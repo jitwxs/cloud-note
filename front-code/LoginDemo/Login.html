@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>无道云笔记</title>
+    <script src="jquery/jquery-1.11.3.min.js"></script>
+</head>
+<body>
+    <div >
+        <form method="" action="" onsubmit="return false;" >
+            <table>
+                <tr>
+                    <td>Username: </td>
+                    <td><input type="text" name="username"></td>
+                </tr>
+                <tr>
+                    <td>Password: </td>
+                    <td><input type="password" name="password"></td>
+                </tr><tr>
+                    <td><input type="submit" value="submit" class="button"></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <script>
+        $('.button').on("click",function httpPost() {
+            var username = $('input[name=username]').val();
+            var password = $('input[name=password]').val();
+            $.ajax({
+                type:'post',
+                url:'http://www.baidu.com',
+                data:{
+                    'username':username,
+                    'password':password
+                },
+                success:function (data) {
+                    alert("登录成功！");
+                },
+                error:function (error) {
+                    alert("登陆失败！")
+                }
+            });
+        });
+    </script>
+</body>
+</html>
