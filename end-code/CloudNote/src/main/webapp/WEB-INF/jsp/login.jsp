@@ -12,37 +12,77 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="${ctx}/css/bootstrap.css">
-    <link rel="stylesheet" href="${ctx}/css/login.css">
     <link rel="stylesheet" href="${ctx}/css/message.css">
     <!-- jQuery first, then Bootstrap JS. -->
     <script src="${ctx}/js/jquery-3.2.1.min.js"></script>
     <script src="${ctx}/js/bootstrap.js"></script>
-    <script src="${ctx}/js/message.js"></script>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        #main {
+            width: 860px;
+            height: 410px;
+            border: solid black 1px;
+        }
+    </style>
 </head>
 
 <body>
-<div class="container">
-    <div class="row">
-        <div class="col-md-offset-3 col-md-6">
-            <form class="form-horizontal" action="${ctx}/login" method="post" onsubmit="return check()">
-                <span class="heading">用户登录</span>
-                <div class="form-group">
-                    <input type="text" class="form-control" name="tel" required="required" placeholder="手机号码">
-                </div>
-                <div class="form-group">
-                    <input type="password" class="form-control" name="password" required="required" placeholder="密码">
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-default">登录</button>
-                </div>
-            </form>
-        </div>
-    </div>
+<div id="main">
+    <form method="post" action="${ctx}/login" onsubmit="return httpPost()">
+        <table>
+            <tr>
+                <td>手机号:</td>
+                <td><input type="text" id="tel" name="tel" maxlength="11"></td>
+            </tr>
+            <tr>
+                <td>密码:</td>
+                <td><input type="password" id="password" name="password"></td>
+            </tr>
+            <tr>
+                <td><input type="submit" value="登录" class="button"></td>
+            </tr>
+        </table>
+    </form>
 </div>
-
 <script>
-    function check() {
+    function httpPost() {
+        var tel = $("#tel").val();
+        var password = $('#password').val();
+        var re = /^1\d{10}$/;
 
+        var flag = true;
+        if (!re.test(tel)) {
+            alert("手机号输入不正确");
+            return false;
+        }
+        if (password == "" || password == null) {
+            alert("密码不能为空");
+            return false;
+        }
+        $.ajax({
+            type: 'post',
+            url: '${ctx}/loginCheck',
+            dataType: 'json',
+            data: {
+                'tel': tel,
+                'password': password
+            },
+            async : false,
+            success: function (msg) {
+                if (!msg.res) {
+                    alert("账户未注册或密码错误");
+                    flag = false;
+                }
+            },
+            error: function () {
+                alert("登录失败！");
+                flag = false;
+            }
+        });
+        return flag;
     }
 </script>
 </body>

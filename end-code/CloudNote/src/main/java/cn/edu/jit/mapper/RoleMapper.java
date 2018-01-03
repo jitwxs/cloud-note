@@ -5,16 +5,12 @@ import cn.edu.jit.entry.RoleExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
-/**
- * @author jitwxs
- * @date 2018/1/2 19:24
- */
 public interface RoleMapper {
     int countByExample(RoleExample example);
 
     int deleteByExample(RoleExample example);
 
-    int deleteByPrimaryKey(Integer role);
+    int deleteByPrimaryKey(Integer id);
 
     int insert(Role record);
 
@@ -22,7 +18,7 @@ public interface RoleMapper {
 
     List<Role> selectByExample(RoleExample example);
 
-    Role selectByPrimaryKey(Integer role);
+    Role selectByPrimaryKey(Integer id);
 
     int updateByExampleSelective(@Param("record") Role record, @Param("example") RoleExample example);
 

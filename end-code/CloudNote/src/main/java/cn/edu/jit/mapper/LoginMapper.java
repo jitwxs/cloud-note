@@ -5,10 +5,6 @@ import cn.edu.jit.entry.LoginExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
-/**
- * @author jitwxs
- * @date 2018/1/2 19:24
- */
 public interface LoginMapper {
     int countByExample(LoginExample example);
 

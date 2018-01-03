@@ -11,13 +11,18 @@
     <mvc:default-servlet-handler />
 
     <!-- 注解驱动 -->
-    <mvc:annotation-driven conversion-service="conversionService"/>
+    <mvc:annotation-driven conversion-service="conversionService">
+    </mvc:annotation-driven>
+
+    <!-- 自定义参数绑定组件 -->
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+    </bean>
 
     <!-- 扫描组件 -->
     <context:component-scan base-package="cn.edu.jit.web"/>
 
     <!-- 全局异常类 -->
-    <bean class="cn.edu.jit.exception.GlobalException"/>
+    <bean class="cn.edu.jit.exception.GlobalExceptionResolver"/>
 
     <!-- 视图解析器 -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

@@ -1,16 +1,17 @@
 package cn.edu.jit.entry;
 
-/**
- * 登陆实体类
- * @author jitwxs
- * @date 2018/1/2 19:39
- */
+import java.util.Date;
+
 public class Login {
     private String tel;
 
     private String password;
 
-    private Integer role;
+    private Integer roleId;
+
+    private Date createDate;
+
+    private Date modifiedDate;
 
     public String getTel() {
         return tel;
@@ -28,11 +29,27 @@ public class Login {
         this.password = password == null ? null : password.trim();
     }
 
-    public Integer getRole() {
-        return role;
+    public Integer getRoleId() {
+        return roleId;
     }
 
-    public void setRole(Integer role) {
-        this.role = role;
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Date getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public void setModifiedDate(Date modifiedDate) {
+        this.modifiedDate = modifiedDate;
     }
 }

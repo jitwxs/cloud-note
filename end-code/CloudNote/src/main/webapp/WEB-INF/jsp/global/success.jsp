@@ -3,7 +3,7 @@
 
 <html>
 <head>
-    <title>Error</title>
+    <title>Success</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- 引入bootstrap -->
     <link rel="stylesheet" type="text/css" href="${ctx}/css/bootstrap.css">
@@ -12,7 +12,7 @@
     <script src="${ctx}/js/bootstrap.js"></script>
 </head>
 <body>
-    <h1>Error : ${message}</h1>
+    <h2 >Success</h2>
     <jsp:include page="/WEB-INF/jsp/global/footer.jsp"/>
 </body>
 </html>

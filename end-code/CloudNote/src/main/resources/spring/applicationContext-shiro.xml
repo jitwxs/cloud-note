@@ -28,7 +28,12 @@
 
                 # 匿名请求请求列表
                 # 登陆请求
+                /loginCheck = anon
                 /login = anon
+                # 注册请求
+                /registerCheck = anon
+                /register = anon
+
                 # 注销请求
                 /logout = logout
 
@@ -48,7 +53,7 @@
     <!-- 配置securityManager -->
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <!-- 配置自定义Realm -->
-        <!--<property name="realm" ref="loginRealm" />-->
+        <property name="realm" ref="loginRealm" />
     </bean>
 
     <!-- 生命周期 -->
