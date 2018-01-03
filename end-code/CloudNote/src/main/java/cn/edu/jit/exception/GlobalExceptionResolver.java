@@ -13,26 +13,26 @@ import javax.servlet.http.HttpServletResponse;
  * @author jitwxs
  * @date 2018/1/2 18:58
  */
-public class GlobalException implements HandlerExceptionResolver {
+public class GlobalExceptionResolver implements HandlerExceptionResolver {
 
     @Override
     public ModelAndView resolveException(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) {
         ModelAndView modelAndView = new ModelAndView();
 
-        UserException UserException;
+        UserException userException;
         if (e instanceof UserException) {
-            UserException = (UserException)e;
+            userException = (UserException)e;
         } else if (e instanceof UnknownAccountException || e instanceof IncorrectCredentialsException) {
             // 用户名错误异常
             modelAndView.addObject("message", "用户名或密码错误");
             modelAndView.setViewName("global/error");
             return modelAndView;
         } else {
-            UserException = new UserException("内部错误");
+            userException = new UserException("内部错误");
         }
 
         // 错误信息
-        String message = UserException.getMessage();
+        String message = userException.getMessage();
 
         // 错误信息传递和错误页面跳转
         modelAndView.addObject("message", message);

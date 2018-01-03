@@ -2,8 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.edu.jit.mapper.RoleMapper" >
   <resultMap id="BaseResultMap" type="cn.edu.jit.entry.Role" >
-    <id column="role" property="role" jdbcType="INTEGER" />
+    <id column="id" property="id" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modified_time" property="modifiedTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -64,7 +66,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    role, name
+    id, name, create_time, modified_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.edu.jit.entry.RoleExample" >
     select
@@ -84,11 +86,11 @@
     select 
     <include refid="Base_Column_List" />
     from role
-    where role = #{role,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from role
-    where role = #{role,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
   </delete>
   <delete id="deleteByExample" parameterType="cn.edu.jit.entry.RoleExample" >
     delete from role
@@ -97,25 +99,39 @@
     </if>
   </delete>
   <insert id="insert" parameterType="cn.edu.jit.entry.Role" >
-    insert into role (role, name)
-    values (#{role,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR})
+    insert into role (id, name, create_time, 
+      modified_time)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifiedTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.jit.entry.Role" >
     insert into role
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="role != null" >
-        role,
+      <if test="id != null" >
+        id,
       </if>
       <if test="name != null" >
         name,
       </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="modifiedTime != null" >
+        modified_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="role != null" >
-        #{role,jdbcType=INTEGER},
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
       </if>
       <if test="name != null" >
         #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedTime != null" >
+        #{modifiedTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -128,11 +144,17 @@
   <update id="updateByExampleSelective" parameterType="map" >
     update role
     <set >
-      <if test="record.role != null" >
-        role = #{record.role,jdbcType=INTEGER},
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
       </if>
       <if test="record.name != null" >
         name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.modifiedTime != null" >
+        modified_time = #{record.modifiedTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -141,8 +163,10 @@
   </update>
   <update id="updateByExample" parameterType="map" >
     update role
-    set role = #{record.role,jdbcType=INTEGER},
-      name = #{record.name,jdbcType=VARCHAR}
+    set id = #{record.id,jdbcType=INTEGER},
+      name = #{record.name,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      modified_time = #{record.modifiedTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -153,12 +177,20 @@
       <if test="name != null" >
         name = #{name,jdbcType=VARCHAR},
       </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedTime != null" >
+        modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
-    where role = #{role,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="cn.edu.jit.entry.Role" >
     update role
-    set name = #{name,jdbcType=VARCHAR}
-    where role = #{role,jdbcType=INTEGER}
+    set name = #{name,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modified_time = #{modifiedTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
