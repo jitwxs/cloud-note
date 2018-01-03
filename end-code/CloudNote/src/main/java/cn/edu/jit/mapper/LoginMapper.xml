@@ -2,9 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.edu.jit.mapper.LoginMapper" >
   <resultMap id="BaseResultMap" type="cn.edu.jit.entry.Login" >
-    <id column="tel" property="tel" jdbcType="CHAR" />
+    <id column="tel" property="tel" jdbcType="VARCHAR" />
     <result column="password" property="password" jdbcType="VARCHAR" />
-    <result column="role" property="role" jdbcType="INTEGER" />
+    <result column="role_id" property="roleId" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -65,7 +67,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    tel, password, role
+    tel, password, role_id, create_date, modified_date
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.edu.jit.entry.LoginExample" >
     select
@@ -85,11 +87,11 @@
     select 
     <include refid="Base_Column_List" />
     from login
-    where tel = #{tel,jdbcType=CHAR}
+    where tel = #{tel,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from login
-    where tel = #{tel,jdbcType=CHAR}
+    where tel = #{tel,jdbcType=VARCHAR}
   </delete>
   <delete id="deleteByExample" parameterType="cn.edu.jit.entry.LoginExample" >
     delete from login
@@ -98,10 +100,10 @@
     </if>
   </delete>
   <insert id="insert" parameterType="cn.edu.jit.entry.Login" >
-    insert into login (tel, password, role
-      )
-    values (#{tel,jdbcType=CHAR}, #{password,jdbcType=VARCHAR}, #{role,jdbcType=INTEGER}
-      )
+    insert into login (tel, password, role_id, 
+      create_date, modified_date)
+    values (#{tel,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{roleId,jdbcType=INTEGER}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{modifiedDate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.jit.entry.Login" >
     insert into login
@@ -112,19 +114,31 @@
       <if test="password != null" >
         password,
       </if>
-      <if test="role != null" >
-        role,
+      <if test="roleId != null" >
+        role_id,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="modifiedDate != null" >
+        modified_date,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="tel != null" >
-        #{tel,jdbcType=CHAR},
+        #{tel,jdbcType=VARCHAR},
       </if>
       <if test="password != null" >
         #{password,jdbcType=VARCHAR},
       </if>
-      <if test="role != null" >
-        #{role,jdbcType=INTEGER},
+      <if test="roleId != null" >
+        #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedDate != null" >
+        #{modifiedDate,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -138,13 +152,19 @@
     update login
     <set >
       <if test="record.tel != null" >
-        tel = #{record.tel,jdbcType=CHAR},
+        tel = #{record.tel,jdbcType=VARCHAR},
       </if>
       <if test="record.password != null" >
         password = #{record.password,jdbcType=VARCHAR},
       </if>
-      <if test="record.role != null" >
-        role = #{record.role,jdbcType=INTEGER},
+      <if test="record.roleId != null" >
+        role_id = #{record.roleId,jdbcType=INTEGER},
+      </if>
+      <if test="record.createDate != null" >
+        create_date = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.modifiedDate != null" >
+        modified_date = #{record.modifiedDate,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -153,9 +173,11 @@
   </update>
   <update id="updateByExample" parameterType="map" >
     update login
-    set tel = #{record.tel,jdbcType=CHAR},
+    set tel = #{record.tel,jdbcType=VARCHAR},
       password = #{record.password,jdbcType=VARCHAR},
-      role = #{record.role,jdbcType=INTEGER}
+      role_id = #{record.roleId,jdbcType=INTEGER},
+      create_date = #{record.createDate,jdbcType=TIMESTAMP},
+      modified_date = #{record.modifiedDate,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -166,16 +188,24 @@
       <if test="password != null" >
         password = #{password,jdbcType=VARCHAR},
       </if>
-      <if test="role != null" >
-        role = #{role,jdbcType=INTEGER},
+      <if test="roleId != null" >
+        role_id = #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedDate != null" >
+        modified_date = #{modifiedDate,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where tel = #{tel,jdbcType=CHAR}
+    where tel = #{tel,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="cn.edu.jit.entry.Login" >
     update login
     set password = #{password,jdbcType=VARCHAR},
-      role = #{role,jdbcType=INTEGER}
-    where tel = #{tel,jdbcType=CHAR}
+      role_id = #{roleId,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      modified_date = #{modifiedDate,jdbcType=TIMESTAMP}
+    where tel = #{tel,jdbcType=VARCHAR}
   </update>
 </mapper>

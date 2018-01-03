@@ -1,12 +1,9 @@
 package cn.edu.jit.entry;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-/**
- * @author jitwxs
- * @date 2018/1/2 19:39
- */
 public class LoginExample {
     protected String orderByClause;
 
@@ -248,63 +245,183 @@ public class LoginExample {
             return (Criteria) this;
         }
 
-        public Criteria andRoleIsNull() {
-            addCriterion("role is null");
+        public Criteria andRoleIdIsNull() {
+            addCriterion("role_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andRoleIsNotNull() {
-            addCriterion("role is not null");
+        public Criteria andRoleIdIsNotNull() {
+            addCriterion("role_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andRoleEqualTo(Integer value) {
-            addCriterion("role =", value, "role");
+        public Criteria andRoleIdEqualTo(Integer value) {
+            addCriterion("role_id =", value, "roleId");
             return (Criteria) this;
         }
 
-        public Criteria andRoleNotEqualTo(Integer value) {
-            addCriterion("role <>", value, "role");
+        public Criteria andRoleIdNotEqualTo(Integer value) {
+            addCriterion("role_id <>", value, "roleId");
             return (Criteria) this;
         }
 
-        public Criteria andRoleGreaterThan(Integer value) {
-            addCriterion("role >", value, "role");
+        public Criteria andRoleIdGreaterThan(Integer value) {
+            addCriterion("role_id >", value, "roleId");
             return (Criteria) this;
         }
 
-        public Criteria andRoleGreaterThanOrEqualTo(Integer value) {
-            addCriterion("role >=", value, "role");
+        public Criteria andRoleIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("role_id >=", value, "roleId");
             return (Criteria) this;
         }
 
-        public Criteria andRoleLessThan(Integer value) {
-            addCriterion("role <", value, "role");
+        public Criteria andRoleIdLessThan(Integer value) {
+            addCriterion("role_id <", value, "roleId");
             return (Criteria) this;
         }
 
-        public Criteria andRoleLessThanOrEqualTo(Integer value) {
-            addCriterion("role <=", value, "role");
+        public Criteria andRoleIdLessThanOrEqualTo(Integer value) {
+            addCriterion("role_id <=", value, "roleId");
             return (Criteria) this;
         }
 
-        public Criteria andRoleIn(List<Integer> values) {
-            addCriterion("role in", values, "role");
+        public Criteria andRoleIdIn(List<Integer> values) {
+            addCriterion("role_id in", values, "roleId");
             return (Criteria) this;
         }
 
-        public Criteria andRoleNotIn(List<Integer> values) {
-            addCriterion("role not in", values, "role");
+        public Criteria andRoleIdNotIn(List<Integer> values) {
+            addCriterion("role_id not in", values, "roleId");
             return (Criteria) this;
         }
 
-        public Criteria andRoleBetween(Integer value1, Integer value2) {
-            addCriterion("role between", value1, value2, "role");
+        public Criteria andRoleIdBetween(Integer value1, Integer value2) {
+            addCriterion("role_id between", value1, value2, "roleId");
             return (Criteria) this;
         }
 
-        public Criteria andRoleNotBetween(Integer value1, Integer value2) {
-            addCriterion("role not between", value1, value2, "role");
+        public Criteria andRoleIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("role_id not between", value1, value2, "roleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateDateIsNull() {
+            addCriterion("create_date is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateDateIsNotNull() {
+            addCriterion("create_date is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateDateEqualTo(Date value) {
+            addCriterion("create_date =", value, "createDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateDateNotEqualTo(Date value) {
+            addCriterion("create_date <>", value, "createDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateDateGreaterThan(Date value) {
+            addCriterion("create_date >", value, "createDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateDateGreaterThanOrEqualTo(Date value) {
+            addCriterion("create_date >=", value, "createDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateDateLessThan(Date value) {
+            addCriterion("create_date <", value, "createDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateDateLessThanOrEqualTo(Date value) {
+            addCriterion("create_date <=", value, "createDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateDateIn(List<Date> values) {
+            addCriterion("create_date in", values, "createDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateDateNotIn(List<Date> values) {
+            addCriterion("create_date not in", values, "createDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateDateBetween(Date value1, Date value2) {
+            addCriterion("create_date between", value1, value2, "createDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateDateNotBetween(Date value1, Date value2) {
+            addCriterion("create_date not between", value1, value2, "createDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifiedDateIsNull() {
+            addCriterion("modified_date is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifiedDateIsNotNull() {
+            addCriterion("modified_date is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifiedDateEqualTo(Date value) {
+            addCriterion("modified_date =", value, "modifiedDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifiedDateNotEqualTo(Date value) {
+            addCriterion("modified_date <>", value, "modifiedDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifiedDateGreaterThan(Date value) {
+            addCriterion("modified_date >", value, "modifiedDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifiedDateGreaterThanOrEqualTo(Date value) {
+            addCriterion("modified_date >=", value, "modifiedDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifiedDateLessThan(Date value) {
+            addCriterion("modified_date <", value, "modifiedDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifiedDateLessThanOrEqualTo(Date value) {
+            addCriterion("modified_date <=", value, "modifiedDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifiedDateIn(List<Date> values) {
+            addCriterion("modified_date in", values, "modifiedDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifiedDateNotIn(List<Date> values) {
+            addCriterion("modified_date not in", values, "modifiedDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifiedDateBetween(Date value1, Date value2) {
+            addCriterion("modified_date between", value1, value2, "modifiedDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifiedDateNotBetween(Date value1, Date value2) {
+            addCriterion("modified_date not between", value1, value2, "modifiedDate");
             return (Criteria) this;
         }
     }
