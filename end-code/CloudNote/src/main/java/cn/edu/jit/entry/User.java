@@ -15,7 +15,7 @@ public class User {
 
     private String icon;
 
-    private Boolean sex;
+    private String sex;
 
     private String sign;
 
@@ -71,12 +71,12 @@ public class User {
         this.icon = icon == null ? null : icon.trim();
     }
 
-    public Boolean getSex() {
+    public String getSex() {
         return sex;
     }
 
-    public void setSex(Boolean sex) {
-        this.sex = sex;
+    public void setSex(String sex) {
+        this.sex = sex == null ? null : sex.trim();
     }
 
     public String getSign() {

@@ -15,4 +15,6 @@ public interface UserService {
     User getById(String id);
 
     int save(User user);
+
+    int update(User user);
 }

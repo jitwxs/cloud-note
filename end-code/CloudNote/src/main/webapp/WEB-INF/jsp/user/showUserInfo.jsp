@@ -1,6 +1,23 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/global/taglib.jsp" %>
 
+<style>
+    .fileinput-button {
+        position: relative;
+        display: inline-block;
+        overflow: hidden;
+    }
+
+    .fileinput-button input{
+        position:absolute;
+        right: 0px;
+        top: 0px;
+        opacity: 0;
+        -ms-filter: 'alpha(opacity=0)';
+        font-size: 200px;
+    }
+</style>
+
 <div class="modal fade" id="showUserInfoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -10,9 +27,23 @@
                 <h4 class="modal-title" id="myModalLabel">个人信息</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" id="userExpressForm" role="form" action="${ctx}/user/saveUserInfo"
-                      method="post">
+                <form class="form-horizontal" id="userInfoForm" role="form" action="${ctx}/user/saveUserInfo"
+                      method="post" enctype="multipart/form-data">
                     <input type="hidden" id="userId" name="id">
+                    <div class="form-group">
+                        <label for="userIcon" class="col-sm-2 control-label">头像</label>
+                        <div class="col-sm-3">
+                            <img id="userIcon" name="icon" style="width: 100px;height: 100px" src=""/>
+                        </div>
+                        <div class="col-sm-7">
+                            <span class="btn btn-success fileinput-button">
+                                <span>上传头像</span>
+                                <input type="file" id="uploadIcon" name="uploadIcon">
+                            </span><br><br>
+                            <span class="upload-hint">支持PNG、GIF、JPG格式，小于2MB</span><br>
+                            <label id="fileName"></label>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label for="userTel" class="col-sm-2 control-label">手机号码</label>
                         <div class="col-sm-10">
@@ -38,15 +69,14 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="userIcon" class="col-sm-2 control-label">头像</label>
+                        <label class="col-sm-2 control-label">性别</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="userIcon" name="icon">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="userSex" class="col-sm-2 control-label">性别</label>
-                        <div class="col-sm-10">
-                            <input type="text" id="userSex" name="sex" class="form-control">
+                            <label class="checkbox-inline">
+                                <input type="radio" name="sex" value="男" checked>男
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="radio" name="sex" value="女">女
+                            </label>
                         </div>
                     </div>
                     <div class="form-group">
@@ -59,9 +89,25 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">保存</button>
+                <button type="button" class="btn btn-primary" onclick="checkUserInfo()">保存</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    // 提交表单
+    function checkUserInfo() {
+        // TODO 头像类型、大小验证
+
+        $("#userInfoForm").submit();
+    }
+
+    // 实时更新选中的文件名
+    $("input[type='file']").change(function(){
+        var file = this.files[0];
+        $("#fileName").html("当前选中："+file.name);
+    });
+
+</script>

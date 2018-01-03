@@ -36,6 +36,7 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public int update(Login login) {
+        login.setModifiedDate(new Date());
         return loginMapper.updateByPrimaryKey(login);
     }
 }

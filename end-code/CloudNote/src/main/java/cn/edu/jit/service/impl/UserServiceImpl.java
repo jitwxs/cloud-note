@@ -47,4 +47,10 @@ public class UserServiceImpl implements UserService {
     public int save(User user) {
         return userMapper.insertSelective(user);
     }
+
+    @Override
+    public int update(User user) {
+        user.setModifedDate(new Date());
+        return userMapper.updateByPrimaryKey(user);
+    }
 }

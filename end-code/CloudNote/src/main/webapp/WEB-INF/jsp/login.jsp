@@ -104,13 +104,14 @@
                 'password': password
             },
             success: function (msg) {
-                if (msg.res == false){
-                    alert("手机号与密码不匹配");
+                if (!msg.res){
+                    alert("手机号不存在或密码错误");
                     flag = false;
+                } else {
+                    flag = true;
                 }
-                flag = true;
             },
-            error: function (error) {
+            error: function () {
                 alert("登录失败！");
                 flag = false;
             }

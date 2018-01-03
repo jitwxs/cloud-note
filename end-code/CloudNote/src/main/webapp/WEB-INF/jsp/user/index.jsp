@@ -23,6 +23,8 @@
 <input type="hidden" id="uid" name="uid" value="${uid}">
 <!-- 引入模块框 -->
 <jsp:include page="showUserInfo.jsp"/>
+<!-- 引入模块框 -->
+<jsp:include page="importNote.jsp"/>
 
 <nav class="navbar navbar-default navbar-fixed-top" style="height: 50px;">
     <div class="container-fluid">
@@ -46,7 +48,7 @@
                     <li class="divider"></li>
                     <li id="share"><a href="#">查看分享</a></li>
                     <li class="divider"></li>
-                    <li id="import"><a href="#">导入笔记</a></li>
+                    <li id="import"><a href="javascript:void(0)" data-toggle="modal" data-target="#importNoteModal">导入笔记</a></li>
                     <li class="divider"></li>
                     <li id="help"><a href="#">帮助</a></li>
                 </ul>
@@ -86,8 +88,14 @@
                 $("#userName").val(res.name);
                 $("#userEmail").val(res.email);
                 $("#userArea").val(res.area);
-                $("#userIcon").val(res.icon);
-                $("#userSex").val(res.sex);
+
+                // 设置头像url
+                $("#userIcon").attr('src',"${ctx}/upload/"+res.icon);
+                //初始化更新头像信息
+                $("#uploadIcon").val('');
+                $("#fileName").html('');
+
+                $("input:radio[name='sex'][value="+res.sex+"]").attr('checked','true');
                 $("#userSign").val(res.sign);
             },
             error: function () {

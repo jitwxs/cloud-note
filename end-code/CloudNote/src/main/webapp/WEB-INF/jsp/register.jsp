@@ -49,9 +49,10 @@
 
         var re = /^1\d{10}$/;
         var flag = true;
-
+        alert(password);
+        alert(password1);
         if (!re.test(tel)) {
-            alert("手机号输入不正确");
+            alert("手机号不符合规范");
             return false;
         }
         if (password == "" || password == null) {
