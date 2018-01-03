@@ -4,15 +4,19 @@ import cn.edu.jit.entry.User;
 import cn.edu.jit.service.ArticleService;
 import cn.edu.jit.service.LoginService;
 import cn.edu.jit.service.UserService;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * 用户控制
@@ -46,7 +50,27 @@ public class UserController {
         return (String) subject.getPrincipal();
     }
 
-    /*---------   普通方法区域（START）   ----------*/
+    /*---------   普通方法区域（END）   ----------*/
+
+    @RequestMapping(value = "index")
+    public String indexUI(HttpServletRequest request) {
+        request.setAttribute("uid", getSelfId());
+        return "user/index";
+    }
+
+    /*---------   用户管理区域（START）   ----------*/
+
+    @RequestMapping(value = "showUserInfo", method = {RequestMethod.POST})
+    public void showUserInfo(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String id = request.getParameter("id");
+        User user = userService.getById(id);
+
+        String data = JSON.toJSONString(user, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+
+        response.getWriter().write(data);
+    }
+
+    /*---------   用户管理区域（END）   ----------*/
 
     /*---------   文章管理区域（START）   ----------*/
 

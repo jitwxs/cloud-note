@@ -24,7 +24,7 @@
                 # 如果用户没有该角色，然后访问该路径会报 401错误
 
                 /admin/** = authc, roles[admin]
-                /user/** = authc, roles[courier]
+                /user/** = authc, roles[user]
 
                 # 匿名请求请求列表
                 # 登陆请求

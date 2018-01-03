@@ -2,7 +2,7 @@ package cn.edu.jit.entry;
 
 import java.util.Date;
 
-public class Article {
+public class ArticleRecycle {
     private String id;
 
     private String title;

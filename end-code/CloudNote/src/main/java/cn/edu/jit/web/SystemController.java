@@ -73,8 +73,7 @@ public class SystemController {
             return "redirect:global/success";
 //            return "redirect:/admin/index";
         } else if (subject.hasRole(GlobalConstant.ROLE.USER.getName())) {
-            return "redirect:global/success";
-//            return "redirect:/user/index";
+            return "redirect:/user/index";
         } else {
             return "/login";
         }

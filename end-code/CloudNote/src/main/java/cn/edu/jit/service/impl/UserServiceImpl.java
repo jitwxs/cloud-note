@@ -39,6 +39,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getById(String id) {
+        return userMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
     public int save(User user) {
         return userMapper.insertSelective(user);
     }

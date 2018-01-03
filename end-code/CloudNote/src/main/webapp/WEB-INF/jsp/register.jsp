@@ -28,7 +28,7 @@
 
 <body>
     <div id="loginDiv">
-        已有账号？去<input type="button" value="登陆" herf="#" style="margin-right: 50px;color: red">
+        已有账号？去<a class="btn btn-default"href="${ctx}/login" style="margin-right: 50px;color: red">登陆</a>
     </div>
     <div style="width:100%; height:auto;text-align:center">
         <h3>欢迎使用无道云笔记</h3>
