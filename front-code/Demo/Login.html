@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>无道云笔记</title>
+    <script src="jquery/jquery-1.11.3.min.js"></script>
+    <style type="text/css">
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        #main{
+            width:860px;
+            height:410px;
+            border:solid black 1px;
+
+        }
+    </style>
+</head>
+<body>
+    <header>
+
+    </header>
+    <div id="main">
+        <form method="" action="" onsubmit="return httpPost();" >
+            <table>
+                <tr>
+                    <td>手机号: </td>
+                    <td><input type="text" name="tel" maxlength="11"></td>
+                </tr>
+                <tr>
+                    <td>密码: </td>
+                    <td><input type="password" name="password"></td>
+                </tr><tr>
+                    <td><input type="submit" value="登录" class="button" ></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <script>
+        function httpPost() {
+            var tel = $('input[name=tel]').val();
+            var password = $('input[name=password]').val();
+            var re=/^(13[0-9]{9})|(15[89][0-9]{8})$/;
+            if (!re.test(tel)) {
+                alert("手机号输入不正确");
+                return false;
+            }
+            if (password == "" || password == null) {
+                alert("密码不能为空");
+                return false;
+            }
+            $.ajax({
+                type: 'post',
+                url: '/loginCheck',
+                datatype:'json',
+                data: {
+                    'tel': tel,
+                    'password': password
+                },
+                success: function (msg) {
+                    if (msg == "手机号已被注册") {
+                        alert("手机号已被注册");
+                        return false;
+                    }
+                    return true;
+                },
+                error: function (error) {
+                    alert("登录失败！");
+                    return false;
+                }
+            });
+        }
+    </script>
+</body>
+</html>
