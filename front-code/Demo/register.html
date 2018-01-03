@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>register</title>
+    <script src="jquery/jquery-1.11.3.min.js"></script>
+    <style>
+
+        #loginDiv{
+            margin-right: 100px;
+            width: 250px;
+            margin-left: 700px;
+        }
+    </style>
+
+</head>
+<body >
+        <div id="loginDiv">已有账号？去<a href="/login"><input
+                type="button" value="登陆" style="margin-right: 50px;color: red"></a></div>
+    <div style="width:100%; height:auto;text-align:center">
+        <h3>欢迎使用无道云笔记</h3>
+        <form action="" method="" onsubmit="return registerPost()">
+
+           手机号: <input type="tel" id="tel" name="tel" style="margin-left: 20px;" /><br />
+            密 码：<input type="password" id="password" name="password" style="margin-left: 24px;"/><br />
+            确认密码<input type="password" id="password1" style="margin-left: 12px;" /><br />
+            验证码:<input type="text" style="margin-left: 15px; width:60px;"> <input type="button" value="获取手机验证码"> <br />
+            <input type="submit" value="注册" id="register"
+                   style="width:180px;background-color: firebrick;margin-left: 70px;height: 30px;" />
+        </form>
+    </div>
+        <script>
+            function registerPost() {
+                var tel = $("#tel").val();
+                var password = $("#password").val();
+                var passwor1 = $("#password1").val();
+                var re = /^1\d{10}$/;
+                var flag = true;
+                if (!re.test(tel)) {
+                    alert("手机号输入不正确");
+                    return false;
+                }
+                if (password == "" || password == null) {
+                    alert("密码不能为空");
+                    return false;
+                }
+                if (password != passwor1) {
+                    alert("两次密码不一致！");
+                    return false;
+                }
+            $ajax({
+                type:'post',
+                url:'/registerCheck',
+                dataType:'json',
+                data: {
+                    'tel': tel,
+                    'password': password
+                },
+                success: function (msg) {
+                    if (msg == "注册成功") {
+                        alert("注册成功");
+                        flag = false;
+                    }
+              
+                },
+                error: function (error) {
+                    alert("注册失败！");
+                    flag = true;
+                }
+
+            });
+            return flag;
+            }
+
+        </script>
+</body>
+</html>
