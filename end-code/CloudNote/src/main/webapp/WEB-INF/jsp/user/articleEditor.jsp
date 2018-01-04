@@ -8,21 +8,10 @@
     <button id="getContent" onclick="saveContent()">获取HTML（不包含样式）</button>
     <%--<button id="getJSON">获取JSON</button>--%>
     <button id="setContent">动态设置内容</button>
-    <%--<div>--%>
-    <%--<p>扫描到的内容：</p>--%>
-    <%--<label id="scanContent"></label>--%>
-    <%--</div>--%>
 
     <script type="text/javascript">
         var E = window.wangEditor;
         var editor = new E('#editor');
-        // // 自定义 onchange 触发的延迟时间，默认为 200 ms
-        // editor.customConfig.onchangeTimeout = 1000; // 单位 ms
-        // // 动态扫描文件内容
-        // editor.customConfig.onchange = function (html) {
-        //     // 动态侦测内容改变
-        //     $("#scanContent").html(html);
-        // };
         // 对输入网络图片地址的校验
         editor.customConfig.linkImgCheck = function (src) {
             alert("即将上传图片url："+src);// 图片的链接
@@ -42,10 +31,7 @@
             return true // 返回 true 表示校验成功
             // return '验证失败' // 返回字符串，即校验失败的提示信息
         };
-        // // 区域获得焦点
-        // editor.customConfig.onfocus = function () {
-        //     alert("获得焦点：");
-        // };
+
         // 区域失去焦点
         editor.customConfig.onblur = function (html) {
             saveContent(html);
@@ -70,36 +56,32 @@
         // 初始化全屏插件
         E.fullscreen.init('#editor');
 
-        // // 获取内容的html
-        // document.getElementById('getContent').addEventListener('click', function () {
-        //     alert("内容：" + editor.txt.html());
-        // }, false);
-
-        function saveContent(html) {
-            // alert("内容：" + editor.txt.html());
-            // $.ajax({
-            //     url : "$saveArticle",
-            //     type : "post|get",
-            //     dataType : "json",
-            //     data : {
-            //         "key" : value
-            //     },
-            //     async :false,
-            //     success : function(res) {
-            //
-            //     },
-            //     error : function(jqXHR, textStatus, errorThrown){
-            //         alert(jqXHR + "," + textStatus + "," + errorThrown);
-            //     }
-            // });
-        }
-
         // // 获取内容的json
         // document.getElementById('getJSON').addEventListener('click', function () {
         //     var json = editor.txt.getJSON(); // 获取 JSON 格式的内容
         //     var jsonStr = JSON.stringify(json);
         //     alert("json：" + jsonStr);
         // }, false);
+
+        // TODO 后期加上笔记id
+        function saveContent() {
+            var content = editor.txt.html();
+            $.ajax({
+                url : "${ctx}/user/saveArticle",
+                type : "post",
+                dataType : "text",
+                data : {
+                    // "id" : ,
+                    "data" : content
+                },
+                async :true,
+                success : function(res) {
+                },
+                error : function(){
+                    alert("发生错误");
+                }
+            });
+        }
 
         // 设置内容值
         document.getElementById('setContent').addEventListener('click', function () {

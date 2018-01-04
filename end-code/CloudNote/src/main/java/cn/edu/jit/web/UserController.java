@@ -157,11 +157,34 @@ public class UserController {
 
     /*---------   文章管理区域（START）   ----------*/
 
-    // TODO 保存文章
+    /**
+     * 保存笔记
+     * @param request
+     * @param response
+     */
     @RequestMapping(value = "/saveArticle", method = {RequestMethod.POST})
     public void saveArticle(HttpServletRequest request, HttpServletResponse response) {
+        String upload_path = request.getSession().getServletContext().getRealPath("upload"); // 获取upload文件夹路径
         response.setContentType("text/html;charset=utf-8");
+        try {
+//        String articleId = request.getParameter("id");
+            String content = request.getParameter("data");
+            String targetFilePath = upload_path + "/" + GlobalFunction.getSelfTel() + "/" + "111.txt";
 
+            File file = new File(targetFilePath);
+            if (!file.getParentFile().exists()) {
+                file.getParentFile().mkdirs();
+            }
+
+            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(targetFilePath),"UTF-8");
+            System.out.println(content);
+            writer.write(content);
+            writer.flush();
+            writer.close();
+            response.getWriter().write("{\"res\":" + true + "}");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @RequestMapping(value = "/removeArticle", method = {RequestMethod.GET})
@@ -169,25 +192,29 @@ public class UserController {
         articleService.removeById(id);
     }
 
+    /**
+     * 恢复笔记
+     * @param request
+     * @param response
+     */
     @RequestMapping(value = "/showUserNote", method = {RequestMethod.POST})
     public void showUserNote(HttpServletRequest request, HttpServletResponse response) {
       try {
-          response.setContentType("text/html;charset=utf-8");
-          String upload_path = request.getSession().getServletContext().getRealPath("upload");
-          String file_path = upload_path+"/"+GlobalFunction.getSelfTel()+"/111.txt";
-
-          BufferedReader br = new BufferedReader(new FileReader(file_path));
-
           char[] buf = new char[1024];
           int len;
-          while((len = br.read(buf,0,1024)) > 0) {
+          response.setContentType("text/html;charset=utf-8");
+          String upload_path = request.getSession().getServletContext().getRealPath("upload");
+          String targetFilePath = upload_path+"/"+GlobalFunction.getSelfTel()+"/111.txt";
+
+          InputStreamReader reader = new InputStreamReader(new FileInputStream(targetFilePath),"UTF-8");
+
+          while ((len = reader.read(buf, 0, 1024)) > 0) {
               response.getWriter().write(buf,0,len);
           }
-          br.close();
+          reader.close();
       } catch (IOException e) {
          e.printStackTrace();
       }
     }
     /*---------   文章管理区域（END）   ----------*/
-
 }
