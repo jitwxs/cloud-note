@@ -8,6 +8,7 @@ import cn.edu.jit.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,6 +35,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public int update(Article article) {
+        article.setModifedDate(new Date());
         return articleMapper.updateByPrimaryKey(article);
     }
 

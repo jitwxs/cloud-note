@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50719
 File Encoding         : 65001
 
-Date: 2018-01-03 14:43:47
+Date: 2018-01-04 00:31:32
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -25,6 +25,8 @@ CREATE TABLE `article` (
   `content` varchar(255) DEFAULT NULL COMMENT '文章内容',
   `user_id` varchar(64) NOT NULL COMMENT '作者id',
   `dir_id` varchar(64) NOT NULL COMMENT '所属文件夹id',
+  `is_open` int(11) NOT NULL DEFAULT '0' COMMENT '是否公开（1：公开；0：不公开）',
+  `share_url` varchar(64) DEFAULT NULL COMMENT '分享url',
   `create_date` datetime NOT NULL,
   `modifed_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -36,6 +38,31 @@ CREATE TABLE `article` (
 
 -- ----------------------------
 -- Records of article
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for article_recycle
+-- ----------------------------
+DROP TABLE IF EXISTS `article_recycle`;
+CREATE TABLE `article_recycle` (
+  `id` varchar(64) NOT NULL,
+  `title` varchar(32) NOT NULL COMMENT '文章标题',
+  `content` varchar(255) DEFAULT NULL COMMENT '文章内容',
+  `user_id` varchar(64) NOT NULL COMMENT '作者id',
+  `dir_id` varchar(64) NOT NULL COMMENT '所属文件夹id',
+  `is_open` int(11) NOT NULL DEFAULT '0' COMMENT '是否公开（1：公开；0：不公开）',
+  `share_url` varchar(64) DEFAULT NULL COMMENT '分享url',
+  `create_date` datetime NOT NULL,
+  `modifed_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_user` (`user_id`),
+  KEY `fk_dir` (`dir_id`),
+  CONSTRAINT `article_recycle_ibfk_1` FOREIGN KEY (`dir_id`) REFERENCES `directory` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `article_recycle_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of article_recycle
 -- ----------------------------
 
 -- ----------------------------
@@ -93,8 +120,8 @@ CREATE TABLE `login` (
 -- ----------------------------
 -- Records of login
 -- ----------------------------
-INSERT INTO `login` VALUES ('18168404321', '8a423f131115c0026c7617b1ef3fd238b409d049ade27fa9d0e6136a', '2', '2018-01-03 13:07:11', null);
-INSERT INTO `login` VALUES ('18168404329', '8eb6030a2cf40d7a0dd92d88513621b61b86aeb5c16a0b841ef39b97', '2', '2018-01-03 12:57:52', null);
+INSERT INTO `login` VALUES ('18168404321', 'f4b9b2efb4a26a6319fc66021695358d7e093cba4b8315b27542163d', '2', '2018-01-04 00:19:56', null);
+INSERT INTO `login` VALUES ('18168404329', 'e47c3db50941ceb90ebf74c3135e137dab229904218df9bee0d68ba7', '2', '2018-01-04 00:23:38', null);
 
 -- ----------------------------
 -- Table structure for role
@@ -140,8 +167,8 @@ CREATE TABLE `user` (
   `name` varchar(16) DEFAULT NULL COMMENT '昵称',
   `email` varchar(32) DEFAULT NULL COMMENT '邮箱',
   `area` varchar(32) DEFAULT NULL COMMENT '地区',
-  `icon` varchar(32) DEFAULT NULL COMMENT '头像',
-  `sex` tinyint(1) DEFAULT NULL COMMENT '性别（1：男；0：女）',
+  `icon` varchar(128) DEFAULT NULL COMMENT '头像',
+  `sex` char(1) DEFAULT NULL COMMENT '性别',
   `sign` varchar(32) DEFAULT NULL COMMENT '签名',
   `create_date` datetime NOT NULL,
   `modifed_date` datetime DEFAULT NULL,
@@ -153,5 +180,5 @@ CREATE TABLE `user` (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('694303fe17df43ad9dfdf3e75688fe32', '18168404329', null, null, null, null, null, null, '2018-01-03 12:57:52', null);
-INSERT INTO `user` VALUES ('7963cdd80c3b4144b75003e1dd611494', '18168404321', null, null, null, null, null, null, '2018-01-03 13:07:11', null);
+INSERT INTO `user` VALUES ('05d4849d43704410a904f93632e9f9b0', '18168404329', 'jitwxs', 'jitwxs@foxmail.com', '南京', '18168404329/18168404329.png', '男', '', '2018-01-04 00:23:38', '2018-01-04 00:27:16');
+INSERT INTO `user` VALUES ('fda14630bb884e5d8a038a067f7af463', '18168404321', null, null, null, null, null, null, '2018-01-04 00:19:56', null);

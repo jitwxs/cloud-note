@@ -6,6 +6,8 @@ import cn.edu.jit.service.DirectoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 /**
  * @author jitwxs
  * @date 2018/1/3 14:14
@@ -28,6 +30,7 @@ public class DirectoryServiceImpl implements DirectoryService {
 
     @Override
     public int update(Directory directory) {
+        directory.setModifedDate(new Date());
         return directoryMapper.updateByPrimaryKey(directory);
     }
 

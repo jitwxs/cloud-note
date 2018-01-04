@@ -88,8 +88,14 @@
                 $("#userName").val(res.name);
                 $("#userEmail").val(res.email);
                 $("#userArea").val(res.area);
-                $("#userIcon").val(res.icon);
-                $("#userSex").val(res.sex);
+
+                // 设置头像url
+                $("#userIcon").attr('src',"${ctx}/upload/"+res.icon);
+                //初始化更新头像信息
+                $("#uploadIcon").val('');
+                $("#fileName").html('');
+
+                $("input:radio[name='sex'][value="+res.sex+"]").attr('checked','true');
                 $("#userSign").val(res.sign);
             },
             error: function () {

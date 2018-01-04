@@ -8,7 +8,7 @@
     <result column="email" property="email" jdbcType="VARCHAR" />
     <result column="area" property="area" jdbcType="VARCHAR" />
     <result column="icon" property="icon" jdbcType="VARCHAR" />
-    <result column="sex" property="sex" jdbcType="BIT" />
+    <result column="sex" property="sex" jdbcType="CHAR" />
     <result column="sign" property="sign" jdbcType="VARCHAR" />
     <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
     <result column="modifed_date" property="modifedDate" jdbcType="TIMESTAMP" />
@@ -111,7 +111,7 @@
       modifed_date)
     values (#{id,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
       #{email,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{icon,jdbcType=VARCHAR}, 
-      #{sex,jdbcType=BIT}, #{sign,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{sex,jdbcType=CHAR}, #{sign,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
       #{modifedDate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.jit.entry.User" >
@@ -168,7 +168,7 @@
         #{icon,jdbcType=VARCHAR},
       </if>
       <if test="sex != null" >
-        #{sex,jdbcType=BIT},
+        #{sex,jdbcType=CHAR},
       </if>
       <if test="sign != null" >
         #{sign,jdbcType=VARCHAR},
@@ -209,7 +209,7 @@
         icon = #{record.icon,jdbcType=VARCHAR},
       </if>
       <if test="record.sex != null" >
-        sex = #{record.sex,jdbcType=BIT},
+        sex = #{record.sex,jdbcType=CHAR},
       </if>
       <if test="record.sign != null" >
         sign = #{record.sign,jdbcType=VARCHAR},
@@ -233,7 +233,7 @@
       email = #{record.email,jdbcType=VARCHAR},
       area = #{record.area,jdbcType=VARCHAR},
       icon = #{record.icon,jdbcType=VARCHAR},
-      sex = #{record.sex,jdbcType=BIT},
+      sex = #{record.sex,jdbcType=CHAR},
       sign = #{record.sign,jdbcType=VARCHAR},
       create_date = #{record.createDate,jdbcType=TIMESTAMP},
       modifed_date = #{record.modifedDate,jdbcType=TIMESTAMP}
@@ -260,7 +260,7 @@
         icon = #{icon,jdbcType=VARCHAR},
       </if>
       <if test="sex != null" >
-        sex = #{sex,jdbcType=BIT},
+        sex = #{sex,jdbcType=CHAR},
       </if>
       <if test="sign != null" >
         sign = #{sign,jdbcType=VARCHAR},
@@ -281,7 +281,7 @@
       email = #{email,jdbcType=VARCHAR},
       area = #{area,jdbcType=VARCHAR},
       icon = #{icon,jdbcType=VARCHAR},
-      sex = #{sex,jdbcType=BIT},
+      sex = #{sex,jdbcType=CHAR},
       sign = #{sign,jdbcType=VARCHAR},
       create_date = #{createDate,jdbcType=TIMESTAMP},
       modifed_date = #{modifedDate,jdbcType=TIMESTAMP}
