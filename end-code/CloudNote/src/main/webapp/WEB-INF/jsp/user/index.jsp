@@ -13,9 +13,13 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="${ctx}/css/bootstrap.css">
     <link rel="stylesheet" href="${ctx}/css/message.css">
+    <link rel="stylesheet" href="${ctx}/css/wangEditor-fullscreen-plugin.css">
     <!-- jQuery first, then Bootstrap JS. -->
     <script src="${ctx}/js/jquery-3.2.1.min.js"></script>
     <script src="${ctx}/js/bootstrap.js"></script>
+    <!-- wangEditor依赖 -->
+    <script src="${ctx}/js/wangEditor.js"></script>
+    <script src="${ctx}/js/wangEditor-fullscreen-plugin.js"></script>
 </head>
 
 <body style="padding: 50px;">
@@ -23,12 +27,11 @@
 <input type="hidden" id="uid" name="uid" value="${uid}">
 <!-- 引入模块框 -->
 <jsp:include page="showUserInfo.jsp"/>
-<!-- 引入模块框 -->
 <jsp:include page="importNote.jsp"/>
 
 <nav class="navbar navbar-default navbar-fixed-top" style="height: 50px;">
     <div class="container-fluid">
-        <!--无道云的图标-->
+        <%--<!--无道云的图标-->--%>
         <%--<div class="navbar-header">--%>
             <%--<a class="navbar-brand" href="#">--%>
                 <%--<img alt="Brand" src="...">--%>
@@ -54,11 +57,11 @@
                 </ul>
             </li>
         </ul>
-        <!--头像-->
+        <!-- 头像 -->
         <%--<div class=" navbar-right" style="margin-right: 30px;">--%>
             <%--<img src="cinqueterre.jpg" class="img-responsive" alt="Cinque Terre">--%>
         <%--</div>--%>
-        <!--搜索-->
+        <!-- 搜索 -->
         <div>
             <form class="navbar-form navbar-left" role="search">
                 <div class="form-group">
@@ -70,6 +73,8 @@
         </div>
     </div>
 </nav>
+
+<jsp:include page="/WEB-INF/jsp/user/articleEditor.jsp"/>
 
 <script>
     function showUserInfo() {
