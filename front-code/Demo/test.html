@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	
+	<link rel="stylesheet" href="css/common.css"/><!-- 基本样式 -->
+	<link rel="stylesheet" href="css/animate.min.css"/> <!-- 动画效果 -->
+	<title>实用带多种CSS动画特效的jQuery弹出层插件hDialog.js - JS代码网</title>
+</head>
+<body>
+<div id="wrapper">
+	<header><h2></h2></header>
+	<div class="box">
+		<div class="demo">
+			<h3>引入animate.min.css动画库：</h3>
+			<a href="javascript:;" class="bounceIn dialog">bounceIn动画</a>
+			<a href="javascript:;" class="bounceInDown dialog">bounceInDown动画</a>
+			<a href="javascript:;" class="bounceInLeft dialog">bounceInLeft动画</a>
+			<a href="javascript:;" class="bounceInRight dialog">bounceInRight动画</a>
+			<a href="javascript:;" class="bounceInUp dialog">bounceInUp动画</a>
+			<a href="javascript:;" class="rollIn dialog">rollIn动画</a>
+			<a href="javascript:;" class="fadeIn dialog">fadeIn动画</a>
+			<a href="javascript:;" class="fadeInUpBig dialog">fadeInUpBig动画</a>
+			<a href="javascript:;" class="lightSpeedIn dialog">lightSpeedIn动画</a>
+			<a href="javascript:;" class="flipInX dialog">flipInX动画</a>
+			<a href="javascript:;" class="rotateInDownLeft dialog">rotateInDownLeft动画</a>
+			<a href="javascript:;" class="rotateInDownRight dialog">rotateInDownRight动画</a>
+			<a href="javascript:;" class="rotateInUpLeft dialog">rotateInUpLeft动画</a>
+			<a href="javascript:;" class="rotateInUpRight dialog">rotateInUpRight动画</a>
+			<a href="javascript:;" class="rubberBand dialog">rubberBand动画</a>
+			<a href="javascript:;" class="zoomIn dialog">zoomIn动画</a>
+			<a href="javascript:;" class="zoomInDown dialog">zoomInDown动画</a>
+			<a href="javascript:;" class="zoomInLeft dialog">zoomInLeft动画</a>
+			<a href="javascript:;" class="zoomInRight dialog">zoomInRight动画</a>
+			<a href="javascript:;" class="zoomInUp dialog">zoomInUp动画</a>
+			
+
+		</div>
+        <!-- demo end -->
+		<!-- 注意：请将要放入弹框的内容放在比如id="HBox"的容器中，然后将box的值换成该ID即可，比如：$(element).hDialog({'box':'#HBox'}); -->
+		<div id="HBox">
+			<form action="" method="post" onsubmit="return false;">
+				<ul class="list">
+					<li>
+						<strong>昵 称  <font color="#ff0000">*</font></strong>
+						<div class="fl"><input type="text" name="nickname" value="" class="ipt nickname" /></div>
+					</li>
+					<li>
+						<strong>手 机 <font color="#ff0000">*</font></strong>
+						<div class="fl"><input type="text" name="phone" value="" class="ipt phone" /></div>
+					</li>
+					<li>
+						<strong>邮 箱 <font color="#ff0000">*</font></strong>
+						<div class="fl"><input type="text" name="email" value="" class="ipt email" /></div>
+					</li>
+					<li>
+						<strong>性 别 <font color="#ff0000">&nbsp;</font></strong>
+						<div class="fl">
+							<label class="mr10"><input type="radio" name="sex" value="1"/>男</label>
+							<label class="mr10"><input type="radio" name="sex" value="2"/>女</label>
+							<label><input type="radio" name="sex" value="3"/>保密</label>
+						</div>
+					</li>
+					<li>
+						<strong>爱 好 <font color="#ff0000">&nbsp;</font></strong>
+						<div class="fl">
+							<label class="mr10"><input type="checkbox" name="like" value="男" />男</label>
+							<label class="mr10"><input type="checkbox" name="like" value="女"/>女</label>
+							<label><input type="checkbox" name="like" value="都喜欢"/>都喜欢</label>
+						</div>
+					</li>
+					<li><input type="submit" value="确认提交" class="submitBtn" /></li>
+				</ul>
+			</form>
+		</div><!-- HBox end -->	
+	</div><!-- box end -->
+</div><!-- wrapper end -->
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery.hDialog.js"></script>
+<script>
+$(function(){
+	var $el = $('.dialog');
+	$el.hDialog();
+	
+	//提交并验证表单
+	$('.submitBtn').click(function() {
+		var EmailReg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/; //邮件正则
+		var PhoneReg = /^0{0,1}(13[0-9]|15[0-9]|153|156|18[7-9])[0-9]{8}$/ ; //手机正则
+		var $nickname = $('.nickname');
+		var $email = $('.email'); 
+		var $phone = $('.phone');
+		if($nickname.val() == ''){
+			$.tooltip('昵称还没填呢...'); $nickname.focus();
+		}else if($phone.val() == ''){
+			$.tooltip('手机还没填呢...'); $phone.focus();
+		}else if(!PhoneReg.test($phone.val())){
+			$.tooltip('手机格式错咯...'); $phone.focus();
+		}else if($email.val() == ''){
+			$.tooltip('邮箱还没填呢...'); $email.focus();
+		}else if(!EmailReg.test($email.val())){
+			$.tooltip('邮箱格式错咯...'); $email.focus();
+		}else{
+			$.tooltip('提交成功，2秒后自动关闭',2000,true);
+			setTimeout(function(){ 
+				$el.hDialog('close',{box:'#HBox'}); 
+			},2000);
+		}
+	});
+});
+</script>
+</body>
+</html> 
