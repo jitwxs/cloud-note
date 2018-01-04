@@ -76,7 +76,7 @@
         // }, false);
 
         function saveContent(html) {
-            alert("内容：" + editor.txt.html());
+            // alert("内容：" + editor.txt.html());
             // $.ajax({
             //     url : "$saveArticle",
             //     type : "post|get",
@@ -103,7 +103,21 @@
 
         // 设置内容值
         document.getElementById('setContent').addEventListener('click', function () {
-            editor.txt.html('<p>存放服务器得到的数据</p>')
+            $.ajax({
+                    url : "${ctx}/user/showUserNote",
+                    type : "post",
+                    dataType : "text",
+                    data : {
+                         "key" : "value"
+                    },
+                    async :true,
+                    success : function(res) {
+                        editor.txt.html(res);
+                    },
+                    error : function(){
+                        alert("出现错误!");
+                    }
+                });
         }, false);
     </script>
 </div>
