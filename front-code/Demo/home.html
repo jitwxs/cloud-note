@@ -9,6 +9,7 @@
     <script src="http://cdn.bootcss.com/wangeditor/2.1.20/js/lib/jquery-2.2.1.js"></script>
 
     <style>
+<<<<<<< HEAD
         *{
             margin: 0;
             padding: 0;
@@ -24,55 +25,61 @@
         .wjj_div{
             margin-left: 10px;
         }
+=======
+        /*.dropdown a:hover{*/
+        /*color: red;*/
+        /*}*/
+>>>>>>> fceca0abdf2a50230730feb5deb2517c91722bf7
     </style>
 </head>
 <body style="padding: 50px;">
-    <nav class="navbar navbar-inverse navbar-fixed-top" style="height: 50px;">
+<nav class="navbar navbar-inverse navbar-fixed-top" style="height: 50px;">
 
-        <div class="container-fluid">
-            <!--无道云的图标-->
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#">
-                    <img alt="Brand" src="...">
-                </a>
-            </div>
-
-            <!--设置-->
-            <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                    <a style="background: none" href="#" class="dropdown-toggle" data-toggle="dropdown" >
-                        设置 <b class="caret"></b>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li id="msg" ><a href="#">个人信息</a></li>
-                        <li class="divider"></li>
-                        <li id="account"><a href="#">账户设置</a></li>
-                        <li class="divider"></li>
-                        <li id="share" ><a href="#">查看分享</a></li>
-                        <li class="divider"></li>
-                        <li id="help" ><a href="#">帮助</a></li>
-
-
-                    </ul>
-                </li>
-            </ul>
-                <!--头像-->
-            <div class=" navbar-right" style="margin-right: 30px;">
-                <img src="cinqueterre.jpg" class="img-responsive" alt="Cinque Terre">
-            </div>
-            <!--搜索-->
-            <div>
-                <form class="navbar-form navbar-left" role="search">
-                    <div class="form-group">
-                        <input type="text" class="form-control" style="border:none; background:none;outline:none;" placeholder="Search" />
-                    </div>
-                    <button type="submit" class="btn btn-default">查找</button>
-                </form>
-                </button>
-            </div>
+    <div class="container-fluid">
+        <!--无道云的图标-->
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">
+                <img alt="Brand" src="...">
+            </a>
         </div>
 
+        <!--设置-->
+        <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+                <a style="background: none" href="#" class="dropdown-toggle" data-toggle="dropdown" >
+                    设置 <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    <li id="msg" ><a href="#">个人信息</a></li>
+                    <li class="divider"></li>
+                    <li id="account"><a href="#">账户设置</a></li>
+                    <li class="divider"></li>
+                    <li id="share" ><a href="#">查看分享</a></li>
+                    <li class="divider"></li>
+                    <li id="help" ><a href="#">帮助</a></li>
 
+
+                </ul>
+            </li>
+        </ul>
+        <!--头像-->
+        <div class=" navbar-right" style="margin-right: 30px;">
+            <img src="cinqueterre.jpg" class="img-responsive" alt="Cinque Terre">
+        </div>
+        <!--搜索-->
+        <div>
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                    <input type="text" class="form-control" style="border:none; background:none;outline:none;" placeholder="Search" />
+                </div>
+                <button type="submit" class="btn btn-default">查找</button>
+            </form>
+            </button>
+        </div>
+    </div>
+
+
+<<<<<<< HEAD
     </nav>
 
     <div id="left" style="background-color: #fbfcfe;width:200px;float: left;height: 500px;" >
@@ -194,11 +201,24 @@
     <div id="wangeditor" style="width:800px;float: right; height: 600px;" >
         <div style="max-width:700px;margin:50px;height: 700px;">
             <div id="txtdiv" style="border:1px solid gray;min-height:400px">
+=======
+</nav>
+<div id="left" style="background-color: #398439;width:200px;float: left;height: 500px;" >
+    <div class="panel-body" >
+        使用右键点击这里
+    </div>
+</div>
 
-            </div>
+<div id="wangeditor" style="width:800px;float: right; height: 600px;" >
+    <div style="max-width:700px;margin:50px;height: 700px;">
+        <div id="txtdiv" style="border:1px solid gray;min-height:400px">
+>>>>>>> fceca0abdf2a50230730feb5deb2517c91722bf7
+
         </div>
+    </div>
 
 
+<<<<<<< HEAD
         <!--脚本控制-->
         <script src="js/jquery.contextify.js"></script>
         <script>
@@ -224,5 +244,36 @@
 
 
 
+=======
+    <!--脚本控制-->
+    <script>
+        $(function(){
+            //初始化编辑器
+            editor = new wangEditor("txtdiv");
+            editor.create();
+
+            //内容修改事件，此处做的是实时展示实际效果
+            editor.onchange = function(){
+                //获取editor的html值
+                var html = editor.$txt.html();
+                $("#show_box").html(html)
+            }
+        })
+    </script>
+
+    <!--按照官网上的说明，js和css的这两个引用应该放在body的末尾-->
+    <script src="http://cdn.bootcss.com/wangeditor/2.1.20/js/wangEditor.js"></script>
+    <link href="http://cdn.bootcss.com/wangeditor/2.1.20/css/wangEditor.css" rel="stylesheet">
+</div>
+<button onclick="showContent()">获取编辑器内容</button>
+<script type="text/javascript">
+	function showContent() {
+		// 获取编辑器区域完整html代码
+        var html = editor.$txt.html();
+		alert(html);
+	}
+
+</script>
+>>>>>>> fceca0abdf2a50230730feb5deb2517c91722bf7
 </body>
 </html>

@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.Date;
 import java.util.List;
 
@@ -97,7 +96,6 @@ public class UserController {
         User user = userService.getById(id);
 
         String data = JSON.toJSONString(user, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
-        System.out.println(data);
         response.getWriter().write(data);
     }
 
@@ -171,6 +169,25 @@ public class UserController {
         articleService.removeById(id);
     }
 
+    @RequestMapping(value = "/showUserNote", method = {RequestMethod.POST})
+    public void showUserNote(HttpServletRequest request, HttpServletResponse response) {
+      try {
+          response.setContentType("text/html;charset=utf-8");
+          String upload_path = request.getSession().getServletContext().getRealPath("upload");
+          String file_path = upload_path+"/"+GlobalFunction.getSelfTel()+"/111.txt";
+
+          BufferedReader br = new BufferedReader(new FileReader(file_path));
+
+          char[] buf = new char[1024];
+          int len;
+          while((len = br.read(buf,0,1024)) > 0) {
+              response.getWriter().write(buf,0,len);
+          }
+          br.close();
+      } catch (IOException e) {
+         e.printStackTrace();
+      }
+    }
     /*---------   文章管理区域（END）   ----------*/
 
 }

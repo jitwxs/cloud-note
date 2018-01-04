@@ -24,19 +24,8 @@
 <a href="${ctx}/login">登陆</a>
 <a href="${ctx}/register">注册</a>
 
-<button type="button" class="btn btn-default" onclick="save()">保存</button>
-
 <jsp:include page="/WEB-INF/jsp/global/footer.jsp"/>
 
-<script>
-    function save() {
-        var a = '<!DOCTYPE html><html lang="zh-cn">';
-        var z = "</html>";
-        var by = $(":root").html();
-        alert(a+by+z);
-    }
-
-</script>
 </body>
 
 </html>
