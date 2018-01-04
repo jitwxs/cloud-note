@@ -10,129 +10,91 @@
     </script>
     <script src="http://cdn.bootcss.com/wangeditor/2.1.20/js/lib/jquery-2.2.1.js"></script>
     <style>
-<<<<<<< HEAD
-        #left a:hover{
-            background: lightskyblue;
-            color: white;
-        }
-    </style>
-</head>
-<body style="padding: 50px;">
-    <nav class="navbar navbar-default navbar-fixed-top" style="height: 50px;">
-=======
         /*.dropdown a:hover{*/
-            /*color: red;*/
+        /*color: red;*/
         /*}*/
     </style>
 </head>
 <body style="padding: 50px;">
-    <nav class="navbar navbar-inverse navbar-fixed-top" style="height: 50px;">
->>>>>>> 1821da66d7fff0c02128beb41d404fc6254b9cbe
+<nav class="navbar navbar-inverse navbar-fixed-top" style="height: 50px;">
 
-        <div class="container-fluid">
-            <!--无道云的图标-->
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#">
-                    <img alt="Brand" src="...">
+    <div class="container-fluid">
+        <!--无道云的图标-->
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">
+                <img alt="Brand" src="...">
+            </a>
+        </div>
+
+        <!--设置-->
+        <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+                <a style="background: none" href="#" class="dropdown-toggle" data-toggle="dropdown" >
+                    设置 <b class="caret"></b>
                 </a>
-            </div>
-
-            <!--设置-->
-            <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-<<<<<<< HEAD
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" >
-=======
-                    <a style="background: none" href="#" class="dropdown-toggle" data-toggle="dropdown" >
->>>>>>> 1821da66d7fff0c02128beb41d404fc6254b9cbe
-                        设置 <b class="caret"></b>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li id="msg" ><a href="#">个人信息</a></li>
-                        <li class="divider"></li>
-                        <li id="account"><a href="#">账户设置</a></li>
-                        <li class="divider"></li>
-                        <li id="share" ><a href="#">查看分享</a></li>
-                        <li class="divider"></li>
-                        <li id="help" ><a href="#">帮助</a></li>
+                <ul class="dropdown-menu">
+                    <li id="msg" ><a href="#">个人信息</a></li>
+                    <li class="divider"></li>
+                    <li id="account"><a href="#">账户设置</a></li>
+                    <li class="divider"></li>
+                    <li id="share" ><a href="#">查看分享</a></li>
+                    <li class="divider"></li>
+                    <li id="help" ><a href="#">帮助</a></li>
 
 
-                    </ul>
-                </li>
-            </ul>
-                <!--头像-->
-            <div class=" navbar-right" style="margin-right: 30px;">
-                <img src="cinqueterre.jpg" class="img-responsive" alt="Cinque Terre">
-            </div>
-            <!--搜索-->
-            <div>
-                <form class="navbar-form navbar-left" role="search">
-                    <div class="form-group">
-                        <input type="text" class="form-control" style="border:none; background:none;outline:none;" placeholder="Search" />
-                    </div>
-                    <button type="submit" class="btn btn-default">查找</button>
-                </form>
-                </button>
-            </div>
-        </div>
-
-
-    </nav>
-<<<<<<< HEAD
-    <div id="left" style="background-color: #f5f5f5;width:200px;float: left;height: 500px;" >
-        <div style="width: 200px;height:50px;background: lightskyblue" class="text-center">
-            <div class="dropdown" >
-                <button  style="border: none;text-align: center;margin-top: 10px;background: lightskyblue " class="btn  dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    新文档 <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    <li><a href="#">新建笔记</a></li>
-                    <li><a href="#">新建文件夹</a></li>
-                    <li><a href="#">上传文件</a></li>
-                    <li><a href="#">上传文件夹</a></li>
                 </ul>
-            </div>
+            </li>
+        </ul>
+        <!--头像-->
+        <div class=" navbar-right" style="margin-right: 30px;">
+            <img src="cinqueterre.jpg" class="img-responsive" alt="Cinque Terre">
         </div>
-
-
-=======
-    <div id="left" style="background-color: #398439;width:200px;float: left;height: 500px;" >
->>>>>>> 1821da66d7fff0c02128beb41d404fc6254b9cbe
-    </div>
-    <div id="wangeditor" style="width:800px;float: right; height: 600px;" >
-        <div style="max-width:700px;margin:50px;height: 700px;">
-            <div id="txtdiv" style="border:1px solid gray;min-height:400px">
-
-            </div>
+        <!--搜索-->
+        <div>
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                    <input type="text" class="form-control" style="border:none; background:none;outline:none;" placeholder="Search" />
+                </div>
+                <button type="submit" class="btn btn-default">查找</button>
+            </form>
+            </button>
         </div>
-
-
-        <!--脚本控制-->
-        <script>
-            $(function(){
-                //初始化编辑器
-                editor = new wangEditor("txtdiv");
-                editor.create();
-
-                //内容修改事件，此处做的是实时展示实际效果
-                editor.onchange = function(){
-                    //获取editor的html值
-                    var html = editor.$txt.html();
-                    $("#show_box").html(html)
-                }
-            })
-<<<<<<< HEAD
-
-        </script>
-
-
-=======
-        </script>
-
->>>>>>> 1821da66d7fff0c02128beb41d404fc6254b9cbe
-        <!--按照官网上的说明，js和css的这两个引用应该放在body的末尾-->
-        <script src="http://cdn.bootcss.com/wangeditor/2.1.20/js/wangEditor.js"></script>
-        <link href="http://cdn.bootcss.com/wangeditor/2.1.20/css/wangEditor.css" rel="stylesheet">
     </div>
+
+
+</nav>
+<div id="left" style="background-color: #398439;width:200px;float: left;height: 500px;" >
+    <div class="panel-body" >
+        使用右键点击这里
+    </div>
+</div>
+<div id="wangeditor" style="width:800px;float: right; height: 600px;" >
+    <div style="max-width:700px;margin:50px;height: 700px;">
+        <div id="txtdiv" style="border:1px solid gray;min-height:400px">
+
+        </div>
+    </div>
+
+
+    <!--脚本控制-->
+    <script>
+        $(function(){
+            //初始化编辑器
+            editor = new wangEditor("txtdiv");
+            editor.create();
+
+            //内容修改事件，此处做的是实时展示实际效果
+            editor.onchange = function(){
+                //获取editor的html值
+                var html = editor.$txt.html();
+                $("#show_box").html(html)
+            }
+        })
+    </script>
+
+    <!--按照官网上的说明，js和css的这两个引用应该放在body的末尾-->
+    <script src="http://cdn.bootcss.com/wangeditor/2.1.20/js/wangEditor.js"></script>
+    <link href="http://cdn.bootcss.com/wangeditor/2.1.20/css/wangEditor.css" rel="stylesheet">
+</div>
 </body>
 </html>
