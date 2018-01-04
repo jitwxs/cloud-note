@@ -97,7 +97,6 @@ public class UserController {
         User user = userService.getById(id);
 
         String data = JSON.toJSONString(user, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
-        System.out.println(data);
         response.getWriter().write(data);
     }
 

@@ -68,6 +68,7 @@
         使用右键点击这里
     </div>
 </div>
+
 <div id="wangeditor" style="width:800px;float: right; height: 600px;" >
     <div style="max-width:700px;margin:50px;height: 700px;">
         <div id="txtdiv" style="border:1px solid gray;min-height:400px">
@@ -96,5 +97,14 @@
     <script src="http://cdn.bootcss.com/wangeditor/2.1.20/js/wangEditor.js"></script>
     <link href="http://cdn.bootcss.com/wangeditor/2.1.20/css/wangEditor.css" rel="stylesheet">
 </div>
+<button onclick="showContent()">获取编辑器内容</button>
+<script type="text/javascript">
+	function showContent() {
+		// 获取编辑器区域完整html代码
+        var html = editor.$txt.html();
+		alert(html);
+	}
+
+</script>
 </body>
 </html>
