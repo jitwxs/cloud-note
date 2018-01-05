@@ -1,7 +1,10 @@
 package cn.edu.jit.web;
 
+import cn.edu.jit.entry.Article;
+import cn.edu.jit.entry.ArticleRecycle;
 import cn.edu.jit.entry.User;
 import cn.edu.jit.global.GlobalFunction;
+import cn.edu.jit.service.ArticleRecycleService;
 import cn.edu.jit.service.ArticleService;
 import cn.edu.jit.service.UserService;
 import com.alibaba.fastjson.JSON;
@@ -40,6 +43,10 @@ public class UserController {
 
     @Resource(name = "articleServiceImpl")
     private ArticleService articleService;
+
+    @Resource (name = "articleRecycleServiceImpl")
+    private ArticleRecycleService articleRecycleService;
+
 
     /*---------   普通方法区域（START）   ----------*/
 
@@ -267,6 +274,33 @@ public class UserController {
             writer.close();
             response.getWriter().write("{\"status\":" + true + "}");
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 删除文章
+     * @param request
+     * @param response
+     */
+    @RequestMapping(value = "/removeArticle", method = {RequestMethod.POST})
+    public void removeArticle(HttpServletRequest request, HttpServletResponse response){
+        try {
+            String id = request.getParameter("id");
+            ArticleRecycle articleRecycle = new ArticleRecycle();
+            Article article = articleService.getById("1");
+            if (article == null) {
+                response.getWriter().write("inexistence");
+            } else {
+                BeanUtils.copyProperties(article, articleRecycle);
+                if(articleService.removeById("1") == 1 && articleRecycleService.save(articleRecycle) == 1) {
+                    response.getWriter().write("true");
+                } else {
+                    response.getWriter().write("false");
+                }
+            }
+        }catch (IOException e) {
             e.printStackTrace();
         }
     }

@@ -10,6 +10,7 @@
     <button onclick="saveContent()">手动保存</button>
     <button onclick="window.location.href='${ctx}/user/downloadFile?fileId=111.txt'">下载文件</button>
     <button onclick="window.location.href='${ctx}/user/downloadFile?fileId=测试.txt'">下载中文</button>
+    <button id="articleRecycle" href="">删除文章</button>
 
     <script type="text/javascript">
         var strRegex = "^((https|http|ftp|rtsp|mms)?://)"
@@ -115,6 +116,27 @@
                         toastr.error("系统错误");
                     }
                 });
+        }, false);
+
+        // 删除文章
+        document.getElementById('articleRecycle').addEventListener('click', function () {
+            $.ajax({
+                url : "${ctx}/user/removeArticle",
+                type : "post",
+                dataType : "text",
+                data : {
+                    "id" : "value"
+                },
+                async :true,
+                success : function(res) {
+                    if (res == "inexistence") {toastr.warning("不存在此文件!");}
+                    if (res == "true") {toastr.success("删除成功!");}
+                    if (res == "false") {toastr.warning("删除失败!");}
+                },
+                error : function(){
+                    toastr.error("出现错误!");
+                }
+            });
         }, false);
     </script>
 </div>

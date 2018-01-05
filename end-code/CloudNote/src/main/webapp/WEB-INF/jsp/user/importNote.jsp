@@ -21,7 +21,9 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel">导入文件</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">导入笔记</h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal" id="importNoteForm" role="form" action="${ctx}/user/importNote"
@@ -34,7 +36,7 @@
                                 <span>浏览...</span>
                                 <input type="file" id="importNote" name="importNote">
                             </span><br><br>
-                            <label id="importNoteName"></label>
+                            <label id="importNoteName">当前未选中文件</label>
                         </div>
                     </div>
                 </form>
@@ -50,7 +52,6 @@
 <script>
     // 提交表单
     function checkNote() {
-
         $("#importNoteForm").submit();
     }
 
