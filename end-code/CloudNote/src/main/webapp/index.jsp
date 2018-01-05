@@ -12,7 +12,6 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="${ctx}/css/bootstrap.css">
-    <link rel="stylesheet" href="${ctx}/css/message.css">
     <!-- jQuery first, then Bootstrap JS. -->
     <script src="${ctx}/js/jquery-3.2.1.min.js"></script>
     <script src="${ctx}/js/bootstrap.js"></script>
@@ -24,7 +23,7 @@
 <a href="${ctx}/login">登陆</a>
 <a href="${ctx}/register">注册</a>
 
-<jsp:include page="/WEB-INF/jsp/global/footer.jsp"/>
+<jsp:include page="${ctx}/WEB-INF/jsp/global/footer.jsp"/>
 
 </body>
 

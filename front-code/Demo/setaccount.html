@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>账号设置</title>
+    <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.css">
+    <script src="jquery/jquery-1.11.3.min.js"></script>
+    <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <script type=text/javascript>
+    </script>
+    <script src="http://cdn.bootcss.com/wangeditor/2.1.20/js/lib/jquery-2.2.1.js"></script>
+    <style>
+        /* Custom Styles */
+        ul.nav-tabs{
+            width: 140px;
+            margin-top: 150px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.067);
+        }
+        ul.nav-tabs li{
+            margin: 20px;
+            border-top: 1px solid #ddd;
+        }
+        ul.nav-tabs li:first-child{
+            border-top: none;
+        }
+        ul.nav-tabs li a{
+            margin: 0;
+            padding: 8px 16px;
+            border-radius: 0;
+        }
+        ul.nav-tabs li.active a, ul.nav-tabs li.active a:hover{
+            color: #fff;
+            background: #0088cc;
+            border: 1px solid #0088cc;
+        }
+        ul.nav-tabs li:first-child a{
+            border-radius: 4px 4px 0 0;
+        }
+        ul.nav-tabs li:last-child a{
+            border-radius: 0 0 4px 4px;
+        }
+        ul.nav-tabs.affix{
+            top: 30px; /* Set the top position of pinned element */
+        }
+        #myContainer {
+            margin-top: 100px;
+        }
+    </style>
+</head>
+<body data-spy="scroll" data-target="#myScrollspy">
+<div>
+<nav class="navbar navbar-inverse navbar-fixed-top" style="height: 50px;">
+    <div class="container-fluid">
+        <!--无道云的图标-->
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">
+                <img alt="Brand" src="...">
+            </a>
+        </div>
+        <!--设置-->
+        <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+                <a style="background: none" href="#" class="dropdown-toggle" data-toggle="dropdown" >
+                    设置 <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    <li id="msg" ><a href="#">个人信息</a></li>
+                    <li class="divider"></li>
+                    <li id="account"><a href="#">账户设置</a></li>
+                    <li class="divider"></li>
+                    <li id="share" ><a href="#">查看分享</a></li>
+                    <li class="divider"></li>
+                    <li id="help" ><a href="#">帮助</a></li>
+                </ul>
+            </li>
+        </ul>
+        <!--头像-->
+        <div class=" navbar-right" style="margin-right: 30px;">
+            <img src="cinqueterre.jpg" class="img-responsive" alt="Cinque Terre">
+        </div>
+        <!--搜索-->
+        <div>
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                    <input type="text" class="form-control" style="border:none; background:none;outline:none;" placeholder="Search" />
+                </div>
+                <button type="submit" class="btn btn-default">查找</button>
+            </form>
+            </button>
+        </div>
+    </div>
+</nav>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-3" id="myScrollspy">
+            <ul class="nav nav-tabs nav-stacked" data-spy="affix" data-offset-top="146">
+                <li class="active"><a href="#section-1">账号信息</a></li>
+                <li><a href="#section-2">更改密码</a></li>
+                <li><a href="#section-3">上传文件</a></li>
+                <li><a href="#section-4">下载文件</a></li>
+                <li><a href="#section-5">用户权限</a></li>
+            </ul>
+        </div>
+        <div class="col-xs-9" id="myContainer" >
+                <h4 id="section-1">账号信息</h4>
+            <hr>
+            <div style="height: 500px;">
+                <a style="margin-left: 80px">账号:</a></div>
+
+            <h4 id="section-2">更改密码</h4>
+            <hr>
+            <div style="height: 500px;">
+                <p style="margin-left: 80px"> 原始密码:</p></div>
+            <h4 id="section-3">上传文件</h4>
+            <hr>
+            <div style="height: 500px;">
+                <p style="margin-left: 80px"> 选择路径:</p></div>
+            <h4 id="section-4">下载文件</h4>
+            <hr>
+            <div style="height: 500px;">
+                <p style="margin-left: 80px"> 选择下载路径:</p></div>
+            <h4 id="section-5">用户权限</h4>
+            <hr>
+            <div style="height: 500px;">
+                <p style="margin-left: 80px"> 没有管理权限:</p></div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

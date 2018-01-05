@@ -24,7 +24,7 @@
 <nav class="navbar navbar-inverse navbar-fixed-bottom my_footer">
     <div class="container">
         <div class="footer_text" style="margin-top: 10px"><a class="footer" target="_blank" href="http://www.miitbeian.gov.cn/">苏 ICP 备 16061429 号</a></div>
-        <div class="footer_text">Designed By <a class="footer" target="_blank" href="http://www.jitwxs.cn">Jitwxs </a> &copy; 2017</div>
-        <div class="footer_text">邮箱：jitwxs@foxmail.com | 地址：南京市江宁区弘景大道99号</div>
+        <div class="footer_text">Designed By <a class="footer" target="_blank" href="http://www.jitwxs.cn">CloudNote开发小组 </a> &copy; 2017</div>
+        <div class="footer_text">南京软件研究院 | 地址：南京市江宁区弘景大道99号</div>
     </div>
 </nav>
