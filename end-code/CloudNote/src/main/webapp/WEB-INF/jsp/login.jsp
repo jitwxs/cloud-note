@@ -16,7 +16,7 @@
     <!-- jQuery first, then Bootstrap JS. -->
     <script src="${ctx}/js/jquery-3.2.1.min.js"></script>
     <script src="${ctx}/js/bootstrap.js"></script>
-    <<style type="text/css">
+    <style type="text/css">
     *{
         margin: 0;
         padding: 0;
@@ -89,7 +89,7 @@
 <div id="main" >
     <div class="left" style="width: 420px;height: 410px;">
         <p style="font-size: 18px;text-align: center;margin-top: 30px">手机号登录</p>
-        <form method="" action="" onsubmit="return httpPost()">
+        <form method="post" action="${ctx}/login" onsubmit="return httpPost()">
             <div class="form-group" style="width: 250px;height: 50px;margin: 0 auto;margin-top: 20px">
                 <input  id="tel" class="form-control" type="text" name="tel" maxlength="11"  placeholder="手机号" >
             </div>

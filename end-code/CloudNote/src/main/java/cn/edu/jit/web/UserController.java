@@ -153,6 +153,51 @@ public class UserController {
         return "redirect:index";
     }
 
+    @RequestMapping(value = "importNote", method = {RequestMethod.POST})
+    public String importNote(HttpServletRequest request, HttpServletResponse response) {
+        User user = new User();
+        String temp_path = request.getSession().getServletContext().getRealPath("temp"); // 获取temp文件夹路径
+        String upload_path = request.getSession().getServletContext().getRealPath("upload"); // 获取upload文件夹路径
+        try {
+            // 1.创建磁盘文件项工厂 sizeThreshold：每次缓存大小，单位为字节  File：临时文件路径
+            DiskFileItemFactory factory = new DiskFileItemFactory(1024 * 1024, new File(temp_path));
+
+            // 2.创建文件上传核心类
+            ServletFileUpload upload = new ServletFileUpload(factory);
+            // 设置上传文件的编码
+            upload.setHeaderEncoding("UTF-8");
+
+            // 3.判断是否为上传文件的表单
+            if (upload.isMultipartContent(request)) {
+                // 4.解析request获得文件项集合
+                List<FileItem> fileItems = upload.parseRequest(request);
+                if (fileItems.size() != 0) {
+                    for (FileItem item : fileItems) {
+                        // 获取上传头像的文件名
+                        String fileName = item.getName();
+                        // 如果文件名为空，就跳过
+                        if(StringUtils.isEmpty(fileName)) {
+                            continue;
+                        }
+                        // 重命名：规定未手机号+后缀作为头像名
+                        fileName = GlobalFunction.getSelfTel() + "_note." + fileName.split("\\.")[1];
+
+                        // 拼装路径
+                        String icon_path = GlobalFunction.getSelfTel() + "/" + fileName;
+                        String targetFilePath = upload_path + "/" + icon_path;
+                        // 上传文件
+                        GlobalFunction.uploadFile(item, targetFilePath);
+
+                    }
+                }
+            }
+            userService.update(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "redirect:index";
+    }
+
     /*---------   用户管理区域（END）   ----------*/
 
     /*---------   文章管理区域（START）   ----------*/
@@ -215,6 +260,23 @@ public class UserController {
       } catch (IOException e) {
          e.printStackTrace();
       }
+    }
+
+    /**
+     * 下载笔记
+     * @param request
+     * @param response
+     */
+    @RequestMapping(value = "/downloadNote", method = {RequestMethod.POST})
+    public void downloadNote(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        String upload_path = request.getSession().getServletContext().getRealPath("upload");
+        String targetFilePath = upload_path+"/"+GlobalFunction.getSelfTel()+"/111.txt";
+        try {
+            response.getWriter().write(targetFilePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     /*---------   文章管理区域（END）   ----------*/
 }

@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/global/taglib.jsp" %>
-
+<div style="height: 1500px"></div>
 <div>
     <div id="editor">
         <p>欢迎使用 <b>wangEditor</b> 富文本编辑器</p>
@@ -8,6 +8,7 @@
     <button id="getContent" onclick="saveContent()">获取HTML（不包含样式）</button>
     <%--<button id="getJSON">获取JSON</button>--%>
     <button id="setContent">动态设置内容</button>
+    <button id="downloadNote" href="">下载笔记</button>
 
     <script type="text/javascript">
         var E = window.wangEditor;
@@ -100,6 +101,27 @@
                         alert("出现错误!");
                     }
                 });
+        }, false);
+
+        // 下载笔记
+        document.getElementById('downloadNote').addEventListener('click', function () {
+            var content = editor.txt.html();
+            $.ajax({
+                url : "${ctx}/user/downloadNote",
+                type : "post",
+                dataType : "text",
+                data : {
+                    "data" : content
+                },
+                async :true,
+                success : function(res) {
+                    $('#downloadNote').attr('href',res);
+                    alert("下载成功!");
+                },
+                error : function(){
+                    alert("出现错误!");
+                }
+            });
         }, false);
     </script>
 </div>
