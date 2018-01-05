@@ -13,6 +13,6 @@
 </head>
 <body>
     <h1>Error : ${message}</h1>
-    <jsp:include page="/WEB-INF/jsp/global/footer.jsp"/>
+    <jsp:include page="${ctx}/WEB-INF/jsp/global/footer.jsp"/>
 </body>
 </html>
