@@ -1,12 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/global/taglib.jsp" %>
-
+<div style="height: 700px"></div>
 <div>
     <div id="editor">
         <p>欢迎使用 <b>无道云笔记</b></p>
     </div>
     <button id="getJSON">获取JSON</button>
     <button id="setContent">恢复笔记</button>
+    <button onclick="saveContent()">手动保存</button>
+    <button onclick="window.location.href='${ctx}/user/downloadFile?fileId=111.txt'">下载文件</button>
+    <button onclick="window.location.href='${ctx}/user/downloadFile?fileId=测试.txt'">下载中文</button>
 
     <script type="text/javascript">
         var strRegex = "^((https|http|ftp|rtsp|mms)?://)"
@@ -36,12 +39,11 @@
         };
         // 区域失去焦点
         editor.customConfig.onblur = function (html) {
-            saveContent(html);
+            saveContent();
         };
 
         // Func2: 使用 base64 保存图片
         editor.customConfig.uploadImgShowBase64 = true;
-
         // Func1: 开启上传图片功能，参数：服务端接口
         // editor.customConfig.uploadImgServer = '/upload';
         // 配置服务器端上传地址
@@ -70,23 +72,27 @@
             alert("json：" + jsonStr);
         }, false);
 
-        // TODO 后期加上笔记id
-        // 保存笔记
+        // 保存笔记 TODO 后期加上笔记id
         function saveContent() {
             var content = editor.txt.html();
             $.ajax({
                 url : "${ctx}/user/saveArticle",
                 type : "post",
-                dataType : "text",
+                dataType : "json",
                 data : {
-                    // "id" : ,
+                    // "noteId" : ,
                     "data" : content
                 },
                 async :true,
                 success : function(res) {
+                    if(res.status) {
+                        toastr.success("保存成功");
+                    } else {
+                        toastr.error("保存失败");
+                    }
                 },
                 error : function(){
-                    alert("发生错误");
+                    toastr.error("系统错误");
                 }
             });
         }
@@ -94,18 +100,19 @@
         // 恢复笔记
         document.getElementById('setContent').addEventListener('click', function () {
             $.ajax({
-                    url : "${ctx}/user/showUserNote",
+                    url : "${ctx}/user/recoverNote",
                     type : "post",
                     dataType : "text",
                     data : {
-                         "key" : "value"
+                         "noteId" : "后期填写笔记id"
                     },
                     async :true,
                     success : function(res) {
                         editor.txt.html(res);
+                        toastr.success("笔记已恢复");
                     },
                     error : function(){
-                        alert("出现错误!");
+                        toastr.error("系统错误");
                     }
                 });
         }, false);

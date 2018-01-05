@@ -12,10 +12,12 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="${ctx}/css/bootstrap.css">
-    <link rel="stylesheet" href="${ctx}/css/message.css">
+    <link rel="stylesheet" href="${ctx}/css/toastr.css">
     <!-- jQuery first, then Bootstrap JS. -->
     <script src="${ctx}/js/jquery-3.2.1.min.js"></script>
     <script src="${ctx}/js/bootstrap.js"></script>
+    <script src="${ctx}/js/toastr.js"></script>
+
     <style type="text/css">
     *{
         margin: 0;
@@ -94,7 +96,7 @@
                 <input  id="tel" class="form-control" type="text" name="tel" maxlength="11"  placeholder="手机号" >
             </div>
             <div class="form-group" style="width: 250px;height: 50px;margin: 0 auto;margin-top: 20px">
-                <input id="password" class="form-control" type="password" name="password" placeholder="密码">
+                <input id="password" class="form-control" type="password" name="password" placeholder="密码" required="required">
             </div>
             <div style="width:100px ;height: 40px;margin-left: 300px;margin-top: 10px">
                 <a href="#">忘记密码？</a>
@@ -118,13 +120,10 @@
         var password = $("#password").val();
         var re=/^1\d{10}$/;
         if (!re.test(tel)) {
-            alert("手机号输入不正确");
+            toastr.warning("手机号不符合规范");
             return false;
         }
-        if (password == "" || password == null) {
-            alert("密码不能为空");
-            return false;
-        }
+
         $.ajax({
             type: 'post',
             url: '/loginCheck',
@@ -136,14 +135,14 @@
             },
             success: function (msg) {
                 if (!msg.res){
-                    alert("手机号不存在或密码错误");
+                    toastr.error("手机号不存在或密码错误");
                     flag = false;
                 } else {
                     flag = true;
                 }
             },
             error: function () {
-                alert("登录失败！");
+                toastr.error("系统异常");
                 flag = false;
             }
         });
