@@ -1,23 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>无道云笔记</title>
-    <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.css">
-    <script src="jquery/jquery-1.11.3.min.js"></script>
-    <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
-    <script type=text/javascript>
-    </script>
-    <script src="http://cdn.bootcss.com/wangeditor/2.1.20/js/lib/jquery-2.2.1.js"></script>
-    <style>
-        /*.dropdown a:hover{*/
-        /*color: red;*/
-        /*}*/
-    </style>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>无道云笔记</title>
+        <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.css">
+        <script src="jquery/jquery-1.11.3.min.js"></script>
+        <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+        <script type=text/javascript>
+        </script>
+        <script src="http://cdn.bootcss.com/wangeditor/2.1.20/js/lib/jquery-2.2.1.js"></script>
 </head>
-<body style="padding: 50px;">
+<body>
 <nav class="navbar navbar-inverse navbar-fixed-top" style="height: 50px;">
-
     <div class="container-fluid">
         <!--无道云的图标-->
         <div class="navbar-header">
@@ -40,8 +34,6 @@
                     <li id="share" ><a href="#">查看分享</a></li>
                     <li class="divider"></li>
                     <li id="help" ><a href="#">帮助</a></li>
-
-
                 </ul>
             </li>
         </ul>
@@ -60,38 +52,7 @@
             </button>
         </div>
     </div>
-
-
 </nav>
-<div id="left" style="background-color: #398439;width:200px;float: left;height: 500px;" >
-</div>
-<div id="wangeditor" style="width:800px;float: right; height: 600px;" >
-    <div style="max-width:700px;margin:50px;height: 700px;">
-        <div id="txtdiv" style="border:1px solid gray;min-height:400px">
 
-        </div>
-    </div>
-
-
-    <!--脚本控制-->
-    <script>
-        $(function(){
-            //初始化编辑器
-            editor = new wangEditor("txtdiv");
-            editor.create();
-
-            //内容修改事件，此处做的是实时展示实际效果
-            editor.onchange = function(){
-                //获取editor的html值
-                var html = editor.$txt.html();
-                $("#show_box").html(html)
-            }
-        })
-    </script>
-
-    <!--按照官网上的说明，js和css的这两个引用应该放在body的末尾-->
-    <script src="http://cdn.bootcss.com/wangeditor/2.1.20/js/wangEditor.js"></script>
-    <link href="http://cdn.bootcss.com/wangeditor/2.1.20/css/wangEditor.css" rel="stylesheet">
-</div>
 </body>
 </html>
