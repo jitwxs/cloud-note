@@ -3,40 +3,47 @@
 
 <div>
     <div id="editor">
-        <p>欢迎使用 <b>wangEditor</b> 富文本编辑器</p>
+        <p>欢迎使用 <b>无道云笔记</b></p>
     </div>
-    <button id="getContent" onclick="saveContent()">获取HTML（不包含样式）</button>
-    <%--<button id="getJSON">获取JSON</button>--%>
-    <button id="setContent">动态设置内容</button>
+    <button id="getJSON">获取JSON</button>
+    <button id="setContent">恢复笔记</button>
 
     <script type="text/javascript">
+        var strRegex = "^((https|http|ftp|rtsp|mms)?://)"
+            + "?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?" //ftp的user@
+            + "(([0-9]{1,3}\.){3}[0-9]{1,3}" // IP形式的URL- 199.194.52.184
+            + "|" // 允许IP和DOMAIN（域名）
+            + "([0-9a-z_!~*'()-]+\.)*" // 域名- www.
+            + "([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\." // 二级域名
+            + "[a-z]{2,6})" // first level domain- .com or .museum
+            + "(:[0-9]{1,4})?" // 端口- :80
+            + "((/?)|" // a slash isn't required if there is no file name
+            + "(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$";
+
         var E = window.wangEditor;
         var editor = new E('#editor');
-        // 对输入网络图片地址的校验
-        editor.customConfig.linkImgCheck = function (src) {
-            alert("即将上传图片url："+src);// 图片的链接
-
-            return true // 返回 true 表示校验成功
-            // return '验证失败' // 返回字符串，即校验失败的提示信息
-        };
-        // 回掉得到上传网络图片的地址
+        // 回掉成功上传的网络图片的地址
         editor.customConfig.linkImgCallback = function (url) {
-            alert("上传图片地址："+url); // url 即插入图片的地址
+            alert("上传图片地址："+url);
         };
         // 对输入链接的校验
         editor.customConfig.linkCheck = function (text, link) {
-            alert("链接文字：" + text);// 插入的文字
-            alert("链接url：" + link);// 插入的链接
-
-            return true // 返回 true 表示校验成功
-            // return '验证失败' // 返回字符串，即校验失败的提示信息
+            var re=new RegExp(strRegex);
+            if (re.test(link))
+                return true;
+            else
+                return "链接不合法";
         };
-
         // 区域失去焦点
         editor.customConfig.onblur = function (html) {
             saveContent(html);
         };
 
+        // Func2: 使用 base64 保存图片
+        editor.customConfig.uploadImgShowBase64 = true;
+
+        // Func1: 开启上传图片功能，参数：服务端接口
+        // editor.customConfig.uploadImgServer = '/upload';
         // 配置服务器端上传地址
         // editor.customConfig.uploadImgServer = '';
         // // 将图片大小限制为 3M（默认为5M）
@@ -56,14 +63,15 @@
         // 初始化全屏插件
         E.fullscreen.init('#editor');
 
-        // // 获取内容的json
-        // document.getElementById('getJSON').addEventListener('click', function () {
-        //     var json = editor.txt.getJSON(); // 获取 JSON 格式的内容
-        //     var jsonStr = JSON.stringify(json);
-        //     alert("json：" + jsonStr);
-        // }, false);
+        // 获取内容的json
+        document.getElementById('getJSON').addEventListener('click', function () {
+            var json = editor.txt.getJSON(); // 获取 JSON 格式的内容
+            var jsonStr = JSON.stringify(json);
+            alert("json：" + jsonStr);
+        }, false);
 
         // TODO 后期加上笔记id
+        // 保存笔记
         function saveContent() {
             var content = editor.txt.html();
             $.ajax({
@@ -83,7 +91,7 @@
             });
         }
 
-        // 设置内容值
+        // 恢复笔记
         document.getElementById('setContent').addEventListener('click', function () {
             $.ajax({
                     url : "${ctx}/user/showUserNote",
