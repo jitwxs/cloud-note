@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <title>register</title>
     <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.css">
-    <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/ziti.css">
-    <script src="jquery/jquery-1.11.3.min.js"></script>
+    <script  src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
     <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
     <link href="./css/toastr.css" rel="stylesheet" type="text/css" />
 
@@ -168,7 +167,6 @@
 
         };
 
-
     </script>
 
 </head>
@@ -199,7 +197,7 @@
         </div>
     </div>
 
-    <div  class="container" style="width:60%; height:auto;text-align:center;margin-top: 100px;box-shadow:0px 0px  10px 5px #f4e6ff;">
+    <div  class="container" style="width:70%; height:auto;text-align:center;margin-top: 100px;box-shadow:0px 0px  10px 5px #f4e6ff;">
         <div class="col-md-6 col-md-offset-3">
             <h3>欢迎使用无道云笔记</h3>
             <form action="" method="" onsubmit="return registerPost()">
@@ -246,7 +244,7 @@
                         </div>
                     </div>
                     <div class="col-xs-5 text-center">
-                        <button type="button" id="loadingButton" class="btn btn-primary" autocomplete="off">获取短信校验码</button>
+                        <button type="button" id="loadingButton" class="btn btn-primary" autocomplete="off" onclick="sendCode(this)">获取短信校验码</button>
                     </div>
                 </div>
                 <div class="form-group">
@@ -257,6 +255,28 @@
         </div>
 
         <script>
+            var clock = '';
+            var nums = 10;
+            var btn;
+            function sendCode(thisBtn)
+            {
+                btn = thisBtn;
+                btn.disabled = true; //将按钮置为不可点击
+                btn.value = nums+'秒后可重新获取';
+                clock = setInterval(doLoop, 1000); //一秒执行一次
+            }
+            function doLoop()
+            {
+                nums--;
+                if(nums > 0){
+                    btn.value = nums+'秒后可重新获取';
+                }else{
+                    clearInterval(clock); //清除js定时器
+                    btn.disabled = false;
+                    btn.value = '点击发送验证码';
+                    nums = 10; //重置时间
+                }
+            }
             function registerPost() {
                 var tel = $("#tel").val();
                 var password = $("#password").val();
