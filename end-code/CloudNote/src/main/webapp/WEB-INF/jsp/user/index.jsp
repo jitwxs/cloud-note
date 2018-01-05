@@ -12,14 +12,15 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="${ctx}/css/bootstrap.css">
-    <link rel="stylesheet" href="${ctx}/css/message.css">
     <link rel="stylesheet" href="${ctx}/css/wangEditor-fullscreen-plugin.css">
+    <link rel="stylesheet" href="${ctx}/css/toastr.css">
     <!-- jQuery first, then Bootstrap JS. -->
     <script src="${ctx}/js/jquery-3.2.1.min.js"></script>
     <script src="${ctx}/js/bootstrap.js"></script>
     <!-- wangEditor依赖 -->
     <script src="${ctx}/js/wangEditor.js"></script>
     <script src="${ctx}/js/wangEditor-fullscreen-plugin.js"></script>
+    <script src="${ctx}/js/toastr.js"></script>
 </head>
 
 <body style="padding: 50px;">
@@ -58,9 +59,9 @@
             </li>
         </ul>
         <!-- 头像 -->
-        <%--<div class=" navbar-right" style="margin-right: 30px;">--%>
-            <%--<img src="cinqueterre.jpg" class="img-responsive" alt="Cinque Terre">--%>
-        <%--</div>--%>
+        <div class=" navbar-right" style="margin-right: 30px;">
+            <img class="img-responsive" id="userSmallIcon" style="width: 50px;height: 50px" src="">
+        </div>
         <!-- 搜索 -->
         <div>
             <form class="navbar-form navbar-left" role="search">
@@ -74,9 +75,14 @@
     </div>
 </nav>
 
-<jsp:include page="/WEB-INF/jsp/user/articleEditor.jsp"/>
+<jsp:include page="articleEditor.jsp"/>
 
 <script>
+    // 页面加载函数
+    $(function(){
+        $("#userSmallIcon").attr('src',"${ctx}/upload/"+"18168404329/18168404329.png");
+    });
+
     function showUserInfo() {
         var id = $("#uid").val();
         $.ajax({
@@ -95,7 +101,7 @@
                 $("#userArea").val(res.area);
 
                 // 设置头像url
-                $("#userIcon").attr('src',"${ctx}/upload/"+res.icon);
+                $("#userBigIcon").attr('src',"${ctx}/upload/"+res.icon);
                 //初始化更新头像信息
                 $("#uploadIcon").val('');
                 $("#fileName").html('');
@@ -104,10 +110,7 @@
                 $("#userSign").val(res.sign);
             },
             error: function () {
-                $.message({
-                    message: '未知错误',
-                    type: 'error'
-                });
+                toastr.error("系统错误");
             }
         });
     }

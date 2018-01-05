@@ -12,13 +12,12 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="${ctx}/css/bootstrap.css">
-    <link rel="stylesheet" href="${ctx}/css/message.css">
+    <link rel="stylesheet" href="${ctx}/css/toastr.css">
     <!-- jQuery first, then Bootstrap JS. -->
     <script src="${ctx}/js/jquery-3.2.1.min.js"></script>
     <script src="${ctx}/js/bootstrap.js"></script>
-    <script src="${ctx}/js/message.js"></script>
+    <script src="${ctx}/js/toastr.js"></script>
     <style>
-
         #loginDiv{
             margin-right: 100px;
             width: 250px;
@@ -150,12 +149,12 @@
 <nav class="navbar navbar-default navbar-fixed-top" style="height: 50px;">
 
     <div class="container-fluid">
-        <!--无道云的图标-->
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">
-                <img alt="Brand" src="...">
-            </a>
-        </div>
+        <%--<!--无道云的图标-->--%>
+        <%--<div class="navbar-header">--%>
+            <%--<a class="navbar-brand" href="#">--%>
+                <%--<img alt="Brand" src="">--%>
+            <%--</a>--%>
+        <%--</div>--%>
 
         <!--搜索-->
         <div>
@@ -176,7 +175,7 @@
     <div  class="container" style="width:60%; height:auto;text-align:center">
         <div class="col-md-6 col-md-offset-3">
             <h3>欢迎使用无道云笔记</h3>
-            <form action="" method="" onsubmit="return registerPost()">
+            <form action="${ctx}/register" method="post" onsubmit="return registerPost()">
 
                 <div class="form-group has-feedback">
                     <div class="input-group">
@@ -190,7 +189,7 @@
                 <div class="form-group has-feedback">
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                        <input id="password" name="password" class="form-control" placeholder="请输入密码" maxlength="20" type="password">
+                        <input id="password" name="password" class="form-control" placeholder="请输入密码" maxlength="20" type="password" required="required">
                     </div>
 
                     <span style="color:red;display: none;" class="tips"></span>
@@ -201,7 +200,7 @@
                 <div class="form-group has-feedback">
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                        <input id="password1" class="form-control" placeholder="请再次输入密码" maxlength="20" type="password">
+                        <input id="password1" class="form-control" placeholder="请再次输入密码" maxlength="20" type="password" required="required">
                     </div>
                     <span style="color:red;display: none;" class="tips"></span>
                     <span style="display: none;" class="glyphicon glyphicon-remove form-control-feedback"></span>
@@ -220,7 +219,7 @@
                         </div>
                     </div>
                     <div class="col-xs-5 text-center">
-                        <button type="button" id="loadingButton" class="btn btn-primary" autocomplete="off">获取短信校验码</button>
+                        <button type="button" id="loadingButton" class="btn btn-primary" >获取短信校验码</button>
                     </div>
                 </div>
                 <div class="form-group">
@@ -238,18 +237,13 @@
 
         var re = /^1\d{10}$/;
         var flag = true;
-        alert(password);
-        alert(password1);
         if (!re.test(tel)) {
-            alert("手机号不符合规范");
+            toastr.warning("手机号不符合规范");
             return false;
         }
-        if (password == "" || password == null) {
-            alert("密码不能为空");
-            return false;
-        }
+
         if (password != password1) {
-            alert("两次密码不一致！");
+            toastr.error("手机号不符合规范");
             return false;
         }
 
@@ -263,12 +257,14 @@
             async : false,
             success: function (msg) {
                 if (!msg.res) {
-                    alert("手机号码已经被注册");
+                    toastr.warning("手机号码已经被注册");
                     flag = false;
+                } else {
+                    toastr.success("注册成功");
                 }
             },
             error: function () {
-                alert("注册失败！");
+                toastr.error("系统错误");
                 flag = false;
             }
         });
