@@ -4,17 +4,47 @@
     <meta charset="UTF-8">
     <title>无道云笔记</title>
     <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.css">
+<<<<<<< HEAD
     <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/ziti.css">
     <script src="jquery/jquery-1.11.3.min.js"></script>
     <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
     <script type=text/javascript>
     </script>
+=======
+    <script src="jquery/jquery-1.11.3.min.js" type="javascript"></script>
+    <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js" type="javascript"></script>
+>>>>>>> 0b8cc7676c9a3f87015aa8769602908eb2985fb8
     <script src="http://cdn.bootcss.com/wangeditor/2.1.20/js/lib/jquery-2.2.1.js"></script>
+
     <style>
+<<<<<<< HEAD
         a {
             color: #f1f1f1;
         }
 
+=======
+<<<<<<< HEAD
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        #left .panel-body a{
+            text-decoration: none;
+            text-align: center;
+        }
+
+        #left .panel-body a:hover{
+            color: #2aabd2;
+        }
+        .wjj_div{
+            margin-left: 10px;
+        }
+=======
+        /*.dropdown a:hover{*/
+        /*color: red;*/
+        /*}*/
+>>>>>>> fceca0abdf2a50230730feb5deb2517c91722bf7
+>>>>>>> 0b8cc7676c9a3f87015aa8769602908eb2985fb8
     </style>
 </head>
 <body style="padding: 50px;">
@@ -64,13 +94,138 @@
     </div>
 
 
+<<<<<<< HEAD
+    </nav>
+
+    <div id="left" style="background-color: #fbfcfe;width:200px;float: left;height: 500px;" >
+        <div class="wjj">
+            <a class="btn js_wjj_btn">我的文件夹</a>
+            <div class="wjj_div">
+                <div class="wjj">
+                    <a class="btn js_wjj_btn">文件夹1</a>
+                    <div class="wjj_div" >
+                        <div class="wjj">
+                            <a class="btn js_wjj_btn">文件夹1-1</a>
+                            <div class="wjj_div">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="wjj">
+                    <a class="btn js_wjj_btn">文件夹1</a>
+                    <div class="wjj_div" >
+                        <div class="wjj">
+                            <a class="btn js_wjj_btn">文件夹1-1</a>
+                            <div class="wjj_div">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/jquery.contextify.js"></script>
+    <script>
+        /*一些全局变量*/
+        //当前点击的目录
+        var $chooseDir = null;
+        var options = {items:[
+            // {header: ''},
+            {text: '新建目录', onclick: createDir},
+            {text: '新建笔记', onclick: function() {alert("你点击了第二个链接")}},
+            // {divider: true}
+        ]}
+        var dirTPL = '' +
+            '              <div class="wjj">\n' +
+            '                    <input type="text" name="dir_name" value="新建文件夹">' +
+            '                    <div class="wjj_div" >\n' +
+            '                    </div>\n' +
+            '                </div>';
+
+        $(".js_wjj_btn").bind("contextmenu", function(){
+            //记录右键点击的元素
+            $chooseDir = $(this);
+            var $brother = $chooseDir.next();
+            $brother.removeClass("hidden");
+
+        });
+        function createDir() {
+            /*$('#myModal').modal('show');*/
+            var $brother = $chooseDir.next();
+            $brother.append(dirTPL);
+            $('input[name=dir_name]').select();
+            initUI();
+        }
+
+        function initUI() {
+            /*失去焦点事件*/
+            $('input[name=dir_name]').blur(function(){
+                //获取名字
+                var name = $('input[name=dir_name]').val();
+                //把文本框删掉
+                var $parent = $('input[name=dir_name]').parent();
+                $('input[name=dir_name]').remove();
+                //生成目录
+                $parent.prepend('<a class="btn js_wjj_btn" >'+name+'</a>');
+                initUI();
+                //发送给服务器
+                $.ajax({
+                    type:'post',
+                    url:'/creatDir',
+                    async:false,
+                    dataType:'json',
+                    data:{
+                        'type':dirName,
+                        'dirName':name
+                    },
+                    success:function(msg){
+                        if (!msg.res){
+                            alert("文件夹创建失败!");
+                            return false;
+                        }
+                        return true;
+                    },
+                    error:function (error) {
+                        alert("出错!");
+                    }
+                });
+            })
+            $('.js_wjj_btn').contextify(options);
+            $('.js_wjj_btn').on("click",function () {
+                var $this = $(this);
+                var $parent = $this.parent();
+                var $brother = $parent.find('.wjj_div');
+                if ($brother.hasClass("hidden")){
+                    $brother.removeClass("hidden");
+                }else {
+                    $brother.addClass("hidden");
+                }
+            });
+        }
+
+        initUI();
+
+    </script>
+
+
+
+    <div id="wangeditor" style="width:800px;float: right; height: 600px;" >
+        <div style="max-width:700px;margin:50px;height: 700px;">
+            <div id="txtdiv" style="border:1px solid gray;min-height:400px">
+=======
 </nav>
 <div id="left" style="background-color: #398439;width:200px;float: left;height: 500px;" >
     <div class="panel-body" >
         使用右键点击这里
     </div>
 </div>
+
 <div id="wangeditor" style="width:800px;float: right; height: 600px;" >
+<<<<<<< HEAD
     <div style="width: 100%;height: 100px;">
         <form class="form-inline bs-example bs-example-form" role="form">
             <div class="form-group input-group" >
@@ -82,6 +237,11 @@
                 <span class="glyphicon glyphicon-info-sign " aria-hidden="true"  style="font-size:30px;float: right;"></span>
             </a>
             <br/>
+=======
+    <div style="max-width:700px;margin:50px;height: 700px;">
+        <div id="txtdiv" style="border:1px solid gray;min-height:400px">
+>>>>>>> fceca0abdf2a50230730feb5deb2517c91722bf7
+>>>>>>> 0b8cc7676c9a3f87015aa8769602908eb2985fb8
 
             <div class="form-group input-group" style="margin-top: 5px;" >
                 <span class="input-group-addon">标签</span>
@@ -91,11 +251,47 @@
 
         </form>
 
+<<<<<<< HEAD
     </div>
 
     <div id="main">
         <p>欢迎使用 wangEditor 富文本编辑器</p>
     </div>
+=======
+<<<<<<< HEAD
+        <!--脚本控制-->
+        <script src="js/jquery.contextify.js"></script>
+        <script>
+            $(function(){
+                //初始化编辑器
+                editor = new wangEditor("txtdiv");
+                editor.create();
+
+                //内容修改事件，此处做的是实时展示实际效果
+                editor.onchange = function(){
+                    //获取editor的html值
+                    var html = editor.$txt.html();
+                    $("#show_box").html(html)
+                }
+            })
+
+        </script>
+
+        <!--按照官网上的说明，js和css的这两个引用应该放在body的末尾-->
+        <script src="http://cdn.bootcss.com/wangeditor/2.1.20/js/wangEditor.js"></script>
+        <link href="http://cdn.bootcss.com/wangeditor/2.1.20/css/wangEditor.css" rel="stylesheet">
+    </div>
+
+
+
+=======
+    <!--脚本控制-->
+    <script>
+        $(function(){
+            //初始化编辑器
+            editor = new wangEditor("txtdiv");
+            editor.create();
+>>>>>>> 0b8cc7676c9a3f87015aa8769602908eb2985fb8
 
     <script type="text/javascript" src="./js/wangEditor.min.js"></script>
     <script type="text/javascript">
@@ -109,6 +305,19 @@
     </script>
 
 </div>
+<<<<<<< HEAD
 
+=======
+<button onclick="showContent()">获取编辑器内容</button>
+<script type="text/javascript">
+	function showContent() {
+		// 获取编辑器区域完整html代码
+        var html = editor.$txt.html();
+		alert(html);
+	}
+
+</script>
+>>>>>>> fceca0abdf2a50230730feb5deb2517c91722bf7
+>>>>>>> 0b8cc7676c9a3f87015aa8769602908eb2985fb8
 </body>
 </html>
