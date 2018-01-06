@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -322,4 +323,330 @@
         </script>
     </div>
 </body>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>register</title>
+    <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.css">
+    <script  src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <link href="./css/toastr.css" rel="stylesheet" type="text/css" />
+
+    <!-- <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script> -->
+
+    <script src="./js/toastr.js"></script>
+
+    <style>
+
+        #loginDiv{
+            margin-right: 100px;
+            width: 250px;
+            margin-left: 700px;
+        }
+        .navbar {
+            background-color: #e9e6ea;
+        }
+        .navbar .navbar-brand {
+            color: #010f13;
+        }
+        .navbar .navbar-brand:hover,
+        .navbar .navbar-brand:focus {
+            color: #080111;
+        }
+        .navbar .navbar-text {
+            color: #010f13;
+        }
+        .navbar .navbar-nav .nav-link {
+            color: #010f13;
+            border-radius: .25rem;
+            margin: 0 0.25em;
+        }
+        .navbar .navbar-nav .nav-link:not(.disabled):hover,
+        .navbar .navbar-nav .nav-link:not(.disabled):focus {
+            color: #080111;
+        }
+        .navbar .navbar-nav .nav-item.active .nav-link,
+        .navbar .navbar-nav .nav-item.active .nav-link:hover,
+        .navbar .navbar-nav .nav-item.active .nav-link:focus,
+        .navbar .navbar-nav .nav-item.show .nav-link,
+        .navbar .navbar-nav .nav-item.show .nav-link:hover,
+        .navbar .navbar-nav .nav-item.show .nav-link:focus {
+            color: #080111;
+            background-color: #b5adb8;
+        }
+        .navbar .navbar-toggle {
+            border-color: #b5adb8;
+        }
+        .navbar .navbar-toggle:hover,
+        .navbar .navbar-toggle:focus {
+            background-color: #b5adb8;
+        }
+        .navbar .navbar-toggle .navbar-toggler-icon {
+            color: #010f13;
+        }
+        .navbar .navbar-collapse,
+        .navbar .navbar-form {
+            border-color: #010f13;
+        }
+        .navbar .navbar-link {
+            color: #010f13;
+        }
+        .navbar .navbar-link:hover {
+            color: #080111;
+        }
+
+        @media (max-width: 575px) {
+            .navbar-expand-sm .navbar-nav .show .dropdown-menu .dropdown-item {
+                color: #010f13;
+            }
+            .navbar-expand-sm .navbar-nav .show .dropdown-menu .dropdown-item:hover,
+            .navbar-expand-sm .navbar-nav .show .dropdown-menu .dropdown-item:focus {
+                color: #080111;
+            }
+            .navbar-expand-sm .navbar-nav .show .dropdown-menu .dropdown-item.active {
+                color: #080111;
+                background-color: #b5adb8;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .navbar-expand-md .navbar-nav .show .dropdown-menu .dropdown-item {
+                color: #010f13;
+            }
+            .navbar-expand-md .navbar-nav .show .dropdown-menu .dropdown-item:hover,
+            .navbar-expand-md .navbar-nav .show .dropdown-menu .dropdown-item:focus {
+                color: #080111;
+            }
+            .navbar-expand-md .navbar-nav .show .dropdown-menu .dropdown-item.active {
+                color: #080111;
+                background-color: #b5adb8;
+            }
+        }
+
+        @media (max-width: 991px) {
+            .navbar-expand-lg .navbar-nav .show .dropdown-menu .dropdown-item {
+                color: #010f13;
+            }
+            .navbar-expand-lg .navbar-nav .show .dropdown-menu .dropdown-item:hover,
+            .navbar-expand-lg .navbar-nav .show .dropdown-menu .dropdown-item:focus {
+                color: #080111;
+            }
+            .navbar-expand-lg .navbar-nav .show .dropdown-menu .dropdown-item.active {
+                color: #080111;
+                background-color: #b5adb8;
+            }
+        }
+
+        @media (max-width: 1199px) {
+            .navbar-expand-xl .navbar-nav .show .dropdown-menu .dropdown-item {
+                color: #010f13;
+            }
+            .navbar-expand-xl .navbar-nav .show .dropdown-menu .dropdown-item:hover,
+            .navbar-expand-xl .navbar-nav .show .dropdown-menu .dropdown-item:focus {
+                color: #080111;
+            }
+            .navbar-expand-xl .navbar-nav .show .dropdown-menu .dropdown-item.active {
+                color: #080111;
+                background-color: #b5adb8;
+            }
+        }
+
+        .navbar-expand .navbar-nav .show .dropdown-menu .dropdown-item {
+            color: #010f13;
+        }
+        .navbar-expand .navbar-nav .show .dropdown-menu .dropdown-item:hover,
+        .navbar-expand .navbar-nav .show .dropdown-menu .dropdown-item:focus {
+            color: #080111;
+        }
+        .navbar-expand .navbar-nav .show .dropdown-menu .dropdown-item.active {
+            color: #080111;
+            background-color: #b5adb8;
+        }
+    </style>
+
+    <script type="text/javascript">
+        toastr.options = {
+
+            "closeButton": false, //是否显示关闭按钮
+
+            "debug": false, //是否使用debug模式
+
+            "positionClass": "toast-top-center",//弹出窗的位置
+
+            "showDuration": "300",//显示的动画时间
+
+            "hideDuration": "100",//消失的动画时间
+
+            "timeOut": "1000", //展现时间
+
+            "extendedTimeOut": "100",//加长展示时间
+
+            "showEasing": "swing",//显示时的动画缓冲方式
+
+            "hideEasing": "linear",//消失时的动画缓冲方式
+
+            "showMethod": "fadeIn",//显示时的动画方式
+
+            "hideMethod": "fadeOut" //消失时的动画方式
+
+        };
+
+    </script>
+
+</head>
+<body >
+<nav class="navbar navbar-default navbar-fixed-top" style="height: 50px;">
+
+    <div class="container-fluid">
+        <!--无道云的图标-->
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">
+                <img alt="Brand" src="...">
+            </a>
+        </div>
+
+        <!--搜索-->
+        <div>
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                    <input type="text" class="form-control" style="border:none; background:none;outline:none;" placeholder="Search" />
+                </div>
+                <button type="submit" class="btn btn-default">查找</button>
+            </form>
+        </div>
+        <div style="float: right;">
+            <a href="#">
+                已有账号？去登陆
+            </a>
+        </div>
+    </div>
+
+    <div  class="container" style="width:70%; height:auto;text-align:center;margin-top: 100px;box-shadow:0px 0px  10px 5px #f4e6ff;">
+        <div class="col-md-6 col-md-offset-3">
+            <h3>欢迎使用无道云笔记</h3>
+            <form action="" method="" onsubmit="return registerPost()">
+
+                <div class="form-group has-feedback">
+                    <div class="input-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                        <input id="tel" class="form-control" name="tel" placeholder="请输入手机号" maxlength="20" type="text">
+                    </div>
+                    <span style="color:red;display: none;" class="tips"></span>
+                    <span style="display: none;" class=" glyphicon glyphicon-remove form-control-feedback"></span>
+                    <span style="display: none;" class="glyphicon glyphicon-ok form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback">
+                    <div class="input-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+                        <input id="password" name="password" class="form-control" placeholder="请输入密码" maxlength="20" type="password">
+                    </div>
+
+                    <span style="color:red;display: none;" class="tips"></span>
+                    <span style="display: none;" class="glyphicon glyphicon-remove form-control-feedback"></span>
+                    <span style="display: none;" class="glyphicon glyphicon-ok form-control-feedback"></span>
+                </div>
+
+                <div class="form-group has-feedback">
+                    <div class="input-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+                        <input id="password1" class="form-control" placeholder="请再次输入密码" maxlength="20" type="password">
+                    </div>
+                    <span style="color:red;display: none;" class="tips"></span>
+                    <span style="display: none;" class="glyphicon glyphicon-remove form-control-feedback"></span>
+                    <span style="display: none;" class="glyphicon glyphicon-ok form-control-feedback"></span>
+                </div>
+                <div class="row">
+                    <div class="col-xs-7">
+                        <div class="form-group has-feedback">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-qrcode"></span></span>
+                                <input id="idcode-btn" class="form-control" placeholder="请输入校验码" maxlength="6" type="text">
+                            </div>
+                            <span style="color:red;display: none;" class="tips"></span>
+                            <span style="display: none;" class="glyphicon glyphicon-remove form-control-feedback"></span>
+                            <span style="display: none;" class="glyphicon glyphicon-ok form-control-feedback"></span>
+                        </div>
+                    </div>
+                    <div class="col-xs-5 text-center">
+                        <button type="button" id="loadingButton" class="btn btn-primary" autocomplete="off" onclick="sendCode(this)">获取短信校验码</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input class="form-control btn btn-primary" id="submit" value="立&nbsp;&nbsp;即&nbsp;&nbsp;注&nbsp;&nbsp;册" type="submit">
+                </div>
+
+            </form>
+        </div>
+
+        <script>
+            var clock = '';
+            var nums = 10;
+            var btn;
+            function sendCode(thisBtn)
+            {
+                btn = thisBtn;
+                btn.disabled = true; //将按钮置为不可点击
+                btn.value = nums+'秒后可重新获取';
+                clock = setInterval(doLoop, 1000); //一秒执行一次
+            }
+            function doLoop()
+            {
+                nums--;
+                if(nums > 0){
+                    btn.value = nums+'秒后可重新获取';
+                }else{
+                    clearInterval(clock); //清除js定时器
+                    btn.disabled = false;
+                    btn.value = '点击发送验证码';
+                    nums = 10; //重置时间
+                }
+            }
+            function registerPost() {
+                var tel = $("#tel").val();
+                var password = $("#password").val();
+                var passwor1 = $("#password1").val();
+                var re = /^1\d{10}$/;
+                var flag = true;
+                if (!re.test(tel)) {
+                    toastr.error("手机号输入错误！");
+                    return false;
+                }
+                if (password == "" || password == null) {
+                    toastr.error("密码不能为空！");
+                    return false;
+                }
+                if (password != passwor1) {
+                    toastr.error("两次密码不一致！");
+                    return false;
+                }
+                $ajax({
+                    type:'post',
+                    url:'/registerCheck',
+                    dataType:'json',
+                    data: {
+                        'tel': tel,
+                        'password': password
+                    },
+                    success: function (msg) {
+                        if (msg == "注册成功") {
+                            toastr.success("注册成功！");
+                            flag = false;
+                        }
+
+                    },
+                    error: function (error) {
+                       toastr.error("手机号被注册！")
+                        flag = true;
+                    }
+
+                });
+                return flag;
+            }
+
+        </script>
+    </div>
+</body>
+>>>>>>> origin/master
 </html>
