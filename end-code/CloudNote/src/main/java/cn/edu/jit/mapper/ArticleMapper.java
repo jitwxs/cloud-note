@@ -34,5 +34,5 @@ public interface ArticleMapper {
      * @param tagId
      * @return
      */
-    List<Article> listSbByTag(@Param("uid") String uid, @Param("tagId") String tagId);
+    List<Article> listArticleByTag(@Param("uid") String uid, @Param("tagId") String tagId);
 }

@@ -13,70 +13,41 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="${ctx}/css/bootstrap.css">
     <link rel="stylesheet" href="${ctx}/css/wangEditor-fullscreen-plugin.css">
+    <!-- 弹窗CSS -->
     <link rel="stylesheet" href="${ctx}/css/toastr.css">
+    <!-- 自定义CSS -->
+    <link rel="stylesheet" href="${ctx}/css/custom.css">
     <!-- jQuery first, then Bootstrap JS. -->
     <script src="${ctx}/js/jquery-3.2.1.min.js"></script>
     <script src="${ctx}/js/bootstrap.js"></script>
     <!-- wangEditor依赖 -->
     <script src="${ctx}/js/wangEditor.js"></script>
     <script src="${ctx}/js/wangEditor-fullscreen-plugin.js"></script>
+    <!-- 弹窗依赖 -->
     <script src="${ctx}/js/toastr.js"></script>
+    <!-- 封装ajax -->
+    <script src="${ctx}/js/http.js"></script>
 </head>
 
-<body style="padding: 50px;">
+<body>
 
-<input type="hidden" id="uid" name="uid" value="${uid}">
+<jsp:include page="head.jsp"/>
+
+<jsp:include page="showSelfInfo.jsp"/>
 
 
-<nav class="navbar navbar-default navbar-fixed-top" style="height: 50px;">
-    <div class="container-fluid">
-        <%--<!--无道云的图标-->--%>
-        <%--<div class="navbar-header">--%>
-            <%--<a class="navbar-brand" href="#">--%>
-                <%--<img alt="Brand" src="...">--%>
-            <%--</a>--%>
-        <%--</div>--%>
-
-        <!--设置-->
-        <ul class="nav navbar-nav navbar-right">
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    设置 <b class="caret"></b>
-                </a>
-                <ul class="dropdown-menu">
-                    <li id="msg"><a href="javascript:void(0)" onclick="showUserInfo()" data-toggle="modal" data-target="#showUserInfoModal">个人信息</a></li>
-                    <li class="divider"></li>
-                    <li id="account"><a href="#">账户设置</a></li>
-                    <li class="divider"></li>
-                    <li id="share"><a href="#">查看分享</a></li>
-                    <li class="divider"></li>
-                    <li id="import"><a href="javascript:void(0)" data-toggle="modal" data-target="#importNoteModal">导入笔记</a></li>
-                    <li class="divider"></li>
-                    <li id="help"><a href="#">帮助</a></li>
-                </ul>
-            </li>
-        </ul>
-        <!-- 头像 -->
-        <div class=" navbar-right" style="margin-right: 30px;">
-            <img class="img-responsive" id="userSmallIcon" style="width: 50px;height: 50px" src="">
-        </div>
-        <!-- 搜索 -->
-        <div>
-            <form class="navbar-form navbar-left" role="search">
-                <div class="form-group">
-                    <input type="text" class="form-control" style="border:none; background:none;outline:none;"
-                           placeholder="Search"/>
-                </div>
-                <button type="submit" class="btn btn-default">查找</button>
-            </form>
-        </div>
+<div class="container">
+    <div class="row">
+        <h1>管理员页面</h1>
     </div>
-</nav>
+</div>
+
 
 <script>
     // 页面加载函数
     $(function(){
-        $("#userSmallIcon").attr('src',"${ctx}/upload/"+"18168404329/18168404329.png");
+        // 得到当前用户手机号码
+        var userTel = $.trim($("#showId").text());
     });
 </script>
 </body>

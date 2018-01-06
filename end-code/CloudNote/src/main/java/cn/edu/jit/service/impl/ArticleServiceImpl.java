@@ -45,7 +45,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> listSbTitle(String uid, String title) {
+    public List<Article> listArticleByTitle(String uid, String title) {
         ArticleExample articleExample = new ArticleExample();
 
         ArticleExample.Criteria criteria = articleExample.createCriteria();
@@ -56,12 +56,23 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> listSbByTag(String uid, String tagId) {
-        return  articleMapper.listSbByTag(uid, tagId);
+    public List<Article> listArticleByTag(String uid, String tagId) {
+        return  articleMapper.listArticleByTag(uid, tagId);
     }
 
     @Override
-    public int countSbArticle(String uid) {
+    public List<Article> listArticleByDir(String uid, String dirId) {
+        ArticleExample articleExample = new ArticleExample();
+
+        ArticleExample.Criteria criteria = articleExample.createCriteria();
+        criteria.andUserIdEqualTo(uid);
+        criteria.andDirIdEqualTo(dirId);
+
+        return articleMapper.selectByExample(articleExample);
+    }
+
+    @Override
+    public int countArticle(String uid) {
         ArticleExample articleExample = new ArticleExample();
 
         ArticleExample.Criteria criteria = articleExample.createCriteria();

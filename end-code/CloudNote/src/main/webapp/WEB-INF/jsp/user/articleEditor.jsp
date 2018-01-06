@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/global/taglib.jsp" %>
-<div style="height: 700px"></div>
-<div>
+<%--<div style="height: 700px"></div>--%>
+<div class="col-md-10">
     <div id="editor">
         <p>欢迎使用 <b>无道云笔记</b></p>
     </div>
@@ -38,10 +38,10 @@
             else
                 return "链接不合法";
         };
-        // 区域失去焦点
-        editor.customConfig.onblur = function (html) {
-            saveContent();
-        };
+        // // 区域失去焦点
+        // editor.customConfig.onblur = function (html) {
+        //     saveContent();
+        // };
 
         // Func2: 使用 base64 保存图片
         editor.customConfig.uploadImgShowBase64 = true;
@@ -62,6 +62,7 @@
         // // 将 timeout 时间改为 3s，默认为10s
         // editor.customConfig.uploadImgTimeout = 3000;
 
+        editor.customConfig.zIndex = 100;
         editor.create();
         // 初始化全屏插件
         E.fullscreen.init('#editor');
@@ -76,66 +77,40 @@
         // 保存笔记 TODO 后期加上笔记id
         function saveContent() {
             var content = editor.txt.html();
-            $.ajax({
-                url : "${ctx}/user/saveArticle",
-                type : "post",
-                dataType : "json",
-                data : {
-                    // "noteId" : ,
-                    "data" : content
-                },
-                async :true,
-                success : function(res) {
-                    if(res.status) {
-                        toastr.success("保存成功");
-                    } else {
-                        toastr.error("保存失败");
-                    }
-                },
-                error : function(){
-                    toastr.error("系统错误");
+            sendPost('${ctx}/user/saveArticle',{'data':content},true,function (msg) {
+                if(msg.status) {
+                    toastr.success("保存成功");
+                } else {
+                    toastr.error("保存失败");
                 }
+            },function (error) {
+                toastr.error("系统错误");
+                return false;
             });
         }
 
         // 恢复笔记
         document.getElementById('setContent').addEventListener('click', function () {
-            $.ajax({
-                    url : "${ctx}/user/recoverNote",
-                    type : "post",
-                    dataType : "text",
-                    data : {
-                         "noteId" : "后期填写笔记id"
-                    },
-                    async :true,
-                    success : function(res) {
-                        editor.txt.html(res);
-                        toastr.success("笔记已恢复");
-                    },
-                    error : function(){
-                        toastr.error("系统错误");
-                    }
-                });
+            sendPostByText('${ctx}/user/recoverNote',{'noteId':"xxx"},true,function (res) {
+                editor.txt.html(res);
+                toastr.success("笔记已恢复");
+            },function (error) {
+                toastr.error("系统错误");
+                return false;
+            });
         }, false);
 
         // 删除文章
         document.getElementById('articleRecycle').addEventListener('click', function () {
-            $.ajax({
-                url : "${ctx}/user/removeArticle",
-                type : "post",
-                dataType : "text",
-                data : {
-                    "id" : "value"
-                },
-                async :true,
-                success : function(res) {
-                    if (res == "inexistence") {toastr.warning("不存在此文件!");}
-                    if (res == "true") {toastr.success("删除成功!");}
-                    if (res == "false") {toastr.warning("删除失败!");}
-                },
-                error : function(){
-                    toastr.error("出现错误!");
+            sendPost('${ctx}/user/removeArticle',{'id':"value"},true,function (res) {
+                if(res.status) {
+                    toastr.success("删除成功!");
+                } else {
+                    toastr.warning("删除失败!");
                 }
+            },function (error) {
+                toastr.error("系统错误");
+                return false;
             });
         }, false);
     </script>

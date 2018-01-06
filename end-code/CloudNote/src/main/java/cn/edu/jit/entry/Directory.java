@@ -5,6 +5,8 @@ import java.util.Date;
 public class Directory {
     private String id;
 
+    private String uid;
+
     private String name;
 
     private String parentId;
@@ -19,6 +21,14 @@ public class Directory {
 
     public void setId(String id) {
         this.id = id == null ? null : id.trim();
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid == null ? null : uid.trim();
     }
 
     public String getName() {

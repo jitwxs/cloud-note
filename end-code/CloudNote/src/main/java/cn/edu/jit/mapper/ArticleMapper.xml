@@ -273,7 +273,7 @@
     where id = #{id,jdbcType=VARCHAR}
   </update>
 
-  <select id="listSbByTag" resultMap="BaseResultMap">
+  <select id="listArticleByTag" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List"/>
     from article,article_tag,tag
