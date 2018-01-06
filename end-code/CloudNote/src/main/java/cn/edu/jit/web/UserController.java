@@ -2,11 +2,14 @@ package cn.edu.jit.web;
 
 import cn.edu.jit.entry.Article;
 import cn.edu.jit.entry.ArticleRecycle;
+import cn.edu.jit.entry.Login;
 import cn.edu.jit.entry.User;
 import cn.edu.jit.global.GlobalFunction;
 import cn.edu.jit.service.ArticleRecycleService;
 import cn.edu.jit.service.ArticleService;
+import cn.edu.jit.service.LoginService;
 import cn.edu.jit.service.UserService;
+import cn.edu.jit.util.Sha1Utils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import org.apache.commons.fileupload.FileItem;
@@ -40,6 +43,9 @@ public class UserController {
 
     @Resource(name = "userServiceImpl")
     private UserService userService;
+
+    @Resource(name = "loginServiceImpl")
+    private LoginService loginService;
 
     @Resource(name = "articleServiceImpl")
     private ArticleService articleService;
@@ -192,7 +198,6 @@ public class UserController {
         }
         return "redirect:index";
     }
-
     /*---------   用户管理区域（END）   ----------*/
 
     /*---------   文章管理区域（START）   ----------*/

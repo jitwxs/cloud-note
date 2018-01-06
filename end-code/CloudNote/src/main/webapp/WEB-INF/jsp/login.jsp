@@ -99,7 +99,7 @@
                 <input id="password" class="form-control" type="password" name="password" placeholder="密码" required="required">
             </div>
             <div style="width:100px ;height: 40px;margin-left: 300px;margin-top: 10px">
-                <a href="#">忘记密码？</a>
+                <a href="${ctx}/resetPassword">忘记密码？</a>
             </div>
             <button  id="login_btn" type="submit"  class="btn btn-default" >登录</button>
             <button id="register_btn" type="button" class="btn btn-default" onclick="window.location='${ctx}/register'">注册</button>
@@ -126,7 +126,7 @@
 
         $.ajax({
             type: 'post',
-            url: '/loginCheck',
+            url: '${ctx}/loginCheck',
             async :false,
             dataType:'json',
             data: {

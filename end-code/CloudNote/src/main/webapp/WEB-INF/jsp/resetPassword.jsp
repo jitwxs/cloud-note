@@ -12,9 +12,11 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="${ctx}/css/bootstrap.css">
+    <link rel="stylesheet" href="${ctx}/css/toastr.css">
     <!-- jQuery first, then Bootstrap JS. -->
     <script src="${ctx}/js/jquery-3.2.1.min.js"></script>
     <script src="${ctx}/js/bootstrap.js"></script>
+    <script src="${ctx}/js/toastr.js"></script>
     <style>
         *{
             margin: 0;
@@ -62,7 +64,7 @@
             text-align: center;
             color: #949494;
         }
-        #main .changePasswd .changmm{
+        #main .changePasswd .changePassword{
             text-align: left;
             margin-left: 15px;
             font-size: 20px;
@@ -101,161 +103,58 @@
     <header >
         <p style="font-size: 20px;line-height: 45px;text-align: center;color: white;">找回密码</p>
     </header>
-    <div class="inputPhone" >
-        <input id="phonenum"type="text" class="form-control name"
-               placeholder="请输入手机号获取验证码">
-        <input type="button" class="btn send" style="margin-bottom: 15px" id="second" value="发送验证码"></input>
+    <%--<div class="inputPhone" >--%>
+        <%--<input id="phonenum"type="text" class="form-control name"--%>
+               <%--placeholder="请输入手机号获取验证码">--%>
+        <%--<input type="button" class="btn send" style="margin-bottom: 15px" id="second" value="发送验证码"></input>--%>
 
-        <input id="yanzhengma" name="code" style="margin-top: 35px" type="text" class="form-control name"
-               placeholder="请输入验证码">
-        <a class="btn send" onclick="changePassword()">确定</a>
-    </div>
+        <%--<input id="yanzhengma" name="code" style="margin-top: 35px" type="text" class="form-control name"--%>
+               <%--placeholder="请输入验证码">--%>
+        <%--<a class="btn send" onclick="changePassword()">确定</a>--%>
+    <%--</div>--%>
 
-    <div class="changePasswd" style="display: none">
+    <div class="changePasswd" >
         <p style="margin-top: 20px;">您正在通过手机验证找回密码，</p>
         <p style="margin-top: 10px">请输入新密码并重复确认，以完成密码重置操作</p>
         <hr>
-        <p class="changmm" >新密码：</p>
-        <input id="newmima" style="margin-top: 5px" type="text" class="form-control mima"
+        <p class="changePassword" >新密码：</p>
+        <input id="newPassword" style="margin-top: 5px" type="password" class="form-control mima"
                placeholder="请输入新密码">
-        <p class="changmm" style="margin-top: 60px">确认密码：</p>
-        <input id="resetmima" style="margin-top: 5px" type="text" class="form-control r_mima"
+        <p class="changePassword" style="margin-top: 60px">确认密码：</p>
+        <input id="checkPassword" style="margin-top: 5px" type="password" class="form-control r_mima"
                placeholder="确认新密码">
         <a class="btn" id="reset" onclick="reset()">重置密码</a>
-
     </div>
 </div>
 
 <jsp:include page="${ctx}/WEB-INF/jsp/global/footer.jsp"/>
 <script>
-    //发送验证码时添加cookie
-    function addCookie(name,value,expiresHours){
-        //判断是否设置过期时间,0代表关闭浏览器时失效
-        if(expiresHours>0){
-            var date=new Date();
-            date.setTime(date.getTime()+expiresHours*1000);
-            $.cookie(name, escape(value), {expires: date});
-        }else{
-            $.cookie(name, escape(value));
-
-        }
-    }
-    //修改cookie的值
-    function editCookie(name,value,expiresHours){
-        if(expiresHours>0){
-            var date=new Date();
-            date.setTime(date.getTime()+expiresHours*1000); //单位是毫秒
-            $.cookie(name, escape(value), {expires: date});
-        } else{
-            $.cookie(name, escape(value));
-
-        }
-
-    }
-    //根据名字获取cookie的值
-    function getCookieValue(name){
-        return $.cookie(name);
-
-    }
-    $(function(){
-        $.cookie("secondsremained",null);
-        $("#second").click(function (){
-            sendCode($("#second"));
-        });
-        v = getCookieValue("secondsremained");//获取cookie值
-        if(v>0){
-            settime($("#second"));//开始倒计时
-        }
-    })
-    //发送验证码
-    function sendCode(obj){
-        var phonenum = $("#phonenum").val();
-        var result = isPhoneNum();
-        if(result){
-// doPostBack('${base}/login/getCode.htm',backFunc1,{"phonenum":phonenum});
-            addCookie("secondsremained",60,60);//添加cookie记录,有效时间60s
-            settime(obj);//开始倒计时
-        }
-    }
-    //开始倒计时
-    var countdown;
-    function settime(obj) {
-        countdown=getCookieValue("secondsremained");
-        if (countdown == 0) {
-            obj.removeAttr("disabled");
-            obj.val("免费获取验证码");
-            return;
-        } else {
-            obj.attr("disabled", true);
-            obj.val("重新发送(" + countdown + ")");
-            countdown--;
-            editCookie("secondsremained",countdown,countdown+1);
-        }
-        setTimeout(function() { settime(obj) },1000) //每1000毫秒执行一次
-    }
-    //校验手机号是否合法
-    function isPhoneNum(){
-        var phonenum = $("#phonenum").val();
-        var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
-        if(!myreg.test(phonenum)){
-            alert('请输入有效的手机号码！');
-            return false;
-        }else{
-            return true;
-        }
-    }
-
-
-    function changePassword() {
-        var code = $("#yanzhengma").val();
-        $.ajax({
-            type:'post',
-            url: '/findPassword',
-            async:false,
-            dataType:'json',
-            data: {
-                'code':code
-            },
-            success:function (msg) {
-                if (!msg.res){
-                    alert("验证码错误！");
-                }
-                else{
-                    $('.inputPhone').hide();
-                    $('.changePasswd').show();
-                }
-            },
-            error:function (error) {
-                alert("出错啦！");
-            }
-        });
-    }
     function reset(){
-        var newmima= $('#newmima').val();
-        var resetmima = $('#resetmima').val();
-        if (newmima != retmm){
-            alert("两次密码不一致！");
-            return false;
+        var newPassword= $('#newPassword').val();
+        var checkPassword = $('#checkPassword').val();
+        if (newPassword != checkPassword){
+            toastr.warning("两次密码不一致！");
         }
         $.ajax({
             type:'post',
-            url: '/findPassword',
+            url: '${ctx}/resetPassword',
             async:false,
             dataType:'json',
             data:{
-                'resetmima':resetmima,
+                'id':'tel',
+                'newPassword':newPassword
             },
             success:function (msg) {
-                if(!msg.res){
-                    return false;
+                if(msg.status) {
+                    toastr.success("修改成功!");
+                } else {
+                    toastr.warning("修改失败!");
                 }
-                return true;
             },
-            error:function (error) {
-                return false;
+            error:function () {
+                toastr.error("内部错误");
             }
         });
-
     }
 </script>
 </body>
