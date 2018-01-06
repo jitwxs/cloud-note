@@ -1,0 +1,19 @@
+/*文件选择按钮*/
+.fileinput-button {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+}
+.fileinput-button input{
+    position:absolute;
+    right: 0px;
+    top: 0px;
+    opacity: 0;
+    -ms-filter: 'alpha(opacity=0)';
+    font-size: 200px;
+}
+
+/*目录di*/
+.wjj_div{
+    margin-left: 10px;
+}
