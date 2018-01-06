@@ -10,7 +10,7 @@
                 <h4 class="modal-title" id="myModalLabel">个人信息</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" id="userInfoForm" role="form" action="${ctx}/user/saveUserInfo"
+                <form class="form-horizontal" id="userInfoForm" role="form" action="${ctx}/saveSelfInfo"
                       method="post" enctype="multipart/form-data">
                     <input type="hidden" id="userId" name="id">
                     <div class="form-group">
@@ -83,8 +83,19 @@
     // 提交表单
     function checkUserInfo() {
         // TODO 头像类型、大小验证
-
-        $("#userInfoForm").submit();
+        var status = true;
+        var icon = document.getElementById("uploadIcon").value;
+        if (icon != null) {
+            var point = icon.lastIndexOf(".");
+            var type = icon.substr(point);
+            if(type != ".jpg" && type != ".gif" && type != ".JPG" && type != ".GIF" && type != ".PNG" && type != ".png"){
+                toastr.info("图片格式错误!");
+                status = false;
+            }
+        }
+        if (status) {
+            $("#userInfoForm").submit();
+        }
     }
 
     // 实时更新选中的文件名

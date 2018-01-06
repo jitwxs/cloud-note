@@ -94,24 +94,20 @@
 </head>
 
 <body>
-<h1>首页</h1>
-
-<a href="${ctx}/login">登陆</a>
-<a href="${ctx}/register">注册</a>
 
 <div id="main">
     <header >
         <p style="font-size: 20px;line-height: 45px;text-align: center;color: white;">找回密码</p>
     </header>
-    <%--<div class="inputPhone" >--%>
-        <%--<input id="phonenum"type="text" class="form-control name"--%>
-               <%--placeholder="请输入手机号获取验证码">--%>
-        <%--<input type="button" class="btn send" style="margin-bottom: 15px" id="second" value="发送验证码"></input>--%>
+    <div class="inputPhone" >
+        <input id="phonenum" type="text" class="form-control name"
+               placeholder="请输入手机号获取验证码">
+        <input type="button" class="btn send" style="margin-bottom: 15px" id="second" value="发送验证码">
 
-        <%--<input id="yanzhengma" name="code" style="margin-top: 35px" type="text" class="form-control name"--%>
-               <%--placeholder="请输入验证码">--%>
-        <%--<a class="btn send" onclick="changePassword()">确定</a>--%>
-    <%--</div>--%>
+        <input id="yanzhengma" name="code" style="margin-top: 35px" type="text" class="form-control name"
+               placeholder="请输入验证码">
+        <a class="btn send" onclick="changePassword()">确定</a>
+    </div>
 
     <div class="changePasswd" >
         <p style="margin-top: 20px;">您正在通过手机验证找回密码，</p>

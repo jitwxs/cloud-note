@@ -1,12 +1,15 @@
 package cn.edu.jit.service.impl;
 
+import cn.edu.jit.entry.ArticleExample;
 import cn.edu.jit.entry.Directory;
+import cn.edu.jit.entry.DirectoryExample;
 import cn.edu.jit.mapper.DirectoryMapper;
 import cn.edu.jit.service.DirectoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author jitwxs
@@ -37,5 +40,26 @@ public class DirectoryServiceImpl implements DirectoryService {
     @Override
     public Directory getById(String id) {
         return directoryMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public List<Directory> listByUid(String uid) {
+        DirectoryExample directoryExample = new DirectoryExample();
+
+        DirectoryExample.Criteria criteria = directoryExample.createCriteria();
+        criteria.andUidEqualTo(uid);
+
+        return directoryMapper.selectByExample(directoryExample);
+    }
+
+    @Override
+    public List<Directory> listByParentId(String uid, String parentId) {
+        DirectoryExample directoryExample = new DirectoryExample();
+
+        DirectoryExample.Criteria criteria = directoryExample.createCriteria();
+        criteria.andUidEqualTo(uid);
+        criteria.andParentIdEqualTo(parentId);
+
+        return directoryMapper.selectByExample(directoryExample);
     }
 }

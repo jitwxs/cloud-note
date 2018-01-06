@@ -18,9 +18,12 @@ public interface ArticleService {
 
     Article getById(String id);
 
-    List<Article> listSbTitle(String uid, String name);
+    List<Article> listArticleByTitle(String uid, String name);
 
-    List<Article> listSbByTag(String uid, String tagId);
+    List<Article> listArticleByTag(String uid, String tagId);
 
-    int countSbArticle(String uid);
+    List<Article> listArticleByDir(String uid, String dirId);
+
+    int countArticle(String uid);
+
 }

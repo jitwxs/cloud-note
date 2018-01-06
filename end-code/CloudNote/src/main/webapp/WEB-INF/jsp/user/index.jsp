@@ -13,107 +13,48 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="${ctx}/css/bootstrap.css">
     <link rel="stylesheet" href="${ctx}/css/wangEditor-fullscreen-plugin.css">
+    <!-- 弹窗CSS -->
     <link rel="stylesheet" href="${ctx}/css/toastr.css">
+    <!-- 自定义CSS -->
+    <link rel="stylesheet" href="${ctx}/css/custom.css">
     <!-- jQuery first, then Bootstrap JS. -->
     <script src="${ctx}/js/jquery-3.2.1.min.js"></script>
     <script src="${ctx}/js/bootstrap.js"></script>
+    <!-- jQuery百叶窗 -->
+    <script src="${ctx}/js/jquery.contextify.js"></script>
     <!-- wangEditor依赖 -->
     <script src="${ctx}/js/wangEditor.js"></script>
     <script src="${ctx}/js/wangEditor-fullscreen-plugin.js"></script>
+    <!-- 弹窗依赖 -->
     <script src="${ctx}/js/toastr.js"></script>
+    <!-- 封装ajax -->
+    <script src="${ctx}/js/http.js"></script>
 </head>
 
-<body style="padding: 50px;">
-
-<input type="hidden" id="uid" name="uid" value="${uid}">
+<body>
+<jsp:include page="head.jsp"/>
 <!-- 引入模块框 -->
-<jsp:include page="showUserInfo.jsp"/>
+<jsp:include page="showSelfInfo.jsp"/>
 <jsp:include page="importNote.jsp"/>
 
-<nav class="navbar navbar-default navbar-fixed-top" style="height: 50px;">
-    <div class="container-fluid">
-        <%--<!--无道云的图标-->--%>
-        <%--<div class="navbar-header">--%>
-            <%--<a class="navbar-brand" href="#">--%>
-                <%--<img alt="Brand" src="...">--%>
-            <%--</a>--%>
-        <%--</div>--%>
+<div class="container">
+    <div class="row">
+        <!-- 引入左侧目录结构 -->
+        <jsp:include page="directory.jsp"/>
 
-        <!--设置-->
-        <ul class="nav navbar-nav navbar-right">
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    设置 <b class="caret"></b>
-                </a>
-                <ul class="dropdown-menu">
-                    <li id="msg"><a href="javascript:void(0)" onclick="showUserInfo()" data-toggle="modal" data-target="#showUserInfoModal">个人信息</a></li>
-                    <li class="divider"></li>
-                    <li id="account"><a href="#">账户设置</a></li>
-                    <li class="divider"></li>
-                    <li id="share"><a href="#">查看分享</a></li>
-                    <li class="divider"></li>
-                    <li id="import"><a href="javascript:void(0)" data-toggle="modal" data-target="#importNoteModal">导入笔记</a></li>
-                    <li class="divider"></li>
-                    <li id="help"><a href="#">帮助</a></li>
-                </ul>
-            </li>
-        </ul>
-        <!-- 头像 -->
-        <div class=" navbar-right" style="margin-right: 30px;">
-            <img class="img-responsive" id="userSmallIcon" style="width: 50px;height: 50px" src="">
-        </div>
-        <!-- 搜索 -->
-        <div>
-            <form class="navbar-form navbar-left" role="search">
-                <div class="form-group">
-                    <input type="text" class="form-control" style="border:none; background:none;outline:none;"
-                           placeholder="Search"/>
-                </div>
-                <button type="submit" class="btn btn-default">查找</button>
-            </form>
-        </div>
+        <!-- 引入右侧富文本编辑器 -->
+        <jsp:include page="articleEditor.jsp"/>
     </div>
-</nav>
+</div>
 
-<jsp:include page="articleEditor.jsp"/>
-
+<!-- 引入页脚 -->
+<jsp:include page="${ctx}/WEB-INF/jsp/global/footer.jsp"/>
 <script>
     // 页面加载函数
     $(function(){
-        $("#userSmallIcon").attr('src',"${ctx}/upload/"+"18168404329/18168404329.png");
+        // 得到当前用户手机号码
+        var userTel = $.trim($("#showId").text());
     });
-
-    function showUserInfo() {
-        var id = $("#uid").val();
-        $.ajax({
-            url : "${ctx}/user/showUserInfo",
-            type : "post",
-            dataType : "json",
-            data : {
-                "id": id
-            },
-            async : true,
-            success : function(res) {
-                $("#userId").val(res.id);
-                $("#userTel").val(res.tel);
-                $("#userName").val(res.name);
-                $("#userEmail").val(res.email);
-                $("#userArea").val(res.area);
-
-                // 设置头像url
-                $("#userBigIcon").attr('src',"${ctx}/upload/"+res.icon);
-                //初始化更新头像信息
-                $("#uploadIcon").val('');
-                $("#fileName").html('');
-
-                $("input:radio[name='sex'][value="+res.sex+"]").attr('checked','true');
-                $("#userSign").val(res.sign);
-            },
-            error: function () {
-                toastr.error("系统错误");
-            }
-        });
-    }
 </script>
 </body>
 </html>
