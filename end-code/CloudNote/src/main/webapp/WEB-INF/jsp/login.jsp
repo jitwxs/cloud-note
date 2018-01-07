@@ -51,15 +51,17 @@
             /*border:1px solid red;*/
             float: right;
         }
-        #main .right button{
+        #main .right a{
             border-radius: 8px;
             width: 70%;
             height:50px;
+            padding:13px;
             margin-left:50px;
-            margin-top: 20px;
-            background: lightskyblue;
-            color: white;
+            margin-top: 35px;
+            background: white;
+            color: lightskyblue;
             font-size: 18px;
+            border: 1px solid lightskyblue;
         }
         #main .left button{
             width:130px;
@@ -73,14 +75,14 @@
             background: lightskyblue;
             font-size: 18px;
             float: left;
-            margin-top: 40px;
-            margin-left: 50px;
+            margin-top: 18px;
+            margin-left: 70px;
         }
         #register_btn{
             color: lightskyblue;
             font-size: 18px;
             background: white;
-            margin-top: 40px;
+            margin-top: 18px;
             margin-right: 50px;
             float: right;
         }
@@ -108,9 +110,9 @@
 
     <div class="right" style="width: 420px;height: 410px;">
         <p style="font-size: 18px;text-align: center;margin-top: 30px">其他账号登录</p>
-        <a class="btn" onclick="loginQQ()">使用QQ登录</a>
-        <a class="btn" onclick="loginWchat()">使用微信登录</a>
-        <a class="btn" onclick="loginSina()">使用微博登录</a>
+        <a class="btn" onclick="loginQQ()"><img src="${ctx}/images/qq.png">  使用QQ登录</a>
+        <a style="margin-top: 40px" class="btn" onclick="loginWchat()"><img src="${ctx}/images/weixin.png">  使用微信登录</a>
+        <a style="margin-top: 40px" class="btn" onclick="loginSina()"><img src="${ctx}/images/weibo.png">  使用微博登录</a>
     </div>
 </div>
 <script>
