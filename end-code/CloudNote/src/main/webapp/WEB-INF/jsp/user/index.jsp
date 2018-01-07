@@ -94,9 +94,8 @@
 
 <body>
 <jsp:include page="head.jsp"/>
-<!-- 引入模块框 -->
-<jsp:include page="showSelfInfo.jsp"/>
-<jsp:include page="importNote.jsp"/>
+
+<input type="hidden" id="lastLoginTime" value="${lastLoginTime}">
 
 <div class="container">
     <div class="row">
@@ -108,14 +107,21 @@
     </div>
 </div>
 
+<button onclick="window.location.href='${ctx}/user/resetPassword'">重置密码</button>
+
 <!-- 引入页脚 -->
 <jsp:include page="${ctx}/WEB-INF/jsp/global/footer.jsp"/>
 <script>
     // 页面加载函数
     $(function(){
         // 得到当前用户手机号码
-        var userTel = $.trim($("#showId").text());
-    });
+        // var userTel = $.trim($("#showId").text());
+        var lastTime = $("#lastLoginTime").val();
+        if(lastTime != null && lastTime != "") {
+            toastr.info(lastTime);
+            $("#text1").val(null);
+        }
+     });
 </script>
 </body>
 >>>>>>> origin/master

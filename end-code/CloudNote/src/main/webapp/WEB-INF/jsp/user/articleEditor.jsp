@@ -126,9 +126,12 @@
     <button id="getJSON">获取JSON</button>
     <button id="setContent">恢复笔记</button>
     <button onclick="saveContent()">手动保存</button>
-    <button onclick="window.location.href='${ctx}/user/downloadFile?fileId=111.txt'">下载文件</button>
-    <button onclick="window.location.href='${ctx}/user/downloadFile?fileId=测试.txt'">下载中文</button>
-    <button id="articleRecycle" href="">删除文章</button>
+    <button onclick="window.location.href='${ctx}/user/downloadFile?fileName=111.txt'">下载111.txt</button>
+    <button onclick="window.location.href='${ctx}/user/downloadFile?fileName=测试.txt'">下载测试.txt</button>
+    <button onclick="convertFile('test.docx')">测试doc转pdf</button>
+    <button onclick="convertFile('test.ppt')" >测试ppt转pdf</button>
+    <button onclick="convertFile('test.xlsx')" >测试excel转pdf</button>
+
 
     <script type="text/javascript">
         var strRegex = "^((https|http|ftp|rtsp|mms)?://)"
@@ -192,21 +195,6 @@
             alert("json：" + jsonStr);
         }, false);
 
-        // 保存笔记 TODO 后期加上笔记id
-        function saveContent() {
-            var content = editor.txt.html();
-            sendPost('${ctx}/user/saveArticle',{'data':content},true,function (msg) {
-                if(msg.status) {
-                    toastr.success("保存成功");
-                } else {
-                    toastr.error("保存失败");
-                }
-            },function (error) {
-                toastr.error("系统错误");
-                return false;
-            });
-        }
-
         // 恢复笔记
         document.getElementById('setContent').addEventListener('click', function () {
             sendPostByText('${ctx}/user/recoverNote',{'noteId':"xxx"},true,function (res) {
@@ -231,6 +219,36 @@
                 return false;
             });
         }, false);
+
+        // 保存笔记 TODO 后期加上笔记id
+        function saveContent() {
+            var content = editor.txt.html();
+            sendPost('${ctx}/user/saveArticle',{'data':content},true,function (msg) {
+                if(msg.status) {
+                    toastr.success("保存成功");
+                } else {
+                    toastr.error("保存失败");
+                }
+            },function (error) {
+                toastr.error("系统错误");
+                return false;
+            });
+        }
+
+        // 转换文件
+        function convertFile(fileName) {
+            sendPost('${ctx}/user/convertFile',{'fileName':fileName},true,function (res) {
+                if(res.status) {
+                    alert("成功，耗时：" + res.info + "秒!");
+                } else {
+                    alert("失败，原因：" + res.info + "!");
+                }
+            },function (error) {
+                toastr.error("系统错误");
+                return false;
+            });
+        }
+
     </script>
 >>>>>>> origin/master
 </div>

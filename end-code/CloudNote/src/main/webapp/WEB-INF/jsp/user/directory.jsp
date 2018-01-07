@@ -276,7 +276,7 @@
 
 <div class="col-md-2">
     <div class="wjj">
-        <a class="btn js_wjj_btn"><img src="${ctx}/images/wjj2.png" width="15px" height="15px"> 我的文件夹</a>
+        <a class="btn js_wjj_btn" index-id="root"><img src="${ctx}/images/wjj2.png" width="15px" height="15px"> 我的文件夹</a>
         <div class="wjj_div">
 
         </div>
@@ -394,8 +394,8 @@
     function removeNote() {
         var id = $chooseDir.attr('index-id');
         //发送要删除的笔记的id
-        sendPost('',{'removeId':id},false,function (msg) {
-            if (!msg.res){alert("删除笔记失败！");return false}
+        sendPost('${ctx}/user/removeArticle',{'noteId':id},false,function (msg) {
+            if (!msg.status){alert("删除笔记失败！");return false}
             else  $chooseDir.remove();
         },function (error) {
             alert("删除笔记出错了！");
@@ -406,8 +406,8 @@
         var $parent = $chooseDir.parent();
         var id = $chooseDir.attr('index-id');
         //发送要删除的目录的id
-        sendPost('',{'removeId':id},false,function (msg) {
-            if (!msg.res){alert("删除目录失败！");return false}
+        sendPost('${ctx}/user/removeDir',{'dirId':id},false,function (msg) {
+            if (!msg.status){alert("删除目录失败！");return false}
             else   $parent.remove();
         },function (error) {
             alert("删除目录出错了！");
@@ -417,6 +417,7 @@
     function renameDir() {
         var dirname = $chooseDir.text();
         var $parent = $chooseDir.parent();
+        var dirId = $chooseDir.attr("index-id");
         $chooseDir.remove();
         var str = '<input type="text" name="dir_name" value="'+dirname+'">';
         $parent.prepend(str);
@@ -426,8 +427,8 @@
             //获取名字
             var name = $('input[name=dir_name]').val();
             //发送给服务器
-            sendPost('',{'parent':parent_id,'dirName':name},false,function (msg) {
-                if (!msg.res){alert("生成目录失败！");return false}
+            sendPost('${ctx}/user/renameDir',{'dirId':dirId,'dirName':name},false,function (msg) {
+                if (!msg.status){alert("生成目录失败！");return false}
                 else return true;
             },function (error) {
                 alert("出错了！");
@@ -442,9 +443,9 @@
     }
     function renameNote() {
         var notename = $chooseDir.text();
-        console.log(notename)
         var $parent = $chooseDir.parent();
         $chooseDir.remove();
+        var noteId = $chooseDir.attr("index-id");
         var str = '<input type="text" name="note_name" value="'+notename+'">';
         $parent.append(str);
         $('input[name=note_name]').select();
@@ -453,8 +454,8 @@
             //获取名字
             var name = $('input[name=note_name]').val();
             //发送给服务器
-            sendPost('',{'parent':parent_id,'noteName':name},false,function (msg) {
-                if (!msg.res){alert("生成笔记失败！");return false}
+            sendPost('${ctx}/user/renameNote',{'noteId':noteId,'noteName':name},false,function (msg) {
+                if (!msg.status){alert("生成笔记失败！");return false}
                 else return true;
             },function (error) {
                 alert("出错了！");
@@ -470,7 +471,6 @@
     }
 
     function initUI() {
-
         //生成目录
         $(".js_wjj_btn").bind("contextmenu", function(){
             //记录右键点击的元素
@@ -486,22 +486,20 @@
             var name = $('input[name=dir_name]').val();
             var parent_id = $chooseDir.attr('index-id');
             //发送给服务器
-            sendPost('',{'parent':parent_id,'dirName':name},false,function (msg) {
-                if (!msg.res){alert("生成目录失败！");return false}
+            sendPost('${ctx}/user/createDir',{'parentId':parent_id,'dirName':name},false,function (msg) {
+                if (!msg.status){alert("生成目录失败！");return false}
                 else return true;
             },function (error) {
                 alert("出错了！");
                 return false;
             });
-
             //把文本框删掉
             var $parent = $('input[name=dir_name]').parent();
             $('input[name=dir_name]').remove();
             //生成目录
             $parent.prepend('<a class="btn js_wjj_btn" index-id="" ><img src="${ctx}/images/wjj3.png" width="20px" height="20px">'+ name+'</a>');
             initUI();
-        })
-
+        });
 
         //生成笔记
         $(".js_note_btn").bind("contextmenu", function(){
@@ -515,8 +513,8 @@
             var name = $('input[name=note_name]').val();
             var parent_id = $chooseDir.attr('index-id');
             //发送给服务器
-            sendPost('',{'parent':parent_id,'noteName':name},false,function (msg) {
-                if (!msg.res){alert("生成笔记失败！");return false}
+            sendPost('${ctx}/user/createNote',{'parentId':parent_id,'noteName':name},false,function (msg) {
+                if (!msg.status){alert("生成笔记失败！");return false}
                 else return true;
             },function (error) {
                 alert("出错了！");

@@ -196,7 +196,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50719
 File Encoding         : 65001
 
-Date: 2018-01-04 00:31:32
+Date: 2018-01-06 16:26:59
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -225,6 +225,8 @@ CREATE TABLE `article` (
 -- ----------------------------
 -- Records of article
 -- ----------------------------
+INSERT INTO `article` VALUES ('a9eff09ae43b476996cff1chwqca04c3', '文章二', '测试内容二', '05d4849d43704410a904f93632e9f9b0', 'rteff09ae43b476996cff1csh9ca04c3', '0', null, '2018-01-06 10:45:05', null);
+INSERT INTO `article` VALUES ('a9eff09ae43b476996cff1cscqca04c3', '文章一', '测试内容一', '05d4849d43704410a904f93632e9f9b0', 'a9eff09ae43b476996cff193c9ca04c3', '0', null, '2018-01-06 10:44:28', null);
 
 -- ----------------------------
 -- Table structure for article_recycle
@@ -250,6 +252,7 @@ CREATE TABLE `article_recycle` (
 -- ----------------------------
 -- Records of article_recycle
 -- ----------------------------
+INSERT INTO `article_recycle` VALUES ('1', 'afa', 'afa', '05d4849d43704410a904f93632e9f9b0', 'a9eff09ae43b476996cff193c9ca04c3', '0', null, '2018-01-06 16:09:38', null);
 
 -- ----------------------------
 -- Table structure for article_tag
@@ -274,19 +277,23 @@ CREATE TABLE `article_tag` (
 DROP TABLE IF EXISTS `directory`;
 CREATE TABLE `directory` (
   `id` varchar(64) NOT NULL,
+  `uid` varchar(64) NOT NULL,
   `name` varchar(32) NOT NULL COMMENT '目录名称',
-  `parent_id` varchar(64) DEFAULT NULL COMMENT '父目录id',
+  `parent_id` varchar(64) DEFAULT '' COMMENT '父目录id',
   `create_date` datetime NOT NULL,
   `modifed_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
+  KEY `fk_uid` (`uid`),
   KEY `fk_parent` (`parent_id`),
-  CONSTRAINT `fk_parent` FOREIGN KEY (`parent_id`) REFERENCES `directory` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
+  CONSTRAINT `fk_uid` FOREIGN KEY (`uid`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of directory
 -- ----------------------------
-INSERT INTO `directory` VALUES ('a9eff09ae43b476996cff193c9ca04c3', '我的文件夹', null, '2018-01-03 10:07:17', null);
+INSERT INTO `directory` VALUES ('a9eff09ae43b476996cff193c9ca04c3', '05d4849d43704410a904f93632e9f9b0', 'jitwxs文件夹一', '', '2018-01-06 10:42:03', null);
+INSERT INTO `directory` VALUES ('a9eff09ae43b476996cff1csh9ca04c3', '05d4849d43704410a904f93632e9f9b0', 'jitwxs文件夹二', '', '2018-01-06 10:42:31', null);
+INSERT INTO `directory` VALUES ('rteff09ae43b476996cff1csh9ca04c3', '05d4849d43704410a904f93632e9f9b0', 'jitwxs子文件夹一', 'a9eff09ae43b476996cff193c9ca04c3', '2018-01-06 10:43:08', null);
 
 -- ----------------------------
 -- Table structure for login
@@ -306,7 +313,8 @@ CREATE TABLE `login` (
 -- ----------------------------
 -- Records of login
 -- ----------------------------
-INSERT INTO `login` VALUES ('18168404321', 'f4b9b2efb4a26a6319fc66021695358d7e093cba4b8315b27542163d', '2', '2018-01-04 00:19:56', null);
+INSERT INTO `login` VALUES ('18168404321', 'f4b9b2efb4a26a6319fc66021695358d7e093cba4b8315b27542163d', '1', '2018-01-04 00:19:56', null);
+INSERT INTO `login` VALUES ('18168404326', '0a436092af3acc486004d93e08f7eb01ac7d6675ab412954299f3e49', '2', '2018-01-05 11:30:16', null);
 INSERT INTO `login` VALUES ('18168404329', 'e47c3db50941ceb90ebf74c3135e137dab229904218df9bee0d68ba7', '2', '2018-01-04 00:23:38', null);
 
 -- ----------------------------
@@ -366,6 +374,12 @@ CREATE TABLE `user` (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
+<<<<<<< HEAD
+INSERT INTO `user` VALUES ('05d4849d43704410a904f93632e9f9b0', '18168404329', 'jitwxs', 'jitwxs@foxmail.com', '南京', '18168404329/18168404329.jpg', '男', '', '2018-01-04 00:23:38', '2018-01-06 15:10:31');
+INSERT INTO `user` VALUES ('733900ac3a764099b0410844b0b33aae', '18168404326', null, null, null, null, null, null, '2018-01-05 11:30:16', null);
+INSERT INTO `user` VALUES ('fda14630bb884e5d8a038a067f7af463', '18168404321', '', '', '', '18168404321/18168404321.jpg', '男', '', '2018-01-04 00:19:56', '2018-01-06 15:11:32');
+=======
 INSERT INTO `user` VALUES ('05d4849d43704410a904f93632e9f9b0', '18168404329', 'jitwxs', 'jitwxs@foxmail.com', '南京', '18168404329/18168404329.png', '男', '', '2018-01-04 00:23:38', '2018-01-04 00:27:16');
 INSERT INTO `user` VALUES ('fda14630bb884e5d8a038a067f7af463', '18168404321', null, null, null, null, null, null, '2018-01-04 00:19:56', null);
 >>>>>>> origin/master
+>>>>>>> 2a147f8da6353334ca52304230a5e4025d576436

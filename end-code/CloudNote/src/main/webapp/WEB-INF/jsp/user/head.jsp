@@ -70,6 +70,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/global/taglib.jsp" %>
 
+<!-- 引入模块框 -->
+<jsp:include page="showSelfInfo.jsp"/>
+<jsp:include page="importNote.jsp"/>
+
 <div class="container">
     <nav class="navbar navbar-default">
         <div class="container-fluid">

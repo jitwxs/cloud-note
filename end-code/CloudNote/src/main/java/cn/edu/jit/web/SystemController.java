@@ -358,8 +358,7 @@ public class SystemController {
         String tel = request.getParameter("tel");
         String password = request.getParameter("password");
 
-        Login login = null;
-        login = loginService.getByTel(tel);
+        Login login = loginService.getByTel(tel);
 
         // 账户不存在或密码错误
         if (login == null) {
@@ -367,7 +366,7 @@ public class SystemController {
         } else if(!Sha1Utils.validatePassword(password, login.getPassword())) {
             res = false;
         }
-        response.getWriter().write("{\"res\":" + res + "}");
+        response.getWriter().write("{\"status\":" + res + "}");
     }
 
     @RequestMapping(value = "/login", method = {RequestMethod.POST})
@@ -379,10 +378,12 @@ public class SystemController {
         // 如果获取不到用户名就是登录失败，登录失败会直接抛出异常
         subject.login(token);
 
-        // 所有用户均重定向对应的展示配送页面
+        // 所有用户均重定向对应首页
         if (subject.hasRole(GlobalConstant.ROLE.ADMIN.getName())) {
+            GlobalConstant.hasShowLoginInfo = true;
             return "redirect:/admin/index";
         } else if (subject.hasRole(GlobalConstant.ROLE.USER.getName())) {
+            GlobalConstant.hasShowLoginInfo = true;
             return "redirect:/user/index";
         } else {
             return "/login";
@@ -422,12 +423,12 @@ public class SystemController {
         return "redirect:/login";
     }
 
-    @RequestMapping(value = "resetPassword", method = {RequestMethod.GET})
+    @RequestMapping(value = "fondPassword", method = {RequestMethod.GET})
     public String resetPasswordUI() {
-        return "resetPassword";
+        return "foundPassword";
     }
 
-    @RequestMapping(value = "resetPassword", method = {RequestMethod.POST})
+    @RequestMapping(value = "fondPassword", method = {RequestMethod.POST})
     public void resetPassword(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
         Boolean status = true;
@@ -481,7 +482,7 @@ public class SystemController {
             upload.setHeaderEncoding("UTF-8");
 
             // 3.判断是否为上传文件的表单
-            if (upload.isMultipartContent(request)) {
+            if (ServletFileUpload.isMultipartContent(request)) {
                 // 4.解析request获得文件项集合
                 List<FileItem> fileItems = upload.parseRequest(request);
                 if (fileItems.size() != 0) {
