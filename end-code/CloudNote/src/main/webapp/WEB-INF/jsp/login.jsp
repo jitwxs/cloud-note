@@ -19,72 +19,72 @@
     <script src="${ctx}/js/toastr.js"></script>
 
     <style type="text/css">
-    *{
-        margin: 0;
-        padding: 0;
-    }
-    body{
-        background: #fbfcfe;
-    }
-    header{
-        background: lightskyblue;
-        width:100%;
-        height:50px;
-    }
-    #main{
-        width:880px;
-        height:410px;
-        background: white;
-        /*border:solid black 1px;*/
-        margin:0 auto;
-        margin-top: 100px;
-        position: relative;
-        box-shadow:0 0 3px #f3f7fc
-    }
-    #main .left{
-        margin-left: 5px;
-        /*border:1px solid red;*/
-        float: left;
-    }
-    #main .right{
-        margin-right:5px ;
-        /*border:1px solid red;*/
-        float: right;
-    }
-    #main .right button{
-        border-radius: 8px;
-        width: 70%;
-        height:50px;
-        margin-left:50px;
-        margin-top: 20px;
-        background: lightskyblue;
-        color: white;
-        font-size: 18px;
-    }
-    #main .left button{
-        width:130px;
-        height: 45px;
-        display: block;
-        border-radius: 8px;
-        font-size: 18px;
-    }
-    #login_btn{
-        color: white;
-        background: lightskyblue;
-        font-size: 18px;
-        float: left;
-        margin-top: 40px;
-        margin-left: 50px;
-    }
-    #register_btn{
-        color: lightskyblue;
-        font-size: 18px;
-        background: white;
-        margin-top: 40px;
-        margin-right: 50px;
-        float: right;
-    }
-</style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            background: #fbfcfe;
+        }
+        header{
+            background: lightskyblue;
+            width:100%;
+            height:50px;
+        }
+        #main{
+            width:880px;
+            height:410px;
+            background: white;
+            /*border:solid black 1px;*/
+            margin:0 auto;
+            margin-top: 100px;
+            position: relative;
+            box-shadow:0 0 3px #f3f7fc
+        }
+        #main .left{
+            margin-left: 5px;
+            /*border:1px solid red;*/
+            float: left;
+        }
+        #main .right{
+            margin-right:5px ;
+            /*border:1px solid red;*/
+            float: right;
+        }
+        #main .right button{
+            border-radius: 8px;
+            width: 70%;
+            height:50px;
+            margin-left:50px;
+            margin-top: 20px;
+            background: lightskyblue;
+            color: white;
+            font-size: 18px;
+        }
+        #main .left button{
+            width:130px;
+            height: 45px;
+            display: block;
+            border-radius: 8px;
+            font-size: 18px;
+        }
+        #login_btn{
+            color: white;
+            background: lightskyblue;
+            font-size: 18px;
+            float: left;
+            margin-top: 40px;
+            margin-left: 50px;
+        }
+        #register_btn{
+            color: lightskyblue;
+            font-size: 18px;
+            background: white;
+            margin-top: 40px;
+            margin-right: 50px;
+            float: right;
+        }
+    </style>
 </head>
 
 <body>
@@ -99,7 +99,7 @@
                 <input id="password" class="form-control" type="password" name="password" placeholder="密码" required="required">
             </div>
             <div style="width:100px ;height: 40px;margin-left: 300px;margin-top: 10px">
-                <a href="${ctx}/resetPassword">忘记密码？</a>
+                <a href="${ctx}/foundPassword">忘记密码？</a>
             </div>
             <button  id="login_btn" type="submit"  class="btn btn-default" >登录</button>
             <button id="register_btn" type="button" class="btn btn-default" onclick="window.location='${ctx}/register'">注册</button>

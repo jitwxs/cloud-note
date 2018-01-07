@@ -6,6 +6,9 @@ package cn.edu.jit.global;
  * @date 2018/1/2 20:32
  */
 public class GlobalConstant {
+    // 是否显示登陆信息
+    public static boolean hasShowLoginInfo = false;
+
     // 权限枚举
     public static enum ROLE {
         // 管理员

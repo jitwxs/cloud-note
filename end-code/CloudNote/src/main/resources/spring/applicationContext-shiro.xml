@@ -33,7 +33,7 @@
                 # 注册请求
                 /registerCheck = anon
                 /register = anon
-                /resetPassword = anon
+                /foundPassword = anon
 
                 # 注销请求
                 /logout = logout

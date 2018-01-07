@@ -2,7 +2,7 @@
 
 ### 使用技术
 
-- 前端：Bootstrap、Vue
+- 前端：Bootstrap
 
 - 开发工具；IDEA
 
@@ -12,7 +12,9 @@
 
 - 安全框架：Shiro
 
-- 在线展示文档：PDF.js
+- Word、Excel、PPT转PDF：Aspose
+
+- PDF在线预览：PDF.js
 
 - 短信验证：云片
 

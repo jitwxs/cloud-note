@@ -1,9 +1,13 @@
 package cn.edu.jit.web;
 
 import cn.edu.jit.entry.*;
+import cn.edu.jit.global.GlobalConstant;
 import cn.edu.jit.global.GlobalFunction;
 import cn.edu.jit.service.*;
+import cn.edu.jit.util.ExcelToPdf;
+import cn.edu.jit.util.PptToPdf;
 import cn.edu.jit.util.Sha1Utils;
+import cn.edu.jit.util.WordToPdf;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import org.apache.commons.fileupload.FileItem;
@@ -18,6 +22,7 @@ import sun.misc.BASE64Encoder;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -99,7 +104,9 @@ public class UserController {
             return;
         }
         for (Article article: articles) {
-            directoryTree.addData(new DirectoryTree(article.getId(), article.getTitle()));
+            DirectoryTree dt = new DirectoryTree(article.getId(),article.getTitle());
+            dt.setData(null);
+            directoryTree.addData(dt);
         }
         for (Directory childDir: childDirs) {
             DirectoryTree dt = new DirectoryTree(childDir.getId(), childDir.getName());
@@ -107,44 +114,90 @@ public class UserController {
             directoryTree.addData(dt);
         }
     }
+
+    /**
+     * 将指定目录及其子目录下所有笔记的目录修改为指定目录
+     */
+    private void changeAllNoteDir(Directory directory, String parentDir) {
+        List<Article> articles = articleService.listArticleByDir(getSelfId(), directory.getId());
+        for (Article article : articles) {
+            article.setDirId(parentDir);
+            articleService.update(article);
+        }
+        List<Directory> directories = directoryService.listByParentId(getSelfId(), directory.getId());
+        for (Directory dir : directories) {
+            changeAllNoteDir(dir, parentDir);
+        }
+    }
     /*---------   普通方法区域（END）   ----------*/
 
     @RequestMapping(value = "index")
-    public String indexUI(HttpServletRequest request) {
-        request.setAttribute("uid", getSelfId());
+    public String index(HttpServletRequest request, HttpServletResponse response) {
+        String data = GlobalFunction.getDate();
+        Cookie cookie = new Cookie("lastLoginTime", data);
+        cookie.setMaxAge(60 * 60 * 24 * 30); // 登录时间保存30天
+        response.addCookie(cookie);
+
+        Cookie[] cookies = request.getCookies();
+        String result = "";
+        if(cookies.length > 0) {
+            for (Cookie ck: cookies) {
+                if("lastLoginTime".equals(ck.getName())) {
+                    String lastLoginTime = ck.getValue();
+                    result = "上次登陆：" + lastLoginTime.replace('#',' ');
+                }
+            }
+        } else {
+            result = "上次登陆：未知";
+        }
+
+        // 是否显示登陆信息
+        if(GlobalConstant.hasShowLoginInfo) {
+            request.setAttribute("lastLoginTime", result);
+            GlobalConstant.hasShowLoginInfo = false;
+        }
+
         return "user/index";
     }
 
     /*---------   用户管理区域（START）   ----------*/
     /**
-     * 重置密码
+     * 验证密码
      */
-    @RequestMapping(value = "resetPassword", method = {RequestMethod.POST})
+    @RequestMapping(value = "verifyPassword", method = {RequestMethod.POST})
     public void resetPassword(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
-        int status = 0;
+        Boolean status = true;
         try {
-//            String tel = request.getParameter("tel");
-            String password = request.getParameter("password");
-            Login login = loginService.getByTel("13260908721");
-            if (!Sha1Utils.validatePassword(password, login.getPassword())) {
-                status = 1;
-            } else {
-                String newPassword = request.getParameter("newPassword");
-                String encryptedPassword = Sha1Utils.entryptPassword(newPassword);
-                login.setPassword(encryptedPassword);
-                login.setModifiedDate(new Date());
-                if (loginService.update(login) != 1) {
-                    status = 2;
-                } else {
-                    status = 3;
-                }
+            String passWord = request.getParameter("password");
+            Login login = loginService.getByTel(GlobalFunction.getSelfTel());
+            if (!Sha1Utils.validatePassword(passWord, login.getPassword())) {
+                status = false;
             }
-            response.getWriter().write(status);
+            response.getWriter().write("{\"status\":" + status + "}");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    /**
+     * 重置密码
+     */
+    @RequestMapping(value = "resetPassword", method = {RequestMethod.GET})
+    public String resetPasswordUI() {
+        return "/user/resetPassword";
+    }
+
+    @RequestMapping(value = "resetPassword", method = {RequestMethod.POST})
+    public String resetPassword(String newPassword) {
+        Login login = loginService.getByTel(GlobalFunction.getSelfTel());
+        String encryptedPassword = Sha1Utils.entryptPassword(newPassword);
+        login.setPassword(encryptedPassword);
+        loginService.update(login);
+
+        return "redirect:/logout";
+    }
+
 
     /*---------   用户管理区域（END）   ----------*/
 
@@ -158,11 +211,61 @@ public class UserController {
         response.setContentType("text/html;charset=utf-8");
         String uid = getSelfId();
         try {
-            // 获取顶层目录
-            DirectoryTree directoryTree = new DirectoryTree("","我的文件夹");
+            // 顶层目录 id:root name:我的文件夹
+            DirectoryTree directoryTree = new DirectoryTree("root","我的文件夹");
             initDirectoryTree(directoryTree);
             String data = JSON.toJSONString(directoryTree, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 初始化笔记
+     */
+    @RequestMapping(value = "/createNote", method = {RequestMethod.POST})
+    public void createNote(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        Boolean status = true;
+        try {
+            String dirId = request.getParameter("parentId");
+            String noteName = request.getParameter("noteName");
+
+            Article article = new Article();
+            article.setTitle(noteName);
+            article.setId(GlobalFunction.getUUID());
+            article.setUserId(getSelfId());
+            article.setDirId(dirId);
+            article.setCreateDate(new Date());
+
+            int i = articleService.save(article);
+            if(i != 1) {
+                status = false;
+            }
+
+            response.getWriter().write("{\"status\":" + status + "}");
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * 重命名笔记
+     */
+    @RequestMapping(value = "renameNote", method = {RequestMethod.POST})
+    public void renameNote(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        Boolean status = true;
+        try {
+            String noteId = request.getParameter("noteId");
+            String noteName = request.getParameter("noteName");
+            Article article = articleService.getById(noteId);
+            article.setTitle(noteName);
+            int i = articleService.update(article);
+            if(i != 1) {
+                status = false;
+            }
+            response.getWriter().write("{\"status\":" + status + "}");
         }catch (IOException e) {
             e.printStackTrace();
         }
@@ -186,7 +289,7 @@ public class UserController {
             upload.setHeaderEncoding("UTF-8");
 
             // 3.判断是否为上传文件的表单
-            if (upload.isMultipartContent(request)) {
+            if (ServletFileUpload.isMultipartContent(request)) {
                 // 4.解析request获得文件项集合
                 List<FileItem> fileItems = upload.parseRequest(request);
                 if (fileItems.size() != 0) {
@@ -222,7 +325,7 @@ public class UserController {
     public void downloadFile(HttpServletRequest request, HttpServletResponse response) {
         try {
             String upload_path = request.getSession().getServletContext().getRealPath("upload");
-            String fileName = request.getParameter("fileId");
+            String fileName = request.getParameter("fileName");
             // 设置编码（如果文件名乱码，尝试打开） fileName = new String(fileName.getBytes("ISO8859-1"),"UTF-8");
             // 得到用于返回给客户端的编码后的文件名
             String agent = request.getHeader("User-Agent");
@@ -242,6 +345,59 @@ public class UserController {
             }
             in.close();
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 文件转换
+     * 支持doc/docx/xls/xlsx/ppt/pptx --> pdf
+     */
+    @RequestMapping(value = "/convertFile", method = {RequestMethod.POST})
+    public void convertFile(HttpServletRequest request, HttpServletResponse response) {
+        String upload_path = request.getSession().getServletContext().getRealPath("upload");
+        response.setContentType("text/html;charset=utf-8");
+        Boolean status;
+        String info = null;
+        try {
+            String[] tmp = request.getParameter("fileName").split("\\.");
+            String fileName = tmp[0];
+            String suffix = tmp[1];
+            String inputPath = upload_path + "/" + GlobalFunction.getSelfTel() + "/" + request.getParameter("fileName");
+            String outputPath = upload_path + "/" + GlobalFunction.getSelfTel() + "/" + fileName + ".pdf";
+            int i;
+            switch (suffix) {
+                case "doc":
+                case "docx":
+                    i = WordToPdf.run(inputPath, outputPath);
+                    break;
+                case "xls":
+                case"xlsx":
+                    i = ExcelToPdf.run(inputPath, outputPath);
+                    break;
+                case "ppt":
+                case "pptx":
+                    i = PptToPdf.run(inputPath, outputPath);
+                    break;
+                default:
+                    i = -2;
+                    break;
+            }
+
+            if(i < 0) {
+                status = false;
+                if (i == -1) {
+                    info = "转换失败";
+                } else if (i == -2) {
+                    info = "格式不支持";
+                }
+            } else {
+                status = true;
+                info = i +"";
+            }
+            // status：是否成功；info：成功返回执行秒数，失败返回错误原因
+            response.getWriter().write("{\"status\":" + status +",\"info\":" + "\"" + info + "\"" + "}");
+        }catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -283,11 +439,12 @@ public class UserController {
     public void removeArticle(HttpServletRequest request, HttpServletResponse response){
         try {
             Boolean status = false;
-            String id = request.getParameter("id");
+            String noteId = request.getParameter("noteId");
             ArticleRecycle articleRecycle = new ArticleRecycle();
-            Article article = articleService.getById("1");
+            Article article = articleService.getById(noteId);
             BeanUtils.copyProperties(article, articleRecycle);
-            if(articleService.removeById("1") == 1 && articleRecycleService.save(articleRecycle) == 1) {
+            articleRecycle.setCreateDate(new Date());
+            if(articleService.removeById(noteId) == 1 && articleRecycleService.save(articleRecycle) == 1) {
                 status = true;
             }
             response.getWriter().write("{\"status\":" + status + "}");
@@ -297,7 +454,7 @@ public class UserController {
     }
 
     /**
-     * 恢复笔记
+     * 恢复笔记内容
      */
     @RequestMapping(value = "/recoverNote", method = {RequestMethod.POST})
     public void showUserNote(HttpServletRequest request, HttpServletResponse response) {
@@ -321,4 +478,83 @@ public class UserController {
         }
     }
     /*---------   笔记管理区域（END）   ----------*/
+
+    /*---------   目录管理区域（START）   ----------*/
+
+    /**
+     * 新建目录
+     */
+    @RequestMapping(value = "/createDir", method = {RequestMethod.POST})
+    public void createDir(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        Boolean status = true;
+        try {
+            String parentId = request.getParameter("parentId");
+            String dirName = request.getParameter("dirName");
+
+            Directory directory = new Directory();
+            directory.setId(GlobalFunction.getUUID());
+            directory.setName(dirName);
+            directory.setUid(getSelfId());
+            directory.setParentId(parentId);
+            directory.setCreateDate(new Date());
+            int i = directoryService.save(directory);
+            if(i != 1) {
+                status = false;
+            }
+            response.getWriter().write("{\"status\":" + status + "}");
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 删除目录
+     */
+    @RequestMapping(value = "/removeDir", method = {RequestMethod.POST})
+    public void removeDir(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        Boolean status = true;
+        String dirId = request.getParameter("dirId");
+
+        try {
+            // 1.将目录及其子目录下所有笔记迁移到父目录中
+            Directory directory = directoryService.getById(dirId);
+            String parentDir = directory.getParentId();
+            changeAllNoteDir(directory, parentDir);
+
+            // 2.删除目录及其子目录
+            int i = directoryService.remove(dirId);
+            if(i != 1) {
+                status = false;
+            }
+            response.getWriter().write("{\"status\":" + status + "}");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 重命名目录
+     */
+    @RequestMapping(value = "/renameDir", method = {RequestMethod.POST})
+    public void renameDir(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        Boolean status = true;
+        try {
+            String dirId = request.getParameter("dirId");
+            String dirName = request.getParameter("dirName");
+            Directory directory = directoryService.getById(dirId);
+            directory.setName(dirName);
+            int i = directoryService.update(directory);
+            if(i != 1) {
+                status = false;
+            }
+            response.getWriter().write("{\"status\":" + status + "}");
+        } catch (IOException e) {
+
+        }
+    }
+
+    /*---------   目录管理区域（END）   ----------*/
 }

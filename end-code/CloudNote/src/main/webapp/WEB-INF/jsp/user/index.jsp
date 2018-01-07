@@ -37,6 +37,8 @@
 <jsp:include page="showSelfInfo.jsp"/>
 <jsp:include page="importNote.jsp"/>
 
+<input type="hidden" id="lastLoginTime" value="${lastLoginTime}">
+
 <div class="container">
     <div class="row">
         <!-- 引入左侧目录结构 -->
@@ -53,7 +55,12 @@
     // 页面加载函数
     $(function(){
         // 得到当前用户手机号码
-        var userTel = $.trim($("#showId").text());
+        // var userTel = $.trim($("#showId").text());
+        var lastTime = $("#lastLoginTime").val();
+        if(lastTime != null && lastTime != "") {
+            toastr.info(lastTime);
+            $("#text1").val(null);
+        }
     });
 </script>
 </body>

@@ -10,7 +10,9 @@
     <button onclick="saveContent()">手动保存</button>
     <button onclick="window.location.href='${ctx}/user/downloadFile?fileId=111.txt'">下载文件</button>
     <button onclick="window.location.href='${ctx}/user/downloadFile?fileId=测试.txt'">下载中文</button>
-    <button id="articleRecycle" href="">删除文章</button>
+    <button onclick="convertFile('test.docx')">测试doc转pdf</button>
+    <button onclick="convertFile('test.ppt')" >测试ppt转pdf</button>
+    <button onclick="convertFile('test.xlsx')" >测试excel转pdf</button>
 
     <script type="text/javascript">
         var strRegex = "^((https|http|ftp|rtsp|mms)?://)"
@@ -113,5 +115,19 @@
                 return false;
             });
         }, false);
+
+        // 转换文件
+        function convertFile(fileName) {
+            sendPost('${ctx}/user/convertFile',{'fileName':fileName},true,function (res) {
+                if(res.status) {
+                    alert("成功，耗时：" + res.info + "秒!");
+                } else {
+                    alert("失败，原因：" + res.info + "!");
+                }
+            },function (error) {
+                toastr.error("系统错误");
+                return false;
+            });
+        }
     </script>
 </div>

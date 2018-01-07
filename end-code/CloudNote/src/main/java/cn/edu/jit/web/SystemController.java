@@ -113,10 +113,12 @@ public class SystemController {
         // 如果获取不到用户名就是登录失败，登录失败会直接抛出异常
         subject.login(token);
 
-        // 所有用户均重定向对应的展示配送页面
+        // 所有用户均重定向对应首页
         if (subject.hasRole(GlobalConstant.ROLE.ADMIN.getName())) {
+            GlobalConstant.hasShowLoginInfo = true;
             return "redirect:/admin/index";
         } else if (subject.hasRole(GlobalConstant.ROLE.USER.getName())) {
+            GlobalConstant.hasShowLoginInfo = true;
             return "redirect:/user/index";
         } else {
             return "/login";
@@ -156,26 +158,35 @@ public class SystemController {
         return "redirect:/login";
     }
 
-    @RequestMapping(value = "resetPassword", method = {RequestMethod.GET})
+    @RequestMapping(value = "foundPassword", method = {RequestMethod.GET})
     public String resetPasswordUI() {
-        return "resetPassword";
+        return "foundPassword";
     }
 
-    @RequestMapping(value = "resetPassword", method = {RequestMethod.POST})
+    @RequestMapping(value = "foundPassword", method = {RequestMethod.POST})
     public void resetPassword(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
         Boolean status = true;
+        String info = null;
         try {
             String newPassword = request.getParameter("newPassword");
-//        String id = request.getParameter("id");
-            String encryptedPassword = Sha1Utils.entryptPassword(newPassword);
-            Login login = loginService.getByTel("13260908721");
-            login.setPassword(encryptedPassword);
-            login.setModifiedDate(new Date());
-            if (loginService.update(login) != 1) {
+            String tel = request.getParameter("tel");
+
+            Login login = loginService.getByTel(tel);
+
+            if(login != null) {
+                String encryptedPassword = Sha1Utils.entryptPassword(newPassword);
+                login.setPassword(encryptedPassword);
+                if (loginService.update(login) != 1) {
+                    status = false;
+                    info = "修改密码失败";
+                }
+            } else {
                 status = false;
+                info = "账户不存在";
             }
-            response.getWriter().write("{\"status\":" + status + "}");
+            // status：是否成功；info：成功返回null，失败返回错误原因
+            response.getWriter().write("{\"status\":" + status +",\"info\":" + "\"" + info + "\"" + "}");
         } catch (IOException e) {
             e.printStackTrace();
         }

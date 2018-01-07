@@ -100,8 +100,8 @@
         <p style="font-size: 20px;line-height: 45px;text-align: center;color: white;">找回密码</p>
     </header>
     <div class="inputPhone" >
-        <input id="phonenum" type="text" class="form-control name"
-               placeholder="请输入手机号获取验证码">
+        <input id="tel" type="text" class="form-control name"
+               placeholder="请输入手机号获取验证码" required="required">
         <input type="button" class="btn send" style="margin-bottom: 15px" id="second" value="发送验证码">
 
         <input id="yanzhengma" name="code" style="margin-top: 35px" type="text" class="form-control name"
@@ -115,10 +115,10 @@
         <hr>
         <p class="changePassword" >新密码：</p>
         <input id="newPassword" style="margin-top: 5px" type="password" class="form-control mima"
-               placeholder="请输入新密码">
+               placeholder="请输入新密码" required="required">
         <p class="changePassword" style="margin-top: 60px">确认密码：</p>
         <input id="checkPassword" style="margin-top: 5px" type="password" class="form-control r_mima"
-               placeholder="确认新密码">
+               placeholder="确认新密码" required="required">
         <a class="btn" id="reset" onclick="reset()">重置密码</a>
     </div>
 </div>
@@ -126,33 +126,36 @@
 <jsp:include page="${ctx}/WEB-INF/jsp/global/footer.jsp"/>
 <script>
     function reset(){
+        var tel = $('#tel').val();
         var newPassword= $('#newPassword').val();
         var checkPassword = $('#checkPassword').val();
         if (newPassword != checkPassword){
             toastr.warning("两次密码不一致！");
+            return false;
         }
         $.ajax({
             type:'post',
-            url: '${ctx}/resetPassword',
+            url: '${ctx}/foundPassword',
             async:false,
             dataType:'json',
             data:{
-                'id':'tel',
+                'tel':tel,
                 'newPassword':newPassword
             },
             success:function (msg) {
                 if(msg.status) {
-                    toastr.success("修改成功!");
+                    toastr.success("修改成功，3秒后前往登陆页面！");
+                    setTimeout(function(){ window.location.href="${ctx}/login"; }, 3000);
                 } else {
-                    toastr.warning("修改失败!");
+                    toastr.warning(msg.info);
                 }
             },
             error:function () {
                 toastr.error("内部错误");
+                return false;
             }
         });
     }
 </script>
 </body>
-
 </html>

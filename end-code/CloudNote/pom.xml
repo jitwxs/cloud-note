@@ -163,6 +163,33 @@
             <version>5.1.41</version>
         </dependency>
 
+        <!-- Aspose word->Pdf -->
+        <dependency>
+            <groupId>com.aspose</groupId>
+            <artifactId>aspose-words</artifactId>
+            <version>6.8.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/aspose-words-16.8.0-jdk16.jar</systemPath>
+        </dependency>
+
+        <!-- Aspose excel->Pdf -->
+        <dependency>
+            <groupId>com.aspose</groupId>
+            <artifactId>aspose-cells</artifactId>
+            <version>8.5.2</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/aspose-cells-8.5.2.jar</systemPath>
+        </dependency>
+
+        <!-- Aspose ppt->Pdf -->
+        <dependency>
+            <groupId>com.aspose</groupId>
+            <artifactId>aspose-slides</artifactId>
+            <version>15.9.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/aspose-slides-15.9.0.jar</systemPath>
+        </dependency>
+
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations-java5</artifactId>
