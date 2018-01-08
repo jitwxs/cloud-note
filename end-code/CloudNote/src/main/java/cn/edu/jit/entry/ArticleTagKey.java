@@ -1,6 +1,8 @@
 package cn.edu.jit.entry;
 
-public class ArticleTagKey {
+import java.io.Serializable;
+
+public class ArticleTagKey implements Serializable {
     private String articleId;
 
     private String tagId;

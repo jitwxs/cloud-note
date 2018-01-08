@@ -1,9 +1,12 @@
 package cn.edu.jit.entry;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Directory {
+public class Directory implements Serializable {
     private String id;
+
+    private String uid;
 
     private String name;
 
@@ -19,6 +22,14 @@ public class Directory {
 
     public void setId(String id) {
         this.id = id == null ? null : id.trim();
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid == null ? null : uid.trim();
     }
 
     public String getName() {

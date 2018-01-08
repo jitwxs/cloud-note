@@ -1,13 +1,12 @@
 package cn.edu.jit.entry;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ArticleRecycle {
+public class ArticleRecycle implements Serializable {
     private String id;
 
     private String title;
-
-    private String content;
 
     private String userId;
 
@@ -35,14 +34,6 @@ public class ArticleRecycle {
 
     public void setTitle(String title) {
         this.title = title == null ? null : title.trim();
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content == null ? null : content.trim();
     }
 
     public String getUserId() {

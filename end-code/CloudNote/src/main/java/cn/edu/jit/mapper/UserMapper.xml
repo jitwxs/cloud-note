@@ -7,8 +7,8 @@
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="email" property="email" jdbcType="VARCHAR" />
     <result column="area" property="area" jdbcType="VARCHAR" />
-    <result column="icon" property="icon" jdbcType="VARCHAR" />
     <result column="sex" property="sex" jdbcType="CHAR" />
+    <result column="icon" property="icon" jdbcType="VARCHAR" />
     <result column="sign" property="sign" jdbcType="VARCHAR" />
     <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
     <result column="modifed_date" property="modifedDate" jdbcType="TIMESTAMP" />
@@ -72,7 +72,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, tel, name, email, area, icon, sex, sign, create_date, modifed_date
+    id, tel, name, email, area, sex, icon, sign, create_date, modifed_date
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.edu.jit.entry.UserExample" >
     select
@@ -106,13 +106,13 @@
   </delete>
   <insert id="insert" parameterType="cn.edu.jit.entry.User" >
     insert into user (id, tel, name, 
-      email, area, icon, 
-      sex, sign, create_date, 
-      modifed_date)
+      email, area, sex, icon, 
+      sign, create_date, modifed_date
+      )
     values (#{id,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
-      #{email,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{icon,jdbcType=VARCHAR}, 
-      #{sex,jdbcType=CHAR}, #{sign,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
-      #{modifedDate,jdbcType=TIMESTAMP})
+      #{email,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{sex,jdbcType=CHAR}, #{icon,jdbcType=VARCHAR}, 
+      #{sign,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{modifedDate,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.jit.entry.User" >
     insert into user
@@ -132,11 +132,11 @@
       <if test="area != null" >
         area,
       </if>
-      <if test="icon != null" >
-        icon,
-      </if>
       <if test="sex != null" >
         sex,
+      </if>
+      <if test="icon != null" >
+        icon,
       </if>
       <if test="sign != null" >
         sign,
@@ -164,11 +164,11 @@
       <if test="area != null" >
         #{area,jdbcType=VARCHAR},
       </if>
-      <if test="icon != null" >
-        #{icon,jdbcType=VARCHAR},
-      </if>
       <if test="sex != null" >
         #{sex,jdbcType=CHAR},
+      </if>
+      <if test="icon != null" >
+        #{icon,jdbcType=VARCHAR},
       </if>
       <if test="sign != null" >
         #{sign,jdbcType=VARCHAR},
@@ -205,11 +205,11 @@
       <if test="record.area != null" >
         area = #{record.area,jdbcType=VARCHAR},
       </if>
-      <if test="record.icon != null" >
-        icon = #{record.icon,jdbcType=VARCHAR},
-      </if>
       <if test="record.sex != null" >
         sex = #{record.sex,jdbcType=CHAR},
+      </if>
+      <if test="record.icon != null" >
+        icon = #{record.icon,jdbcType=VARCHAR},
       </if>
       <if test="record.sign != null" >
         sign = #{record.sign,jdbcType=VARCHAR},
@@ -232,8 +232,8 @@
       name = #{record.name,jdbcType=VARCHAR},
       email = #{record.email,jdbcType=VARCHAR},
       area = #{record.area,jdbcType=VARCHAR},
-      icon = #{record.icon,jdbcType=VARCHAR},
       sex = #{record.sex,jdbcType=CHAR},
+      icon = #{record.icon,jdbcType=VARCHAR},
       sign = #{record.sign,jdbcType=VARCHAR},
       create_date = #{record.createDate,jdbcType=TIMESTAMP},
       modifed_date = #{record.modifedDate,jdbcType=TIMESTAMP}
@@ -256,11 +256,11 @@
       <if test="area != null" >
         area = #{area,jdbcType=VARCHAR},
       </if>
-      <if test="icon != null" >
-        icon = #{icon,jdbcType=VARCHAR},
-      </if>
       <if test="sex != null" >
         sex = #{sex,jdbcType=CHAR},
+      </if>
+      <if test="icon != null" >
+        icon = #{icon,jdbcType=VARCHAR},
       </if>
       <if test="sign != null" >
         sign = #{sign,jdbcType=VARCHAR},
@@ -280,8 +280,8 @@
       name = #{name,jdbcType=VARCHAR},
       email = #{email,jdbcType=VARCHAR},
       area = #{area,jdbcType=VARCHAR},
-      icon = #{icon,jdbcType=VARCHAR},
       sex = #{sex,jdbcType=CHAR},
+      icon = #{icon,jdbcType=VARCHAR},
       sign = #{sign,jdbcType=VARCHAR},
       create_date = #{createDate,jdbcType=TIMESTAMP},
       modifed_date = #{modifedDate,jdbcType=TIMESTAMP}
