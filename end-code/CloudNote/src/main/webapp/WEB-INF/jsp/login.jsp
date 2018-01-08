@@ -110,10 +110,11 @@
 
     <div class="right" style="width: 420px;height: 410px;">
         <p style="font-size: 18px;text-align: center;margin-top: 30px">其他账号登录</p>
-        <a class="btn" onclick="loginQQ()"><img src="${ctx}/images/qq.png">  使用QQ登录</a>
-        <a style="margin-top: 40px" class="btn" onclick="loginWchat()"><img src="${ctx}/images/weixin.png">  使用微信登录</a>
-        <a style="margin-top: 40px" class="btn" onclick="loginSina()"><img src="${ctx}/images/weibo.png">  使用微博登录</a>
+        <a class="btn" style="padding-left: 33px" onclick="loginQQ()"><img src="${ctx}/images/qq.png">  使用QQ登录</a>
+        <a style="margin-top: 40px;padding-left: 40px" class="btn"   onclick="loginWeChat()"><img src="${ctx}/images/weixin.png">  使用微信登录</a>
+        <a style="margin-top: 40px;padding-left: 55px"class="btn"   onclick="loginGithub()"><img src="${ctx}/images/github.png">  使用Github登录</a>
     </div>
+
 </div>
 <script>
     function httpPost() {
@@ -136,8 +137,8 @@
                 'password': password
             },
             success: function (msg) {
-                if (!msg.res){
-                    toastr.error("手机号不存在或密码错误");
+                if (!msg.status){
+                    toastr.error("账号或密码错误");
                     flag = false;
                 } else {
                     flag = true;
@@ -154,10 +155,10 @@
     function loginQQ() {
     }
     //微信登录
-    function loginWchat(){
+    function loginWeChat(){
     }
     //新浪微博登录
-    function loginSina(){
+    function loginGithub(){
     }
 </script>
 </body>

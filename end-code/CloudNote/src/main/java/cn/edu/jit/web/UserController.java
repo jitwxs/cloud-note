@@ -13,6 +13,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
@@ -135,7 +136,8 @@ public class UserController {
     public String index(HttpServletRequest request, HttpServletResponse response) {
         String data = GlobalFunction.getDate();
         Cookie cookie = new Cookie("lastLoginTime", data);
-        cookie.setMaxAge(60 * 60 * 24 * 30); // 登录时间保存30天
+        // 登录时间保存30天
+        cookie.setMaxAge(60 * 60 * 24 * 30);
         response.addCookie(cookie);
 
         Cookie[] cookies = request.getCookies();
@@ -152,9 +154,9 @@ public class UserController {
         }
 
         // 是否显示登陆信息
-        if(GlobalConstant.hasShowLoginInfo) {
+        if(GlobalConstant.HAS_SHOW_LOGIN_INFO) {
             request.setAttribute("lastLoginTime", result);
-            GlobalConstant.hasShowLoginInfo = false;
+            GlobalConstant.HAS_SHOW_LOGIN_INFO = false;
         }
 
         return "user/index";
@@ -174,7 +176,11 @@ public class UserController {
             if (!Sha1Utils.validatePassword(passWord, login.getPassword())) {
                 status = false;
             }
-            response.getWriter().write("{\"status\":" + status + "}");
+
+            Message msg = new Message();
+            msg.setStatus(status);
+            String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -204,7 +210,7 @@ public class UserController {
     /*---------   笔记管理区域（START）   ----------*/
 
     /**
-     * 初始化目录树
+     * 初始化用户笔记目录树
      */
     @RequestMapping(value = "/initDirectory", method = {RequestMethod.GET})
     public void initArticle(HttpServletRequest request, HttpServletResponse response) {
@@ -222,33 +228,48 @@ public class UserController {
     }
 
     /**
-     * 初始化笔记
+     * 创建笔记
      */
     @RequestMapping(value = "/createNote", method = {RequestMethod.POST})
     public void createNote(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
         Boolean status = true;
         try {
+            // 所属目录id
             String dirId = request.getParameter("parentId");
             String noteName = request.getParameter("noteName");
+            String id = GlobalFunction.getUUID();
+            String articlePath = GlobalConstant.USER_ARTICLE_PATH + "/" + id + "/" + noteName + ".note";
 
+            // 存入数据库
             Article article = new Article();
             article.setTitle(noteName);
-            article.setId(GlobalFunction.getUUID());
+            article.setId(id);
             article.setUserId(getSelfId());
             article.setDirId(dirId);
             article.setCreateDate(new Date());
-
             int i = articleService.save(article);
             if(i != 1) {
                 status = false;
             }
 
-            response.getWriter().write("{\"status\":" + status + "}");
+            // 创建笔记目录
+            GlobalFunction.createPath(articlePath);
+            // 初始化笔记内容
+            OutputStreamWriter bw = new OutputStreamWriter(new FileOutputStream(articlePath), "UTF-8");
+            bw.write(GlobalConstant.ARTICLE_DEFAULT_CONTENT);
+            bw.close();
+
+            Message msg = new Message();
+            msg.setStatus(status);
+            msg.setNoteId(id);
+            String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
         }catch (IOException e) {
             e.printStackTrace();
         }
     }
+
     /**
      * 重命名笔记
      */
@@ -260,13 +281,22 @@ public class UserController {
             String noteId = request.getParameter("noteId");
             String noteName = request.getParameter("noteName");
             Article article = articleService.getById(noteId);
-            article.setTitle(noteName);
-            int i = articleService.update(article);
-            if(i != 1) {
+            boolean flag = GlobalFunction.renameFile(GlobalConstant.USER_ARTICLE_PATH + "/" + noteId,
+                    article.getTitle() + GlobalConstant.NOTE_SUFFIX, noteName + GlobalConstant.NOTE_SUFFIX);
+            if (flag) {
+                article.setTitle(noteName);
+                if (articleService.update(article) != 1) {
+                    status = false;
+                }
+            } else {
                 status = false;
             }
-            response.getWriter().write("{\"status\":" + status + "}");
-        }catch (IOException e) {
+
+            Message msg = new Message();
+            msg.setStatus(status);
+            String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -277,11 +307,9 @@ public class UserController {
     @RequestMapping(value = "importNote", method = {RequestMethod.POST})
     public String importNote(HttpServletRequest request, HttpServletResponse response) {
         User user = new User();
-        String temp_path = request.getSession().getServletContext().getRealPath("temp"); // 获取temp文件夹路径
-        String upload_path = request.getSession().getServletContext().getRealPath("upload"); // 获取upload文件夹路径
         try {
             // 1.创建磁盘文件项工厂 sizeThreshold：每次缓存大小，单位为字节  File：临时文件路径
-            DiskFileItemFactory factory = new DiskFileItemFactory(1024 * 1024, new File(temp_path));
+            DiskFileItemFactory factory = new DiskFileItemFactory(1024 * 1024, new File(GlobalConstant.TEMP_PATH));
 
             // 2.创建文件上传核心类
             ServletFileUpload upload = new ServletFileUpload(factory);
@@ -303,9 +331,7 @@ public class UserController {
                         // 重命名：规定未手机号+后缀作为头像名
                         fileName = GlobalFunction.getSelfTel() + "_note." + fileName.split("\\.")[1];
 
-                        // 拼装路径
-                        String icon_path = GlobalFunction.getSelfTel() + "/" + fileName;
-                        String targetFilePath = upload_path + "/" + icon_path;
+                        String targetFilePath = GlobalConstant.USER_IMG_PATH + fileName;
                         // 上传文件
                         GlobalFunction.uploadFile(item, targetFilePath);
                     }
@@ -319,14 +345,16 @@ public class UserController {
     }
 
     /**
-     * 导出笔记/文件下载
+     * 下载笔记
      */
-    @RequestMapping(value = "/downloadFile", method = {RequestMethod.GET})
+    @RequestMapping(value = "/downloadNote", method = {RequestMethod.GET})
     public void downloadFile(HttpServletRequest request, HttpServletResponse response) {
+        String noteId = request.getParameter("noteId");
+        // 设置编码（如果文件名乱码，尝试打开解决问题）
+        // fileName = new String(fileName.getBytes("ISO8859-1"),"UTF-8");
+        String fileName = request.getParameter("noteName");
+        fileName = fileName + GlobalConstant.NOTE_SUFFIX;
         try {
-            String upload_path = request.getSession().getServletContext().getRealPath("upload");
-            String fileName = request.getParameter("fileName");
-            // 设置编码（如果文件名乱码，尝试打开） fileName = new String(fileName.getBytes("ISO8859-1"),"UTF-8");
             // 得到用于返回给客户端的编码后的文件名
             String agent = request.getHeader("User-Agent");
             String fileNameEncode = solveFileNameEncode(agent, fileName);
@@ -335,15 +363,9 @@ public class UserController {
             // 关闭客户端的默认解析
             response.setHeader("Content-Disposition", "attachment;filename=" + fileNameEncode);
             // 获得文件真实下载路径
-            String path = upload_path + "/" + GlobalFunction.getSelfTel() + "/" + fileName;
-            InputStream in = new FileInputStream(path);
-            ServletOutputStream out = response.getOutputStream();
-            int len = 0;
-            byte[] buf = new byte[1024];
-            while ((len = in.read(buf)) > 0) {
-                out.write(buf, 0, len);
-            }
-            in.close();
+            String path = GlobalConstant.USER_ARTICLE_PATH + "/" + noteId + "/" + fileName;
+            // 下载文件
+            GlobalFunction.downloadFile(path, response.getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -355,7 +377,6 @@ public class UserController {
      */
     @RequestMapping(value = "/convertFile", method = {RequestMethod.POST})
     public void convertFile(HttpServletRequest request, HttpServletResponse response) {
-        String upload_path = request.getSession().getServletContext().getRealPath("upload");
         response.setContentType("text/html;charset=utf-8");
         Boolean status;
         String info = null;
@@ -363,8 +384,8 @@ public class UserController {
             String[] tmp = request.getParameter("fileName").split("\\.");
             String fileName = tmp[0];
             String suffix = tmp[1];
-            String inputPath = upload_path + "/" + GlobalFunction.getSelfTel() + "/" + request.getParameter("fileName");
-            String outputPath = upload_path + "/" + GlobalFunction.getSelfTel() + "/" + fileName + ".pdf";
+            String inputPath = GlobalConstant.USER_PAN_PATH + "/" + request.getParameter("fileName");
+            String outputPath = GlobalConstant.USER_PAN_PATH + "/" + fileName + ".pdf";
             int i;
             switch (suffix) {
                 case "doc":
@@ -396,7 +417,11 @@ public class UserController {
                 info = i +"";
             }
             // status：是否成功；info：成功返回执行秒数，失败返回错误原因
-            response.getWriter().write("{\"status\":" + status +",\"info\":" + "\"" + info + "\"" + "}");
+            Message msg = new Message();
+            msg.setStatus(status);
+            msg.setInfo(info);
+            String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -405,16 +430,16 @@ public class UserController {
     /**
      * 保存笔记
      */
+    //TODO
     @RequestMapping(value = "/saveArticle", method = {RequestMethod.POST})
     public void saveArticle(HttpServletRequest request, HttpServletResponse response) {
-        String upload_path = request.getSession().getServletContext().getRealPath("upload"); // 获取upload文件夹路径
         //String noteName = request.getParameter("noteId");
         String noteName = "111.txt";
         response.setContentType("text/html;charset=utf-8");
         try {
 //        String articleId = request.getParameter("id");
             String content = request.getParameter("data");
-            String targetFilePath = upload_path + "/" + GlobalFunction.getSelfTel() + "/" + noteName;
+            String targetFilePath = GlobalConstant.USER_ARTICLE_PATH + noteName;
 
             File file = new File(targetFilePath);
             if (!file.getParentFile().exists()) {
@@ -422,7 +447,6 @@ public class UserController {
             }
 
             OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(targetFilePath), "UTF-8");
-            System.out.println(content);
             writer.write(content);
             writer.flush();
             writer.close();
@@ -447,8 +471,17 @@ public class UserController {
             if(articleService.removeById(noteId) == 1 && articleRecycleService.save(articleRecycle) == 1) {
                 status = true;
             }
-            response.getWriter().write("{\"status\":" + status + "}");
-        }catch (IOException e) {
+
+            // 删除文章目录
+            String path = GlobalConstant.USER_ARTICLE_PATH  + "/" + noteId;
+
+            FileUtils.deleteQuietly(new File(path));
+
+            Message msg = new Message();
+            msg.setStatus(status);
+            String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        }catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -462,17 +495,16 @@ public class UserController {
         int len;
         response.setContentType("text/html;charset=utf-8");
         try {
-            //String noteName = request.getParameter("noteId");
-            String noteName = "111.txt";
-            String upload_path = request.getSession().getServletContext().getRealPath("upload");
-            String targetFilePath = upload_path + "/" + GlobalFunction.getSelfTel() + "/" + noteName;
+            String noteName = request.getParameter("noteName");
+            String noteId = request.getParameter("noteId");
+            String targetFilePath = GlobalConstant.USER_ARTICLE_PATH + "/" + noteId + "/" + noteName + GlobalConstant.NOTE_SUFFIX;
 
-            InputStreamReader reader = new InputStreamReader(new FileInputStream(targetFilePath), "UTF-8");
+            InputStreamReader in = new InputStreamReader(new FileInputStream(targetFilePath), "UTF-8");
 
-            while ((len = reader.read(buf, 0, 1024)) > 0) {
+            while ((len = in.read(buf, 0, 1024)) > 0) {
                 response.getWriter().write(buf, 0, len);
             }
-            reader.close();
+            in.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -493,7 +525,8 @@ public class UserController {
             String dirName = request.getParameter("dirName");
 
             Directory directory = new Directory();
-            directory.setId(GlobalFunction.getUUID());
+            String dirId = GlobalFunction.getUUID();
+            directory.setId(dirId);
             directory.setName(dirName);
             directory.setUid(getSelfId());
             directory.setParentId(parentId);
@@ -502,7 +535,12 @@ public class UserController {
             if(i != 1) {
                 status = false;
             }
-            response.getWriter().write("{\"status\":" + status + "}");
+
+            Message msg = new Message();
+            msg.setStatus(status);
+            msg.setDirId(dirId);
+            String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
         }catch (IOException e) {
             e.printStackTrace();
         }
@@ -528,7 +566,11 @@ public class UserController {
             if(i != 1) {
                 status = false;
             }
-            response.getWriter().write("{\"status\":" + status + "}");
+
+            Message msg = new Message();
+            msg.setStatus(status);
+            String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -550,9 +592,13 @@ public class UserController {
             if(i != 1) {
                 status = false;
             }
-            response.getWriter().write("{\"status\":" + status + "}");
-        } catch (IOException e) {
 
+            Message msg = new Message();
+            msg.setStatus(status);
+            String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

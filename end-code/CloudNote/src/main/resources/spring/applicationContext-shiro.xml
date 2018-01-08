@@ -34,6 +34,10 @@
                 /registerCheck = anon
                 /register = anon
                 /foundPassword = anon
+                # 发送验证码
+                /smsVerification = anon
+                # 验证验证码
+                /codeCheck = anon
 
                 # 注销请求
                 /logout = logout

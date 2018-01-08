@@ -53,7 +53,7 @@
             $("#userArea").val(res.area);
 
             // 设置头像url
-            $("#userBigIcon").attr('src',"${ctx}/upload/"+res.icon);
+            $("#userBigIcon").attr('src',"${ctx}/upload/"+ userTel + "/images/" + res.icon);
             //初始化更新头像信息
             $("#uploadIcon").val('');
             $("#fileName").html('');

@@ -46,10 +46,10 @@ public class WordToPdf {
         boolean result = false;
         try {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
-            license = new FileInputStream(loader.getResource("license.xml").getPath());// 凭证文件
+            license = new FileInputStream(loader.getResource("license.xml").getPath());
 
             fileInput = new FileInputStream(input);
-            outputFile = new File(output);// 输出路径
+            outputFile = new File(output);
 
             License aposeLic = new License();
             aposeLic.setLicense(license);

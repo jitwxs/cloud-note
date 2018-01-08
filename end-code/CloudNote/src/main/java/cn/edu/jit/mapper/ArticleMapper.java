@@ -1,9 +1,11 @@
 package cn.edu.jit.mapper;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import cn.edu.jit.entry.Article;
 import cn.edu.jit.entry.ArticleExample;
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
 public interface ArticleMapper {
     int countByExample(ArticleExample example);
@@ -30,8 +32,8 @@ public interface ArticleMapper {
 
     /**
      * 根据用户id和标签id查询所有文章
-     * @param uid
-     * @param tagId
+     * @param uid 用户id
+     * @param tagId 标签id
      * @return
      */
     List<Article> listArticleByTag(@Param("uid") String uid, @Param("tagId") String tagId);

@@ -1,8 +1,9 @@
 package cn.edu.jit.entry;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Directory {
+public class Directory implements Serializable {
     private String id;
 
     private String uid;

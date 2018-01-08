@@ -45,7 +45,8 @@ public class AdminController {
     public String index(HttpServletRequest request, HttpServletResponse response) {
         String data = GlobalFunction.getDate();
         Cookie cookie = new Cookie("lastLoginTime", data);
-        cookie.setMaxAge(60 * 60 * 24 * 30); // 登录时间保存30天
+        // 登录时间保存30天
+        cookie.setMaxAge(60 * 60 * 24 * 30);
         response.addCookie(cookie);
 
         Cookie[] cookies = request.getCookies();
@@ -61,9 +62,9 @@ public class AdminController {
             result = "上次登陆：未知";
         }
         // 是否显示登陆信息
-        if(GlobalConstant.hasShowLoginInfo) {
+        if(GlobalConstant.HAS_SHOW_LOGIN_INFO) {
             request.setAttribute("lastLoginTime", result);
-            GlobalConstant.hasShowLoginInfo = false;
+            GlobalConstant.HAS_SHOW_LOGIN_INFO = false;
         }
         return "admin/index";
     }

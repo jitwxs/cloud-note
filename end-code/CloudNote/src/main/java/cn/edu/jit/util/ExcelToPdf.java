@@ -27,8 +27,8 @@ public class ExcelToPdf {
         }
         try {
             long old = System.currentTimeMillis();
-            Workbook wb = new Workbook(inputFile);// 原始excel路径
-            File pdfFile = new File(outputFile);// 输出路径
+            Workbook wb = new Workbook(inputFile);
+            File pdfFile = new File(outputFile);
             FileOutputStream fileOS = new FileOutputStream(pdfFile);
             wb.save(fileOS, SaveFormat.PDF);
             long now = System.currentTimeMillis();

@@ -1,8 +1,9 @@
 package cn.edu.jit.entry;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class User {
+public class User implements Serializable {
     private String id;
 
     private String tel;
@@ -13,9 +14,9 @@ public class User {
 
     private String area;
 
-    private String icon;
-
     private String sex;
+
+    private String icon;
 
     private String sign;
 
@@ -63,20 +64,20 @@ public class User {
         this.area = area == null ? null : area.trim();
     }
 
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon == null ? null : icon.trim();
-    }
-
     public String getSex() {
         return sex;
     }
 
     public void setSex(String sex) {
         this.sex = sex == null ? null : sex.trim();
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon == null ? null : icon.trim();
     }
 
     public String getSign() {

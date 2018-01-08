@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="${ctx}/css/toastr.css">
     <!-- 自定义CSS -->
     <link rel="stylesheet" href="${ctx}/css/custom.css">
+    <link rel="stylesheet" href="${ctx}/css/home_css.css">
     <!-- jQuery first, then Bootstrap JS. -->
     <script src="${ctx}/js/jquery-3.2.1.min.js"></script>
     <script src="${ctx}/js/bootstrap.js"></script>
@@ -29,33 +30,57 @@
     <script src="${ctx}/js/toastr.js"></script>
     <!-- 封装ajax -->
     <script src="${ctx}/js/http.js"></script>
+    <script src="${ctx}/js/home_js.js"></script>
+
+
 </head>
 
-<body>
-<jsp:include page="head.jsp"/>
+<body style="margin-top: 60px;position: absolute;width: 100%" id="home_body">
+
 <!-- 引入模块框 -->
 <jsp:include page="showSelfInfo.jsp"/>
 <jsp:include page="importNote.jsp"/>
 
 <input type="hidden" id="lastLoginTime" value="${lastLoginTime}">
 
-<div class="container">
-    <div class="row">
-        <!-- 引入左侧目录结构 -->
-        <jsp:include page="directory.jsp"/>
+<!-- 导入头部 -->
+<jsp:include page="head.jsp"/>
 
-        <!-- 引入右侧富文本编辑器 -->
-        <jsp:include page="articleEditor.jsp"/>
+<!--侧边栏-->
+<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1" style="height: 1500px;">
+    ....
+</nav>
+
+<!--主体-->
+<div  class="container" style="padding-right: 0px; width:100%" id="left">
+    <div class="row">
+        <div id="wangeditor" class="col-lg-10">
+            <jsp:include page="directory.jsp"/>
+            <jsp:include page="articleEditor.jsp"/>
+        </div>
+        <div class="col-lg-2" id="advertisment" style="background: yellow;height: 700px;">
     </div>
 </div>
 
 <!-- 引入页脚 -->
 <jsp:include page="${ctx}/WEB-INF/jsp/global/footer.jsp"/>
+
 <script>
+    var menuLeft = document.getElementById( 'cbp-spmenu-s1' ),  //nav整个导航栏
+        showLeftPush = document.getElementById( 'showLeftPush' ),//button按钮
+        body = document.getElementById("home_body");
+    showLeftPush.onclick = function() {
+        var nav_id=document.getElementById("cbp-spmenu-s1");
+        classie.toggle( this, 'active' );
+        classie.toggle( body, 'cbp-spmenu-push-toright' );   //body 左移200px
+        classie.toggle( menuLeft, 'cbp-spmenu-open' );   //nav 的left:0
+    };
+
+    var userTel;
     // 页面加载函数
     $(function(){
         // 得到当前用户手机号码
-        // var userTel = $.trim($("#showId").text());
+        userTel = $.trim($("#showId").text());
         var lastTime = $("#lastLoginTime").val();
         if(lastTime != null && lastTime != "") {
             toastr.info(lastTime);

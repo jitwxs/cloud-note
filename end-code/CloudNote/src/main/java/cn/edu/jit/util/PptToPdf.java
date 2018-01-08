@@ -31,7 +31,7 @@ public class PptToPdf {
         try {
             long old = System.currentTimeMillis();
             Presentation pres = new Presentation(inputFile);
-            File file = new File(outputFile);// 输出pdf路径
+            File file = new File(outputFile);
             FileOutputStream fileOS = new FileOutputStream(file);
 
             pres.save(fileOS, SaveFormat.Pdf);
@@ -47,7 +47,7 @@ public class PptToPdf {
     public static boolean getLicense(String inputFile ) {
         boolean result = false;
         try {
-            license = PptToPdf.class.getClassLoader().getResourceAsStream("license.xml");// license路径
+            license = PptToPdf.class.getClassLoader().getResourceAsStream("license.xml");
             License aposeLic = new License();
             aposeLic.setLicense(license);
             result = true;

@@ -46,10 +46,11 @@
 
 
 <script>
+    var userTel;
     // 页面加载函数
     $(function(){
         // 得到当前用户手机号码
-        // var userTel = $.trim($("#showId").text());
+        userTel = $.trim($("#showId").text());
         var lastTime = $("#lastLoginTime").val();
         if(lastTime != null && lastTime != "") {
             toastr.info(lastTime);

@@ -1,8 +1,9 @@
 package cn.edu.jit.entry;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Login {
+public class Login implements Serializable {
     private String tel;
 
     private String password;

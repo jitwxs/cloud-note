@@ -1,0 +1,98 @@
+ /* General styles for all menus */
+.cbp-spmenu {
+    background: #cfd3c7;
+    position: fixed;
+}
+
+/* Orientation-dependent styles for the content of the menu */
+
+.cbp-spmenu-vertical {
+    width: 240px;
+    height:1000px;
+    top:5;
+    z-index: 1000;
+}
+
+.cbp-spmenu-horizontal {
+    width: 100%;
+    height: 150px;
+    left: 0;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+/* Vertical menu that slides from the left or right 显示隐藏侧边栏的类 */
+
+.cbp-spmenu-left {
+    left: -240px;
+}
+.cbp-spmenu-left.cbp-spmenu-open {
+    left: 0px;
+}
+
+
+/* Push classes applied to the body主体随之移动 */
+
+.cbp-spmenu-push {
+    overflow-x: hidden;
+    position: relative;
+    left: 0;
+}
+
+.cbp-spmenu-push-toright {
+    left: 240px;
+}
+
+.cbp-spmenu-push-toleft {
+    left: -240px;
+}
+
+/* Transitions 隐藏侧边栏的滑动出现效果*/
+
+.cbp-spmenu,
+.cbp-spmenu-push {
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+.wjj_div{
+    margin-left: 10px;
+}
+
+#home_body{
+    padding-top: 60px;
+    padding-right: 0px;
+    padding-left: 0px;
+}
+#home_nav{
+    height: 50px;
+    width: auto;
+}
+#wangeditor{
+    height: 600px;
+}
+#top_wangeditor{
+    width: 100%;
+    height:100px;
+}
+#name{
+    width:300%;
+    border: none;
+}
+#file_info:hover{
+    color: #0d77b6;
+}
+#file_info_img{
+    font-size:30px;
+    margin-left: 20px;
+}
+#flag{
+    margin-top: 5px;
+}
+/*#headline{*/
+    /*width: 500%;*/
+/*}*/
+#tag{
+    width:470%;
+}

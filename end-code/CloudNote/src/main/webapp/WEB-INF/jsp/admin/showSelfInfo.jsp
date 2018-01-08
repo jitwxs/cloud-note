@@ -23,7 +23,7 @@
                                 <span>上传头像</span>
                                 <input type="file" id="uploadIcon" name="uploadIcon">
                             </span><br><br>
-                            <span class="upload-hint">支持PNG、GIF、JPG格式，小于2MB</span><br>
+                            <span class="upload-hint">支持PNG、JPG格式，小于2MB</span><br>
                             <label id="fileName"></label>
                         </div>
                     </div>
@@ -88,8 +88,8 @@
         if (icon != null) {
             var point = icon.lastIndexOf(".");
             var type = icon.substr(point);
-            if(type != ".jpg" && type != ".gif" && type != ".JPG" && type != ".GIF" && type != ".PNG" && type != ".png"){
-                toastr.info("图片格式错误!");
+            if(type != ".jpg" && type != ".JPG" && type != ".PNG" && type != ".png"){
+                toastr.warning("图片格式错误!");
                 status = false;
             }
         }

@@ -1,5 +1,6 @@
 package cn.edu.jit.entry;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -9,7 +10,7 @@ import java.util.List;
  * @author jitwxs
  * @date 2018/1/6 11:25
  */
-public class DirectoryTree {
+public class DirectoryTree implements Serializable {
     private String id;
     private String name;
     private List<DirectoryTree> data;

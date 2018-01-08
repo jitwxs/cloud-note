@@ -1,15 +1,54 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/global/taglib.jsp" %>
-<%--<div style="height: 700px"></div>--%>
-<div class="col-md-10">
-    <div id="editor">
-        <p>欢迎使用 <b>无道云笔记</b></p>
-    </div>
+
+<%--<div class="col-lg-9" id="editior_area">--%>
+    <%--<div id="top_wangeditor" class="row">--%>
+        <%--<form class="form-inline bs-example bs-example-form"--%>
+              <%--role="form" action="" method=""--%>
+              <%--onsubmit="return headlinePost()">--%>
+            <%--<div class="form-group input-group col-lg-10" style="float: right">--%>
+                <%--<!--<label class="sr-only" for="name">名称</label>-->--%>
+                <%--<input type="text" class="form-control " id="headline" value="无标题" name="headline">--%>
+            <%--</div>--%>
+            <%--<div class="col-lg-2">--%>
+            <%--<button type="submit" class="btn btn-default col-md-6" id="submit_btn" value="无标题"> 保存</button>--%>
+            <%--<a href="#" id="file_info" class="col-md-6">--%>
+                <%--<span class="glyphicon glyphicon-info-sign " aria-hidden="true" id="file_info_img"></span>--%>
+            <%--</a>--%>
+            <%--</div>--%>
+            <%--<br/>--%>
+            <%--<div class="form-group input-group" id="flag">--%>
+                <%--<span class="input-group-addon">标签</span>--%>
+                <%--<input type="text" class="form-control" id="tag" name="tag">--%>
+            <%--</div>--%>
+
+        <%--</form>--%>
+    <%--</div>--%>
+
+<%--</div>--%>
+
+
+<div class="col-md-10" style="float: right">
+    <form class="form-inline">
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon">标题</div>
+                <input type="text" class="form-control" id="title">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon">标签</div>
+                <input type="text" class="form-control" id="tags">
+            </div>
+        </div>
+        <button type="button" class="btn btn-default" style="float:right;">信息</button>
+        <button type="submit" class="btn btn-success" style="float:right;">保存</button>
+    </form>
+
+    <div id="editor" style="float: right;width:100%;"></div>
     <button id="getJSON">获取JSON</button>
-    <button id="setContent">恢复笔记</button>
     <button onclick="saveContent()">手动保存</button>
-    <button onclick="window.location.href='${ctx}/user/downloadFile?fileId=111.txt'">下载文件</button>
-    <button onclick="window.location.href='${ctx}/user/downloadFile?fileId=测试.txt'">下载中文</button>
     <button onclick="convertFile('test.docx')">测试doc转pdf</button>
     <button onclick="convertFile('test.ppt')" >测试ppt转pdf</button>
     <button onclick="convertFile('test.xlsx')" >测试excel转pdf</button>
@@ -90,17 +129,6 @@
                 return false;
             });
         }
-
-        // 恢复笔记
-        document.getElementById('setContent').addEventListener('click', function () {
-            sendPostByText('${ctx}/user/recoverNote',{'noteId':"xxx"},true,function (res) {
-                editor.txt.html(res);
-                toastr.success("笔记已恢复");
-            },function (error) {
-                toastr.error("系统错误");
-                return false;
-            });
-        }, false);
 
         // 删除文章
         document.getElementById('articleRecycle').addEventListener('click', function () {
