@@ -12,7 +12,7 @@ public class User implements Serializable {
 
     private String email;
 
-    private String area;
+    private Integer area;
 
     private String sex;
 
@@ -56,12 +56,12 @@ public class User implements Serializable {
         this.email = email == null ? null : email.trim();
     }
 
-    public String getArea() {
+    public Integer getArea() {
         return area;
     }
 
-    public void setArea(String area) {
-        this.area = area == null ? null : area.trim();
+    public void setArea(Integer area) {
+        this.area = area;
     }
 
     public String getSex() {

@@ -38,27 +38,29 @@
 <body style="margin-top: 60px;position: absolute;width: 100%" id="home_body">
 
 <!-- 引入模块框 -->
-<jsp:include page="showSelfInfo.jsp"/>
+<jsp:include page="../showSelfInfo.jsp"/>
 <jsp:include page="importNote.jsp"/>
 
 <input type="hidden" id="lastLoginTime" value="${lastLoginTime}">
 
-<!-- 导入头部 -->
+<!-- 头部 -->
 <jsp:include page="head.jsp"/>
 
-<!--侧边栏-->
-<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1" style="height: 1500px;">
-    ....
-</nav>
+<!-- 分享区域 -->
+<jsp:include page="share.jsp"/>
 
 <!--主体-->
 <div  class="container" style="padding-right: 0px; width:100%" id="left">
     <div class="row">
         <div id="wangeditor" class="col-lg-10">
+            <!-- 目录区域 -->
             <jsp:include page="directory.jsp"/>
+            <!-- 编辑器区域 -->
             <jsp:include page="articleEditor.jsp"/>
         </div>
+        <!-- 暂时预留 -->
         <div class="col-lg-2" id="advertisment" style="background: yellow;height: 700px;">
+        </div>
     </div>
 </div>
 
@@ -66,14 +68,15 @@
 <jsp:include page="${ctx}/WEB-INF/jsp/global/footer.jsp"/>
 
 <script>
-    var menuLeft = document.getElementById( 'cbp-spmenu-s1' ),  //nav整个导航栏
-        showLeftPush = document.getElementById( 'showLeftPush' ),//button按钮
+    var menuLeft = document.getElementById('cbp-spmenu-s1'),  //nav整个导航栏
+        showLeftPush = document.getElementById('showLeftPush'),//button按钮
         body = document.getElementById("home_body");
-    showLeftPush.onclick = function() {
-        var nav_id=document.getElementById("cbp-spmenu-s1");
-        classie.toggle( this, 'active' );
-        classie.toggle( body, 'cbp-spmenu-push-toright' );   //body 左移200px
-        classie.toggle( menuLeft, 'cbp-spmenu-open' );   //nav 的left:0
+
+    showLeftPush.onclick = function () {
+        var nav_id = document.getElementById("cbp-spmenu-s1");
+        classie.toggle(this, 'active');
+        classie.toggle(body, 'cbp-spmenu-push-toright');   //body 左移200px
+        classie.toggle(menuLeft, 'cbp-spmenu-open');   //nav 的left:0
     };
 
     var userTel;

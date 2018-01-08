@@ -1,10 +1,13 @@
 package cn.edu.jit.web;
 
+import cn.edu.jit.dto.UserDto;
+import cn.edu.jit.entry.Area;
 import cn.edu.jit.entry.Login;
 import cn.edu.jit.entry.Message;
 import cn.edu.jit.entry.User;
 import cn.edu.jit.global.GlobalConstant;
 import cn.edu.jit.global.GlobalFunction;
+import cn.edu.jit.service.AreaService;
 import cn.edu.jit.util.Sha1Utils;
 import cn.edu.jit.service.LoginService;
 import cn.edu.jit.service.UserService;
@@ -31,7 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -48,8 +51,11 @@ public class SystemController {
     @Resource(name = "userServiceImpl")
     private UserService userService;
 
+    @Resource(name = "areaServiceImpl")
+    private AreaService areaService;
+
     /**
-     * 获取登陆用户id
+     * 获取当前用户id
      */
     private String getSelfId() {
         User user = userService.getByTel(GlobalFunction.getSelfTel());
@@ -65,7 +71,7 @@ public class SystemController {
         GlobalConstant.USER_PAN_PATH = GlobalConstant.USER_HOME_PATH  + "/"  + "pan" ;
     }
 
-    private void parserUser(User user, String key, String value) {
+    private void parserUser(User user, String key, String value) throws Exception {
         switch (key) {
             case "id":
                 BeanUtils.copyProperties(userService.getById(value), user);
@@ -77,7 +83,7 @@ public class SystemController {
                 user.setEmail(value);
                 break;
             case "area":
-                user.setArea(value);
+                user.setArea(Integer.parseInt(value));
                 break;
             case "icon":
                 user.setIcon(value);
@@ -93,12 +99,12 @@ public class SystemController {
         }
     }
 
-    @RequestMapping(value = "/login", method = {RequestMethod.GET})
+    @RequestMapping(value = "login", method = {RequestMethod.GET})
     public String loginUI() {
         return "login";
     }
 
-    @RequestMapping(value = "/loginCheck", method = {RequestMethod.POST})
+    @RequestMapping(value = "loginCheck", method = {RequestMethod.POST})
     public void loginCheck(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html;charset=utf-8");
         Boolean status = true;
@@ -121,7 +127,7 @@ public class SystemController {
         response.getWriter().write(data);
     }
 
-    @RequestMapping(value = "/login", method = {RequestMethod.POST})
+    @RequestMapping(value = "login", method = {RequestMethod.POST})
     public String login(Login login, HttpServletRequest request) {
         // Shiro验证
         UsernamePasswordToken token = new UsernamePasswordToken(login.getTel(), login.getPassword());
@@ -145,17 +151,17 @@ public class SystemController {
         }
     }
 
-    @RequestMapping(value = "/logout")
+    @RequestMapping(value = "logout")
     public String logout(){
         return "redirect:/logout";
     }
 
-    @RequestMapping(value = "/register", method = {RequestMethod.GET})
+    @RequestMapping(value = "register", method = {RequestMethod.GET})
     public String registerUI() {
         return "register";
     }
 
-    @RequestMapping(value = "/registerCheck", method = {RequestMethod.POST})
+    @RequestMapping(value = "registerCheck", method = {RequestMethod.POST})
     public void registerCheck(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Boolean status = true;
         String info = null;
@@ -195,7 +201,7 @@ public class SystemController {
         response.getWriter().write("{\"status\":" + status +",\"info\":" + "\"" + info + "\"" + "}");
     }
 
-    @RequestMapping(value = "/register", method = {RequestMethod.POST})
+    @RequestMapping(value = "register", method = {RequestMethod.POST})
     public String register(Login login) {
         loginService.save(login);
 
@@ -213,7 +219,8 @@ public class SystemController {
         response.setContentType("text/html;charset=utf-8");
         boolean status = true;
         String tel = request.getParameter("tel");
-        String verifyCode = Math.round(Math.random()*900000+1) + "";
+        // 生成6位验证码
+        String verifyCode = (int)((Math.random()*9+1)*100000) + "";
         System.out.println(verifyCode);
         HttpSession session = request.getSession();
         session.setAttribute("code",verifyCode);
@@ -316,6 +323,25 @@ public class SystemController {
     }
 
     /**
+     * 省市二级联动
+     */
+    @RequestMapping(value = "getSecondArea", method = {RequestMethod.POST})
+    public void getSecondArea(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        try {
+            String areaId = request.getParameter("areaId");
+            if (areaId != null) {
+                List<Area> lists = areaService.listByPid(Integer.parseInt(areaId));
+                String data = JSON.toJSONString(lists, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+                response.getWriter().write(data);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
      * 显示个人信息
      */
     @RequestMapping(value = "showSelfInfo", method = {RequestMethod.GET})
@@ -324,7 +350,17 @@ public class SystemController {
         String id = getSelfId();
         try {
             User user = userService.getById(id);
-            String data = JSON.toJSONString(user, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            Area area = areaService.getById(user.getArea());
+            UserDto userDto = new UserDto();
+            BeanUtils.copyProperties(user, userDto);
+            userDto.setAreaName(area.getName());
+
+            List<Area> areas = areaService.listByPid(0);;
+
+            List<Object> objects = new LinkedList<>();
+            objects.add(userDto);
+            objects.add(areas);
+            String data = JSON.toJSONString(objects, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
         } catch (IOException e) {
             e.printStackTrace();

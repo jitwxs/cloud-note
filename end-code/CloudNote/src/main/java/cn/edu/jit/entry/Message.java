@@ -1,6 +1,7 @@
 package cn.edu.jit.entry;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author jitwxs
@@ -63,6 +64,14 @@ public class Message implements Serializable {
         this.tel = tel;
     }
 
+    public List<Tag> getNoteTag() {
+        return noteTag;
+    }
+
+    public void setNoteTag(List<Tag> noteTag) {
+        this.noteTag = noteTag;
+    }
+
     private Boolean status;
 
     private String info;
@@ -77,4 +86,5 @@ public class Message implements Serializable {
 
     private String tel;
 
+    private List<Tag> noteTag;
 }

@@ -21,15 +21,12 @@
 </head>
 
 <body>
+    <a href="${ctx}/login">已有账号？去<input type="button" class="btn btn-info" value="登陆"></a>
 
-<a href="#">
-    已有账号？去<input type="button" class="btn btn-info" value="登陆">
-</a>
     <div  class="container" style="width:60%; height:auto;text-align:center">
         <div class="col-md-6 col-md-offset-3">
             <h3>欢迎使用无道云笔记</h3>
             <form action="${ctx}/register" method="post" onsubmit="return registerPost()">
-
                 <div class="form-group has-feedback">
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
@@ -71,6 +68,42 @@
                     </div>
                     <span style="color:red;display: none;" class="tips"></span>
                     <span style="display: none;" class="glyphicon glyphicon-remove form-control-feedback"></span>
+                    <span style="display: none;" class="glyphicon glyphicon-ok form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback">
+                    <div class="input-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                        <input id="second_name" class="form-control" name="name" placeholder="请输入昵称（可选）" maxlength="20" type="text">
+                    </div>
+                    <span style="color:red;display: none;" class="tips"></span>
+                    <span style="display: none;" class=" glyphicon glyphicon-remove form-control-feedback"></span>
+                    <span style="display: none;" class="glyphicon glyphicon-ok form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback">
+                    <div class="input-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                        <input id="email" class="form-control " name="email" placeholder="请输入邮箱（可选）" maxlength="20" type="email">
+                    </div>
+                    <span style="color:red;display: none;" class="tips"></span>
+                    <span style="display: none;" class=" glyphicon glyphicon-remove form-control-feedback"></span>
+                    <span style="display: none;" class="glyphicon glyphicon-ok form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback">
+                    <div class="input-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                        <input id="area" class="form-control" name="area" placeholder="请选择所在城市（可选）" maxlength="20" type="text">
+                    </div>
+                    <span style="color:red;display: none;" class="tips"></span>
+                    <span style="display: none;" class=" glyphicon glyphicon-remove form-control-feedback"></span>
+                    <span style="display: none;" class="glyphicon glyphicon-ok form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback">
+                    <div class="input-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                        <input id="sex" class="form-control" name="sex" placeholder="请输入性别（可选）" maxlength="20" type="text">
+                    </div>
+                    <span style="color:red;display: none;" class="tips"></span>
+                    <span style="display: none;" class=" glyphicon glyphicon-remove form-control-feedback"></span>
                     <span style="display: none;" class="glyphicon glyphicon-ok form-control-feedback"></span>
                 </div>
                 <div class="form-group">

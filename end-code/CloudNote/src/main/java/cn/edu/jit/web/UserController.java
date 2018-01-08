@@ -1,5 +1,6 @@
 package cn.edu.jit.web;
 
+import cn.edu.jit.dto.ArticleDto;
 import cn.edu.jit.entry.*;
 import cn.edu.jit.global.GlobalConstant;
 import cn.edu.jit.global.GlobalFunction;
@@ -22,12 +23,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import sun.misc.BASE64Encoder;
 
 import javax.annotation.Resource;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -44,8 +45,14 @@ public class UserController {
     @Resource(name = "userServiceImpl")
     private UserService userService;
 
+    @Resource(name = "tagServiceImpl")
+    private TagService tagService;
+
     @Resource(name = "articleServiceImpl")
     private ArticleService articleService;
+
+    @Resource(name = "articleTagServiceImpl")
+    private ArticleTagService articleTagService;
 
     @Resource (name = "articleRecycleServiceImpl")
     private ArticleRecycleService articleRecycleService;
@@ -94,6 +101,7 @@ public class UserController {
 
     /**
      * 生成目录树
+     * @param directoryTree 树根
      */
     private void initDirectoryTree(DirectoryTree directoryTree) {
         String uid = getSelfId();
@@ -117,7 +125,7 @@ public class UserController {
     }
 
     /**
-     * 将指定目录及其子目录下所有笔记的目录修改为指定目录
+     * 将directory及其子目录下所有笔记的目录修改为parentDir目录
      */
     private void changeAllNoteDir(Directory directory, String parentDir) {
         List<Article> articles = articleService.listArticleByDir(getSelfId(), directory.getId());
@@ -130,6 +138,16 @@ public class UserController {
             changeAllNoteDir(dir, parentDir);
         }
     }
+
+    private List<Tag> getNoteTag(String noteId) {
+        List<Tag> result = new ArrayList<>();
+        List<ArticleTagKey> lists = articleTagService.listByArticleId(noteId);
+        for (ArticleTagKey articleTag : lists) {
+                result.add(tagService.getById(articleTag.getTagId()));
+        }
+        return result;
+    }
+
     /*---------   普通方法区域（END）   ----------*/
 
     @RequestMapping(value = "index")
@@ -212,7 +230,7 @@ public class UserController {
     /**
      * 初始化用户笔记目录树
      */
-    @RequestMapping(value = "/initDirectory", method = {RequestMethod.GET})
+    @RequestMapping(value = "initDirectory", method = {RequestMethod.GET})
     public void initArticle(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
         String uid = getSelfId();
@@ -230,7 +248,7 @@ public class UserController {
     /**
      * 创建笔记
      */
-    @RequestMapping(value = "/createNote", method = {RequestMethod.POST})
+    @RequestMapping(value = "createNote", method = {RequestMethod.POST})
     public void createNote(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
         Boolean status = true;
@@ -264,6 +282,26 @@ public class UserController {
             msg.setStatus(status);
             msg.setNoteId(id);
             String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 获取笔记信息
+     */
+    @RequestMapping(value = "getNoteInfo", method = {RequestMethod.POST})
+    public void getNoteInfo(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String noteId = request.getParameter("noteId");
+            Article article = articleService.getById(noteId);
+            ArticleDto articleDto = new ArticleDto();
+            if(article != null) {
+                BeanUtils.copyProperties(article, articleDto);
+                articleDto.setAuthorName(userService.getById(article.getUserId()).getTel());
+            }
+            String data = JSON.toJSONString(articleDto, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
         }catch (IOException e) {
             e.printStackTrace();
@@ -347,7 +385,7 @@ public class UserController {
     /**
      * 下载笔记
      */
-    @RequestMapping(value = "/downloadNote", method = {RequestMethod.GET})
+    @RequestMapping(value = "downloadNote", method = {RequestMethod.GET})
     public void downloadFile(HttpServletRequest request, HttpServletResponse response) {
         String noteId = request.getParameter("noteId");
         // 设置编码（如果文件名乱码，尝试打开解决问题）
@@ -372,10 +410,105 @@ public class UserController {
     }
 
     /**
+     * 保存笔记
+     */
+    @RequestMapping(value = "saveNote", method = {RequestMethod.POST})
+    public void saveNote(HttpServletRequest request, HttpServletResponse response) {
+        String noteId = request.getParameter("noteId");
+        String noteName = request.getParameter("noteName");
+        response.setContentType("text/html;charset=utf-8");
+        try {
+            // 将数据写入文件
+            String content = request.getParameter("data");
+            String targetFilePath = GlobalConstant.USER_ARTICLE_PATH + "/" + noteId + "/" + noteName + GlobalConstant.NOTE_SUFFIX;
+
+            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(targetFilePath), "UTF-8");
+            writer.write(content);
+            writer.flush();
+            writer.close();
+
+            // 更新数据库
+            Article article = articleService.getById(noteId);
+           if(article != null) {
+               articleService.update(article);
+           }
+
+            Message msg = new Message();
+            msg.setStatus(true);
+            String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 删除笔记
+     */
+    @RequestMapping(value = "removeNote", method = {RequestMethod.POST})
+    public void removeNote(HttpServletRequest request, HttpServletResponse response){
+        try {
+            Boolean status = false;
+            String noteId = request.getParameter("noteId");
+            ArticleRecycle articleRecycle = new ArticleRecycle();
+            Article article = articleService.getById(noteId);
+            BeanUtils.copyProperties(article, articleRecycle);
+            articleRecycle.setCreateDate(new Date());
+            if(articleService.removeById(noteId) == 1 && articleRecycleService.save(articleRecycle) == 1) {
+                status = true;
+            }
+
+            // 删除文章目录
+            String path = GlobalConstant.USER_ARTICLE_PATH  + "/" + noteId;
+
+            FileUtils.deleteQuietly(new File(path));
+
+            Message msg = new Message();
+            msg.setStatus(status);
+            String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 恢复笔记内容
+     */
+    @RequestMapping(value = "recoverNote", method = {RequestMethod.POST})
+    public void showUserNote(HttpServletRequest request, HttpServletResponse response) {
+        char[] buf = new char[1024];
+        int len;
+        response.setContentType("text/html;charset=utf-8");
+        try {
+            String noteName = request.getParameter("noteName");
+            String noteId = request.getParameter("noteId");
+            String targetFilePath = GlobalConstant.USER_ARTICLE_PATH + "/" + noteId + "/" + noteName + GlobalConstant.NOTE_SUFFIX;
+
+            InputStreamReader in = new InputStreamReader(new FileInputStream(targetFilePath), "UTF-8");
+            StringBuilder sb = new StringBuilder();
+
+            while ((len = in.read(buf, 0, buf.length)) > 0) {
+                sb.append(buf,0,len);
+            }
+            in.close();
+
+            Message message = new Message();
+            message.setInfo(sb.toString());
+            message.setName(noteName);
+            message.setNoteTag(getNoteTag(noteId));
+            String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * 文件转换
      * 支持doc/docx/xls/xlsx/ppt/pptx --> pdf
      */
-    @RequestMapping(value = "/convertFile", method = {RequestMethod.POST})
+    @RequestMapping(value = "convertFile", method = {RequestMethod.POST})
     public void convertFile(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
         Boolean status;
@@ -405,16 +538,19 @@ public class UserController {
                     break;
             }
 
-            if(i < 0) {
-                status = false;
-                if (i == -1) {
+            switch (i) {
+                case -1:
                     info = "转换失败";
-                } else if (i == -2) {
+                    status = false;
+                    break;
+                case -2:
                     info = "格式不支持";
-                }
-            } else {
-                status = true;
-                info = i +"";
+                    status = false;
+                    break;
+                default:
+                    info = String.valueOf(i);
+                    status = true;
+                    break;
             }
             // status：是否成功；info：成功返回执行秒数，失败返回错误原因
             Message msg = new Message();
@@ -426,89 +562,6 @@ public class UserController {
             e.printStackTrace();
         }
     }
-
-    /**
-     * 保存笔记
-     */
-    //TODO
-    @RequestMapping(value = "/saveArticle", method = {RequestMethod.POST})
-    public void saveArticle(HttpServletRequest request, HttpServletResponse response) {
-        //String noteName = request.getParameter("noteId");
-        String noteName = "111.txt";
-        response.setContentType("text/html;charset=utf-8");
-        try {
-//        String articleId = request.getParameter("id");
-            String content = request.getParameter("data");
-            String targetFilePath = GlobalConstant.USER_ARTICLE_PATH + noteName;
-
-            File file = new File(targetFilePath);
-            if (!file.getParentFile().exists()) {
-                file.getParentFile().mkdirs();
-            }
-
-            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(targetFilePath), "UTF-8");
-            writer.write(content);
-            writer.flush();
-            writer.close();
-            response.getWriter().write("{\"status\":" + true + "}");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 删除笔记
-     */
-    @RequestMapping(value = "/removeArticle", method = {RequestMethod.POST})
-    public void removeArticle(HttpServletRequest request, HttpServletResponse response){
-        try {
-            Boolean status = false;
-            String noteId = request.getParameter("noteId");
-            ArticleRecycle articleRecycle = new ArticleRecycle();
-            Article article = articleService.getById(noteId);
-            BeanUtils.copyProperties(article, articleRecycle);
-            articleRecycle.setCreateDate(new Date());
-            if(articleService.removeById(noteId) == 1 && articleRecycleService.save(articleRecycle) == 1) {
-                status = true;
-            }
-
-            // 删除文章目录
-            String path = GlobalConstant.USER_ARTICLE_PATH  + "/" + noteId;
-
-            FileUtils.deleteQuietly(new File(path));
-
-            Message msg = new Message();
-            msg.setStatus(status);
-            String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
-            response.getWriter().write(data);
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 恢复笔记内容
-     */
-    @RequestMapping(value = "/recoverNote", method = {RequestMethod.POST})
-    public void showUserNote(HttpServletRequest request, HttpServletResponse response) {
-        char[] buf = new char[1024];
-        int len;
-        response.setContentType("text/html;charset=utf-8");
-        try {
-            String noteName = request.getParameter("noteName");
-            String noteId = request.getParameter("noteId");
-            String targetFilePath = GlobalConstant.USER_ARTICLE_PATH + "/" + noteId + "/" + noteName + GlobalConstant.NOTE_SUFFIX;
-
-            InputStreamReader in = new InputStreamReader(new FileInputStream(targetFilePath), "UTF-8");
-
-            while ((len = in.read(buf, 0, 1024)) > 0) {
-                response.getWriter().write(buf, 0, len);
-            }
-            in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
     /*---------   笔记管理区域（END）   ----------*/
 
     /*---------   目录管理区域（START）   ----------*/
@@ -516,7 +569,7 @@ public class UserController {
     /**
      * 新建目录
      */
-    @RequestMapping(value = "/createDir", method = {RequestMethod.POST})
+    @RequestMapping(value = "createDir", method = {RequestMethod.POST})
     public void createDir(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
         Boolean status = true;
@@ -549,7 +602,7 @@ public class UserController {
     /**
      * 删除目录
      */
-    @RequestMapping(value = "/removeDir", method = {RequestMethod.POST})
+    @RequestMapping(value = "removeDir", method = {RequestMethod.POST})
     public void removeDir(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
         Boolean status = true;
@@ -579,7 +632,7 @@ public class UserController {
     /**
      * 重命名目录
      */
-    @RequestMapping(value = "/renameDir", method = {RequestMethod.POST})
+    @RequestMapping(value = "renameDir", method = {RequestMethod.POST})
     public void renameDir(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
         Boolean status = true;

@@ -32,7 +32,7 @@ public class AdminController {
     /*---------   普通方法区域（START）   ----------*/
 
     /**
-     * 获取登陆用户id
+     * 获取当前用户id
      */
     private String getSelfId() {
         User user = userService.getByTel(GlobalFunction.getSelfTel());

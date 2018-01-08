@@ -24,7 +24,7 @@
                             <div id="showId"><shiro:principal/> <span class="caret"></span></div>
                         </a>
                         <ul class="dropdown-menu">
-                            <li id="msg"><a href="javascript:void(0)" onclick="showUserInfo()" data-toggle="modal" data-target="#showUserInfoModal">个人信息</a></li>
+                            <li id="msg"><a href="javascript:void(0)" onclick="showUserInfo()" data-toggle="modal" data-target="#showSelfInfoModal">个人信息</a></li>
                             <li class="divider"></li>
                             <li id="account"><a href="#">账户设置</a></li>
                             <li class="divider"></li>

@@ -395,62 +395,52 @@ public class UserExample {
             return (Criteria) this;
         }
 
-        public Criteria andAreaEqualTo(String value) {
+        public Criteria andAreaEqualTo(Integer value) {
             addCriterion("area =", value, "area");
             return (Criteria) this;
         }
 
-        public Criteria andAreaNotEqualTo(String value) {
+        public Criteria andAreaNotEqualTo(Integer value) {
             addCriterion("area <>", value, "area");
             return (Criteria) this;
         }
 
-        public Criteria andAreaGreaterThan(String value) {
+        public Criteria andAreaGreaterThan(Integer value) {
             addCriterion("area >", value, "area");
             return (Criteria) this;
         }
 
-        public Criteria andAreaGreaterThanOrEqualTo(String value) {
+        public Criteria andAreaGreaterThanOrEqualTo(Integer value) {
             addCriterion("area >=", value, "area");
             return (Criteria) this;
         }
 
-        public Criteria andAreaLessThan(String value) {
+        public Criteria andAreaLessThan(Integer value) {
             addCriterion("area <", value, "area");
             return (Criteria) this;
         }
 
-        public Criteria andAreaLessThanOrEqualTo(String value) {
+        public Criteria andAreaLessThanOrEqualTo(Integer value) {
             addCriterion("area <=", value, "area");
             return (Criteria) this;
         }
 
-        public Criteria andAreaLike(String value) {
-            addCriterion("area like", value, "area");
-            return (Criteria) this;
-        }
-
-        public Criteria andAreaNotLike(String value) {
-            addCriterion("area not like", value, "area");
-            return (Criteria) this;
-        }
-
-        public Criteria andAreaIn(List<String> values) {
+        public Criteria andAreaIn(List<Integer> values) {
             addCriterion("area in", values, "area");
             return (Criteria) this;
         }
 
-        public Criteria andAreaNotIn(List<String> values) {
+        public Criteria andAreaNotIn(List<Integer> values) {
             addCriterion("area not in", values, "area");
             return (Criteria) this;
         }
 
-        public Criteria andAreaBetween(String value1, String value2) {
+        public Criteria andAreaBetween(Integer value1, Integer value2) {
             addCriterion("area between", value1, value2, "area");
             return (Criteria) this;
         }
 
-        public Criteria andAreaNotBetween(String value1, String value2) {
+        public Criteria andAreaNotBetween(Integer value1, Integer value2) {
             addCriterion("area not between", value1, value2, "area");
             return (Criteria) this;
         }

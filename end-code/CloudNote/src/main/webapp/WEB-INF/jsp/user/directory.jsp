@@ -29,12 +29,12 @@
             {text: '删除', onclick: removeNote},
             {text: '重命名', onclick: renameNote},
             {text: '下载', onclick: noteDownload},
-            {text:'分享',onclick:shareNote},
+            {text:'分享',onclick:shareNote}
         ]
     };
     var options3 = {items:[
             {text: '新建目录', onclick: createDir},
-            {text: '新建笔记', onclick: createNote},
+            {text: '新建笔记', onclick: createNote}
         ]};
 
     var dirTPL = '' +
@@ -44,7 +44,7 @@
         '                    </div>\n' +
         '                </div>';
 
-    var dirTPL1 = '' + '<div><input type="text" name="note_name" value="新建笔记" ></div>'
+    var dirTPL1 = '' + '<div><input type="text" name="note_name" value="新建笔记" ></div>';
 
     var dirTPL2 = '' +
         '        <div class="wjj">\n' +
@@ -109,7 +109,7 @@
         var $choosenId = $chooseDir;
         var id = $choosenId.attr('index-id');
         //发送要删除的笔记的id
-        sendPost('${ctx}/user/removeArticle', {'noteId': id}, false, function (msg) {
+        sendPost('${ctx}/user/removeNote', {'noteId': id}, false, function (msg) {
             if (!msg.status) {
                 toastr.error("删除笔记失败");
                 return false;
@@ -157,12 +157,12 @@
             //发送给服务器
             sendPost('${ctx}/user/renameDir', {'dirId': dirId, 'dirName': name}, false, function (msg) {
                 if (!msg.status) {
-                    alert("生成目录失败！");
+                    toastr.error("生成目录失败");
                     return false
                 }
                 else return true;
             }, function (error) {
-                alert("出错了！");
+                toastr.error("系统错误");
                 return false;
             });
             var $parent = $('input[name=dir_name]').parent();
@@ -193,7 +193,7 @@
                 }
                 else return true;
             }, function (error) {
-                alert("出错了！");
+                toastr.error("系统错误");
                 return false;
             });
             //把文本框删掉
@@ -270,7 +270,7 @@
                     initUI();
                 }
             }, function (error) {
-                alert("系统错误");
+                toastr.error("系统错误");
                 return false;
             });
 
@@ -332,10 +332,17 @@
             var $this = $(this);
             var noteId = $this.attr('index-id');
             var noteName = $this.text();
-            sendPostByText('${ctx}/user/recoverNote', {'noteId': noteId, "noteName": noteName}, true, function (msg) {
-                editor.txt.html(msg);
+            sendPost('${ctx}/user/recoverNote', {'noteId': noteId, "noteName": noteName}, true, function (msg) {
+                $("#noteId").val(noteId);
+                $("#noteName").val(noteName);
+                $("#editorTitle").val(noteName);
+                $("#editorTags").val("");
+                for(var i=0; i< msg.noteTag.length; i++) {
+                    $("#editorTags").val($("#editorTags").val() + msg.noteTag[i].name + " ");
+                }
+                editor.txt.html(msg.info);
             }, function (error) {
-                alert("内部错误");
+                toastr.error("内部错误");
                 return false;
             });
         });

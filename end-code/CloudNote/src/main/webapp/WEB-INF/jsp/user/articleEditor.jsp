@@ -1,54 +1,31 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/global/taglib.jsp" %>
 
-<%--<div class="col-lg-9" id="editior_area">--%>
-    <%--<div id="top_wangeditor" class="row">--%>
-        <%--<form class="form-inline bs-example bs-example-form"--%>
-              <%--role="form" action="" method=""--%>
-              <%--onsubmit="return headlinePost()">--%>
-            <%--<div class="form-group input-group col-lg-10" style="float: right">--%>
-                <%--<!--<label class="sr-only" for="name">名称</label>-->--%>
-                <%--<input type="text" class="form-control " id="headline" value="无标题" name="headline">--%>
-            <%--</div>--%>
-            <%--<div class="col-lg-2">--%>
-            <%--<button type="submit" class="btn btn-default col-md-6" id="submit_btn" value="无标题"> 保存</button>--%>
-            <%--<a href="#" id="file_info" class="col-md-6">--%>
-                <%--<span class="glyphicon glyphicon-info-sign " aria-hidden="true" id="file_info_img"></span>--%>
-            <%--</a>--%>
-            <%--</div>--%>
-            <%--<br/>--%>
-            <%--<div class="form-group input-group" id="flag">--%>
-                <%--<span class="input-group-addon">标签</span>--%>
-                <%--<input type="text" class="form-control" id="tag" name="tag">--%>
-            <%--</div>--%>
-
-        <%--</form>--%>
-    <%--</div>--%>
-
-<%--</div>--%>
-
-
 <div class="col-md-10" style="float: right">
     <form class="form-inline">
         <div class="form-group">
             <div class="input-group">
                 <div class="input-group-addon">标题</div>
-                <input type="text" class="form-control" id="title">
+                <input type="text" class="form-control" id="editorTitle">
             </div>
         </div>
         <div class="form-group">
             <div class="input-group">
                 <div class="input-group-addon">标签</div>
-                <input type="text" class="form-control" id="tags">
+                <input type="text" class="form-control" id="editorTags">
             </div>
         </div>
-        <button type="button" class="btn btn-default" style="float:right;">信息</button>
-        <button type="submit" class="btn btn-success" style="float:right;">保存</button>
+        <label>Tip:每当你点到别的地方我们都会为您自动保存，别担心内容丢失哦！</label>
+        <button type="button" class="btn btn-default" onclick="getNoteInfo()" style="float:right;">笔记信息</button>
+        <button type="button" class="btn btn-success" onclick="saveNoteContent()" style="float:right;">立即保存</button>
     </form>
 
-    <div id="editor" style="float: right;width:100%;"></div>
+    <input type="hidden" id="noteId">
+    <input type="hidden" id="noteName">
+
+    <div id="editor" style="float: right;width:100%;">
+    </div>
     <button id="getJSON">获取JSON</button>
-    <button onclick="saveContent()">手动保存</button>
     <button onclick="convertFile('test.docx')">测试doc转pdf</button>
     <button onclick="convertFile('test.ppt')" >测试ppt转pdf</button>
     <button onclick="convertFile('test.xlsx')" >测试excel转pdf</button>
@@ -79,10 +56,22 @@
             else
                 return "链接不合法";
         };
-        // // 区域失去焦点
-        // editor.customConfig.onblur = function (html) {
-        //     saveContent();
-        // };
+
+        // 区域失去焦点
+        editor.customConfig.onblur = function (html) {
+            var noteId = $("#noteId").val();
+            var noteName = $("#noteName").val();
+            sendPost('${ctx}/user/saveNote',{'noteId':noteId, 'noteName':noteName, 'data':html},true,function (msg) {
+                // if(msg.status) {
+                //     toastr.success("笔记已保存");
+                // } else {
+                //     toastr.error("保存失败");
+                // }
+            },function (error) {
+                // toastr.error("系统错误");
+                return false;
+            });
+        };
 
         // Func2: 使用 base64 保存图片
         editor.customConfig.uploadImgShowBase64 = true;
@@ -115,12 +104,30 @@
             alert("json：" + jsonStr);
         }, false);
 
-        // 保存笔记 TODO 后期加上笔记id
-        function saveContent() {
-            var content = editor.txt.html();
-            sendPost('${ctx}/user/saveArticle',{'data':content},true,function (msg) {
+        // 获取笔记信息
+        function getNoteInfo() {
+            var noteId = $("#noteId").val();
+            sendPost('${ctx}/user/getNoteInfo',{'noteId':noteId},true,function (msg) {
                 if(msg.status) {
-                    toastr.success("保存成功");
+
+                } else {
+                    toastr.error("获取信息失败");
+                }
+            },function (error) {
+                toastr.error("系统错误");
+                return false;
+            });
+        }
+
+
+        // 保存笔记
+        function saveNoteContent() {
+            var content = editor.txt.html();
+            var noteId = $("#noteId").val();
+            var noteName = $("#noteName").val();
+            sendPost('${ctx}/user/saveNote',{'noteId':noteId, 'noteName':noteName, 'data':content},true,function (msg) {
+                if(msg.status) {
+                    toastr.success("笔记已保存");
                 } else {
                     toastr.error("保存失败");
                 }
@@ -130,9 +137,9 @@
             });
         }
 
-        // 删除文章
+        // 删除笔记
         document.getElementById('articleRecycle').addEventListener('click', function () {
-            sendPost('${ctx}/user/removeArticle',{'id':"value"},true,function (res) {
+            sendPost('${ctx}/user/removeNote',{'id':"value"},true,function (res) {
                 if(res.status) {
                     toastr.success("删除成功!");
                 } else {

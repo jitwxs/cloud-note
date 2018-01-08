@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/global/taglib.jsp" %>
 
-<div class="modal fade" id="showUserInfoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="showSelfInfoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -16,7 +16,7 @@
                     <div class="form-group">
                         <label for="userBigIcon" class="col-sm-2 control-label">头像</label>
                         <div class="col-sm-3">
-                            <img id="userBigIcon" name="icon" style="width: 100px;height: 100px" src=""/>
+                            <img class="img-circle" id="userBigIcon" name="icon" style="width: 100px;height: 100px" src=""/>
                         </div>
                         <div class="col-sm-7">
                             <span class="btn btn-success fileinput-button">
@@ -36,7 +36,7 @@
                     <div class="form-group ">
                         <label for="userName" class="col-sm-2 control-label">昵称</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="userName" name="name">
+                            <input type="text" class="form-control" id="userName" name="name" required="required">
                         </div>
                     </div>
                     <div class="form-group">
@@ -47,9 +47,17 @@
                     </div>
                     <div class="form-group">
                         <label for="userArea" class="col-sm-2 control-label">地区</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="userArea" name="area">
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="userArea" readonly="readonly">
                         </div>
+                        <duv class="col-sm-7">
+                            <select data-live-search="true" id="areaSelect1">
+                                <option value="-1">请选择省/市</option>
+                            </select>
+                            <select data-live-search="true" id="areaSelect2" name="area">
+                                <option value="-1">请选择市/区</option>
+                            </select>
+                        </duv>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">性别</label>
@@ -80,12 +88,28 @@
 </div>
 
 <script>
+    $('#areaSelect1').on('change',function(){
+        var areaId = $(this).val();
+        if(areaId != -1){
+            sendPost('${ctx}/getSecondArea', {'areaId': areaId}, true, function (res) {
+                var options = '<option value="-1">请选择市/区</option>';
+                // 动态添加市级下拉框
+                for(var i=0; i<res.length; i++) {
+                    options += '<option value="' + res[i].id+ '">'+ res[i].name + '</option>';
+                }
+                $('#areaSelect2').html(options);
+            }, function (error) {
+                return false;
+            });
+        }
+    });
+
     // 提交表单
     function checkUserInfo() {
         // TODO 头像类型、大小验证
         var status = true;
-        var icon = document.getElementById("uploadIcon").value;
-        if (icon != null) {
+        var icon = $("#uploadIcon").val();
+        if (icon != null && icon != "") {
             var point = icon.lastIndexOf(".");
             var type = icon.substr(point);
             if(type != ".jpg" && type != ".JPG" && type != ".PNG" && type != ".png"){
@@ -102,6 +126,7 @@
     $("input[type='file']").change(function(){
         var file = this.files[0];
         $("#fileName").html("当前选中："+file.name);
+        // TODO
         // alert(file.size);
     });
 

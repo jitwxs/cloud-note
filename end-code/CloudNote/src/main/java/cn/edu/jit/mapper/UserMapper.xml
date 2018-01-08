@@ -6,7 +6,7 @@
     <result column="tel" property="tel" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="email" property="email" jdbcType="VARCHAR" />
-    <result column="area" property="area" jdbcType="VARCHAR" />
+    <result column="area" property="area" jdbcType="INTEGER" />
     <result column="sex" property="sex" jdbcType="CHAR" />
     <result column="icon" property="icon" jdbcType="VARCHAR" />
     <result column="sign" property="sign" jdbcType="VARCHAR" />
@@ -110,7 +110,7 @@
       sign, create_date, modifed_date
       )
     values (#{id,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
-      #{email,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{sex,jdbcType=CHAR}, #{icon,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{area,jdbcType=INTEGER}, #{sex,jdbcType=CHAR}, #{icon,jdbcType=VARCHAR}, 
       #{sign,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{modifedDate,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -162,7 +162,7 @@
         #{email,jdbcType=VARCHAR},
       </if>
       <if test="area != null" >
-        #{area,jdbcType=VARCHAR},
+        #{area,jdbcType=INTEGER},
       </if>
       <if test="sex != null" >
         #{sex,jdbcType=CHAR},
@@ -203,7 +203,7 @@
         email = #{record.email,jdbcType=VARCHAR},
       </if>
       <if test="record.area != null" >
-        area = #{record.area,jdbcType=VARCHAR},
+        area = #{record.area,jdbcType=INTEGER},
       </if>
       <if test="record.sex != null" >
         sex = #{record.sex,jdbcType=CHAR},
@@ -231,7 +231,7 @@
       tel = #{record.tel,jdbcType=VARCHAR},
       name = #{record.name,jdbcType=VARCHAR},
       email = #{record.email,jdbcType=VARCHAR},
-      area = #{record.area,jdbcType=VARCHAR},
+      area = #{record.area,jdbcType=INTEGER},
       sex = #{record.sex,jdbcType=CHAR},
       icon = #{record.icon,jdbcType=VARCHAR},
       sign = #{record.sign,jdbcType=VARCHAR},
@@ -254,7 +254,7 @@
         email = #{email,jdbcType=VARCHAR},
       </if>
       <if test="area != null" >
-        area = #{area,jdbcType=VARCHAR},
+        area = #{area,jdbcType=INTEGER},
       </if>
       <if test="sex != null" >
         sex = #{sex,jdbcType=CHAR},
@@ -279,7 +279,7 @@
     set tel = #{tel,jdbcType=VARCHAR},
       name = #{name,jdbcType=VARCHAR},
       email = #{email,jdbcType=VARCHAR},
-      area = #{area,jdbcType=VARCHAR},
+      area = #{area,jdbcType=INTEGER},
       sex = #{sex,jdbcType=CHAR},
       icon = #{icon,jdbcType=VARCHAR},
       sign = #{sign,jdbcType=VARCHAR},
