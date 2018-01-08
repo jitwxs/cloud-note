@@ -13,66 +13,63 @@
 </head>
 <body style=" padding-top: 60px;padding-right: 0" id="home_body" class="cbp-spmenu-push">
 <div id="a" >
-    <!--导航栏-->
+<!--导航栏-->
+<nav class="navbar navbar-default navbar-fixed-top" id="home_nav">
 
-    <nav class="navbar navbar-default navbar-fixed-top">
-        <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">
-                    <img alt="Brand" src="...">
-                </a>
-                <div  style="margin-left: 100px;">
-                    <button class="btn btn-default" id="showLeftPush" >分享</button>
-                </div>
-
-            </div>
-
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    <li><a id="showLeftPush" href="#">分享</a></li>
-                </ul>
-                <form class="navbar-form navbar-left">
+    <!--汉堡导航-->
+    <div class="navbar-header">
+        <button class="navbar-toggle" data-toggle="collapse" data-target="#main-menu" >
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">
+            <img alt="Brand" src="...">
+        </a>
+        <div  style="margin-left: 100px;">
+            <button class="btn btn-default" id="showLeftPush" >分享</button>
+        </div>
+    </div>
+    <!--顶部导航栏-->
+    <div class="collapse navbar-collapse" id="main-menu">
+        <ul class="nav navbar-nav">
+            <li role="presentation" style="margin-left: 150px;">
+                <form class="navbar-form navbar-left" role="search">
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="文章、标签、内容">
+                        <input type="text" class="form-control" style="border:none; background:none;outline:none; width: 300px;" placeholder="Search" />
                     </div>
-                    <button type="submit" class="btn btn-default">Serach</button>
+                    <button type="submit" class="btn btn-default">查找</button>
                 </form>
+            </li>
+            <li role="presentation">
+                <img src="cinqueterre.jpg" class="img-responsive" alt="Cinque Terre">
+            </li>
+            <li class="nav-current" role="presentation" style="margin-left: 100px;">
                 <ul class="nav navbar-nav navbar-right">
-                    <li role="presentation">
-                        <img src="" class="img-responsive" alt="Cinque Terre">
-                    </li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                            <div id="showId"><shiro:principal/> <span class="caret"></span></div>
+                        <a  style="background: none" href="#" class="dropdown-toggle" data-toggle="dropdown" >
+                            设置 <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
-                            <li id="msg"><a href="javascript:void(0)" onclick="showUserInfo()" data-toggle="modal" data-target="#showUserInfoModal">个人信息</a></li>
+                            <li id="msg" ><a href="#">个人信息</a></li>
                             <li class="divider"></li>
-                            <li id="account"><a href="${ctx}/user/resetPassword">账户设置</a></li>
+                            <li id="account"><a href="#">账户设置</a></li>
                             <li class="divider"></li>
-                            <li id="share"><a href="#">查看分享</a></li>
+                            <li id="share" ><a href="#">查看分享</a></li>
                             <li class="divider"></li>
-                            <li id="import"><a href="javascript:void(0)" data-toggle="modal" data-target="#importNoteModal">导入笔记</a></li>
-                            <li class="divider"></li>
-                            <li id="help"><a href="#">帮助</a></li>
-                            <li class="divider"></li>
-                            <li ><a href="${ctx}/logout">注销</a></li>
+                            <li id="help" ><a href="#">帮助</a></li>
+
+
                         </ul>
                     </li>
                 </ul>
-            </div><!-- /.container-fluid -->
-    </nav>
+            </li>
+        </ul>
+    </div>
+</nav>
 
-
-    <!--侧边栏-->
+<!--侧边栏-->
     <nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1" style="height: 1500px;">
         ....
     </nav>

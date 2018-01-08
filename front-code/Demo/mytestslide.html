@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="UTF-8" />
+	<link rel="stylesheet" type="text/css" href="css/default.css" />
+	<link rel="stylesheet" type="text/css" href="css/component.css" />
+	<!-- <script src="js/modernizr.custom.js"></script> -->
+
+</head>
+<body class="cbp-spmenu-push">
+<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1" style="height: 1500px;">
+	<div style="height: 70px;width: 100%;background-color: red"></div>
+	<div style="height:1300px; overflow-x:auto;">
+		<h3>Menu1</h3>
+		<a href="http://www.htmleaf.com/" target="_blank">Celery seakale</a>
+		<a href="http://www.htmleaf.com/" target="_blank">Dulse daikon</a>
+		<a href="http://www.htmleaf.com/" target="_blank">Zucchini garlic</a>
+		<a href="http://www.htmleaf.com/" target="_blank">Catsear azuki bean</a>
+		<a href="http://www.htmleaf.com/" target="_blank">Dandelion bunya</a>
+		<a href="http://www.htmleaf.com/" target="_blank">Rutabaga</a>
+		<h3>Menu1</h3>
+		<a href="http://www.htmleaf.com/" target="_blank">Celery seakale</a>
+		<a href="http://www.htmleaf.com/" target="_blank">Dulse daikon</a>
+		<a href="http://www.htmleaf.com/" target="_blank">Zucchini garlic</a>
+		<a href="http://www.htmleaf.com/" target="_blank">Catsear azuki bean</a>
+		<a href="http://www.htmleaf.com/" target="_blank">Dandelion bunya</a>
+		<a href="http://www.htmleaf.com/" target="_blank">Rutabaga</a>
+		<h3>Menu1</h3>
+		<a href="http://www.htmleaf.com/" target="_blank">Celery seakale</a>
+		<a href="http://www.htmleaf.com/" target="_blank">Dulse daikon</a>
+		<a href="http://www.htmleaf.com/" target="_blank">Zucchini garlic</a>
+		<a href="http://www.htmleaf.com/" target="_blank">Catsear azuki bean</a>
+		<a href="http://www.htmleaf.com/" target="_blank">Dandelion bunya</a>
+		<a href="http://www.htmleaf.com/" target="_blank">Rutabaga</a>
+		<h3>Menu1</h3>
+		<a href="http://www.htmleaf.com/" target="_blank">Celery seakale</a>
+		<a href="http://www.htmleaf.com/" target="_blank">Dulse daikon</a>
+		<a href="http://www.htmleaf.com/" target="_blank">Zucchini garlic</a>
+		<a href="http://www.htmleaf.com/" target="_blank">Catsear azuki bean</a>
+		<a href="http://www.htmleaf.com/" target="_blank">Dandelion bunya</a>
+		<a href="http://www.htmleaf.com/" target="_blank">Rutabaga</a>
+		<h3>Menu1</h3>
+		<a href="http://www.htmleaf.com/" target="_blank">Celery seakale</a>
+		<a href="http://www.htmleaf.com/" target="_blank">Dulse daikon</a>
+		<a href="http://www.htmleaf.com/" target="_blank">Zucchini garlic</a>
+		<a href="http://www.htmleaf.com/" target="_blank">Catsear azuki bean</a>
+		<a href="http://www.htmleaf.com/" target="_blank">Dandelion bunya</a>
+		<a href="http://www.htmleaf.com/" target="_blank">Rutabaga</a>
+	</div>
+</nav>
+<div class="container" style="margin-bottom: 100px;">
+	<div class="main" style="background-color: red;">
+		<button id="showLeftPush">Show/Hide Left Push Menu</button>
+	</div>
+</div>
+<script src="js/classie.js"></script>
+<script>
+    var menuLeft = document.getElementById( 'cbp-spmenu-s1' ),
+        showLeftPush = document.getElementById( 'showLeftPush' ),
+        // showRightPush = document.getElementById( 'showRightPush' ),
+        body = document.body;
+
+    showLeftPush.onclick = function() {
+        classie.toggle( this, 'active' );
+        classie.toggle( body, 'cbp-spmenu-push-toright' );
+        classie.toggle( menuLeft, 'cbp-spmenu-open' );
+        disableOther( 'showLeftPush' );
+    };
+
+    function disableOther( button ) {
+        if( button !== 'showLeftPush' ) {
+            classie.toggle( showLeftPush, 'disabled' );
+        }
+    }
+</script>
+</body>
+</html>

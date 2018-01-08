@@ -1,0 +1,33 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="pdf/pdf.js" type="text/javascript"></script>
+</head>
+<body>
+    <canvas id="canvas" >
+
+    </canvas>
+<script>
+    $(function(){
+        var url = '../compressed.tracemonkey-pldi-09.pdf';
+        PDFJS.workerSrc = 'generic/build/pdf.worker.js';
+        PDFJS.getDocument(url).then(function getPdf(pdf) {
+            pdf.getPage(2).then(function getPage(page) {
+                var scale = 1;
+                var viewport = page.getViewport(scale);
+                var canvas = document.getElementById('canvas');
+                var context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                var renderContext = {
+                    canvasContext: context,
+                    viewport: viewport
+                };
+                page.render(renderContext);
+            });
+        });
+    });
+</script>
+</body>
+</html>
