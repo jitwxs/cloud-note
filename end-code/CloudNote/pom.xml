@@ -206,6 +206,15 @@
             <systemPath>${project.basedir}/lib/aliyun-java-sdk-dysmsapi-1.0.0.jar</systemPath>
         </dependency>
 
+        <!-- 腾讯第三方登陆 -->
+        <dependency>
+            <groupId>tencent</groupId>
+            <artifactId>Sdk4J</artifactId>
+            <version>1.0.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Sdk4J.jar</systemPath>
+        </dependency>
+
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations-java5</artifactId>

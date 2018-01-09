@@ -5,7 +5,7 @@
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="javascript:void(0)">
                 <img alt="无道云笔记" src="${ctx}/images/favicon.png" style="width: 40px; height: 40px;">
             </a>
         </div>
@@ -13,13 +13,13 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li><a id="showLeftPush" href="#">我的分享</a></li>
+                <li><a id="showLeftPush" href="javascript:void(0)">随便逛逛</a></li>
             </ul>
             <form class="navbar-form navbar-left">
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="文章、标签、内容">
+                    <input type="text" class="form-control" id="searchContent" placeholder="文章、标签、内容">
                 </div>
-                <button type="submit" class="btn btn-default">Serach</button>
+                <button type="button" class="btn btn-default" onclick="nbSearch()">Search</button>
             </form>
             <ul class="nav navbar-nav navbar-right">
                 <li role="presentation">
@@ -64,7 +64,7 @@
             $("#fileName").html('');
 
             $("input:radio[name='sex'][value="+res[0].sex+"]").attr('checked','true');
-            $("#userSign").val(res.sign);
+            $("#userSign").val(res[0].sign);
 
             // 动态添加省级下拉框
             for(var i=0; i<res[1].length; i++) {
@@ -74,5 +74,22 @@
             toastr.error("系统错误");
             return false;
         });
+    }
+
+    function nbSearch() {
+        var content = $("#searchContent").val();
+        if(content == null || content == "") {
+            toastr.info("想搜啥请告诉我呀");
+            return false;
+        } else {
+            sendPost('${ctx}/user/nbSearch', {'content': content}, true, function (msg) {
+                if(msg.status) {
+                    toastr.info("状态true");
+                }
+            }, function (error) {
+                toastr.error("系统错误");
+                return false;
+            });
+        }
     }
 </script>

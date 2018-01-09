@@ -34,7 +34,7 @@
 <jsp:include page="head.jsp"/>
 
 <!-- 引入模块框 -->
-<jsp:include page="../showSelfInfo.jsp"/>
+<jsp:include page="../showSelfInfoModel.jsp"/>
 
 <input type="hidden" id="lastLoginTime" value="${lastLoginTime}">
 

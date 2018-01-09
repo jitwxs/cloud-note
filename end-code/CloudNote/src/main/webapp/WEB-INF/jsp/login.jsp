@@ -110,9 +110,9 @@
 
     <div class="right" style="width: 420px;height: 410px;">
         <p style="font-size: 18px;text-align: center;margin-top: 30px">其他账号登录</p>
-        <a class="btn" style="padding-left: 33px" onclick="loginQQ()"><img src="${ctx}/images/qq.png">  使用QQ登录</a>
-        <a style="margin-top: 40px;padding-left: 40px" class="btn"   onclick="loginWeChat()"><img src="${ctx}/images/weixin.png">  使用微信登录</a>
-        <a style="margin-top: 40px;padding-left: 55px"class="btn"   onclick="loginGithub()"><img src="${ctx}/images/github.png">  使用Github登录</a>
+        <a class="btn" style="padding-left: 33px" onclick="window.location.href='${ctx}/qqLogin'"><img src="${ctx}/images/qq.png">  使用QQ登录</a>
+        <a style="margin-top: 40px;padding-left: 40px" class="btn"><img src="${ctx}/images/weixin.png">  使用微信登录</a>
+        <a style="margin-top: 40px;padding-left: 55px"class="btn" onclick="window.location.href='${ctx}/githubLogin'"><img src="${ctx}/images/github.png">  使用Github登录</a>
     </div>
 
 </div>
@@ -150,15 +150,6 @@
             }
         });
         return flag;
-    }
-    //qq登录
-    function loginQQ() {
-    }
-    //微信登录
-    function loginWeChat(){
-    }
-    //新浪微博登录
-    function loginGithub(){
     }
 </script>
 </body>

@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50719
 File Encoding         : 65001
 
-Date: 2018-01-08 23:37:01
+Date: 2018-01-09 22:14:30
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -3597,7 +3597,7 @@ CREATE TABLE `article` (
   `user_id` varchar(64) NOT NULL COMMENT '作者id',
   `dir_id` varchar(64) NOT NULL COMMENT '所属文件夹id',
   `is_open` int(11) NOT NULL DEFAULT '0' COMMENT '是否公开（1：公开；0：不公开）',
-  `share_url` varchar(64) DEFAULT NULL COMMENT '分享url',
+  `share_url` varchar(256) DEFAULT NULL COMMENT '分享url',
   `create_date` datetime NOT NULL,
   `modifed_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -3609,13 +3609,38 @@ CREATE TABLE `article` (
 -- ----------------------------
 -- Records of article
 -- ----------------------------
-INSERT INTO `article` VALUES ('19f88063d6c74e32b703309a7c592135', 'ccc', '05d4849d43704410a904f93632e9f9b0', 'root', '0', null, '2018-01-08 13:06:14', '2018-01-08 20:39:21');
-INSERT INTO `article` VALUES ('35b0a6d751d949b0a54ecd278aee9561', 'a\'a\'a', '05d4849d43704410a904f93632e9f9b0', '57836a0ab5804006a4428dc4f7631c9e', '0', null, '2018-01-08 21:37:17', null);
+INSERT INTO `article` VALUES ('19f88063d6c74e32b703309a7c592135', 'ccc', '05d4849d43704410a904f93632e9f9b0', 'root', '1', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/article/19f88063d6c74e32b703309a7c592135/ccc.html', '2018-01-08 13:06:14', '2018-01-09 21:06:24');
+INSERT INTO `article` VALUES ('35b0a6d751d949b0a54ecd278aee9561', 'a\'a\'a', '05d4849d43704410a904f93632e9f9b0', 'root', '0', null, '2018-01-08 21:37:17', '2018-01-09 20:10:27');
 INSERT INTO `article` VALUES ('3efd59b511e24e9684c4cbd005e54496', 'cascsa', '05d4849d43704410a904f93632e9f9b0', 'root', '0', null, '2018-01-08 13:28:16', null);
-INSERT INTO `article` VALUES ('8f73d937929a41be9455e19ada30e448', 'aaa', '05d4849d43704410a904f93632e9f9b0', 'root', '0', null, '2018-01-08 13:18:34', null);
+INSERT INTO `article` VALUES ('8f73d937929a41be9455e19ada30e448', 'aaa', '05d4849d43704410a904f93632e9f9b0', 'root', '1', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/article/8f73d937929a41be9455e19ada30e448/aaa.html', '2018-01-08 13:18:34', '2018-01-09 21:03:25');
+INSERT INTO `article` VALUES ('9ab8a993876a47869a6c0d9203b6a033', 'aaa', '05d4849d43704410a904f93632e9f9b0', '45d798f9cb9c4894ac62d7aa942d9048', '0', null, '2018-01-09 20:11:06', '2018-01-09 20:11:09');
+INSERT INTO `article` VALUES ('a28891a42c8e46aa81b32f46a4df53b3', 'cccc', '05d4849d43704410a904f93632e9f9b0', '45d798f9cb9c4894ac62d7aa942d9048', '0', null, '2018-01-09 20:11:40', '2018-01-09 20:11:47');
+INSERT INTO `article` VALUES ('bcbf9487501045b1904f309e0a5500cf', 'oooo', '05d4849d43704410a904f93632e9f9b0', '45d798f9cb9c4894ac62d7aa942d9048', '0', null, '2018-01-09 20:12:58', '2018-01-09 20:13:01');
+INSERT INTO `article` VALUES ('c07e5293f87b424492fa295b270c5f73', 'xxx', '05d4849d43704410a904f93632e9f9b0', '45d798f9cb9c4894ac62d7aa942d9048', '0', null, '2018-01-09 20:12:47', null);
 INSERT INTO `article` VALUES ('ca147bcf58244d7d9559aa01fab1066e', 'zzz', '05d4849d43704410a904f93632e9f9b0', 'root', '0', null, '2018-01-08 13:28:47', null);
 INSERT INTO `article` VALUES ('f0f7cdb7d32a4de1adea9ca8e8d45b2e', 'zzz', '05d4849d43704410a904f93632e9f9b0', 'root', '0', null, '2018-01-08 13:04:20', null);
 INSERT INTO `article` VALUES ('f867eb4c2cc34cdaa08c8218c8dc4acb', 'aaa', '05d4849d43704410a904f93632e9f9b0', 'root', '0', null, '2018-01-08 13:05:16', null);
+INSERT INTO `article` VALUES ('fd403c4652874a19b1b4735e0c4fb083', 'wfaafa', '05d4849d43704410a904f93632e9f9b0', '45d798f9cb9c4894ac62d7aa942d9048', '0', null, '2018-01-09 20:11:29', null);
+
+-- ----------------------------
+-- Table structure for article_affix
+-- ----------------------------
+DROP TABLE IF EXISTS `article_affix`;
+CREATE TABLE `article_affix` (
+  `id` varchar(64) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `articleId` varchar(64) NOT NULL,
+  `path` varchar(256) NOT NULL,
+  `create_time` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_articleId` (`articleId`),
+  CONSTRAINT `fk_articleId` FOREIGN KEY (`articleId`) REFERENCES `article` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of article_affix
+-- ----------------------------
+INSERT INTO `article_affix` VALUES ('f57368eb477a42ef9fddbc7207f10d7c', 'rules.vdf', '19f88063d6c74e32b703309a7c592135', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/article/19f88063d6c74e32b703309a7c592135/rules.vdf', '2018-01-09 19:29:12');
 
 -- ----------------------------
 -- Table structure for article_recycle
@@ -3640,6 +3665,7 @@ CREATE TABLE `article_recycle` (
 -- ----------------------------
 -- Records of article_recycle
 -- ----------------------------
+INSERT INTO `article_recycle` VALUES ('34275afc9c424a19af2ecc76b5a73b01', 'aaa', '05d4849d43704410a904f93632e9f9b0', '45d798f9cb9c4894ac62d7aa942d9048', '0', null, '2018-01-09 20:16:10', '2018-01-09 20:16:07');
 INSERT INTO `article_recycle` VALUES ('3f8ace0d66624f11a875ae6bd615437a', 'aaa', '05d4849d43704410a904f93632e9f9b0', 'root', '0', null, '2018-01-08 13:09:11', null);
 INSERT INTO `article_recycle` VALUES ('7ecb3e1455404db2830471c6eb3de577', 'xxx', '05d4849d43704410a904f93632e9f9b0', 'root', '0', null, '2018-01-08 11:27:34', '2018-01-08 11:24:26');
 INSERT INTO `article_recycle` VALUES ('8524ef3524374b93929174ce543d2d68', 'bb', '05d4849d43704410a904f93632e9f9b0', 'root', '0', null, '2018-01-08 12:58:21', null);
@@ -3685,9 +3711,7 @@ CREATE TABLE `directory` (
 -- ----------------------------
 -- Records of directory
 -- ----------------------------
-INSERT INTO `directory` VALUES ('3caf2d93c19e480ab759670f2e965b45', '05d4849d43704410a904f93632e9f9b0', 'ww', '45d798f9cb9c4894ac62d7aa942d9048', '2018-01-08 13:07:59', null);
 INSERT INTO `directory` VALUES ('45d798f9cb9c4894ac62d7aa942d9048', '05d4849d43704410a904f93632e9f9b0', 'fff', 'root', '2018-01-08 13:07:50', null);
-INSERT INTO `directory` VALUES ('57836a0ab5804006a4428dc4f7631c9e', '05d4849d43704410a904f93632e9f9b0', 'aaaa', 'root', '2018-01-08 13:09:34', null);
 INSERT INTO `directory` VALUES ('eec08fe57e614ec998f4354768255f06', '05d4849d43704410a904f93632e9f9b0', 'aaa', 'root', '2018-01-08 13:09:15', null);
 INSERT INTO `directory` VALUES ('root', null, '我的文件夹', null, '2018-01-08 11:23:57', null);
 
@@ -3776,6 +3800,26 @@ CREATE TABLE `user` (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('05d4849d43704410a904f93632e9f9b0', '18168404329', 'jitwxs', 'jitwxs@foxmail.com', '130100', '男', 'icon.jpg', '', '2018-01-04 00:23:38', '2018-01-08 23:31:31');
+INSERT INTO `user` VALUES ('05d4849d43704410a904f93632e9f9b0', '18168404329', 'jitwxs', 'jitwxs@foxmail.com', '110100', '男', 'icon.jpg', 'afafaf', '2018-01-04 00:23:38', '2018-01-09 15:01:58');
 INSERT INTO `user` VALUES ('733900ac3a764099b0410844b0b33aae', '18168404326', '未知1', null, '130400', null, null, null, '2018-01-05 11:30:16', null);
 INSERT INTO `user` VALUES ('bae70d0c41ab4b578b88b59ebe037a7c', '17626014329', '未知2', null, '330500', null, null, null, '2018-01-08 16:58:12', null);
+
+-- ----------------------------
+-- Table structure for user_pan
+-- ----------------------------
+DROP TABLE IF EXISTS `user_pan`;
+CREATE TABLE `user_pan` (
+  `id` varchar(64) NOT NULL,
+  `userId` varchar(64) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `size` varchar(32) DEFAULT NULL,
+  `create_time` datetime NOT NULL,
+  `modifed_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_userId` (`userId`),
+  CONSTRAINT `fk_userId` FOREIGN KEY (`userId`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of user_pan
+-- ----------------------------

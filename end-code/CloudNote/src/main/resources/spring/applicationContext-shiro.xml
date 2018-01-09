@@ -30,6 +30,9 @@
                 # 登陆请求
                 /loginCheck = anon
                 /login = anon
+                # 第三方登录请求
+                /qqLogin = anon
+                /afterQQLogin= anon
                 # 注册请求
                 /registerCheck = anon
                 /register = anon
@@ -38,7 +41,6 @@
                 /smsVerification = anon
                 # 验证验证码
                 /codeCheck = anon
-
                 # 注销请求
                 /logout = logout
 

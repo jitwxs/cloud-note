@@ -2,6 +2,7 @@ package cn.edu.jit.service.impl;
 
 import cn.edu.jit.entry.Article;
 import cn.edu.jit.entry.ArticleExample;
+import cn.edu.jit.global.GlobalConstant;
 import cn.edu.jit.mapper.ArticleMapper;
 import cn.edu.jit.mapper.TagMapper;
 import cn.edu.jit.service.ArticleService;
@@ -50,14 +51,16 @@ public class ArticleServiceImpl implements ArticleService {
 
         ArticleExample.Criteria criteria = articleExample.createCriteria();
         criteria.andUserIdEqualTo(uid);
+        // 加上通配符
+        title = "%" + title + "%";
         criteria.andTitleLike(title);
 
         return articleMapper.selectByExample(articleExample);
     }
 
     @Override
-    public List<Article> listArticleByTag(String uid, String tagId) {
-        return  articleMapper.listArticleByTag(uid, tagId);
+    public List<Article> listArticleByTagName(String uid, String tagName) {
+        return  articleMapper.listArticleByTagName(uid, tagName);
     }
 
     @Override
@@ -67,6 +70,28 @@ public class ArticleServiceImpl implements ArticleService {
         ArticleExample.Criteria criteria = articleExample.createCriteria();
         criteria.andUserIdEqualTo(uid);
         criteria.andDirIdEqualTo(dirId);
+
+        return articleMapper.selectByExample(articleExample);
+    }
+
+    @Override
+    public List<Article> listArticleByShare(String uid) {
+        ArticleExample articleExample = new ArticleExample();
+
+        ArticleExample.Criteria criteria = articleExample.createCriteria();
+        criteria.andUserIdEqualTo(uid);
+        criteria.andIsOpenEqualTo(GlobalConstant.ARTICLE_STATUS.SHARE.getIndex());
+
+        return articleMapper.selectByExample(articleExample);
+    }
+
+    @Override
+    public List<Article> listAnotherShareArticle(String uid) {
+        ArticleExample articleExample = new ArticleExample();
+
+        ArticleExample.Criteria criteria = articleExample.createCriteria();
+        criteria.andUserIdNotEqualTo(uid);
+        criteria.andIsOpenEqualTo(GlobalConstant.ARTICLE_STATUS.SHARE.getIndex());
 
         return articleMapper.selectByExample(articleExample);
     }

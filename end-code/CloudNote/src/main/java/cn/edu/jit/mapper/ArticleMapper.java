@@ -31,10 +31,10 @@ public interface ArticleMapper {
     int updateByPrimaryKey(Article record);
 
     /**
-     * 根据用户id和标签id查询所有文章
+     * 根据用户id和标签模糊查询
      * @param uid 用户id
-     * @param tagId 标签id
+     * @param tagName 标签id
      * @return
      */
-    List<Article> listArticleByTag(@Param("uid") String uid, @Param("tagId") String tagId);
+    List<Article> listArticleByTagName(@Param("uid") String uid, @Param("tagName") String tagName);
 }

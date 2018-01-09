@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="${ctx}/css/toastr.css">
     <!-- 自定义CSS -->
     <link rel="stylesheet" href="${ctx}/css/custom.css">
+    <!-- home页CSS -->
     <link rel="stylesheet" href="${ctx}/css/home_css.css">
     <!-- jQuery first, then Bootstrap JS. -->
     <script src="${ctx}/js/jquery-3.2.1.min.js"></script>
@@ -30,6 +31,7 @@
     <script src="${ctx}/js/toastr.js"></script>
     <!-- 封装ajax -->
     <script src="${ctx}/js/http.js"></script>
+    <!-- home页JS -->
     <script src="${ctx}/js/home_js.js"></script>
 
 
@@ -38,7 +40,8 @@
 <body style="margin-top: 60px;position: absolute;width: 100%" id="home_body">
 
 <!-- 引入模块框 -->
-<jsp:include page="../showSelfInfo.jsp"/>
+<jsp:include page="../showSelfInfoModel.jsp"/>
+<jsp:include page="shareNoteModel.jsp"/>
 <jsp:include page="importNote.jsp"/>
 
 <input type="hidden" id="lastLoginTime" value="${lastLoginTime}">
@@ -58,7 +61,8 @@
             <!-- 编辑器区域 -->
             <jsp:include page="articleEditor.jsp"/>
         </div>
-        <!-- 暂时预留 -->
+
+        <!-- 广告位 -->
         <div class="col-lg-2" id="advertisment" style="background: yellow;height: 700px;">
         </div>
     </div>
@@ -68,22 +72,12 @@
 <jsp:include page="${ctx}/WEB-INF/jsp/global/footer.jsp"/>
 
 <script>
-    var menuLeft = document.getElementById('cbp-spmenu-s1'),  //nav整个导航栏
-        showLeftPush = document.getElementById('showLeftPush'),//button按钮
-        body = document.getElementById("home_body");
-
-    showLeftPush.onclick = function () {
-        var nav_id = document.getElementById("cbp-spmenu-s1");
-        classie.toggle(this, 'active');
-        classie.toggle(body, 'cbp-spmenu-push-toright');   //body 左移200px
-        classie.toggle(menuLeft, 'cbp-spmenu-open');   //nav 的left:0
-    };
-
     var userTel;
     // 页面加载函数
     $(function(){
         // 得到当前用户手机号码
         userTel = $.trim($("#showId").text());
+        // 打印上次登陆事件
         var lastTime = $("#lastLoginTime").val();
         if(lastTime != null && lastTime != "") {
             toastr.info(lastTime);

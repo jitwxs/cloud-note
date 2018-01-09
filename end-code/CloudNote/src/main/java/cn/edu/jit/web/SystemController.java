@@ -15,6 +15,15 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.aliyuncs.exceptions.ClientException;
+import com.qq.connect.QQConnectException;
+import com.qq.connect.api.OpenID;
+import com.qq.connect.api.qzone.PageFans;
+import com.qq.connect.api.qzone.UserInfo;
+import com.qq.connect.javabeans.AccessToken;
+import com.qq.connect.javabeans.qzone.PageFansBean;
+import com.qq.connect.javabeans.qzone.UserInfoBean;
+import com.qq.connect.javabeans.weibo.Company;
+import com.qq.connect.oauth.Oauth;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -33,7 +42,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -63,6 +75,8 @@ public class SystemController {
     }
 
     private void initPath(HttpServletRequest request) {
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        GlobalConstant.SHARE_TEMPLATE  = loader.getResource("shareTemplate.html").getPath();
         GlobalConstant.TEMP_PATH = request.getSession().getServletContext().getRealPath("temp");
         GlobalConstant.UPLOAD_PATH  = request.getSession().getServletContext().getRealPath("upload");
         GlobalConstant.USER_HOME_PATH = GlobalConstant.UPLOAD_PATH  + "/"  + GlobalFunction.getSelfTel();
@@ -83,7 +97,10 @@ public class SystemController {
                 user.setEmail(value);
                 break;
             case "area":
-                user.setArea(Integer.parseInt(value));
+                int v = Integer.parseInt(value);
+                if(v != -1) {
+                    user.setArea(v);
+                }
                 break;
             case "icon":
                 user.setIcon(value);
@@ -96,6 +113,54 @@ public class SystemController {
                 break;
             default:
                 break;
+        }
+    }
+
+    @RequestMapping(value = "qqLogin", method = {RequestMethod.GET})
+    public void qqLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("text/html;charset=utf-8");
+        try {
+            response.sendRedirect(new Oauth().getAuthorizeURL(request));
+        } catch (QQConnectException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping(value = "afterQQLogin", method = {RequestMethod.GET})
+    public void afterQQLoginGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        afterQQLoginPost(request,response);
+    }
+    @RequestMapping(value = "afterQQLogin", method = {RequestMethod.POST})
+    public void afterQQLoginPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("text/html; charset=utf-8");
+        PrintWriter out = response.getWriter();
+        try {
+            AccessToken accessTokenObj = (new Oauth()).getAccessTokenByRequest(request);
+            String accessToken = null, openID = null;
+            long tokenExpireIn = 0L;
+            if (accessTokenObj.getAccessToken().equals("")) {
+                System.out.print("没有获取到响应参数");
+            } else {
+                accessToken = accessTokenObj.getAccessToken();
+                tokenExpireIn = accessTokenObj.getExpireIn();
+                request.getSession().setAttribute("demo_access_token", accessToken);
+                request.getSession().setAttribute("demo_token_expirein", String.valueOf(tokenExpireIn));
+                // 利用获取到的accessToken 去获取当前用的openid
+                OpenID openIDObj = new OpenID(accessToken);
+                openID = openIDObj.getUserOpenID();
+                request.getSession().setAttribute("demo_openid", openID);
+                UserInfo qzoneUserInfo = new UserInfo(accessToken, openID);
+                UserInfoBean userInfoBean = qzoneUserInfo.getUserInfo();
+                out.println("<br/>");
+                if (userInfoBean.getRet() == 0) {
+                    out.println(userInfoBean.getNickname() + "<br/>");
+                    out.println(userInfoBean.getGender() + "<br/>");
+                } else {
+                    out.println("很抱歉，我们没能正确获取到您的信息，原因是： " + userInfoBean.getMsg());
+                }
+            }
+        } catch (QQConnectException e) {
+            e.printStackTrace();
         }
     }
 

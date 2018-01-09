@@ -40,12 +40,12 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<Tag> listByName(String name) {
+    public Tag getByName(String name) {
         TagExample tagExample = new TagExample();
 
         TagExample.Criteria criteria = tagExample.createCriteria();
         criteria.andNameLike(name);
 
-        return tagMapper.selectByExample(tagExample);
+        return tagMapper.selectByExample(tagExample).get(0);
     }
 }

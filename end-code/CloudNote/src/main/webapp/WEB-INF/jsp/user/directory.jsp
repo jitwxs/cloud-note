@@ -1,6 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/global/taglib.jsp" %>
 
+<!--
+如何获取笔记id和笔记name？
+noteId、noteName即使页面刷新也不会置空，
+正常判断使用：affixNoteId和editorTitle代替，这两个变量在页面刷新时会置空
+-->
 <div class="col-md-2">
     <div class="wjj">
         <a class="btn js_zwjj_btn" index-id="root"><img src="${ctx}/images/wjj2.png" width="15px" height="15px">
@@ -108,38 +113,50 @@
     function removeNote() {
         var $choosenId = $chooseDir;
         var id = $choosenId.attr('index-id');
-        //发送要删除的笔记的id
-        sendPost('${ctx}/user/removeNote', {'noteId': id}, false, function (msg) {
-            if (!msg.status) {
-                toastr.error("删除笔记失败");
+
+        var msg = "删除笔记后笔记将被丢入垃圾桶，确认不考虑下(ｏ ‵-′)ノ";
+        if (confirm(msg)){
+            //发送要删除的笔记的id
+            sendPost('${ctx}/user/removeNote', {'noteId': id}, false, function (msg) {
+                if (!msg.status) {
+                    toastr.error("删除笔记失败");
+                    return false;
+                } else {
+                    $choosenId.remove();
+                    toastr.success("笔记已删除");
+                }
+            }, function (error) {
+                toastr.error("系统错误");
                 return false;
-            } else {
-                $choosenId.remove();
-                toastr.success("笔记已删除");
-            }
-        }, function (error) {
-            toastr.error("系统错误");
-            return false;
-        });
+            });
+        } else {
+            return true;
+        }
     }
 
     function removeDir() {
         var $choosenId = $chooseDir;
         var $parent = $choosenId.parent();
         var id = $choosenId.attr('index-id');
-        //发送要删除的目录的id
-        sendPost('${ctx}/user/removeDir', {'dirId': id}, false, function (msg) {
-            if (!msg.status) {
-                toastr.error("删除目录失败");
+
+        var msg = "删除目录后笔记将被归入上层文件夹，真的要 (￢_￢)ﾉ？";
+        if (confirm(msg)){
+            //发送要删除的目录的id
+            sendPost('${ctx}/user/removeDir', {'dirId': id}, false, function (msg) {
+                if (!msg.status) {
+                    toastr.error("删除目录失败");
+                    return false;
+                } else {
+                    $parent.remove();
+                }
+            }, function (error) {
+                toastr.error("内部错误");
                 return false;
-            } else {
-                $parent.remove();
-                toastr.success("删除笔记成功");
-            }
-        }, function (error) {
-            toastr.error("内部错误");
+            });
+            location.reload(true);
+        }else{
             return false;
-        });
+        }
     }
 
     function renameDir() {
@@ -218,21 +235,48 @@
         var id = $choosenId.attr('index-id');
         var name = $choosenId.text();
         //发送要分享的笔记的id和name
-        sendPost('${ctx}', {'noteId': id,'noteName':name}, false, function (msg) {
+        sendPost('${ctx}/user/shareNote', {'noteId': id,'noteName':name}, true, function (msg) {
             if (!msg.status) {
                 toastr.error("分享笔记失败");
                 return false;
             } else {
-                toastr.success("笔记已分享");
+                $("#shareUrl").val(msg.info);
+                $("#noteId").val(msg.noteId);
+                $('#shareNoteModal').modal('show');
                 return true;
             }
         }, function (error) {
             toastr.error("系统错误");
             return false;
         });
-
-
     }
+
+    function flushNote(noteId, noteName) {
+        sendPost('${ctx}/user/recoverNote', {'noteId': noteId, "noteName": noteName}, true, function (msg) {
+            $("#noteId").val(noteId);
+            $("#noteName").val(noteName);
+            // 添加标签内容
+            $("#editorTags").val("");
+            for(var i=0; i < msg.noteTag.length; i++) {
+                $("#editorTags").val($("#editorTags").val() + msg.noteTag[i].name + " ");
+            }
+
+            var affixInfo = "";
+            // 添加附件信息
+            for(var i=0; i< msg.affixes.length; i++) {
+                affixInfo += '<div id="' + msg.affixes[i].id  + '">' + msg.affixes[i].name + "" +
+                    '<button onclick="previewAffix(this)">预览</button>' +  '<button onclick="deleteAffix(this)">删除</button>' + '</div>';
+            }
+            $("#affixContent").html(affixInfo);
+
+            // 恢复笔记内容
+            editor.txt.html(msg.info);
+        }, function (error) {
+            toastr.error("内部错误");
+            return false;
+        });
+    }
+
     function initUI() {
         $(".js_zwjj_btn").bind("contextmenu", function(){
             //记录右键点击的元素
@@ -332,19 +376,16 @@
             var $this = $(this);
             var noteId = $this.attr('index-id');
             var noteName = $this.text();
-            sendPost('${ctx}/user/recoverNote', {'noteId': noteId, "noteName": noteName}, true, function (msg) {
-                $("#noteId").val(noteId);
-                $("#noteName").val(noteName);
-                $("#editorTitle").val(noteName);
-                $("#editorTags").val("");
-                for(var i=0; i< msg.noteTag.length; i++) {
-                    $("#editorTags").val($("#editorTags").val() + msg.noteTag[i].name + " ");
-                }
-                editor.txt.html(msg.info);
-            }, function (error) {
-                toastr.error("内部错误");
-                return false;
-            });
+            $("#editorTitle").val(noteName);
+            $("#affixNoteId").val(noteId);
+
+            flushNote(noteId, noteName);
         });
+
+        window.onunload = function () {
+            $("#editorTitle").val("");
+            $("#affixNoteId").val("");
+            $("#editorTags").val("");
+        }
     }
 </script>

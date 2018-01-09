@@ -1,9 +1,12 @@
 package cn.edu.jit.entry;
 
+import cn.edu.jit.dto.ArticleDto;
+
 import java.io.Serializable;
 import java.util.List;
 
 /**
+ * 通信类
  * @author jitwxs
  * @date 2018/1/8 13:20
  */
@@ -72,6 +75,39 @@ public class Message implements Serializable {
         this.noteTag = noteTag;
     }
 
+    public List<ArticleAffix> getAffixes() {
+        return affixes;
+    }
+
+    public void setAffixes(List<ArticleAffix> affixes) {
+        this.affixes = affixes;
+    }
+
+    public List<UserPan> getUserFiles() {
+        return userFiles;
+    }
+
+    public void setUserFiles(List<UserPan> userFiles) {
+        this.userFiles = userFiles;
+    }
+
+    public List<Article> getArticles() {
+        return articles;
+    }
+
+    public void setArticles(List<Article> articles) {
+        this.articles = articles;
+    }
+
+    public List<ArticleDto> getArticleDtos() {
+        return articleDtos;
+    }
+
+    public void setArticleDtos(List<ArticleDto> articleDtos) {
+        this.articleDtos = articleDtos;
+    }
+
+
     private Boolean status;
 
     private String info;
@@ -86,5 +122,14 @@ public class Message implements Serializable {
 
     private String tel;
 
+    private List<Article> articles;
+
+    private List<ArticleDto> articleDtos;
+
     private List<Tag> noteTag;
+
+    private List<ArticleAffix> affixes;
+
+    private List<UserPan> userFiles;
+
 }

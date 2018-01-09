@@ -117,6 +117,22 @@ public class GlobalFunction {
         return flag;
     }
 
+    /**
+     * 删除单个文件
+     */
+    public static boolean deleteSignalFile(String filePath) {
+        File file = new File(filePath);
+        if (file.exists() && file.isFile()) {
+            if (file.delete()) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
     public static boolean renameFile(String path,String oldName,String newName) {
         //新的文件名和以前文件名不同时,才有必要进行重命名
         if (!oldName.equals(newName)) {

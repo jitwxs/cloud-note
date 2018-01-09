@@ -106,7 +106,7 @@
 
     // 提交表单
     function checkUserInfo() {
-        // TODO 头像类型、大小验证
+        // TODO 头像大小验证
         var status = true;
         var icon = $("#uploadIcon").val();
         if (icon != null && icon != "") {
@@ -123,10 +123,10 @@
     }
 
     // 实时更新选中的文件名
-    $("input[type='file']").change(function(){
+    $("#uploadIcon").change(function(){
         var file = this.files[0];
         $("#fileName").html("当前选中："+file.name);
-        // TODO
+        // TODO 大小验证
         // alert(file.size);
     });
 

@@ -11,6 +11,7 @@ import cn.edu.jit.util.Sha1Utils;
 import cn.edu.jit.util.WordToPdf;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.aspose.slides.p2cbca448.ows;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -18,6 +19,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import sun.misc.BASE64Encoder;
@@ -53,6 +55,9 @@ public class UserController {
 
     @Resource(name = "articleTagServiceImpl")
     private ArticleTagService articleTagService;
+
+    @Resource(name = "articleAffixServiceImpl")
+    private ArticleAffixService articleAffixService;
 
     @Resource (name = "articleRecycleServiceImpl")
     private ArticleRecycleService articleRecycleService;
@@ -139,6 +144,9 @@ public class UserController {
         }
     }
 
+    /**
+     * 获取笔记所有标签
+     */
     private List<Tag> getNoteTag(String noteId) {
         List<Tag> result = new ArrayList<>();
         List<ArticleTagKey> lists = articleTagService.listByArticleId(noteId);
@@ -148,6 +156,41 @@ public class UserController {
         return result;
     }
 
+    /**
+     * 创建笔记分享页面
+     * @param noteId 笔记id
+     * @param noteName 笔记名称
+     * @return 页面再程序的真实url
+     */
+    private String createSharePage(String noteId, String noteName) throws IOException{
+        int len;
+        char[] buf = new char[1024];
+        String temp;
+        String dirPath = GlobalConstant.USER_ARTICLE_PATH + "/" + noteId;
+        String inputPath = dirPath + "/" + noteName + GlobalConstant.NOTE_SUFFIX;
+        String outputPath = dirPath + "/" + noteName + ".html";
+
+        BufferedReader br = new BufferedReader(new FileReader(GlobalConstant.SHARE_TEMPLATE));
+        InputStreamReader isr = new InputStreamReader(new FileInputStream(inputPath), "UTF-8");
+        OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(outputPath),"UTF-8");
+
+        while((temp = br.readLine()) != null) {
+            osw.write(temp);
+            // 加入标题和正文
+            if("\t<title>".equals(temp)) {
+                osw.write(noteName);
+            } else if ("<body>".equals(temp)) {
+                while((len = isr.read(buf)) > 0) {
+                    osw.write(buf, 0, len);
+                }
+            }
+            osw.flush();
+        }
+        br.close();
+        isr.close();
+        osw.close();
+        return outputPath;
+    }
     /*---------   普通方法区域（END）   ----------*/
 
     @RequestMapping(value = "index")
@@ -386,7 +429,7 @@ public class UserController {
      * 下载笔记
      */
     @RequestMapping(value = "downloadNote", method = {RequestMethod.GET})
-    public void downloadFile(HttpServletRequest request, HttpServletResponse response) {
+    public void downloadNote(HttpServletRequest request, HttpServletResponse response) {
         String noteId = request.getParameter("noteId");
         // 设置编码（如果文件名乱码，尝试打开解决问题）
         // fileName = new String(fileName.getBytes("ISO8859-1"),"UTF-8");
@@ -473,7 +516,7 @@ public class UserController {
     }
 
     /**
-     * 恢复笔记内容
+     * 恢复笔记
      */
     @RequestMapping(value = "recoverNote", method = {RequestMethod.POST})
     public void showUserNote(HttpServletRequest request, HttpServletResponse response) {
@@ -485,6 +528,7 @@ public class UserController {
             String noteId = request.getParameter("noteId");
             String targetFilePath = GlobalConstant.USER_ARTICLE_PATH + "/" + noteId + "/" + noteName + GlobalConstant.NOTE_SUFFIX;
 
+            // 获取文件内容
             InputStreamReader in = new InputStreamReader(new FileInputStream(targetFilePath), "UTF-8");
             StringBuilder sb = new StringBuilder();
 
@@ -493,10 +537,14 @@ public class UserController {
             }
             in.close();
 
+            // 获取所有附件
+            List<ArticleAffix> affixes = articleAffixService.listByArticleId(noteId);
+
             Message message = new Message();
             message.setInfo(sb.toString());
             message.setName(noteName);
             message.setNoteTag(getNoteTag(noteId));
+            message.setAffixes(affixes);
             String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
         } catch (IOException e) {
@@ -505,8 +553,213 @@ public class UserController {
     }
 
     /**
-     * 文件转换
-     * 支持doc/docx/xls/xlsx/ppt/pptx --> pdf
+     * 分享笔记
+     */
+    @RequestMapping(value = "shareNote", method = {RequestMethod.POST})
+    public void shareNote(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        String noteId = request.getParameter("noteId");
+        String noteName = request.getParameter("noteName");
+        Message message = new Message();
+        Boolean status = false;
+        try {
+            Article article = articleService.getById(noteId);
+            if(article != null) {
+                // 如果文章已经分享，无需再次分享
+                if(article.getIsOpen() == GlobalConstant.ARTICLE_STATUS.SHARE.getIndex()) {
+                    status = true;
+                    message.setInfo(article.getShareUrl());
+                } else if(article.getIsOpen() == GlobalConstant.ARTICLE_STATUS.NOT_SHARE.getIndex()) {
+                    String url = createSharePage(noteId, noteName);
+                    if(!StringUtils.isEmpty(url)) {
+                        status = true;
+                        message.setInfo(url);
+
+                        // 更新数据库
+                        article.setIsOpen(GlobalConstant.ARTICLE_STATUS.SHARE.getIndex());
+                        article.setShareUrl(url);
+                        articleService.update(article);
+                    }
+                }
+            }
+            message.setStatus(status);
+            message.setNoteId(noteId);
+            String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 取消分享笔记
+     */
+    @RequestMapping(value = "cancelShare", method = {RequestMethod.POST})
+    public void cancelShare(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        String noteId = request.getParameter("noteId");
+        String url = request.getParameter("url");
+        Message message = new Message();
+        try {
+            // 删除分享文件
+            GlobalFunction.deleteSignalFile(url);
+            // 更新数据库
+            Article article = articleService.getById(noteId);
+            article.setShareUrl(null);
+            article.setIsOpen(GlobalConstant.ARTICLE_STATUS.NOT_SHARE.getIndex());
+            articleService.update(article);
+            message.setStatus(true);
+            String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 查看个人分享笔记
+     */
+    @RequestMapping(value = "showSelfShareNote", method = {RequestMethod.GET})
+    public void showSelfShareNote(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        try {
+            String userId = getSelfId();
+            List<Article> lists = articleService.listArticleByShare(userId);
+            Message message = new Message();
+            if(lists.size() == 0) {
+                message.setStatus(false);
+            } else {
+                message.setStatus(true);
+                message.setArticles(lists);
+            }
+
+            String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 查看其他人分享的笔记
+     */
+    public void showOtherShareNote(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset-utf-8");
+        try {
+            String userId = getSelfId();
+            List<Article> lists = articleService.listAnotherShareArticle(userId);
+            Message message = new Message();
+            if(lists.size() == 0) {
+                message.setStatus(false);
+            } else {
+                message.setStatus(true);
+                List<ArticleDto> articleDtos = new ArrayList<>();
+                for (Article article : lists) {
+                  ArticleDto articleDto = new ArticleDto();
+                  BeanUtils.copyProperties(article, articleDto);
+                  articleDto.setAuthorName(userService.getById(article.getUserId()).getTel());
+                  articleDtos.add(articleDto);
+                }
+                message.setArticleDtos(articleDtos);
+            }
+
+            String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 删除附件
+     */
+    @RequestMapping(value = "removeAffix", method = {RequestMethod.POST})
+    public void removeAffix(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        Boolean status = false;
+        String affixId = request.getParameter("affixId");
+        try {
+            if (affixId != null) {
+                ArticleAffix articleAffix = articleAffixService.getById(affixId);
+                if(articleAffix != null) {
+                    // 删除存在服务器上的文件
+                    GlobalFunction.deleteSignalFile(articleAffix.getPath());
+                    // 删除记录
+                    articleAffixService.removeById(affixId);
+                    status = true;
+                }
+            }
+
+            Message message = new Message();
+            message.setStatus(status);
+            String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 上传附件
+     */
+    @RequestMapping(value = "uploadAffix", method = {RequestMethod.POST})
+    public void uploadAffix(HttpServletRequest request, HttpServletResponse response) {
+        String path = null;
+        String noteId = null;
+        try {
+            DiskFileItemFactory factory = new DiskFileItemFactory(1024 * 1024, new File(GlobalConstant.TEMP_PATH));
+
+            ServletFileUpload upload = new ServletFileUpload(factory);
+            upload.setHeaderEncoding("UTF-8");
+
+            if (ServletFileUpload.isMultipartContent(request)) {
+                List<FileItem> fileItems = upload.parseRequest(request);
+                if (fileItems.size() != 0) {
+                    for (FileItem item : fileItems) {
+                        if (item.isFormField()) {
+                            String fieldName = item.getFieldName();
+                            String fieldValue = item.getString("UTF-8");
+                            // 此处fieldName即为noteId,如果获取失败，就没有上传附件的意义
+                            if(StringUtils.isEmpty(fieldName)) {
+                                break;
+                            } else {
+                                noteId = fieldValue;
+                            }
+                        } else {
+                            if(!StringUtils.isEmpty(noteId)) {
+                                String fileName = item.getName();
+                                // 如果文件名为空，就跳过
+                                if (StringUtils.isEmpty(fileName)) {
+                                    continue;
+                                }
+                                // 上传文件
+                                path = GlobalConstant.USER_ARTICLE_PATH + "/" + noteId + "/" + fileName;
+                                GlobalFunction.uploadFile(item, path);
+
+                                //存入数据库
+                                ArticleAffix articleAffix = new ArticleAffix();
+                                articleAffix.setId(GlobalFunction.getUUID());
+                                articleAffix.setArticleid(noteId);
+                                articleAffix.setName(fileName);
+                                articleAffix.setPath(path);
+                                articleAffix.setCreateTime(new Date());
+                                articleAffixService.save(articleAffix);
+                            }
+                        }
+                    }
+                }
+                response.sendRedirect("/user/index");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * PDF转换
+     * 支持格式：doc、docx、xls、xlsx、ppt、pptx
      */
     @RequestMapping(value = "convertFile", method = {RequestMethod.POST})
     public void convertFile(HttpServletRequest request, HttpServletResponse response) {
@@ -562,6 +815,32 @@ public class UserController {
             e.printStackTrace();
         }
     }
+
+    /**
+     * 模糊匹配笔记名、标签名、笔记内容
+     */
+    @RequestMapping(value = "nbSearch", method = {RequestMethod.POST})
+    public void nbSearch(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        String content = request.getParameter("content");
+        try {
+            Message message = new Message();
+            if(StringUtils.isEmpty(content)) {
+                message.setStatus(false);
+            } else {
+                List<Article> lists1 = articleService.listArticleByTitle(getSelfId(),content);
+                //TODO
+//            List<Article> list2 = articleService.listArticleByTagName(getSelfId(),content);
+                message.setArticles(lists1);
+                message.setStatus(true);
+            }
+            String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /*---------   笔记管理区域（END）   ----------*/
 
     /*---------   目录管理区域（START）   ----------*/

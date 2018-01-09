@@ -17,5 +17,5 @@ public interface TagService {
 
     Tag getById(String id);
 
-    List<Tag> listByName(String name);
+    Tag getByName(String name);
 }
