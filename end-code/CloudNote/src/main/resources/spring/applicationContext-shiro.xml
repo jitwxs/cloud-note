@@ -34,6 +34,7 @@
                 /qqLogin = anon
                 /afterQQLogin= anon
                 # 注册请求
+                /checkTelRegistered = anon
                 /registerCheck = anon
                 /register = anon
                 /foundPassword = anon

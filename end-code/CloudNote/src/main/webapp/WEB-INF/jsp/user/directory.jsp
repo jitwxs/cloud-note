@@ -1,11 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/global/taglib.jsp" %>
 
-<!--
+<%--
 如何获取笔记id和笔记name？
 noteId、noteName即使页面刷新也不会置空，
 正常判断使用：affixNoteId和editorTitle代替，这两个变量在页面刷新时会置空
--->
+--%>
+
 <div class="col-md-2">
     <div class="wjj">
         <a class="btn js_zwjj_btn" index-id="root"><img src="${ctx}/images/wjj2.png" width="15px" height="15px">
@@ -39,7 +40,8 @@ noteId、noteName即使页面刷新也不会置空，
     };
     var options3 = {items:[
             {text: '新建目录', onclick: createDir},
-            {text: '新建笔记', onclick: createNote}
+            {text: '新建笔记', onclick: createNote},
+            {text:'上传笔记',onclick:uploadNote}
         ]};
 
     var dirTPL = '' +
@@ -109,6 +111,13 @@ noteId、noteName即使页面刷新也不会置空，
         $('input[name=note_name]').select();
         initUI();
     }
+
+    // 上传笔记
+    function uploadNote() {
+        $("#uploadNoteName").html('');
+        $('#uploadNoteModal').modal('show');
+    }
+
 
     function removeNote() {
         var $choosenId = $chooseDir;
@@ -229,6 +238,7 @@ noteId、noteName即使页面刷新也不会置空，
         var url = "${ctx}/user/downloadNote?noteId=" + id + "&noteName=" + name;
         window.location.href = url;
     }
+
     //笔记的右击分享功能
     function shareNote() {
         var $choosenId = $chooseDir;
@@ -261,13 +271,17 @@ noteId、noteName即使页面刷新也不会置空，
                 $("#editorTags").val($("#editorTags").val() + msg.noteTag[i].name + " ");
             }
 
-            var affixInfo = "";
             // 添加附件信息
+            var affixInfo = "";
             for(var i=0; i< msg.affixes.length; i++) {
-                affixInfo += '<div id="' + msg.affixes[i].id  + '">' + msg.affixes[i].name + "" +
-                    '<button onclick="previewAffix(this)">预览</button>' +  '<button onclick="deleteAffix(this)">删除</button>' + '</div>';
+                affixInfo += '<tr id="'+msg.affixes[i].id+'">\n' +
+                    '            <td>'+msg.affixes[i].name+'</td>\n' +
+                    '            <td><button class="btn btn-info btn-sm" onclick="previewAffix(this)" value="'+msg.affixes[i].name+'">预览</button></td>\n' +
+                    '            <td><button class="btn btn-danger btn-sm" onclick="deleteAffix(this)">删除</button></td>\n' +
+                    '            </tr>';
             }
-            $("#affixContent").html(affixInfo);
+
+            $("#affixContentTBody").html(affixInfo);
 
             // 恢复笔记内容
             editor.txt.html(msg.info);

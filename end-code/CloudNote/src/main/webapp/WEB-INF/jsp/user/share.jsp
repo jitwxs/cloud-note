@@ -11,7 +11,8 @@
         </tr>
         </thead>
         <tbody id="shareArticleTBody">
-        <%--<tr><td></td><td></td>--%>
+        <%--<tr><td></td>--%>
+            <%--<td></td>--%>
             <%--<td>--%>
                 <%--<button>查看分享</button>--%>
             <%--</td>--%>

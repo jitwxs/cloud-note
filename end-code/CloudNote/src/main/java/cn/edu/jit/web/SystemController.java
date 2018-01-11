@@ -1,5 +1,6 @@
 package cn.edu.jit.web;
 
+import cn.edu.jit.entry.Register;
 import cn.edu.jit.dto.UserDto;
 import cn.edu.jit.entry.Area;
 import cn.edu.jit.entry.Login;
@@ -15,14 +16,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.aliyuncs.exceptions.ClientException;
-import com.qq.connect.QQConnectException;
 import com.qq.connect.api.OpenID;
-import com.qq.connect.api.qzone.PageFans;
 import com.qq.connect.api.qzone.UserInfo;
 import com.qq.connect.javabeans.AccessToken;
-import com.qq.connect.javabeans.qzone.PageFansBean;
 import com.qq.connect.javabeans.qzone.UserInfoBean;
-import com.qq.connect.javabeans.weibo.Company;
 import com.qq.connect.oauth.Oauth;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -42,10 +39,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -66,9 +62,6 @@ public class SystemController {
     @Resource(name = "areaServiceImpl")
     private AreaService areaService;
 
-    /**
-     * 获取当前用户id
-     */
     private String getSelfId() {
         User user = userService.getByTel(GlobalFunction.getSelfTel());
         return user.getId();
@@ -83,9 +76,14 @@ public class SystemController {
         GlobalConstant.USER_ARTICLE_PATH  = GlobalConstant.USER_HOME_PATH  + "/" + "article";
         GlobalConstant.USER_IMG_PATH = GlobalConstant.USER_HOME_PATH  + "/" + "images";
         GlobalConstant.USER_PAN_PATH = GlobalConstant.USER_HOME_PATH  + "/"  + "pan" ;
+
+        GlobalFunction.createDir(GlobalConstant.TEMP_PATH);
+        GlobalFunction.createDir(GlobalConstant.USER_ARTICLE_PATH);
+        GlobalFunction.createDir(GlobalConstant.USER_IMG_PATH);
+        GlobalFunction.createDir(GlobalConstant.USER_PAN_PATH);
     }
 
-    private void parserUser(User user, String key, String value) throws Exception {
+    private void parserUser(User user, String key, String value) {
         switch (key) {
             case "id":
                 BeanUtils.copyProperties(userService.getById(value), user);
@@ -117,28 +115,29 @@ public class SystemController {
     }
 
     @RequestMapping(value = "qqLogin", method = {RequestMethod.GET})
-    public void qqLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void qqLogin(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
         try {
             response.sendRedirect(new Oauth().getAuthorizeURL(request));
-        } catch (QQConnectException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @RequestMapping(value = "afterQQLogin", method = {RequestMethod.GET})
-    public void afterQQLoginGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void afterQQLoginGet(HttpServletRequest request, HttpServletResponse response) {
         afterQQLoginPost(request,response);
     }
+
     @RequestMapping(value = "afterQQLogin", method = {RequestMethod.POST})
-    public void afterQQLoginPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void afterQQLoginPost(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html; charset=utf-8");
-        PrintWriter out = response.getWriter();
         try {
+            PrintWriter out = response.getWriter();
             AccessToken accessTokenObj = (new Oauth()).getAccessTokenByRequest(request);
             String accessToken = null, openID = null;
             long tokenExpireIn = 0L;
-            if (accessTokenObj.getAccessToken().equals("")) {
+            if ("".equals(accessTokenObj.getAccessToken())) {
                 System.out.print("没有获取到响应参数");
             } else {
                 accessToken = accessTokenObj.getAccessToken();
@@ -159,7 +158,7 @@ public class SystemController {
                     out.println("很抱歉，我们没能正确获取到您的信息，原因是： " + userInfoBean.getMsg());
                 }
             }
-        } catch (QQConnectException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -170,26 +169,29 @@ public class SystemController {
     }
 
     @RequestMapping(value = "loginCheck", method = {RequestMethod.POST})
-    public void loginCheck(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void loginCheck(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
         Boolean status = true;
-
         String tel = request.getParameter("tel");
         String password = request.getParameter("password");
 
-        Login login = loginService.getByTel(tel);
+        try {
+            Login login = loginService.getByTel(tel);
 
-        // 账户不存在或密码错误
-        if (login == null) {
-            status = false;
-        } else if(!Sha1Utils.validatePassword(password, login.getPassword())) {
-            status = false;
+            // 账户不存在或密码错误
+            if (login == null) {
+                status = false;
+            } else if(!Sha1Utils.validatePassword(password, login.getPassword())) {
+                status = false;
+            }
+
+            Message message = new Message();
+            message.setStatus(status);
+            String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        }catch (IOException e) {
+            e.printStackTrace();
         }
-
-        Message msg = new Message();
-        msg.setStatus(status);
-        String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
-        response.getWriter().write(data);
     }
 
     @RequestMapping(value = "login", method = {RequestMethod.POST})
@@ -226,10 +228,29 @@ public class SystemController {
         return "register";
     }
 
+    @RequestMapping(value = "checkTelRegistered", method = {RequestMethod.POST})
+    public void checkTelRegistered (HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String tel = request.getParameter("tel");
+            Message message = new Message();
+            Login login = loginService.getByTel(tel);
+            if(login != null) {
+                message.setStatus(false);
+            } else {
+                message.setStatus(true);
+            }
+            String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @RequestMapping(value = "registerCheck", method = {RequestMethod.POST})
-    public void registerCheck(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void registerCheck(HttpServletRequest request, HttpServletResponse response){
         Boolean status = true;
         String info = null;
+        Message message = new Message();
         response.setContentType("text/html;charset=utf-8");
         String tel = request.getParameter("tel");
         String verityCode = request.getParameter("code");
@@ -239,38 +260,61 @@ public class SystemController {
         String sendTel = (String)session.getAttribute("tel");
         String sendCode = (String)session.getAttribute("code");
 
-        if (tel == null) {
-            status = false;
-            info = "请输入手机号";
-        } else {
-            if (loginService.getByTel(tel) != null) {
+        try {
+            if (tel == null) {
                 status = false;
-                info = "手机号已被注册";
+                info = "请输入手机号";
             } else {
-                if (sendTel == null) {
+                if (loginService.getByTel(tel) != null) {
                     status = false;
-                    info = "请发送验证码";
+                    info = "手机号已被注册";
                 } else {
-                    if (!tel.equals(sendTel)) {
+                    if (sendTel == null) {
                         status = false;
-                        info = "请勿随意修改手机号";
+                        info = "请发送验证码";
                     } else {
-                        if (!verityCode.equals(sendCode)){
+                        if (!tel.equals(sendTel)) {
                             status = false;
-                            info = "验证码输入错误";
+                            info = "注册号码与验证号码不一致";
+                        } else {
+                            if (!verityCode.equals(sendCode)){
+                                status = false;
+                                info = "验证码输入错误";
+                            }
                         }
                     }
                 }
             }
+            message.setStatus(status);
+            message.setInfo(info);
+            String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        response.getWriter().write("{\"status\":" + status +",\"info\":" + "\"" + info + "\"" + "}");
+
     }
 
     @RequestMapping(value = "register", method = {RequestMethod.POST})
-    public String register(Login login) {
-        loginService.save(login);
+    public String register(Register register) {
+        Area area = areaService.getByName(register.getArea());
+        User user = new User();
+        BeanUtils.copyProperties(register, user);
 
-        User user = GlobalFunction.login2User(login);
+        user.setId(GlobalFunction.getUUID());
+        user.setCreateDate(new Date());
+        if (area != null) {
+            user.setArea(area.getId());
+        }
+
+        Login login = new Login();
+        login.setTel(user.getTel());
+        login.setRoleId(GlobalConstant.ROLE.USER.getIndex());
+        login.setCreateDate(new Date());
+        login.setPassword(Sha1Utils.entryptPassword(register.getPassword()));
+
+        // 必须先保存Login表，外键约束
+        loginService.save(login);
         userService.save(user);
 
         return "redirect:/login";
@@ -303,6 +347,7 @@ public class SystemController {
                 status = false;
             }
         } catch (ClientException e) {
+            status = false;
             e.printStackTrace();
         }
         try {
@@ -405,10 +450,6 @@ public class SystemController {
         }
     }
 
-
-    /**
-     * 显示个人信息
-     */
     @RequestMapping(value = "showSelfInfo", method = {RequestMethod.GET})
     public void showUserInfo(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
@@ -420,7 +461,7 @@ public class SystemController {
             BeanUtils.copyProperties(user, userDto);
             userDto.setAreaName(area.getName());
 
-            List<Area> areas = areaService.listByPid(0);;
+            List<Area> areas = areaService.listByPid(0);
 
             List<Object> objects = new LinkedList<>();
             objects.add(userDto);
@@ -432,9 +473,6 @@ public class SystemController {
         }
     }
 
-    /**
-     * 保存个人信息
-     */
     @RequestMapping(value = "saveSelfInfo", method = {RequestMethod.POST})
     public String saveUserInfo(HttpServletRequest request, HttpServletResponse response) {
         User user = new User();
@@ -465,8 +503,8 @@ public class SystemController {
                             if (StringUtils.isEmpty(fileName)) {
                                 continue;
                             }
-                            // 重命名：规定icon+后缀作为头像名
-                            fileName = "icon." + fileName.split("\\.")[1];
+                            // 重命名：规定icon+小写后缀作为头像名
+                            fileName = "icon." + fileName.split("\\.")[1].toLowerCase();
 
                             // 拼装路径
                             String targetFilePath = GlobalConstant.USER_IMG_PATH + "/" + fileName;

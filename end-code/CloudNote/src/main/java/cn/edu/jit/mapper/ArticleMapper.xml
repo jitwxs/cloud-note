@@ -257,8 +257,11 @@
   </update>
 
   <select id="listArticleByTagName" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List"/>
-
+    select article.id,title,user_id,dir_id,is_open,share_url,article.create_date,article.modifed_date
+    from article,article_tag,tag
+    where article.id=article_tag.article_id
+    and article_tag.tag_id=tag.id
+    and article.user_id=#{uid}
+    and tag.name like "%"#{tagName}"%"
   </select>
 </mapper>

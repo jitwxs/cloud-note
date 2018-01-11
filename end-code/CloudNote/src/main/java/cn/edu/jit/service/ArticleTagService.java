@@ -14,6 +14,8 @@ public interface ArticleTagService {
 
     int remove(ArticleTagKey articleTagKey);
 
+    int removeAllByArticleId(String articleId);
+
     List<ArticleTagKey> listByArticleId(String articleId);
 
     int countByArticleId(String articleId);

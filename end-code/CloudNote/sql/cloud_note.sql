@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50719
 File Encoding         : 65001
 
-Date: 2018-01-09 22:14:30
+Date: 2018-01-11 09:52:58
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -3603,24 +3603,16 @@ CREATE TABLE `article` (
   PRIMARY KEY (`id`),
   KEY `fk_user` (`user_id`),
   KEY `fk_dir` (`dir_id`),
-  CONSTRAINT `fk_dir` FOREIGN KEY (`dir_id`) REFERENCES `directory` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `fk_dir` FOREIGN KEY (`dir_id`) REFERENCES `directory` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `userid` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of article
 -- ----------------------------
-INSERT INTO `article` VALUES ('19f88063d6c74e32b703309a7c592135', 'ccc', '05d4849d43704410a904f93632e9f9b0', 'root', '1', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/article/19f88063d6c74e32b703309a7c592135/ccc.html', '2018-01-08 13:06:14', '2018-01-09 21:06:24');
-INSERT INTO `article` VALUES ('35b0a6d751d949b0a54ecd278aee9561', 'a\'a\'a', '05d4849d43704410a904f93632e9f9b0', 'root', '0', null, '2018-01-08 21:37:17', '2018-01-09 20:10:27');
-INSERT INTO `article` VALUES ('3efd59b511e24e9684c4cbd005e54496', 'cascsa', '05d4849d43704410a904f93632e9f9b0', 'root', '0', null, '2018-01-08 13:28:16', null);
-INSERT INTO `article` VALUES ('8f73d937929a41be9455e19ada30e448', 'aaa', '05d4849d43704410a904f93632e9f9b0', 'root', '1', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/article/8f73d937929a41be9455e19ada30e448/aaa.html', '2018-01-08 13:18:34', '2018-01-09 21:03:25');
-INSERT INTO `article` VALUES ('9ab8a993876a47869a6c0d9203b6a033', 'aaa', '05d4849d43704410a904f93632e9f9b0', '45d798f9cb9c4894ac62d7aa942d9048', '0', null, '2018-01-09 20:11:06', '2018-01-09 20:11:09');
-INSERT INTO `article` VALUES ('a28891a42c8e46aa81b32f46a4df53b3', 'cccc', '05d4849d43704410a904f93632e9f9b0', '45d798f9cb9c4894ac62d7aa942d9048', '0', null, '2018-01-09 20:11:40', '2018-01-09 20:11:47');
-INSERT INTO `article` VALUES ('bcbf9487501045b1904f309e0a5500cf', 'oooo', '05d4849d43704410a904f93632e9f9b0', '45d798f9cb9c4894ac62d7aa942d9048', '0', null, '2018-01-09 20:12:58', '2018-01-09 20:13:01');
-INSERT INTO `article` VALUES ('c07e5293f87b424492fa295b270c5f73', 'xxx', '05d4849d43704410a904f93632e9f9b0', '45d798f9cb9c4894ac62d7aa942d9048', '0', null, '2018-01-09 20:12:47', null);
-INSERT INTO `article` VALUES ('ca147bcf58244d7d9559aa01fab1066e', 'zzz', '05d4849d43704410a904f93632e9f9b0', 'root', '0', null, '2018-01-08 13:28:47', null);
-INSERT INTO `article` VALUES ('f0f7cdb7d32a4de1adea9ca8e8d45b2e', 'zzz', '05d4849d43704410a904f93632e9f9b0', 'root', '0', null, '2018-01-08 13:04:20', null);
-INSERT INTO `article` VALUES ('f867eb4c2cc34cdaa08c8218c8dc4acb', 'aaa', '05d4849d43704410a904f93632e9f9b0', 'root', '0', null, '2018-01-08 13:05:16', null);
-INSERT INTO `article` VALUES ('fd403c4652874a19b1b4735e0c4fb083', 'wfaafa', '05d4849d43704410a904f93632e9f9b0', '45d798f9cb9c4894ac62d7aa942d9048', '0', null, '2018-01-09 20:11:29', null);
+INSERT INTO `article` VALUES ('6b95c2e225d14ecfb9598c179113459b', '测试笔记3', 'bae70d0c41ab4b578b88b59ebe037a7c', 'root', '0', null, '2018-01-10 16:13:18', '2018-01-10 21:28:33');
+INSERT INTO `article` VALUES ('aeaf693794d44dfaa5208a6986025414', '测试笔记2', 'bae70d0c41ab4b578b88b59ebe037a7c', 'root', '0', null, '2018-01-10 14:33:23', '2018-01-10 20:34:39');
+INSERT INTO `article` VALUES ('fe214b804f9c4dc29d26cd7387e9e075', '测试笔记', 'bae70d0c41ab4b578b88b59ebe037a7c', 'root', '0', null, '2018-01-10 14:31:56', '2018-01-10 20:44:55');
 
 -- ----------------------------
 -- Table structure for article_affix
@@ -3640,7 +3632,10 @@ CREATE TABLE `article_affix` (
 -- ----------------------------
 -- Records of article_affix
 -- ----------------------------
-INSERT INTO `article_affix` VALUES ('f57368eb477a42ef9fddbc7207f10d7c', 'rules.vdf', '19f88063d6c74e32b703309a7c592135', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/article/19f88063d6c74e32b703309a7c592135/rules.vdf', '2018-01-09 19:29:12');
+INSERT INTO `article_affix` VALUES ('619e2ae7b5b9433693f4091536768d23', 'LinuxProbe.pdf', 'fe214b804f9c4dc29d26cd7387e9e075', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/article/fe214b804f9c4dc29d26cd7387e9e075/LinuxProbe.pdf', '2018-01-10 14:44:36');
+INSERT INTO `article_affix` VALUES ('64721c99e8084a29a8be3ffed0a60b43', 'Python爬虫总结 - 路人甲.docx', '6b95c2e225d14ecfb9598c179113459b', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/article/6b95c2e225d14ecfb9598c179113459b/Python爬虫总结 - 路人甲.docx', '2018-01-10 16:42:34');
+INSERT INTO `article_affix` VALUES ('d574558d59744ffbb689fc46fad275d9', '2017专题报告 - Java web.pptx', 'aeaf693794d44dfaa5208a6986025414', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/article/aeaf693794d44dfaa5208a6986025414/2017专题报告 - Java web.pptx', '2018-01-10 18:04:49');
+INSERT INTO `article_affix` VALUES ('df363c27efdd44de86f86f6b428c4f51', 'LTP_实训4.pptx', 'aeaf693794d44dfaa5208a6986025414', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/article/aeaf693794d44dfaa5208a6986025414/LTP_实训4.pptx', '2018-01-10 18:17:11');
 
 -- ----------------------------
 -- Table structure for article_recycle
@@ -3665,11 +3660,6 @@ CREATE TABLE `article_recycle` (
 -- ----------------------------
 -- Records of article_recycle
 -- ----------------------------
-INSERT INTO `article_recycle` VALUES ('34275afc9c424a19af2ecc76b5a73b01', 'aaa', '05d4849d43704410a904f93632e9f9b0', '45d798f9cb9c4894ac62d7aa942d9048', '0', null, '2018-01-09 20:16:10', '2018-01-09 20:16:07');
-INSERT INTO `article_recycle` VALUES ('3f8ace0d66624f11a875ae6bd615437a', 'aaa', '05d4849d43704410a904f93632e9f9b0', 'root', '0', null, '2018-01-08 13:09:11', null);
-INSERT INTO `article_recycle` VALUES ('7ecb3e1455404db2830471c6eb3de577', 'xxx', '05d4849d43704410a904f93632e9f9b0', 'root', '0', null, '2018-01-08 11:27:34', '2018-01-08 11:24:26');
-INSERT INTO `article_recycle` VALUES ('8524ef3524374b93929174ce543d2d68', 'bb', '05d4849d43704410a904f93632e9f9b0', 'root', '0', null, '2018-01-08 12:58:21', null);
-INSERT INTO `article_recycle` VALUES ('b0931cb1212449ca84d8b13e577fbbab', 'sss', '05d4849d43704410a904f93632e9f9b0', 'root', '0', null, '2018-01-08 13:07:28', null);
 
 -- ----------------------------
 -- Table structure for article_tag
@@ -3687,8 +3677,11 @@ CREATE TABLE `article_tag` (
 -- ----------------------------
 -- Records of article_tag
 -- ----------------------------
-INSERT INTO `article_tag` VALUES ('19f88063d6c74e32b703309a7c592135', '1');
-INSERT INTO `article_tag` VALUES ('19f88063d6c74e32b703309a7c592135', '2');
+INSERT INTO `article_tag` VALUES ('6b95c2e225d14ecfb9598c179113459b', '08b814593fa140eca42d33c355837b01');
+INSERT INTO `article_tag` VALUES ('fe214b804f9c4dc29d26cd7387e9e075', '6fb12f40607641aa86e4685da03d7827');
+INSERT INTO `article_tag` VALUES ('fe214b804f9c4dc29d26cd7387e9e075', '72f8cb5a0c0f46329043c2d9c648e857');
+INSERT INTO `article_tag` VALUES ('6b95c2e225d14ecfb9598c179113459b', '80891bad802e4268b36ef6986da49129');
+INSERT INTO `article_tag` VALUES ('aeaf693794d44dfaa5208a6986025414', '80891bad802e4268b36ef6986da49129');
 
 -- ----------------------------
 -- Table structure for directory
@@ -3711,9 +3704,25 @@ CREATE TABLE `directory` (
 -- ----------------------------
 -- Records of directory
 -- ----------------------------
-INSERT INTO `directory` VALUES ('45d798f9cb9c4894ac62d7aa942d9048', '05d4849d43704410a904f93632e9f9b0', 'fff', 'root', '2018-01-08 13:07:50', null);
-INSERT INTO `directory` VALUES ('eec08fe57e614ec998f4354768255f06', '05d4849d43704410a904f93632e9f9b0', 'aaa', 'root', '2018-01-08 13:09:15', null);
 INSERT INTO `directory` VALUES ('root', null, '我的文件夹', null, '2018-01-08 11:23:57', null);
+
+-- ----------------------------
+-- Table structure for file_convert
+-- ----------------------------
+DROP TABLE IF EXISTS `file_convert`;
+CREATE TABLE `file_convert` (
+  `affix_id` varchar(64) NOT NULL COMMENT '文件转换前的id',
+  `path` varchar(256) DEFAULT NULL COMMENT '文件转换后的路径',
+  PRIMARY KEY (`affix_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of file_convert
+-- ----------------------------
+INSERT INTO `file_convert` VALUES ('64721c99e8084a29a8be3ffed0a60b43', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/article/6b95c2e225d14ecfb9598c179113459b/Python爬虫总结 - 路人甲.pdf');
+INSERT INTO `file_convert` VALUES ('cd9ce1988b49407db483ecc5bda71402', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/article/6b95c2e225d14ecfb9598c179113459b/吴祥生-1513902008 学期计划.pdf');
+INSERT INTO `file_convert` VALUES ('d574558d59744ffbb689fc46fad275d9', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/article/aeaf693794d44dfaa5208a6986025414/2017专题报告 - Java web.pdf');
+INSERT INTO `file_convert` VALUES ('df363c27efdd44de86f86f6b428c4f51', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/article/aeaf693794d44dfaa5208a6986025414/LTP_实训4.pdf');
 
 -- ----------------------------
 -- Table structure for login
@@ -3733,11 +3742,8 @@ CREATE TABLE `login` (
 -- ----------------------------
 -- Records of login
 -- ----------------------------
-INSERT INTO `login` VALUES ('17626014329', 'f840a774b450aef62679410413f15cbfec959efba7b6bb09de5bd6b8', '2', '2018-01-08 16:58:12', null);
-INSERT INTO `login` VALUES ('18168404321', 'f4b9b2efb4a26a6319fc66021695358d7e093cba4b8315b27542163d', '1', '2018-01-04 00:19:56', null);
-INSERT INTO `login` VALUES ('18168404326', '0a436092af3acc486004d93e08f7eb01ac7d6675ab412954299f3e49', '2', '2018-01-05 11:30:16', null);
-INSERT INTO `login` VALUES ('18168404329', '9b2eb342ef78533be7f871cc3f3794f4aedb8d5ef9553083fbba5cfd', '2', '2018-01-04 00:23:38', '2018-01-08 17:04:45');
-INSERT INTO `login` VALUES ('18361809790', '2984f3732af9f329b2b76e1947ea6b05c17c9ac100e146e7842ad997', '2', '2018-01-08 17:19:55', '2018-01-08 17:20:55');
+INSERT INTO `login` VALUES ('15962930119', '529a9da390f1692636c64b7d854b67e0383388897db7ee90cf81503f', '2', '2018-01-11 09:40:26', null);
+INSERT INTO `login` VALUES ('18168404329', 'fc62c2168fb561adfccdb450aadde1e83a1354a462465bce64ef58e7', '2', '2018-01-08 16:58:12', '2018-01-10 14:27:51');
 
 -- ----------------------------
 -- Table structure for role
@@ -3772,8 +3778,11 @@ CREATE TABLE `tag` (
 -- ----------------------------
 -- Records of tag
 -- ----------------------------
-INSERT INTO `tag` VALUES ('1', '模拟书签1', '2018-01-08 21:29:06', null);
-INSERT INTO `tag` VALUES ('2', '模拟书签2', '2018-01-08 21:29:19', null);
+INSERT INTO `tag` VALUES ('08b814593fa140eca42d33c355837b01', '笔记3', '2018-01-10 20:45:53', null);
+INSERT INTO `tag` VALUES ('6fb12f40607641aa86e4685da03d7827', '世界', '2018-01-10 14:35:40', null);
+INSERT INTO `tag` VALUES ('728f9c91ffba463a903dfdea96e5528c', '界', '2018-01-10 20:45:12', null);
+INSERT INTO `tag` VALUES ('72f8cb5a0c0f46329043c2d9c648e857', '你好', '2018-01-10 14:35:40', null);
+INSERT INTO `tag` VALUES ('80891bad802e4268b36ef6986da49129', '你好呀', '2018-01-10 19:50:01', null);
 
 -- ----------------------------
 -- Table structure for user
@@ -3800,9 +3809,8 @@ CREATE TABLE `user` (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('05d4849d43704410a904f93632e9f9b0', '18168404329', 'jitwxs', 'jitwxs@foxmail.com', '110100', '男', 'icon.jpg', 'afafaf', '2018-01-04 00:23:38', '2018-01-09 15:01:58');
-INSERT INTO `user` VALUES ('733900ac3a764099b0410844b0b33aae', '18168404326', '未知1', null, '130400', null, null, null, '2018-01-05 11:30:16', null);
-INSERT INTO `user` VALUES ('bae70d0c41ab4b578b88b59ebe037a7c', '17626014329', '未知2', null, '330500', null, null, null, '2018-01-08 16:58:12', null);
+INSERT INTO `user` VALUES ('bae70d0c41ab4b578b88b59ebe037a7c', '18168404329', 'jitwxs', 'jitwxs@foxmail.com', '320100', '男', 'icon.jpg', 'hhhh', '2018-01-08 16:58:12', '2018-01-10 21:40:59');
+INSERT INTO `user` VALUES ('bf47e566c52d44a6927d5512bd121719', '15962930119', '哈哈哈哈哈哈', 'nb@gmail.com', '320100', '男', null, null, '2018-01-11 09:40:26', null);
 
 -- ----------------------------
 -- Table structure for user_pan

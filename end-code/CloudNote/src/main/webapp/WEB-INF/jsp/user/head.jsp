@@ -3,15 +3,20 @@
 
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-            <a class="navbar-brand" href="javascript:void(0)">
-                <img alt="无道云笔记" src="${ctx}/images/favicon.png" style="width: 40px; height: 40px;">
-            </a>
+        <div class="navbar-header" style="margin-top: 10px;height: 40px;position: relative">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="javascript:void(0)" class="navbar-brand"
+               style="font-family:'Open Sans', Arial, sans-serif;font-size: 20px;color: black;">
+                无道云笔记</a>
+            <img src="${ctx}/images/favicon.png" style="width: 50px;height: 40px;" alt="无道云笔记">
         </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
             <ul class="nav navbar-nav">
                 <li><a id="showLeftPush" href="javascript:void(0)">随便逛逛</a></li>
             </ul>
@@ -30,15 +35,13 @@
                         <div id="showId"><shiro:principal/> <span class="caret"></span></div>
                     </a>
                     <ul class="dropdown-menu">
-                        <li id="msg"><a href="javascript:void(0)" onclick="showSelfInfo()" data-toggle="modal" data-target="#showSelfInfoModal">个人信息</a></li>
+                        <li ><a href="javascript:void(0)" onclick="showSelfInfo()" data-toggle="modal" data-target="#showSelfInfoModal">个人信息</a></li>
                         <li class="divider"></li>
-                        <li id="account"><a href="${ctx}/user/resetPassword">账户设置</a></li>
+                        <li id="accountSet"><a href="${ctx}/user/resetPassword">账户设置</a></li>
                         <li class="divider"></li>
-                        <li id="share"><a href="#">查看分享</a></li>
+                        <li id="showShare"><a href="#">查看分享</a></li>
                         <li class="divider"></li>
-                        <li id="import"><a href="javascript:void(0)" data-toggle="modal" data-target="#importNoteModal">导入笔记</a></li>
-                        <li class="divider"></li>
-                        <li id="help"><a href="#">帮助</a></li>
+                        <li id="aboutDeveloper"><a href="#">关于</a></li>
                         <li class="divider"></li>
                         <li ><a href="${ctx}/logout">注销</a></li>
                     </ul>

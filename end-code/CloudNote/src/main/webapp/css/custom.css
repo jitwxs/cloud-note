@@ -17,3 +17,13 @@
 .wjj_div{
     margin-left: 10px;
 }
+
+/** loding **/
+
+#loading
+{
+    position:fixed;
+    top:40%;
+    left:45%;
+    z-index:999;
+}

@@ -6,26 +6,26 @@
 
 <head>
     <title>无道云笔记</title>
-    <!-- Required meta tags always come first -->
+    <%-- Required meta tags always come first --%>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <!-- Bootstrap CSS -->
+    <%-- Bootstrap CSS --%>
     <link rel="stylesheet" href="${ctx}/css/bootstrap.css">
     <link rel="stylesheet" href="${ctx}/css/wangEditor-fullscreen-plugin.css">
-    <!-- 弹窗CSS -->
+    <%-- 弹窗CSS --%>
     <link rel="stylesheet" href="${ctx}/css/toastr.css">
-    <!-- 自定义CSS -->
+    <%-- 自定义CSS --%>
     <link rel="stylesheet" href="${ctx}/css/custom.css">
-    <!-- jQuery first, then Bootstrap JS. -->
+    <%-- jQuery first, then Bootstrap JS. --%>
     <script src="${ctx}/js/jquery-3.2.1.min.js"></script>
     <script src="${ctx}/js/bootstrap.js"></script>
-    <!-- wangEditor依赖 -->
+    <%-- wangEditor依赖 --%>
     <script src="${ctx}/js/wangEditor.js"></script>
     <script src="${ctx}/js/wangEditor-fullscreen-plugin.js"></script>
-    <!-- 弹窗依赖 -->
+    <%-- 弹窗依赖 --%>
     <script src="${ctx}/js/toastr.js"></script>
-    <!-- 封装ajax -->
+    <%-- 封装ajax --%>
     <script src="${ctx}/js/http.js"></script>
 </head>
 
@@ -33,7 +33,7 @@
 
 <jsp:include page="head.jsp"/>
 
-<!-- 引入模块框 -->
+<%-- 引入模块框 --%>
 <jsp:include page="../showSelfInfoModel.jsp"/>
 
 <input type="hidden" id="lastLoginTime" value="${lastLoginTime}">

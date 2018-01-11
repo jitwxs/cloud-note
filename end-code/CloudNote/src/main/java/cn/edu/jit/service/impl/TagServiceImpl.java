@@ -44,8 +44,14 @@ public class TagServiceImpl implements TagService {
         TagExample tagExample = new TagExample();
 
         TagExample.Criteria criteria = tagExample.createCriteria();
-        criteria.andNameLike(name);
+        criteria.andNameEqualTo(name);
 
-        return tagMapper.selectByExample(tagExample).get(0);
+        List<Tag> lists = tagMapper.selectByExample(tagExample);
+        if(lists.size() ==0) {
+            return null;
+        } else {
+            return lists.get(0);
+        }
+
     }
 }

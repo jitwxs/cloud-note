@@ -23,7 +23,7 @@
                                 <span>上传头像</span>
                                 <input type="file" id="uploadIcon" name="uploadIcon">
                             </span><br><br>
-                            <span class="upload-hint">支持PNG、JPG格式，小于2MB</span><br>
+                            <span class="upload-hint">支持png、jpg格式，小于2MB</span><br>
                             <label id="fileName"></label>
                         </div>
                     </div>
@@ -88,6 +88,7 @@
 </div>
 
 <script>
+    var fileSize;
     $('#areaSelect1').on('change',function(){
         var areaId = $(this).val();
         if(areaId != -1){
@@ -106,28 +107,31 @@
 
     // 提交表单
     function checkUserInfo() {
-        // TODO 头像大小验证
-        var status = true;
         var icon = $("#uploadIcon").val();
         if (icon != null && icon != "") {
             var point = icon.lastIndexOf(".");
-            var type = icon.substr(point);
-            if(type != ".jpg" && type != ".JPG" && type != ".PNG" && type != ".png"){
-                toastr.warning("图片格式错误!");
-                status = false;
+            var type = icon.substr(point).toLowerCase();
+            type = type.substr(1,type.length);
+            if(type != "jpg" && type != "png"){
+                toastr.warning("图片格式错误");
+                return false;
             }
+            if(fileSize / (1024 * 1024) > 2) {
+                toastr.warning("头像太大啦");
+                return false;
+            }
+        } else {
+            toastr.warning("系统错误");
+            return false;
         }
-        if (status) {
-            $("#userInfoForm").submit();
-        }
+        $("#userInfoForm").submit();
     }
 
     // 实时更新选中的文件名
     $("#uploadIcon").change(function(){
         var file = this.files[0];
         $("#fileName").html("当前选中："+file.name);
-        // TODO 大小验证
-        // alert(file.size);
+        fileSize = file.size;
     });
 
 </script>

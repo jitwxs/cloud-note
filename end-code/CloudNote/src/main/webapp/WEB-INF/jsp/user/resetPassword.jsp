@@ -6,23 +6,23 @@
 
 <head>
     <title>无道云笔记</title>
-    <!-- Required meta tags always come first -->
+    <%-- Required meta tags always come first --%>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <!-- Bootstrap CSS -->
+    <%-- Bootstrap CSS --%>
     <link rel="stylesheet" href="${ctx}/css/bootstrap.css">
     <link rel="stylesheet" href="${ctx}/css/wangEditor-fullscreen-plugin.css">
-    <!-- 弹窗CSS -->
+    <%-- 弹窗CSS --%>
     <link rel="stylesheet" href="${ctx}/css/toastr.css">
-    <!-- 自定义CSS -->
+    <%-- 自定义CSS --%>
     <link rel="stylesheet" href="${ctx}/css/custom.css">
-    <!-- jQuery first, then Bootstrap JS. -->
+    <%-- jQuery first, then Bootstrap JS. --%>
     <script src="${ctx}/js/jquery-3.2.1.min.js"></script>
     <script src="${ctx}/js/bootstrap.js"></script>
-    <!-- 弹窗依赖 -->
+    <%-- 弹窗依赖 --%>
     <script src="${ctx}/js/toastr.js"></script>
-    <!-- 封装ajax -->
+    <%-- 封装ajax --%>
     <script src="${ctx}/js/http.js"></script>
     <style>
         @media  screen and (min-width: 200px) {
@@ -57,7 +57,7 @@
 <div class="container">
     <div class="row">
         <div>
-            <ul class="nav nav-tabs" style="float: right">
+            <ul class="nav nav-tabs" style="margin-top: 60px;float: right ">
                 <li style="margin-left: 450px;"><a href="#">账号信息</a></li>
                 <li><a href="accountsafe.html">账号安全</a></li>
                 <li><a href="#">上传文件</a></li>
@@ -95,7 +95,7 @@
     </div>
 </div>
 
-<!-- 引入页脚 -->
+<%-- 引入页脚 --%>
 <jsp:include page="${ctx}/WEB-INF/jsp/global/footer.jsp"/>
 <script>
     // 页面加载函数

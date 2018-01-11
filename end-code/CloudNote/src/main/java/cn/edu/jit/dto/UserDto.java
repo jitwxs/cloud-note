@@ -7,13 +7,13 @@ import cn.edu.jit.entry.User;
  * @date 2018/1/8 22:23
  */
 public class UserDto extends User {
-    private String AreaName;
+    private String areaName;
 
     public String getAreaName() {
-        return AreaName;
+        return areaName;
     }
 
     public void setAreaName(String areaName) {
-        AreaName = areaName;
+        this.areaName = areaName;
     }
 }

@@ -5,19 +5,20 @@
 <html lang="en">
 
 <head>
-    <title>CloudNote</title>
-    <!-- Required meta tags always come first -->
+    <title>找回密码</title>
+    <%-- Required meta tags always come first --%>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <!-- Bootstrap CSS -->
+    <%-- Bootstrap CSS --%>
     <link rel="stylesheet" href="${ctx}/css/bootstrap.css">
     <link rel="stylesheet" href="${ctx}/css/toastr.css">
-    <!-- jQuery first, then Bootstrap JS. -->
+    <%-- jQuery first, then Bootstrap JS. --%>
     <script src="${ctx}/js/jquery-3.2.1.min.js"></script>
     <script src="${ctx}/js/bootstrap.js"></script>
     <script src="${ctx}/js/toastr.js"></script>
     <script src="${ctx}/js/jquery.cookie.js"></script>
+    <script src="${ctx}/js/http.js"></script>
     <style>
         *{
             margin: 0;
@@ -145,34 +146,24 @@
     }
     function checkCode(){
         var tel = $('#tel').val();
-        var re = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
+        var re=/^1\d{10}$/;
         var verityCode = $("#verityCode").val();
         if (!re.test(tel)) {
             toastr.warning("手机号不符合规范");
             return false;
         }
-        $.ajax({
-            type:'post',
-            url: '${ctx}/codeCheck',
-            async:false,
-            dataType:'json',
-            data:{
-                'tel':tel,
-                'verityCode':verityCode
-            },
-            success:function (msg) {
-                if(msg.status) {
-                    toastr.success(msg.info);
-                    $('.inputPhone').hide();
-                    $('.changePasswd').show();
-                } else {
-                    toastr.warning(msg.info);
-                }
-            },
-            error:function () {
-                toastr.error("内部错误");
-                return false;
+
+        sendPost('${ctx}/codeCheck',{'tel': tel,'verityCode':verityCode},false,function (msg) {
+            if(msg.status) {
+                toastr.success(msg.info);
+                $('.inputPhone').hide();
+                $('.changePasswd').show();
+            } else {
+                toastr.warning(msg.info);
             }
+        },function (error) {
+            toastr.error("系统错误");
+            return false;
         });
     }
 
@@ -185,72 +176,72 @@
             toastr.warning("两次密码不一致！");
             return false;
         }
-        $.ajax({
-            type:'post',
-            url: '${ctx}/foundPassword',
-            async:false,
-            dataType:'json',
-            data:{
-                'tel':tel,
-                'newPassword':newPassword,
-                'verityCode':verityCode
-            },
-            success:function (msg) {
-                if(msg.status) {
-                    toastr.success("修改成功，3秒后前往登陆页面！");
-                    setTimeout(function(){ window.location.href="${ctx}/login"; }, 3000);
-                } else {
-                    toastr.warning(msg.info);
-                }
-            },
-            error:function () {
-                toastr.error("内部错误");
-                return false;
+
+        sendPost('${ctx}/foundPassword',{'tel': tel,'newPassword':newPassword,'verityCode':verityCode},false,function (msg) {
+            if(msg.status) {
+                toastr.success("修改成功，3秒后前往登陆页面！");
+                setTimeout(function(){ window.location.href="${ctx}/login"; }, 3000);
+            } else {
+                toastr.warning(msg.info);
             }
+        },function (error) {
+            toastr.error("系统错误");
+            return false;
         });
     }
 
     function ses_verification() {
+        var flag = true;
         var tel = $("#tel").val();
         var re = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
         if (!re.test(tel)) {
             toastr.warning("手机号不符合规范");
             return false;
         }else{
-            var btn = $('#getting');
-            var count = 60; //设置默认60s后获取
-            var resend = setInterval(function(){
-                count--;
-                if (count > 0){
-                    btn.val(count+"秒后重新获取");
-                    $.cookie("captcha", count, {path: '/', expires: (1/86400)*count});
-                }else {
-                    clearInterval(resend);
-                    btn.val("发送验证码").removeAttr('disabled style');
-                    btn.val("发送验证码").css("margin-bottom","15px");
-                }
-            }, 1000);
-            btn.attr('disabled',true).css('cursor','not-allowed');
-        }
-        $.ajax({
-            type: 'post',
-            url: '${ctx}/smsVerification',
-            dataType: 'json',
-            data: {
-                'tel': tel
-            },
-            async : true,
-            success: function (msg) {
+            sendPost('${ctx}/checkTelRegistered',{'tel':tel},false,function(msg) {
                 if (msg.status) {
-                    toastr.success("发送成功");
+                    toastr.error("该手机号未被注册");
+                    flag = false;
                 } else {
-                    toastr.info("发送失败");
+                    toastr.success("该手机号注册");
                 }
-            },
-            error: function () {
+            },function (error) {
                 toastr.error("系统错误");
+                flag = false;
+                return false;
+            });
+
+            if(flag) {
+                sendPost('${ctx}/smsVerification',{'tel': tel},false,function (msg) {
+                    if (msg.status) {
+                        toastr.success("发送成功");
+                    } else {
+                        flag = false;
+                        toastr.info("发送失败");
+                    }
+                },function (error) {
+                    toastr.error("系统错误");
+                    return false;
+                });
+
+                if(flag) {
+                    var btn = $('#getting');
+                    var count = 60; //设置默认60s后获取
+                    var resend = setInterval(function(){
+                        count--;
+                        if (count > 0){
+                            btn.val(count+"秒后重新获取");
+                            $.cookie("captcha", count, {path: '/', expires: (1/86400)*count});
+                        }else {
+                            clearInterval(resend);
+                            btn.val("发送验证码").removeAttr('disabled style');
+                            btn.val("发送验证码").css("margin-bottom","15px");
+                        }
+                    }, 1000);
+                    btn.attr('disabled',true).css('cursor','not-allowed');
+                }
             }
-        });
+        }
     }
 </script>
 </body>

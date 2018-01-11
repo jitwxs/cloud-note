@@ -107,6 +107,21 @@ public class Message implements Serializable {
         this.articleDtos = articleDtos;
     }
 
+    public ArticleDto getArticleDto() {
+        return articleDto;
+    }
+
+    public void setArticleDto(ArticleDto articleDto) {
+        this.articleDto = articleDto;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
 
     private Boolean status;
 
@@ -124,11 +139,15 @@ public class Message implements Serializable {
 
     private List<Article> articles;
 
+    private ArticleDto articleDto;
+
     private List<ArticleDto> articleDtos;
 
     private List<Tag> noteTag;
 
     private List<ArticleAffix> affixes;
+
+    private List<User> users;
 
     private List<UserPan> userFiles;
 

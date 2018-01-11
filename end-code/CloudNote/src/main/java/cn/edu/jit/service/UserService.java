@@ -3,6 +3,8 @@ package cn.edu.jit.service;
 import cn.edu.jit.entry.Login;
 import cn.edu.jit.entry.User;
 
+import java.util.List;
+
 /**
  * 用户Service
  * @author jitwxs
@@ -17,4 +19,8 @@ public interface UserService {
     int save(User user);
 
     int update(User user);
+
+    int removeByTel(String tel);
+
+    List<User> listAllUser();
 }

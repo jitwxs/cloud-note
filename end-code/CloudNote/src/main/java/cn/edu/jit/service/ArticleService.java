@@ -18,8 +18,22 @@ public interface ArticleService {
 
     Article getById(String id);
 
+    List<Article> listArticleByUid(String uid);
+
+    /**
+     * 查询指定用户按标题匹配笔记
+     * @param uid 用户id
+     * @param name 笔记名
+     * @return
+     */
     List<Article> listArticleByTitle(String uid, String name);
 
+    /**
+     * 查询指定用户按标签名匹配笔记
+     * @param uid 用户id
+     * @param tagName 标签名
+     * @return
+     */
     List<Article> listArticleByTagName(String uid, String tagName);
 
     /**
@@ -44,6 +58,13 @@ public interface ArticleService {
      */
     List<Article> listAnotherShareArticle(String uid);
 
+    /**
+     * 查询用户笔记数量
+     * @param uid 用户id
+     * @return
+     */
     int countArticle(String uid);
+
+    List<Article> listAllArticle();
 
 }

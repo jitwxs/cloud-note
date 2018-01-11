@@ -6,18 +6,18 @@
 
 <head>
     <title></title>
-    <!-- Required meta tags always come first -->
+    <%-- Required meta tags always come first --%>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <!-- Bootstrap CSS -->
+    <%-- Bootstrap CSS --%>
     <link rel="stylesheet" href="${ctx}/css/bootstrap.css">
     <link rel="stylesheet" href="${ctx}/css/toastr.css">
-    <!-- jQuery first, then Bootstrap JS. -->
+    <%-- jQuery first, then Bootstrap JS. --%>
     <script src="${ctx}/js/jquery-3.2.1.min.js"></script>
     <script src="${ctx}/js/bootstrap.js"></script>
     <script src="${ctx}/js/toastr.js"></script>
-
+    <script src="${ctx}/js/http.js"></script>
     <style type="text/css">
         *{
             margin: 0;
@@ -118,7 +118,7 @@
 </div>
 <script>
     function httpPost() {
-        var flag = true;
+        var flag;
         var tel = $("#tel").val();
         var password = $("#password").val();
         var re=/^1\d{10}$/;
@@ -126,28 +126,16 @@
             toastr.warning("手机号不符合规范");
             return false;
         }
-
-        $.ajax({
-            type: 'post',
-            url: '${ctx}/loginCheck',
-            async :false,
-            dataType:'json',
-            data: {
-                'tel': tel,
-                'password': password
-            },
-            success: function (msg) {
-                if (!msg.status){
-                    toastr.error("账号或密码错误");
-                    flag = false;
-                } else {
-                    flag = true;
-                }
-            },
-            error: function () {
-                toastr.error("系统异常");
-                flag = false;
+        sendPost('${ctx}/loginCheck',{'tel': tel,'password': password},false,function (msg) {
+            if (!msg.status) {
+                toastr.error("账号或密码错误");
+               flag = false;
+            } else {
+                flag = true;
             }
+        },function (error) {
+            toastr.error("系统错误");
+            flag = false;
         });
         return flag;
     }

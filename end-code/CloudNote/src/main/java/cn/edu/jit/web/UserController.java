@@ -11,7 +11,6 @@ import cn.edu.jit.util.Sha1Utils;
 import cn.edu.jit.util.WordToPdf;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.aspose.slides.p2cbca448.ows;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -19,7 +18,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import sun.misc.BASE64Encoder;
@@ -30,9 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 用户控制层
@@ -61,6 +57,9 @@ public class UserController {
 
     @Resource (name = "articleRecycleServiceImpl")
     private ArticleRecycleService articleRecycleService;
+
+    @Resource (name = "fileConvertServiceImpl")
+    private FileConvertService fileConvertService;
 
     @Resource (name = "directoryServiceImpl")
     private DirectoryService directoryService;
@@ -191,6 +190,7 @@ public class UserController {
         osw.close();
         return outputPath;
     }
+
     /*---------   普通方法区域（END）   ----------*/
 
     @RequestMapping(value = "index")
@@ -300,7 +300,8 @@ public class UserController {
             String dirId = request.getParameter("parentId");
             String noteName = request.getParameter("noteName");
             String id = GlobalFunction.getUUID();
-            String articlePath = GlobalConstant.USER_ARTICLE_PATH + "/" + id + "/" + noteName + ".note";
+            String articleDir = GlobalConstant.USER_ARTICLE_PATH + "/" + id;
+            String articlePath = articleDir + "/" + noteName + ".note";
 
             // 存入数据库
             Article article = new Article();
@@ -315,7 +316,7 @@ public class UserController {
             }
 
             // 创建笔记目录
-            GlobalFunction.createPath(articlePath);
+            GlobalFunction.createDir(articleDir);
             // 初始化笔记内容
             OutputStreamWriter bw = new OutputStreamWriter(new FileOutputStream(articlePath), "UTF-8");
             bw.write(GlobalConstant.ARTICLE_DEFAULT_CONTENT);
@@ -336,15 +337,21 @@ public class UserController {
      */
     @RequestMapping(value = "getNoteInfo", method = {RequestMethod.POST})
     public void getNoteInfo(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        String noteId = request.getParameter("noteId");
         try {
-            String noteId = request.getParameter("noteId");
             Article article = articleService.getById(noteId);
+            Message message = new Message();
             ArticleDto articleDto = new ArticleDto();
-            if(article != null) {
+            if(article == null) {
+                message.setStatus(false);
+            } else {
+                message.setStatus(true);
                 BeanUtils.copyProperties(article, articleDto);
                 articleDto.setAuthorName(userService.getById(article.getUserId()).getTel());
+                message.setArticleDto(articleDto);
             }
-            String data = JSON.toJSONString(articleDto, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
         }catch (IOException e) {
             e.printStackTrace();
@@ -383,42 +390,44 @@ public class UserController {
     }
 
     /**
-     * 导入笔记
+     * 上传笔记
      */
-    @RequestMapping(value = "importNote", method = {RequestMethod.POST})
-    public String importNote(HttpServletRequest request, HttpServletResponse response) {
-        User user = new User();
+    @RequestMapping(value = "uploadNote", method = {RequestMethod.POST})
+    public String uploadNote(HttpServletRequest request, HttpServletResponse response) {
         try {
-            // 1.创建磁盘文件项工厂 sizeThreshold：每次缓存大小，单位为字节  File：临时文件路径
             DiskFileItemFactory factory = new DiskFileItemFactory(1024 * 1024, new File(GlobalConstant.TEMP_PATH));
-
-            // 2.创建文件上传核心类
             ServletFileUpload upload = new ServletFileUpload(factory);
-            // 设置上传文件的编码
             upload.setHeaderEncoding("UTF-8");
 
-            // 3.判断是否为上传文件的表单
             if (ServletFileUpload.isMultipartContent(request)) {
-                // 4.解析request获得文件项集合
                 List<FileItem> fileItems = upload.parseRequest(request);
                 if (fileItems.size() != 0) {
                     for (FileItem item : fileItems) {
-                        // 获取上传头像的文件名
                         String fileName = item.getName();
-                        // 如果文件名为空，就跳过
                         if (StringUtils.isEmpty(fileName)) {
                             continue;
                         }
-                        // 重命名：规定未手机号+后缀作为头像名
-                        fileName = GlobalFunction.getSelfTel() + "_note." + fileName.split("\\.")[1];
 
-                        String targetFilePath = GlobalConstant.USER_IMG_PATH + fileName;
-                        // 上传文件
-                        GlobalFunction.uploadFile(item, targetFilePath);
+                        fileName =fileName.split("\\.")[0];
+                        String id = GlobalFunction.getUUID();
+                        String dirPath = GlobalConstant.USER_ARTICLE_PATH + "/" + id;
+                        String filePath = dirPath + "/" + fileName + GlobalConstant.NOTE_SUFFIX;
+
+                        // 存入服务器
+                        GlobalFunction.createDir(dirPath);
+                        GlobalFunction.uploadFile(item, filePath);
+
+                        // 加入数据库
+                        Article article = new Article();
+                        article.setId(id);
+                        article.setUserId(getSelfId());
+                        article.setTitle(fileName);
+                        article.setDirId(GlobalConstant.ROOT_DIR);
+                        article.setCreateDate(new Date());
+                        articleService.save(article);
                     }
                 }
             }
-            userService.update(user);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -459,6 +468,8 @@ public class UserController {
     public void saveNote(HttpServletRequest request, HttpServletResponse response) {
         String noteId = request.getParameter("noteId");
         String noteName = request.getParameter("noteName");
+        Message message = new Message();
+        Boolean status = true;
         response.setContentType("text/html;charset=utf-8");
         try {
             // 将数据写入文件
@@ -470,15 +481,45 @@ public class UserController {
             writer.flush();
             writer.close();
 
-            // 更新数据库
+            // 更新笔记数据库
             Article article = articleService.getById(noteId);
-           if(article != null) {
+           if(article == null) {
+               status = false;
+           } else {
                articleService.update(article);
            }
 
-            Message msg = new Message();
-            msg.setStatus(true);
-            String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            String editorTags = request.getParameter("tag");
+            if(!StringUtils.isEmpty(editorTags)) {
+                // 移除笔记原有标签
+                articleTagService.removeAllByArticleId(noteId);
+                // 获取笔记新标签
+                String[] editorTag = editorTags.trim().split("\\s+");
+                for (String tagName : editorTag) {
+                    String tagId;
+
+                    Tag tmpTag = tagService.getByName(tagName);
+                    //查询是否已存在此标签，不存在则保存新标签
+                    if (tmpTag == null) {
+                        Tag tag = new Tag();
+                        tag.setName(tagName);
+                        tagId = GlobalFunction.getUUID();
+                        tag.setId(tagId);
+                        tag.setCreateDate(new Date());
+                        tagService.save(tag);
+                    } else {
+                        tagId = tmpTag.getId();
+                    }
+
+                    ArticleTagKey articleTagKey = new ArticleTagKey();
+                    articleTagKey.setArticleId(noteId);
+                    articleTagKey.setTagId(tagId);
+                    articleTagService.save(articleTagKey);
+                }
+            }
+
+            message.setStatus(status);
+            String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
         } catch (IOException e) {
             e.printStackTrace();
@@ -690,7 +731,6 @@ public class UserController {
                     status = true;
                 }
             }
-
             Message message = new Message();
             message.setStatus(status);
             String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
@@ -758,59 +798,131 @@ public class UserController {
     }
 
     /**
+     * 预览附件
+     */
+    @RequestMapping(value = "previewAffix", method = {RequestMethod.POST})
+    public void previewAffix(HttpServletRequest request, HttpServletResponse response) {
+        String affixId = request.getParameter("affixId");
+        Message message = new Message();
+        response.setContentType("text/html;charset=utf-8");
+       try {
+           if(affixId == null) {
+               message.setStatus(false);
+           } else {
+               ArticleAffix articleAffix = articleAffixService.getById(affixId);
+               String tmp = articleAffix.getPath();
+
+               // 判断文件名不是以.pdf或.PDF结尾
+               boolean flag = tmp.endsWith(".pdf") || tmp.endsWith(".PDF");
+               if(flag) {
+                   // 如果是，直接预览即可
+                   int i = tmp.indexOf("upload");
+                   String url = "generic/web/viewer.html?file=/" + tmp.substring(i);
+                   message.setInfo(url);
+                   message.setStatus(true);
+               } else {
+                   // 如果不是，判断是否已经被转换了
+                   FileConvert fileConvert = fileConvertService.getById(affixId);
+                   if(fileConvert == null) {
+                       // 如果没有被转换，无法预览
+                       message.setStatus(false);
+                   } else {
+                       // 如果转换了，预览转换后的文件
+                       String convertedPath = fileConvert.getPath();
+                       int i = convertedPath.indexOf("upload");
+                       String url = "generic/web/viewer.html?file=/" + convertedPath.substring(i);
+                       message.setInfo(url);
+                       message.setStatus(true);
+                   }
+               }
+           }
+           String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+           response.getWriter().write(data);
+       }catch (IOException e) {
+           e.printStackTrace();
+       }
+    }
+    /**
      * PDF转换
      * 支持格式：doc、docx、xls、xlsx、ppt、pptx
      */
     @RequestMapping(value = "convertFile", method = {RequestMethod.POST})
     public void convertFile(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
+        Message msg = new Message();
         Boolean status;
         String info = null;
         try {
-            String[] tmp = request.getParameter("fileName").split("\\.");
-            String fileName = tmp[0];
-            String suffix = tmp[1];
-            String inputPath = GlobalConstant.USER_PAN_PATH + "/" + request.getParameter("fileName");
-            String outputPath = GlobalConstant.USER_PAN_PATH + "/" + fileName + ".pdf";
-            int i;
-            switch (suffix) {
-                case "doc":
-                case "docx":
-                    i = WordToPdf.run(inputPath, outputPath);
-                    break;
-                case "xls":
-                case"xlsx":
-                    i = ExcelToPdf.run(inputPath, outputPath);
-                    break;
-                case "ppt":
-                case "pptx":
-                    i = PptToPdf.run(inputPath, outputPath);
-                    break;
-                default:
-                    i = -2;
-                    break;
+            // 转换前判断是否已经被转换过了
+            String affixId = request.getParameter("affixId");
+            FileConvert fileConvert = fileConvertService.getById(affixId);
+
+            // 如果存在，则直接返回即可
+            if(fileConvert != null) {
+                msg.setStatus(true);
+                String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+                response.getWriter().write(data);
+            } else {
+                // 如果不存在，转换
+                ArticleAffix articleAffix = articleAffixService.getById(affixId);
+                String name = articleAffix.getName();
+                String[] tmp = name.split("\\.");
+                String fileName = tmp[0];
+                String suffix = tmp[1];
+
+               String articleId = articleAffix.getArticleid();
+
+                String inputPath = GlobalConstant.USER_ARTICLE_PATH + "/" + articleId + "/" + name;
+                String outputPath = GlobalConstant.USER_ARTICLE_PATH + "/" + articleId + "/" + fileName + ".pdf";
+                int i;
+                switch (suffix) {
+                    case "doc":
+                    case "docx":
+                        i = WordToPdf.run(inputPath, outputPath);
+                        break;
+                    case "xls":
+                    case"xlsx":
+                        i = ExcelToPdf.run(inputPath, outputPath);
+                        break;
+                    case "ppt":
+                    case "pptx":
+                        i = PptToPdf.run(inputPath, outputPath);
+                        break;
+                    default:
+                        i = -2;
+                        break;
+                }
+
+                switch (i) {
+                    case -1:
+                        info = "转换失败";
+                        status = false;
+                        break;
+                    case -2:
+                        info = "格式不支持";
+                        status = false;
+                        break;
+                    default:
+                        info = String.valueOf(i);
+                        status = true;
+                        break;
+                }
+
+                // 如果转换成功，存入FileConvert表
+                if(status) {
+                    FileConvert fc = new FileConvert();
+                    fc.setAffixId(affixId);
+                    fc.setPath(outputPath);
+                    fileConvertService.save(fc);
+                }
+
+                // status：是否成功；info：成功返回执行秒数，失败返回错误原因
+                msg.setStatus(status);
+                msg.setInfo(info);
+                String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+                response.getWriter().write(data);
             }
 
-            switch (i) {
-                case -1:
-                    info = "转换失败";
-                    status = false;
-                    break;
-                case -2:
-                    info = "格式不支持";
-                    status = false;
-                    break;
-                default:
-                    info = String.valueOf(i);
-                    status = true;
-                    break;
-            }
-            // status：是否成功；info：成功返回执行秒数，失败返回错误原因
-            Message msg = new Message();
-            msg.setStatus(status);
-            msg.setInfo(info);
-            String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
-            response.getWriter().write(data);
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -828,10 +940,12 @@ public class UserController {
             if(StringUtils.isEmpty(content)) {
                 message.setStatus(false);
             } else {
-                List<Article> lists1 = articleService.listArticleByTitle(getSelfId(),content);
-                //TODO
-//            List<Article> list2 = articleService.listArticleByTagName(getSelfId(),content);
-                message.setArticles(lists1);
+                // 查询笔记名
+                List<Article> listByName = articleService.listArticleByTitle(getSelfId(),content);
+                // 查询笔记标签
+                List<Article> listByTitle = articleService.listArticleByTagName(getSelfId(),content);
+                //TODO 加上文件内容搜索
+
                 message.setStatus(true);
             }
             String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);

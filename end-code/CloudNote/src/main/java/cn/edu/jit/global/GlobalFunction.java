@@ -36,14 +36,6 @@ public class GlobalFunction {
         return uuid.replaceAll("-", "");
     }
 
-    public static User login2User(Login login) {
-        User user = new User();
-        user.setTel(login.getTel());
-        user.setId(GlobalFunction.getUUID());
-        user.setCreateDate(login.getCreateDate());
-        return user;
-    }
-
     public static String getDate() {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd#HH:mm:ss");
@@ -60,15 +52,11 @@ public class GlobalFunction {
     }
 
     /**
-     * 如果path不存在，创建path
-     * @param realPath 真实路径
+     * 创建多级路径
      */
-    public static void createPath(String realPath) {
-        // 如果目录不存在，先创建目录，mkdirs支持多级目录创建
+    public static void createDir(String realPath) {
         File file = new File(realPath);
-        if (!file.getParentFile().exists()) {
-            file.getParentFile().mkdirs();
-        }
+        file.mkdirs();
     }
 
     /**
@@ -163,7 +151,6 @@ public class GlobalFunction {
      * @throws IOException 流异常
      */
     public static void uploadFile(FileItem item, String targetFilePath) throws IOException{
-        createPath(targetFilePath);
         // 拷贝数据
         InputStream in = item.getInputStream();
         OutputStream out = new FileOutputStream(targetFilePath);

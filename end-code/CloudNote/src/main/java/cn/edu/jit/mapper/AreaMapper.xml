@@ -178,4 +178,11 @@
       Pid = #{pid,jdbcType=INTEGER}
     where Id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="getByName" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from area
+    where Name like #{name}"%"
+  </select>
 </mapper>

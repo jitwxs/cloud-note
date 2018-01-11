@@ -6,13 +6,13 @@
 
 <head>
     <title>CloudNote</title>
-    <!-- Required meta tags always come first -->
+    <%-- Required meta tags always come first --%>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <!-- Bootstrap CSS -->
+    <%-- Bootstrap CSS --%>
     <link rel="stylesheet" href="${ctx}/css/bootstrap.css">
-    <!-- jQuery first, then Bootstrap JS. -->
+    <%-- jQuery first, then Bootstrap JS. --%>
     <script src="${ctx}/js/jquery-3.2.1.min.js"></script>
     <script src="${ctx}/js/bootstrap.js"></script>
 </head>

@@ -53,4 +53,18 @@ public class UserServiceImpl implements UserService {
         user.setModifedDate(new Date());
         return userMapper.updateByPrimaryKey(user);
     }
+
+    @Override
+    public int removeByTel(String tel) {
+        UserExample userExample = new UserExample();
+        UserExample.Criteria criteria = userExample.createCriteria();
+        criteria.andTelEqualTo(tel);
+        return userMapper.deleteByExample(userExample);
+    }
+
+    @Override
+    public List<User> listAllUser() {
+        UserExample userExample = new UserExample();
+        return userMapper.selectByExample(userExample);
+    }
 }

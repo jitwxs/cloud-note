@@ -27,10 +27,6 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public int save(Login login){
-        login.setRoleId(GlobalConstant.ROLE.USER.getIndex());
-        login.setCreateDate(new Date());
-        login.setPassword(Sha1Utils.entryptPassword(login.getPassword()));
-
         return loginMapper.insertSelective(login);
     }
 
@@ -38,5 +34,10 @@ public class LoginServiceImpl implements LoginService {
     public int update(Login login) {
         login.setModifiedDate(new Date());
         return loginMapper.updateByPrimaryKey(login);
+    }
+
+    @Override
+    public int removeByTel(String tel) {
+        return loginMapper.deleteByPrimaryKey(tel);
     }
 }

@@ -12,4 +12,6 @@ public interface AreaService {
     List<Area> listByPid(int pid);
 
     Area getById(int id);
+
+    Area getByName(String name);
 }

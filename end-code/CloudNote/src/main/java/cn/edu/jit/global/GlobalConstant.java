@@ -33,6 +33,10 @@ public class GlobalConstant {
     // 笔记后缀
     public static String NOTE_SUFFIX = ".note";
 
+    // 根目录
+    public static String ROOT_DIR = "root";
+
+    // 默认笔记内容
     public static String ARTICLE_DEFAULT_CONTENT = "<p>欢迎使用 <b>无道云笔记</b></p>";
 
     //短信签名

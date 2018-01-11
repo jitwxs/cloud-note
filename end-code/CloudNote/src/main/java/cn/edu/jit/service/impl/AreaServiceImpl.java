@@ -34,4 +34,9 @@ public class AreaServiceImpl implements AreaService {
     public Area getById(int id) {
         return areaMapper.selectByPrimaryKey(id);
     }
+
+    @Override
+    public Area getByName(String name) {
+        return areaMapper.getByName(name);
+    }
 }

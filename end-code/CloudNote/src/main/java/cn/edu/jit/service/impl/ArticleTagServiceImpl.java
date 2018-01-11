@@ -31,6 +31,16 @@ public class ArticleTagServiceImpl implements ArticleTagService {
     }
 
     @Override
+    public int removeAllByArticleId(String articleId) {
+        ArticleTagExample articleTagExample = new ArticleTagExample();
+
+        ArticleTagExample.Criteria criteria = articleTagExample.createCriteria();
+        criteria.andArticleIdEqualTo(articleId);
+
+        return articleTagMapper.deleteByExample(articleTagExample);
+    }
+
+    @Override
     public List<ArticleTagKey> listByArticleId(String articleId) {
         ArticleTagExample articleTagExample = new ArticleTagExample();
 
