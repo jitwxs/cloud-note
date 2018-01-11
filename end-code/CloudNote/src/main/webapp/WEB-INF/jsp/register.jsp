@@ -337,15 +337,6 @@
         }
     });
 
-    // 密码匹配，字母、数字、特殊字符至少两种的函数
-    // function atLeastTwo(password) {
-    //     var a = regPasswordSpecial.test(password) ? 1 : 0;
-    //     var b = regPasswordAlpha.test(password) ? 1 : 0;
-    //     var c = regPasswordNum.test(password) ? 1 : 0;
-    //     return a + b + c;
-    //
-    // }
-
     $('.container1').find('input').eq(1).change(function() {
         password = $(this).val();
         if ($(this).val().length < 8) {
@@ -398,20 +389,6 @@
         }
     });
 
-    // // //短信验证码
-    // var regMsg = /111111/;
-    // $('.container1').find('input').eq(8).change(function() {
-    //     if (check[0]) {
-    //         if (regMsg.test($(this).val())) {
-    //             success($(this),7);
-    //         } else {
-    //             fail($(this),7, '短信验证码错误');
-    //         }
-    //     } else {
-    //         $('.container1').find('input').eq(0).parent().parent().removeClass('has-success').addClass('has-error');
-    //     }
-    // });
-
     //提交按钮检查Input 内容
     $('#submit').click(function(e) {
         if (!check.every(function(value) {
@@ -429,15 +406,10 @@
     });
 
     function checkRegister() {
-        alert("ji");
         var tel = $("#tel").val();
         var password = $("#password").val();
         var passwor1 = $("#password1").val();
         var verifyCode = $("#idcode-btn").val();
-        // var name = $("#second_name").val();
-        // var email = $("#email").val();
-        // var area = $("#area").val();
-        // var sex = $("#sex").val();
 
         var re = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
         var flag = true;
