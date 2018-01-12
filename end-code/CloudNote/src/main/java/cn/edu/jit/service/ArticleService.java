@@ -67,4 +67,6 @@ public interface ArticleService {
 
     List<Article> listAllArticle();
 
+    public List<Article> listAllShareArticle();
+
 }

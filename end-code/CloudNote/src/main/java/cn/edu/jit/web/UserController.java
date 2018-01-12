@@ -38,7 +38,7 @@ import java.util.*;
 
 @Controller
 @RequestMapping(value = "/user")
-public class UserController {
+public class  UserController {
 
     @Resource(name = "userServiceImpl")
     private UserService userService;
@@ -191,6 +191,19 @@ public class UserController {
         return outputPath;
     }
 
+    /**
+     * 多个笔记list集合转一个set（去重）
+     */
+    private List<Article> lists2Set(List<Article> list1, List<Article> list2) {
+        Set<Article> set = new HashSet<>();
+        set.addAll(list1);
+        set.addAll(list2);
+        System.out.println(set.size());
+
+        List<Article> result =  new ArrayList<>(set);
+        return result;
+    }
+
     /*---------   普通方法区域（END）   ----------*/
 
     @RequestMapping(value = "index")
@@ -225,6 +238,40 @@ public class UserController {
 
     /*---------   用户管理区域（START）   ----------*/
     /**
+     * 账户信息
+     */
+    @RequestMapping(value = "accountInfo", method = {RequestMethod.GET})
+    public String accountInfoUI() {
+        return "/user/accountInfo";
+    }
+
+    /**
+     * 个人网盘
+     */
+    @RequestMapping(value = "disk", method = {RequestMethod.GET})
+    public String diskUI() {
+        return "/user/accountDisk";
+    }
+
+    /**
+     * 重置密码
+     */
+    @RequestMapping(value = "resetPassword", method = {RequestMethod.GET})
+    public String resetPasswordUI() {
+        return "/user/resetPassword";
+    }
+
+    @RequestMapping(value = "resetPassword", method = {RequestMethod.POST})
+    public String resetPassword(String newPassword) {
+        Login login = loginService.getByTel(GlobalFunction.getSelfTel());
+        String encryptedPassword = Sha1Utils.entryptPassword(newPassword);
+        login.setPassword(encryptedPassword);
+        loginService.update(login);
+
+        return "redirect:/logout";
+    }
+
+    /**
      * 验证密码
      */
     @RequestMapping(value = "verifyPassword", method = {RequestMethod.POST})
@@ -246,25 +293,6 @@ public class UserController {
             e.printStackTrace();
         }
     }
-
-    /**
-     * 重置密码
-     */
-    @RequestMapping(value = "resetPassword", method = {RequestMethod.GET})
-    public String resetPasswordUI() {
-        return "/user/resetPassword";
-    }
-
-    @RequestMapping(value = "resetPassword", method = {RequestMethod.POST})
-    public String resetPassword(String newPassword) {
-        Login login = loginService.getByTel(GlobalFunction.getSelfTel());
-        String encryptedPassword = Sha1Utils.entryptPassword(newPassword);
-        login.setPassword(encryptedPassword);
-        loginService.update(login);
-
-        return "redirect:/logout";
-    }
-
 
     /*---------   用户管理区域（END）   ----------*/
 
@@ -348,7 +376,7 @@ public class UserController {
             } else {
                 message.setStatus(true);
                 BeanUtils.copyProperties(article, articleDto);
-                articleDto.setAuthorName(userService.getById(article.getUserId()).getTel());
+                articleDto.setAuthorName(userService.getById(article.getUserId()).getName());
                 message.setArticleDto(articleDto);
             }
             String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
@@ -404,7 +432,7 @@ public class UserController {
                 if (fileItems.size() != 0) {
                     for (FileItem item : fileItems) {
                         String fileName = item.getName();
-                        if (StringUtils.isEmpty(fileName)) {
+                        if (StringUtils.isBlank(fileName)) {
                             continue;
                         }
 
@@ -472,49 +500,53 @@ public class UserController {
         Boolean status = true;
         response.setContentType("text/html;charset=utf-8");
         try {
-            // 将数据写入文件
-            String content = request.getParameter("data");
-            String targetFilePath = GlobalConstant.USER_ARTICLE_PATH + "/" + noteId + "/" + noteName + GlobalConstant.NOTE_SUFFIX;
+            if (StringUtils.isBlank(noteId) || StringUtils.isBlank(noteName)) {
+                status = false;
+            } else {
+                // 将数据写入文件
+                String content = request.getParameter("data");
+                String targetFilePath = GlobalConstant.USER_ARTICLE_PATH + "/" + noteId + "/" + noteName + GlobalConstant.NOTE_SUFFIX;
 
-            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(targetFilePath), "UTF-8");
-            writer.write(content);
-            writer.flush();
-            writer.close();
+                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(targetFilePath), "UTF-8");
+                writer.write(content);
+                writer.flush();
+                writer.close();
 
-            // 更新笔记数据库
-            Article article = articleService.getById(noteId);
-           if(article == null) {
-               status = false;
-           } else {
-               articleService.update(article);
-           }
+                // 更新笔记数据库
+                Article article = articleService.getById(noteId);
+                if(article == null) {
+                    status = false;
+                } else {
+                    articleService.update(article);
+                }
 
-            String editorTags = request.getParameter("tag");
-            if(!StringUtils.isEmpty(editorTags)) {
+                String editorTags = request.getParameter("tag");
                 // 移除笔记原有标签
                 articleTagService.removeAllByArticleId(noteId);
-                // 获取笔记新标签
-                String[] editorTag = editorTags.trim().split("\\s+");
-                for (String tagName : editorTag) {
-                    String tagId;
+                if(!StringUtils.isBlank(editorTags)) {
+                    // 获取笔记新标签
+                    String[] editorTag = editorTags.trim().split("\\s+");
+                    for (String tagName : editorTag) {
+                        String tagId;
 
-                    Tag tmpTag = tagService.getByName(tagName);
-                    //查询是否已存在此标签，不存在则保存新标签
-                    if (tmpTag == null) {
-                        Tag tag = new Tag();
-                        tag.setName(tagName);
-                        tagId = GlobalFunction.getUUID();
-                        tag.setId(tagId);
-                        tag.setCreateDate(new Date());
-                        tagService.save(tag);
-                    } else {
-                        tagId = tmpTag.getId();
+                        Tag tmpTag = tagService.getByName(tagName);
+                        //查询是否已存在此标签，不存在则保存新标签
+                        if (tmpTag == null) {
+                            Tag tag = new Tag();
+                            tag.setName(tagName);
+                            tagId = GlobalFunction.getUUID();
+                            tag.setId(tagId);
+                            tag.setCreateDate(new Date());
+                            tagService.save(tag);
+                        } else {
+                            tagId = tmpTag.getId();
+                        }
+
+                        ArticleTagKey articleTagKey = new ArticleTagKey();
+                        articleTagKey.setArticleId(noteId);
+                        articleTagKey.setTagId(tagId);
+                        articleTagService.save(articleTagKey);
                     }
-
-                    ArticleTagKey articleTagKey = new ArticleTagKey();
-                    articleTagKey.setArticleId(noteId);
-                    articleTagKey.setTagId(tagId);
-                    articleTagService.save(articleTagKey);
                 }
             }
 
@@ -612,7 +644,7 @@ public class UserController {
                     message.setInfo(article.getShareUrl());
                 } else if(article.getIsOpen() == GlobalConstant.ARTICLE_STATUS.NOT_SHARE.getIndex()) {
                     String url = createSharePage(noteId, noteName);
-                    if(!StringUtils.isEmpty(url)) {
+                    if(!StringUtils.isBlank(url)) {
                         status = true;
                         message.setInfo(url);
 
@@ -660,8 +692,8 @@ public class UserController {
     /**
      * 查看个人分享笔记
      */
-    @RequestMapping(value = "showSelfShareNote", method = {RequestMethod.GET})
-    public void showSelfShareNote(HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "showShareNote", method = {RequestMethod.GET})
+    public void showShareNote(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
         try {
             String userId = getSelfId();
@@ -684,8 +716,9 @@ public class UserController {
     /**
      * 查看其他人分享的笔记
      */
+    @RequestMapping(value = "showOtherShareNote", method = {RequestMethod.GET})
     public void showOtherShareNote(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset-utf-8");
+        response.setContentType("text/html;charset=utf-8");
         try {
             String userId = getSelfId();
             List<Article> lists = articleService.listAnotherShareArticle(userId);
@@ -698,7 +731,7 @@ public class UserController {
                 for (Article article : lists) {
                   ArticleDto articleDto = new ArticleDto();
                   BeanUtils.copyProperties(article, articleDto);
-                  articleDto.setAuthorName(userService.getById(article.getUserId()).getTel());
+                  articleDto.setAuthorName(userService.getById(article.getUserId()).getName());
                   articleDtos.add(articleDto);
                 }
                 message.setArticleDtos(articleDtos);
@@ -706,7 +739,37 @@ public class UserController {
 
             String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    /**
+     * 获取分享笔记的url
+     */
+    @RequestMapping(value = "getShareUrl", method = {RequestMethod.POST})
+    public void getShareUrl(HttpServletRequest request, HttpServletResponse response) {
+        Message message = new Message();
+        Boolean flag = true;
+        String url = "";
+        response.setContentType("text/html;charset=utf-8");
+        try {
+            String id = request.getParameter("id");
+            Article article = articleService.getById(id);
+            if(article == null) {
+                flag = false;
+            } else {
+                url = article.getShareUrl();
+            }
+
+            if(!flag || StringUtils.isBlank(url)) {
+                message.setStatus(false);
+            } else {
+                message.setStatus(true);
+                message.setInfo(url);
+            }
+            String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -761,16 +824,16 @@ public class UserController {
                             String fieldName = item.getFieldName();
                             String fieldValue = item.getString("UTF-8");
                             // 此处fieldName即为noteId,如果获取失败，就没有上传附件的意义
-                            if(StringUtils.isEmpty(fieldName)) {
+                            if(StringUtils.isBlank(fieldName)) {
                                 break;
                             } else {
                                 noteId = fieldValue;
                             }
                         } else {
-                            if(!StringUtils.isEmpty(noteId)) {
+                            if(!StringUtils.isBlank(noteId)) {
                                 String fileName = item.getName();
                                 // 如果文件名为空，就跳过
-                                if (StringUtils.isEmpty(fileName)) {
+                                if (StringUtils.isBlank(fileName)) {
                                     continue;
                                 }
                                 // 上传文件
@@ -810,14 +873,31 @@ public class UserController {
                message.setStatus(false);
            } else {
                ArticleAffix articleAffix = articleAffixService.getById(affixId);
-               String tmp = articleAffix.getPath();
+               // 数据库中文件绝对路径
+               String path = articleAffix.getPath();
 
-               // 判断文件名不是以.pdf或.PDF结尾
-               boolean flag = tmp.endsWith(".pdf") || tmp.endsWith(".PDF");
-               if(flag) {
-                   // 如果是，直接预览即可
-                   int i = tmp.indexOf("upload");
-                   String url = "generic/web/viewer.html?file=/" + tmp.substring(i);
+               // 用来判断文件后缀的临时变量
+               String temp = path.toLowerCase();
+               Boolean pdfFlag, previewFlag = false;
+
+               // 判断是否是除pdf外的可转换后缀
+               for (String ss : GlobalConstant.PREIVER_SUFFIX) {
+                   if(temp.endsWith(ss)) {
+                       previewFlag = true;
+                       break;
+                   }
+               }
+               // 判断是否是pdf后缀
+               pdfFlag = temp.endsWith(".pdf");
+
+               if(pdfFlag) {
+                   int i = path.indexOf("upload");
+                   String url = "generic/web/viewer.html?file=/" + path.substring(i);
+                   message.setInfo(url);
+                   message.setStatus(true);
+               } else if(previewFlag) {
+                   int i = path.indexOf("upload");
+                   String url = path.substring(i);
                    message.setInfo(url);
                    message.setStatus(true);
                } else {
@@ -937,7 +1017,7 @@ public class UserController {
         String content = request.getParameter("content");
         try {
             Message message = new Message();
-            if(StringUtils.isEmpty(content)) {
+            if(StringUtils.isBlank(content)) {
                 message.setStatus(false);
             } else {
                 // 查询笔记名
@@ -946,7 +1026,15 @@ public class UserController {
                 List<Article> listByTitle = articleService.listArticleByTagName(getSelfId(),content);
                 //TODO 加上文件内容搜索
 
-                message.setStatus(true);
+                // 求集合的并集
+                List<Article> list = lists2Set(listByName, listByTitle);
+
+                if(list.size() == 0) {
+                    message.setStatus(false);
+                } else {
+                    message.setStatus(true);
+                    message.setArticles(list);
+                }
             }
             String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);

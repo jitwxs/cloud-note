@@ -194,7 +194,7 @@ noteId、noteName即使页面刷新也不会置空，
             var $parent = $('input[name=dir_name]').parent();
             $('input[name=dir_name]').remove();
             //生成目录
-            $parent.prepend('<a class="btn js_wjj_btn" index-id="" >' + name + '</a>');
+            $parent.prepend('<a class="btn js_wjj_btn" index-id="" ><img src="${ctx}/images/wjj3.png" width="20px" height="20px">' + name + '</a>');
             initUI();
         })
     }
@@ -272,16 +272,17 @@ noteId、noteName即使页面刷新也不会置空，
             }
 
             // 添加附件信息
-            var affixInfo = "";
-            for(var i=0; i< msg.affixes.length; i++) {
-                affixInfo += '<tr id="'+msg.affixes[i].id+'">\n' +
-                    '            <td>'+msg.affixes[i].name+'</td>\n' +
-                    '            <td><button class="btn btn-info btn-sm" onclick="previewAffix(this)" value="'+msg.affixes[i].name+'">预览</button></td>\n' +
-                    '            <td><button class="btn btn-danger btn-sm" onclick="deleteAffix(this)">删除</button></td>\n' +
-                    '            </tr>';
+            if(msg.affixes.length > 0) {
+                var affixInfo = "";
+                for(var i=0; i< msg.affixes.length; i++) {
+                    affixInfo += '<tr id="'+msg.affixes[i].id+'">\n' +
+                        '            <td>'+msg.affixes[i].name+'</td>\n' +
+                        '            <td><button class="btn btn-info btn-sm" onclick="previewAffix(this)" value="'+msg.affixes[i].name+'">预览</button></td>\n' +
+                        '            <td><button class="btn btn-danger btn-sm" onclick="deleteAffix(this)">删除</button></td>\n' +
+                        '            </tr>';
+                }
+                $("#affixContentTBody").html(affixInfo);
             }
-
-            $("#affixContentTBody").html(affixInfo);
 
             // 恢复笔记内容
             editor.txt.html(msg.info);

@@ -125,7 +125,6 @@
     </div>
 </div>
 
-<jsp:include page="${ctx}/WEB-INF/jsp/global/footer.jsp"/>
 <script>
     /*仿刷新：检测是否存在cookie*/
     if($.cookie("captcha")){

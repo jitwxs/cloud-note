@@ -8,19 +8,20 @@
 
 - 数据库：MySQL
 
+- 数据可视化：Echarts
+
 - 后端框架：Spring + SpringMVC + Mybatis
 
 - 安全框架：Shiro
 
-- Word、Excel、PPT转PDF：Aspose
-
-- PDF在线预览：PDF.js
-
 - 短信验证：阿里云
+
+- PDF转换：Aspose
+
+- PDF预览：PDF.js
 
 - 分享功能：
 
-- 评论功能：有言
 
 ### 任务要求
 

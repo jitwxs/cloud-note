@@ -7,7 +7,7 @@
 /* Orientation-dependent styles for the content of the menu */
 
 .cbp-spmenu-vertical {
-    width: 240px;
+    width: 305px;
     height:1000px;
     top:5;
     z-index: 1000;
@@ -24,7 +24,7 @@
 /* Vertical menu that slides from the left or right 显示隐藏侧边栏的类 */
 
 .cbp-spmenu-left {
-    left: -240px;
+    left: -305px;
 }
 .cbp-spmenu-left.cbp-spmenu-open {
     left: 0px;
@@ -40,11 +40,11 @@
 }
 
 .cbp-spmenu-push-toright {
-    left: 240px;
+    left: 305px;
 }
 
 .cbp-spmenu-push-toleft {
-    left: -240px;
+    left: -305px;
 }
 
 /* Transitions 隐藏侧边栏的滑动出现效果*/

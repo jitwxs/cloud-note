@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50719
 File Encoding         : 65001
 
-Date: 2018-01-11 09:52:58
+Date: 2018-01-12 15:12:15
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -3610,9 +3610,11 @@ CREATE TABLE `article` (
 -- ----------------------------
 -- Records of article
 -- ----------------------------
-INSERT INTO `article` VALUES ('6b95c2e225d14ecfb9598c179113459b', '测试笔记3', 'bae70d0c41ab4b578b88b59ebe037a7c', 'root', '0', null, '2018-01-10 16:13:18', '2018-01-10 21:28:33');
-INSERT INTO `article` VALUES ('aeaf693794d44dfaa5208a6986025414', '测试笔记2', 'bae70d0c41ab4b578b88b59ebe037a7c', 'root', '0', null, '2018-01-10 14:33:23', '2018-01-10 20:34:39');
-INSERT INTO `article` VALUES ('fe214b804f9c4dc29d26cd7387e9e075', '测试笔记', 'bae70d0c41ab4b578b88b59ebe037a7c', 'root', '0', null, '2018-01-10 14:31:56', '2018-01-10 20:44:55');
+INSERT INTO `article` VALUES ('6b95c2e225d14ecfb9598c179113459b', '测试笔记3', 'bae70d0c41ab4b578b88b59ebe037a7c', 'root', '1', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/article/6b95c2e225d14ecfb9598c179113459b/测试笔记3.html', '2018-01-10 16:13:18', '2018-01-11 16:20:55');
+INSERT INTO `article` VALUES ('7e405635d7184716ba7eef725fd51f32', '你好好', 'bae70d0c41ab4b578b88b59ebe037a7c', 'fb5b394c5a5b4526a7adcdea2e104b74', '0', null, '2018-01-11 16:53:40', null);
+INSERT INTO `article` VALUES ('aeaf693794d44dfaa5208a6986025414', '测试笔记2', 'bae70d0c41ab4b578b88b59ebe037a7c', 'root', '0', null, '2018-01-10 14:33:23', '2018-01-11 13:57:27');
+INSERT INTO `article` VALUES ('fa7eefe0c5fa43e391f845fc58fa4d84', 'hello', 'bae70d0c41ab4b578b88b59ebe037a7c', 'd397f5558ee14111aa372765bcea6ae8', '0', null, '2018-01-11 23:33:29', null);
+INSERT INTO `article` VALUES ('fe214b804f9c4dc29d26cd7387e9e075', '测试笔记', 'bae70d0c41ab4b578b88b59ebe037a7c', 'root', '1', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/article/fe214b804f9c4dc29d26cd7387e9e075/测试笔记.html', '2018-01-10 14:31:56', '2018-01-11 16:21:00');
 
 -- ----------------------------
 -- Table structure for article_affix
@@ -3632,10 +3634,16 @@ CREATE TABLE `article_affix` (
 -- ----------------------------
 -- Records of article_affix
 -- ----------------------------
+INSERT INTO `article_affix` VALUES ('38d053778cf244a28cf49664bbb7e66d', '自我介绍.txt', '7e405635d7184716ba7eef725fd51f32', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/article/7e405635d7184716ba7eef725fd51f32/自我介绍.txt', '2018-01-11 23:19:42');
 INSERT INTO `article_affix` VALUES ('619e2ae7b5b9433693f4091536768d23', 'LinuxProbe.pdf', 'fe214b804f9c4dc29d26cd7387e9e075', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/article/fe214b804f9c4dc29d26cd7387e9e075/LinuxProbe.pdf', '2018-01-10 14:44:36');
 INSERT INTO `article_affix` VALUES ('64721c99e8084a29a8be3ffed0a60b43', 'Python爬虫总结 - 路人甲.docx', '6b95c2e225d14ecfb9598c179113459b', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/article/6b95c2e225d14ecfb9598c179113459b/Python爬虫总结 - 路人甲.docx', '2018-01-10 16:42:34');
+INSERT INTO `article_affix` VALUES ('64b564e345034b42b7b0fbfa1a083306', 'Main.py', '6b95c2e225d14ecfb9598c179113459b', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/article/6b95c2e225d14ecfb9598c179113459b/Main.py', '2018-01-11 23:39:09');
+INSERT INTO `article_affix` VALUES ('6eeea8a6d24142d6bd33ea9af17540f6', 'README.md', '6b95c2e225d14ecfb9598c179113459b', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/article/6b95c2e225d14ecfb9598c179113459b/README.md', '2018-01-11 23:44:00');
+INSERT INTO `article_affix` VALUES ('c4b28a02dabf4cd6a6352811aee9d23a', '密码强度.jpg', '7e405635d7184716ba7eef725fd51f32', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/article/7e405635d7184716ba7eef725fd51f32/密码强度.jpg', '2018-01-11 23:17:11');
 INSERT INTO `article_affix` VALUES ('d574558d59744ffbb689fc46fad275d9', '2017专题报告 - Java web.pptx', 'aeaf693794d44dfaa5208a6986025414', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/article/aeaf693794d44dfaa5208a6986025414/2017专题报告 - Java web.pptx', '2018-01-10 18:04:49');
 INSERT INTO `article_affix` VALUES ('df363c27efdd44de86f86f6b428c4f51', 'LTP_实训4.pptx', 'aeaf693794d44dfaa5208a6986025414', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/article/aeaf693794d44dfaa5208a6986025414/LTP_实训4.pptx', '2018-01-10 18:17:11');
+INSERT INTO `article_affix` VALUES ('e325fb7ee5414efcb4951c7c477d4ed7', '拟录取名单.xlsx', '7e405635d7184716ba7eef725fd51f32', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/article/7e405635d7184716ba7eef725fd51f32/拟录取名单.xlsx', '2018-01-11 23:18:23');
+INSERT INTO `article_affix` VALUES ('fc68ebd7b66e4902b79efc977bc8809f', '第四学期.html', 'fe214b804f9c4dc29d26cd7387e9e075', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/article/fe214b804f9c4dc29d26cd7387e9e075/第四学期.html', '2018-01-11 23:20:09');
 
 -- ----------------------------
 -- Table structure for article_recycle
@@ -3677,11 +3685,9 @@ CREATE TABLE `article_tag` (
 -- ----------------------------
 -- Records of article_tag
 -- ----------------------------
-INSERT INTO `article_tag` VALUES ('6b95c2e225d14ecfb9598c179113459b', '08b814593fa140eca42d33c355837b01');
 INSERT INTO `article_tag` VALUES ('fe214b804f9c4dc29d26cd7387e9e075', '6fb12f40607641aa86e4685da03d7827');
 INSERT INTO `article_tag` VALUES ('fe214b804f9c4dc29d26cd7387e9e075', '72f8cb5a0c0f46329043c2d9c648e857');
 INSERT INTO `article_tag` VALUES ('6b95c2e225d14ecfb9598c179113459b', '80891bad802e4268b36ef6986da49129');
-INSERT INTO `article_tag` VALUES ('aeaf693794d44dfaa5208a6986025414', '80891bad802e4268b36ef6986da49129');
 
 -- ----------------------------
 -- Table structure for directory
@@ -3704,6 +3710,9 @@ CREATE TABLE `directory` (
 -- ----------------------------
 -- Records of directory
 -- ----------------------------
+INSERT INTO `directory` VALUES ('d397f5558ee14111aa372765bcea6ae8', 'bae70d0c41ab4b578b88b59ebe037a7c', 'xxx', 'fbb0d6df4163404e983d01f8d44e9f8b', '2018-01-11 11:38:22', null);
+INSERT INTO `directory` VALUES ('fb5b394c5a5b4526a7adcdea2e104b74', 'bae70d0c41ab4b578b88b59ebe037a7c', 'qqq', 'root', '2018-01-11 11:38:26', '2018-01-11 11:40:07');
+INSERT INTO `directory` VALUES ('fbb0d6df4163404e983d01f8d44e9f8b', 'bae70d0c41ab4b578b88b59ebe037a7c', 'js', 'root', '2018-01-11 11:38:16', null);
 INSERT INTO `directory` VALUES ('root', null, '我的文件夹', null, '2018-01-08 11:23:57', null);
 
 -- ----------------------------
@@ -3723,6 +3732,22 @@ INSERT INTO `file_convert` VALUES ('64721c99e8084a29a8be3ffed0a60b43', 'C:\\User
 INSERT INTO `file_convert` VALUES ('cd9ce1988b49407db483ecc5bda71402', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/article/6b95c2e225d14ecfb9598c179113459b/吴祥生-1513902008 学期计划.pdf');
 INSERT INTO `file_convert` VALUES ('d574558d59744ffbb689fc46fad275d9', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/article/aeaf693794d44dfaa5208a6986025414/2017专题报告 - Java web.pdf');
 INSERT INTO `file_convert` VALUES ('df363c27efdd44de86f86f6b428c4f51', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/article/aeaf693794d44dfaa5208a6986025414/LTP_实训4.pdf');
+INSERT INTO `file_convert` VALUES ('e325fb7ee5414efcb4951c7c477d4ed7', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/article/7e405635d7184716ba7eef725fd51f32/拟录取名单.pdf');
+
+-- ----------------------------
+-- Table structure for illegal_reason
+-- ----------------------------
+DROP TABLE IF EXISTS `illegal_reason`;
+CREATE TABLE `illegal_reason` (
+  `id` varchar(64) NOT NULL,
+  `name` varchar(64) NOT NULL,
+  PRIMARY KEY (`id`,`name`),
+  KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of illegal_reason
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for login
@@ -3742,7 +3767,8 @@ CREATE TABLE `login` (
 -- ----------------------------
 -- Records of login
 -- ----------------------------
-INSERT INTO `login` VALUES ('15962930119', '529a9da390f1692636c64b7d854b67e0383388897db7ee90cf81503f', '2', '2018-01-11 09:40:26', null);
+INSERT INTO `login` VALUES ('15962930119', 'fc62c2168fb561adfccdb450aadde1e83a1354a462465bce64ef58e7', '2', '2018-01-11 09:40:26', null);
+INSERT INTO `login` VALUES ('15996363731', 'fc5754eeea833cf90c6e1e9f361233893029f169b3d71ba3ec258c99', '1', '2018-01-11 10:44:36', null);
 INSERT INTO `login` VALUES ('18168404329', 'fc62c2168fb561adfccdb450aadde1e83a1354a462465bce64ef58e7', '2', '2018-01-08 16:58:12', '2018-01-10 14:27:51');
 
 -- ----------------------------
@@ -3764,6 +3790,133 @@ INSERT INTO `role` VALUES ('1', 'admin', '2018-01-02 22:24:26', null);
 INSERT INTO `role` VALUES ('2', 'user', '2018-01-02 22:24:36', null);
 
 -- ----------------------------
+-- Table structure for support_area
+-- ----------------------------
+DROP TABLE IF EXISTS `support_area`;
+CREATE TABLE `support_area` (
+  `name` varchar(10) NOT NULL,
+  PRIMARY KEY (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of support_area
+-- ----------------------------
+INSERT INTO `support_area` VALUES ('上海');
+INSERT INTO `support_area` VALUES ('东莞');
+INSERT INTO `support_area` VALUES ('东营');
+INSERT INTO `support_area` VALUES ('中山');
+INSERT INTO `support_area` VALUES ('临汾');
+INSERT INTO `support_area` VALUES ('临沂');
+INSERT INTO `support_area` VALUES ('丹东');
+INSERT INTO `support_area` VALUES ('丽水');
+INSERT INTO `support_area` VALUES ('乌鲁木齐');
+INSERT INTO `support_area` VALUES ('佛山');
+INSERT INTO `support_area` VALUES ('保定');
+INSERT INTO `support_area` VALUES ('兰州');
+INSERT INTO `support_area` VALUES ('包头');
+INSERT INTO `support_area` VALUES ('北京');
+INSERT INTO `support_area` VALUES ('北海');
+INSERT INTO `support_area` VALUES ('南京');
+INSERT INTO `support_area` VALUES ('南宁');
+INSERT INTO `support_area` VALUES ('南昌');
+INSERT INTO `support_area` VALUES ('南通');
+INSERT INTO `support_area` VALUES ('厦门');
+INSERT INTO `support_area` VALUES ('台州');
+INSERT INTO `support_area` VALUES ('合肥');
+INSERT INTO `support_area` VALUES ('呼和浩特');
+INSERT INTO `support_area` VALUES ('咸阳');
+INSERT INTO `support_area` VALUES ('哈尔滨');
+INSERT INTO `support_area` VALUES ('唐山');
+INSERT INTO `support_area` VALUES ('嘉兴');
+INSERT INTO `support_area` VALUES ('大同');
+INSERT INTO `support_area` VALUES ('大连');
+INSERT INTO `support_area` VALUES ('天津');
+INSERT INTO `support_area` VALUES ('太原');
+INSERT INTO `support_area` VALUES ('威海');
+INSERT INTO `support_area` VALUES ('宁波');
+INSERT INTO `support_area` VALUES ('宝鸡');
+INSERT INTO `support_area` VALUES ('宿迁');
+INSERT INTO `support_area` VALUES ('常州');
+INSERT INTO `support_area` VALUES ('广州');
+INSERT INTO `support_area` VALUES ('廊坊');
+INSERT INTO `support_area` VALUES ('延安');
+INSERT INTO `support_area` VALUES ('张家口');
+INSERT INTO `support_area` VALUES ('徐州');
+INSERT INTO `support_area` VALUES ('德州');
+INSERT INTO `support_area` VALUES ('惠州');
+INSERT INTO `support_area` VALUES ('成都');
+INSERT INTO `support_area` VALUES ('扬州');
+INSERT INTO `support_area` VALUES ('承德');
+INSERT INTO `support_area` VALUES ('拉萨');
+INSERT INTO `support_area` VALUES ('无锡');
+INSERT INTO `support_area` VALUES ('日照');
+INSERT INTO `support_area` VALUES ('昆明');
+INSERT INTO `support_area` VALUES ('杭州');
+INSERT INTO `support_area` VALUES ('枣庄');
+INSERT INTO `support_area` VALUES ('柳州');
+INSERT INTO `support_area` VALUES ('株洲');
+INSERT INTO `support_area` VALUES ('武汉');
+INSERT INTO `support_area` VALUES ('汕头');
+INSERT INTO `support_area` VALUES ('江门');
+INSERT INTO `support_area` VALUES ('沈阳');
+INSERT INTO `support_area` VALUES ('沧州');
+INSERT INTO `support_area` VALUES ('河源');
+INSERT INTO `support_area` VALUES ('泉州');
+INSERT INTO `support_area` VALUES ('泰安');
+INSERT INTO `support_area` VALUES ('泰州');
+INSERT INTO `support_area` VALUES ('济南');
+INSERT INTO `support_area` VALUES ('济宁');
+INSERT INTO `support_area` VALUES ('海口');
+INSERT INTO `support_area` VALUES ('淄博');
+INSERT INTO `support_area` VALUES ('淮安');
+INSERT INTO `support_area` VALUES ('深圳');
+INSERT INTO `support_area` VALUES ('清远');
+INSERT INTO `support_area` VALUES ('温州');
+INSERT INTO `support_area` VALUES ('渭南');
+INSERT INTO `support_area` VALUES ('湖州');
+INSERT INTO `support_area` VALUES ('湘潭');
+INSERT INTO `support_area` VALUES ('滨州');
+INSERT INTO `support_area` VALUES ('潍坊');
+INSERT INTO `support_area` VALUES ('烟台');
+INSERT INTO `support_area` VALUES ('玉溪');
+INSERT INTO `support_area` VALUES ('珠海');
+INSERT INTO `support_area` VALUES ('盐城');
+INSERT INTO `support_area` VALUES ('盘锦');
+INSERT INTO `support_area` VALUES ('石家庄');
+INSERT INTO `support_area` VALUES ('福州');
+INSERT INTO `support_area` VALUES ('秦皇岛');
+INSERT INTO `support_area` VALUES ('绍兴');
+INSERT INTO `support_area` VALUES ('聊城');
+INSERT INTO `support_area` VALUES ('肇庆');
+INSERT INTO `support_area` VALUES ('舟山');
+INSERT INTO `support_area` VALUES ('苏州');
+INSERT INTO `support_area` VALUES ('莱芜');
+INSERT INTO `support_area` VALUES ('菏泽');
+INSERT INTO `support_area` VALUES ('营口');
+INSERT INTO `support_area` VALUES ('葫芦岛');
+INSERT INTO `support_area` VALUES ('衡水');
+INSERT INTO `support_area` VALUES ('衢州');
+INSERT INTO `support_area` VALUES ('西宁');
+INSERT INTO `support_area` VALUES ('西安');
+INSERT INTO `support_area` VALUES ('贵阳');
+INSERT INTO `support_area` VALUES ('连云港');
+INSERT INTO `support_area` VALUES ('邢台');
+INSERT INTO `support_area` VALUES ('邯郸');
+INSERT INTO `support_area` VALUES ('郑州');
+INSERT INTO `support_area` VALUES ('鄂尔多斯');
+INSERT INTO `support_area` VALUES ('重庆');
+INSERT INTO `support_area` VALUES ('金华');
+INSERT INTO `support_area` VALUES ('铜川');
+INSERT INTO `support_area` VALUES ('银川');
+INSERT INTO `support_area` VALUES ('镇江');
+INSERT INTO `support_area` VALUES ('长春');
+INSERT INTO `support_area` VALUES ('长沙');
+INSERT INTO `support_area` VALUES ('长治');
+INSERT INTO `support_area` VALUES ('阳泉');
+INSERT INTO `support_area` VALUES ('青岛');
+INSERT INTO `support_area` VALUES ('韶关');
+
+-- ----------------------------
 -- Table structure for tag
 -- ----------------------------
 DROP TABLE IF EXISTS `tag`;
@@ -3783,6 +3936,7 @@ INSERT INTO `tag` VALUES ('6fb12f40607641aa86e4685da03d7827', '世界', '2018-01
 INSERT INTO `tag` VALUES ('728f9c91ffba463a903dfdea96e5528c', '界', '2018-01-10 20:45:12', null);
 INSERT INTO `tag` VALUES ('72f8cb5a0c0f46329043c2d9c648e857', '你好', '2018-01-10 14:35:40', null);
 INSERT INTO `tag` VALUES ('80891bad802e4268b36ef6986da49129', '你好呀', '2018-01-10 19:50:01', null);
+INSERT INTO `tag` VALUES ('ed3f7930c1334ee7805355a0554bd00c', '笔记三', '2018-01-11 13:59:53', null);
 
 -- ----------------------------
 -- Table structure for user
@@ -3809,8 +3963,30 @@ CREATE TABLE `user` (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('bae70d0c41ab4b578b88b59ebe037a7c', '18168404329', 'jitwxs', 'jitwxs@foxmail.com', '320100', '男', 'icon.jpg', 'hhhh', '2018-01-08 16:58:12', '2018-01-10 21:40:59');
-INSERT INTO `user` VALUES ('bf47e566c52d44a6927d5512bd121719', '15962930119', '哈哈哈哈哈哈', 'nb@gmail.com', '320100', '男', null, null, '2018-01-11 09:40:26', null);
+INSERT INTO `user` VALUES ('2b65113913ed4685ab723c33c1ae5c57', '15996363731', '刘畅是头猪猪', 'lc@foxmail.com', '540100', '女', null, null, '2018-01-11 10:44:36', null);
+INSERT INTO `user` VALUES ('bae70d0c41ab4b578b88b59ebe037a7c', '18168404329', 'jitwxs', 'jitwxs@foxmail.com', '230100', '女', 'icon.gif', 'hhhh', '2018-01-08 16:58:12', '2018-01-12 14:57:27');
+INSERT INTO `user` VALUES ('bf47e566c52d44a6927d5512bd121719', '15962930119', '哈哈哈哈哈哈', 'nb@gmail.com', '450200', '男', null, '', '2018-01-11 09:40:26', '2018-01-12 11:04:17');
+
+-- ----------------------------
+-- Table structure for user_blacklist
+-- ----------------------------
+DROP TABLE IF EXISTS `user_blacklist`;
+CREATE TABLE `user_blacklist` (
+  `id` varchar(64) NOT NULL,
+  `user_id` varchar(64) NOT NULL,
+  `reason_id` varchar(64) NOT NULL,
+  `create_date` datetime NOT NULL,
+  `end_date` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fkuserid` (`user_id`),
+  KEY `fk_reason` (`reason_id`),
+  CONSTRAINT `fk_reason` FOREIGN KEY (`reason_id`) REFERENCES `illegal_reason` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fkuserid` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of user_blacklist
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for user_pan

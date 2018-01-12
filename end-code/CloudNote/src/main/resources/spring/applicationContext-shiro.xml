@@ -42,6 +42,9 @@
                 /smsVerification = anon
                 # 验证验证码
                 /codeCheck = anon
+                # 显示用户城市分布
+                /showUserCity = anon
+
                 # 注销请求
                 /logout = logout
 

@@ -122,5 +122,14 @@ public class ArticleServiceImpl implements ArticleService {
         return articleMapper.countByExample(articleExample);
     }
 
+    @Override
+    public List<Article> listAllShareArticle() {
+        ArticleExample articleExample = new ArticleExample();
+
+        ArticleExample.Criteria criteria = articleExample.createCriteria();
+        criteria.andIsOpenEqualTo(GlobalConstant.ARTICLE_STATUS.SHARE.getIndex());
+
+        return articleMapper.selectByExample(articleExample);
+    }
 
 }

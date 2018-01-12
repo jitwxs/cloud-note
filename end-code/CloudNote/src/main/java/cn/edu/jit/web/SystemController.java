@@ -1,14 +1,11 @@
 package cn.edu.jit.web;
 
-import cn.edu.jit.entry.Register;
+import cn.edu.jit.entry.*;
 import cn.edu.jit.dto.UserDto;
-import cn.edu.jit.entry.Area;
-import cn.edu.jit.entry.Login;
-import cn.edu.jit.entry.Message;
-import cn.edu.jit.entry.User;
 import cn.edu.jit.global.GlobalConstant;
 import cn.edu.jit.global.GlobalFunction;
 import cn.edu.jit.service.AreaService;
+import cn.edu.jit.service.SupportAreaService;
 import cn.edu.jit.util.Sha1Utils;
 import cn.edu.jit.service.LoginService;
 import cn.edu.jit.service.UserService;
@@ -38,12 +35,9 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import javax.swing.*;
+import java.io.*;
+import java.util.*;
 
 /**
  * 系统管理
@@ -61,6 +55,9 @@ public class SystemController {
 
     @Resource(name = "areaServiceImpl")
     private AreaService areaService;
+
+    @Resource(name = "supportAreaServiceImpl")
+    private SupportAreaService supportAreaService;
 
     private String getSelfId() {
         User user = userService.getByTel(GlobalFunction.getSelfTel());
@@ -370,13 +367,13 @@ public class SystemController {
             String sendTel = (String)session.getAttribute("tel");
             String sendCode = (String)session.getAttribute("code");
 
-            if(StringUtils.isEmpty(tel)) {
+            if(StringUtils.isBlank(tel)) {
                 info = "手机号为空";
             } else {
                 if(loginService.getByTel(tel) == null) {
                     info = "手机号未注册";
                 } else {
-                    if (StringUtils.isEmpty(sendTel) && !StringUtils.equals(tel, sendTel)) {
+                    if (StringUtils.isBlank(sendTel) && !StringUtils.equals(tel, sendTel)) {
                         info = "验证码未发送";
                     } else {
                         if(StringUtils.equals(sendCode,verityCode)) {
@@ -432,6 +429,51 @@ public class SystemController {
         }
     }
 
+    @RequestMapping(value = "showUserCity", method = {RequestMethod.GET})
+    public void showUserCity(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        List<User> lists = userService.listAllUser();
+        Map<String,Integer> map = new HashMap<>(16);
+        try {
+            if(lists.size() > 0) {
+                for(User user : lists) {
+                    Area area = areaService.getById(user.getArea());
+                    String temp = area.getName();
+                    String name = "";
+                    if(temp.endsWith("市")) {
+                        name = temp.substring(0, temp.length() -1 );
+                    } else if(temp.endsWith("区") || temp.endsWith("县")) {
+                        Area area1 = areaService.getById(area.getPid());
+                        name = area1.getName().substring(0, temp.length() -1 );
+                    }
+
+                    if(map.containsKey(name)) {
+                        map.put(name, map.get(name) + 1);
+                    } else {
+                        // 只显示可预览的城市
+                        SupportArea supportArea = supportAreaService.getByName(name);
+                        if(supportArea != null) {
+                            map.put(name, 1);
+                        }
+                    }
+                }
+            }
+
+            List<Data> datas = new ArrayList<>();
+            for (Map.Entry<String, Integer> entry : map.entrySet()) {
+                Data data = new Data();
+                data.setName(entry.getKey());
+                data.setValue(String.valueOf(entry.getValue()));
+                datas.add(data);
+            }
+
+            String msg = JSON.toJSONString(datas, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(msg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * 省市二级联动
      */
@@ -453,20 +495,21 @@ public class SystemController {
     @RequestMapping(value = "showSelfInfo", method = {RequestMethod.GET})
     public void showUserInfo(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
-        String id = getSelfId();
+        Message message = new Message();
         try {
+            String id = getSelfId();
+            UserDto userDto = new UserDto();
             User user = userService.getById(id);
             Area area = areaService.getById(user.getArea());
-            UserDto userDto = new UserDto();
             BeanUtils.copyProperties(user, userDto);
-            userDto.setAreaName(area.getName());
-
+            if(area != null) {
+                userDto.setAreaName(area.getName());
+            }
             List<Area> areas = areaService.listByPid(0);
 
-            List<Object> objects = new LinkedList<>();
-            objects.add(userDto);
-            objects.add(areas);
-            String data = JSON.toJSONString(objects, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            message.setUserDto(userDto);
+            message.setAreas(areas);
+            String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
         } catch (IOException e) {
             e.printStackTrace();
@@ -500,7 +543,7 @@ public class SystemController {
                             // 获取上传头像的文件名
                             String fileName = item.getName();
                             // 如果文件名为空，就跳过
-                            if (StringUtils.isEmpty(fileName)) {
+                            if (StringUtils.isBlank(fileName)) {
                                 continue;
                             }
                             // 重命名：规定icon+小写后缀作为头像名

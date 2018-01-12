@@ -34,8 +34,6 @@
     <script src="${ctx}/js/http.js"></script>
     <%-- home页JS --%>
     <script src="${ctx}/js/home_js.js"></script>
-
-
 </head>
 
 <body style="margin-top: 60px;position: absolute;width: 100%" id="home_body">
@@ -50,13 +48,13 @@
 <input type="hidden" id="lastLoginTime" value="${lastLoginTime}">
 
 <%-- 头部 --%>
-<jsp:include page="head.jsp"/>
+<jsp:include page="indexHead.jsp"/>
 
 <%-- 分享区域 --%>
 <jsp:include page="share.jsp"/>
 
 <%--主体--%>
-<div  class="container" style="padding-right: 0px; width:100%" id="left">
+<div  class="container" style="padding-right: 0px; width:98%" id="left">
     <div class="row">
         <div id="wangeditor" class="col-md-10">
             <%-- 目录区域 --%>
@@ -72,15 +70,18 @@
     </div>
 </div>
 
-<%-- 引入页脚 --%>
-<jsp:include page="${ctx}/WEB-INF/jsp/global/footer.jsp"/>
-
 <script>
-    var userTel;
-    // 页面加载函数
-    $(function(){
-        // 得到当前用户手机号码
-        userTel = $.trim($("#showId").text());
+    $(function() {
+        // 初始化头部小头像和下拉框名
+        sendGet('${ctx}/showSelfInfo',{},true,function (res) {
+            var userTel = res.userDto.tel;
+            $("#userSmallName").html(res.userDto.name);
+            $("#userSmallIcon").attr('src',"${ctx}/upload/"+ userTel + "/images/" + res.userDto.icon);
+        },function (error) {
+            toastr.error("系统错误");
+            return false;
+        });
+
         // 打印上次登陆事件
         var lastTime = $("#lastLoginTime").val();
         if(lastTime != null && lastTime != "") {
@@ -88,8 +89,7 @@
             $("#text1").val(null);
         }
 
-        // 初始化隐藏loding
-        // $('#loading_bottom').hide(0);
+        // 初始化隐藏loading
         document.getElementById("loading").style.display = "none";
     });
 </script>

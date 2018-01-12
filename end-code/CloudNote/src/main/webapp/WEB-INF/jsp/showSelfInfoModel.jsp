@@ -23,14 +23,14 @@
                                 <span>上传头像</span>
                                 <input type="file" id="uploadIcon" name="uploadIcon">
                             </span><br><br>
-                            <span class="upload-hint">支持png、jpg格式，小于2MB</span><br>
+                            <span class="upload-hint">支持大多数图片格式，小于2MB</span><br>
                             <label id="fileName"></label>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="userTel" class="col-sm-2 control-label">手机号码</label>
                         <div class="col-sm-10">
-                            <input readonly="readonly" type="text" class="form-control" id="userTel" name="tel">
+                            <input type="text" class="form-control" id="userTel" name="tel" disabled>
                         </div>
                     </div>
                     <div class="form-group ">
@@ -47,17 +47,19 @@
                     </div>
                     <div class="form-group">
                         <label for="userArea" class="col-sm-2 control-label">地区</label>
-                        <div class="col-sm-3">
-                            <input type="text" class="form-control" id="userArea" readonly="readonly">
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="userArea" disabled>
                         </div>
-                        <duv class="col-sm-7">
-                            <select data-live-search="true" id="areaSelect1">
-                                <option value="-1">请选择省/市</option>
+                        <div class="col-sm-3">
+                            <select data-live-search="true" id="areaSelect1"  class="form-control">
+                                <option value=-1>请选择省/市</option>
                             </select>
-                            <select data-live-search="true" id="areaSelect2" name="area">
-                                <option value="-1">请选择市/区</option>
+                        </div>
+                        <div class="col-sm-3">
+                            <select data-live-search="true" id="areaSelect2" class="form-control" name="area">
+                                <option value=-1>请选择市/区</option>
                             </select>
-                        </duv>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">性别</label>
@@ -74,7 +76,7 @@
                         <label for="userSign" class="col-sm-2 control-label">签名</label>
                         <div class="col-sm-10">
                             <textarea class="form-control dis_change_textarea" id="userSign" name="sign"
-                                      rows="2"></textarea>
+                                      rows="2" style="resize: none"></textarea>
                         </div>
                     </div>
                 </form>
@@ -107,12 +109,22 @@
 
     // 提交表单
     function checkUserInfo() {
+        // 如果上传了头像，判断头像是否符合规范
         var icon = $("#uploadIcon").val();
         if (icon != null && icon != "") {
+            var pictureSuffix = new Array("bmp", "png", "jpg", "jpeg", "gif");
             var point = icon.lastIndexOf(".");
             var type = icon.substr(point).toLowerCase();
             type = type.substr(1,type.length);
-            if(type != "jpg" && type != "png"){
+
+            var flag = false;
+            for(var i=0; i<pictureSuffix.length; i++) {
+                if(pictureSuffix[i] == type) {
+                    flag = true;
+                    break;
+                }
+            }
+            if(!flag){
                 toastr.warning("图片格式错误");
                 return false;
             }
@@ -120,10 +132,14 @@
                 toastr.warning("头像太大啦");
                 return false;
             }
-        } else {
-            toastr.warning("系统错误");
+        }
+
+        var name = $("#userName").val();
+        if (!(name.length>=2&&name.length<=10)) {
+            toastr.warning("昵称长度在[2,10]之间");
             return false;
         }
+
         $("#userInfoForm").submit();
     }
 

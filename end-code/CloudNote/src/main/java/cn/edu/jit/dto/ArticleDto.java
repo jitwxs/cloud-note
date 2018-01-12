@@ -8,9 +8,11 @@ import cn.edu.jit.entry.Article;
  */
 public class ArticleDto extends Article {
     /**
-     * 作者名称，目前使用手机号
+     * 作者昵称
      */
     private String authorName;
+
+    private String authorTel;
 
     public String getAuthorName() {
         return authorName;
@@ -19,4 +21,8 @@ public class ArticleDto extends Article {
     public void setAuthorName(String authorName) {
         this.authorName = authorName;
     }
+
+    public String getAuthorTel() { return authorTel; }
+
+    public void setAuthorTel(String authorTel) { this.authorTel = authorTel; }
 }

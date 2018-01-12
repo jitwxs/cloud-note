@@ -46,8 +46,8 @@
                 <i class="my-icon nav-more"></i>
             </a>
             <ul>
-                <li><a href="javascript:;"><span>用户列表</span></a></li>
-                <li><a href="javascript:;"><span>添加用户</span></a></li>
+                <li><a href="${ctx}/admin/showAllUser"><span>用户列表</span></a></li>
+                <li><a href="${ctx}/admin/addNewUser"><span>添加用户</span></a></li>
                 <li><a href="javascript:;"><span>小黑屋</span></a></li>
             </ul>
         </li>
@@ -58,9 +58,9 @@
                 <i class="my-icon nav-more"></i>
             </a>
             <ul>
-                <li><a href="javascript:;"><span>笔记审核</span></a></li>
-                <li><a href="javascript:;"><span>分享管理</span></a></li>
-                <li><a href="javascript:;"><span>笔记回收</span></a></li>
+                <li><a href="${ctx}/admin/showAllNote"><span>笔记审核</span></a></li>
+                <li><a href="${ctx}/admin/showShareNote"><span>分享管理</span></a></li>
+                <li><a href="${ctx}/admin/showNoteRecycle"><span>笔记回收</span></a></li>
                 <li><a href="javascript:;"><span>笔记日志</span></a></li>
             </ul>
         </li>

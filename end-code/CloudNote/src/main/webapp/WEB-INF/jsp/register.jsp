@@ -127,7 +127,7 @@
                     <div class="form-group has-feedback">
                         <div class="input-group">
                             <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-                            <input id="second_name" name="name" class="form-control" placeholder="请输入用户名" maxlength="20" type="text" style="height: 50px;">
+                            <input id="second_name" name="name" class="form-control" placeholder="请输入昵称" maxlength="20" type="text" style="height: 50px;">
                         </div>
 
                         <span style="color:red;display: none;" class="tips"></span>
@@ -356,14 +356,13 @@
         }
     });
 
-    // 用户名匹配
+    // 昵称匹配
     $('.container1').find('input').eq(3).change(function() {
-        if ($(this).val().length>5&&($(this).val().length<10)) {
+        if ($(this).val().length>=2&&($(this).val().length<=10)) {
             success($(this), 3);
         } else{
-            fail($(this), 3, '用户名长度在五位到十位之间');
+            fail($(this), 3, '昵称长度在[2,10]之间');
         }
-
     });
 
     //邮箱匹配

@@ -1,9 +1,11 @@
 package cn.edu.jit.entry;
 
 import cn.edu.jit.dto.ArticleDto;
+import cn.edu.jit.dto.UserDto;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 通信类
@@ -123,6 +125,30 @@ public class Message implements Serializable {
         this.users = users;
     }
 
+    public UserDto getUserDto() {
+        return userDto;
+    }
+
+    public void setUserDto(UserDto userDto) {
+        this.userDto = userDto;
+    }
+
+    public List<Area> getAreas() {
+        return areas;
+    }
+
+    public void setAreas(List<Area> areas) {
+        this.areas = areas;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     private Boolean status;
 
     private String info;
@@ -137,9 +163,13 @@ public class Message implements Serializable {
 
     private String tel;
 
-    private List<Article> articles;
+    private User user;
+
+    private UserDto userDto;
 
     private ArticleDto articleDto;
+
+    private List<Article> articles;
 
     private List<ArticleDto> articleDtos;
 
@@ -150,5 +180,7 @@ public class Message implements Serializable {
     private List<User> users;
 
     private List<UserPan> userFiles;
+
+    private List<Area> areas;
 
 }

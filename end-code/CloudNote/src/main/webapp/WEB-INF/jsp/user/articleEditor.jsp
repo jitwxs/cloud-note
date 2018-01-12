@@ -50,12 +50,13 @@
             <table class="table table-striped table-responsive">
                 <thead>
                 <tr>
-                    <th>附件</th>
-                    <th>预览</th>
+                    <th>附件名称</th>
+                    <th>预览(支持图片、网页、word、excel、ppt、pdf)</th>
                     <th>删除</th>
                 </tr>
                 </thead>
                 <tbody id="affixContentTBody">
+                    <td colspan="3" style="text-align: center">该笔记还没有任何附件</td>
                 </tbody>
             </table>
         </div>
@@ -90,7 +91,8 @@
         editor.customConfig.onblur = function (html) {
             var noteId = $("#noteId").val();
             var noteName = $("#noteName").val();
-            sendPost('${ctx}/user/saveNote',{'noteId':noteId, 'noteName':noteName, 'data':html},true,function (msg) {
+            var editorTags = $("#editorTags").val();
+            sendPost('${ctx}/user/saveNote',{'noteId':noteId, 'noteName':noteName, 'data':html,'tag':editorTags},true,function (msg) {
             },function (error) {
                 return false;
             });
@@ -208,7 +210,8 @@
         function previewAffix(obj) {
             var id = obj.parentElement.parentElement.id;
             var noteId = $("#affixNoteId").val();
-            var typeArray=new Array("doc","docx","xls","xlsx","ppt","pptx");
+            var previewArray = new Array("pdf","bmp", "png", "jpg", "jpeg", "gif", "htm", "html");
+            var convertArray=new Array("doc","docx","xls","xlsx","ppt","pptx");
 
             if(noteId == null || noteId == "") {
                 toastr.error("系统错误");
@@ -217,10 +220,27 @@
                 var point = tmpName.lastIndexOf(".");
                 var type = tmpName.substr(point).toLowerCase();
                 type = type.substr(1,type.length);
-                var flag = true;
 
-                // 如果是pdf文件，直接预览即可
-                if(type == "pdf") {
+                var previewFlag = false, convertFlag = false;
+
+                // 如果可预览，直接预览即可
+                for(var i=0; i<previewArray.length; i++) {
+                    if(previewArray[i] == type) {
+                        previewFlag = true;
+                        break;
+                    }
+                }
+                // 如果不可预览，判断是否是可转换的数据类型
+                if(!previewFlag) {
+                    for(var i=0; i<convertArray.length; i++) {
+                        if(convertArray[i] == type) {
+                            convertFlag = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(previewFlag) {
                     sendPost('${ctx}/user/previewAffix',{'affixId':id},true,function (res) {
                         if(res.status) {
                             //TODO 上线记得修改为服务器地址
@@ -233,43 +253,33 @@
                         toastr.error("系统错误");
                         return false;
                     });
-                } else {
-                    // 如果不是pdf，判断是否是可转换的数据类型
-                    for(var i=0; i<typeArray.length; i++) {
-                        if(typeArray[i] == type) {
-                            flag = true;
-                            break;
+                } else if(convertFlag) {
+                    document.getElementById("loading").style.display = "block";
+                    sendPost('${ctx}/user/convertFile',{'affixId':id},true,function (res) {
+                        if(!res.status) {
+                            toastr.error(res.info);
+                        } else {
+                            // 转换成功后。预览文件
+                            document.getElementById("loading").style.display = "none";
+                            sendPost('${ctx}/user/previewAffix',{'affixId':id},true,function (res) {
+                                if(res.status) {
+                                    //TODO 上线记得修改为服务器地址
+                                    var url = "http://localhost:8080/" + res.info;
+                                    window.open(url);
+                                } else {
+                                    toastr.error(res.info);
+                                }
+                            },function (error) {
+                                toastr.error("系统错误");
+                                return false;
+                            });
                         }
-                    }
-                    if(!flag) {
-                        toastr.warning("该格式似乎不支持预览");
-                    } else {
-                        // 转换格式
-                        document.getElementById("loading").style.display = "block";
-                        sendPost('${ctx}/user/convertFile',{'affixId':id},true,function (res) {
-                            if(!res.status) {
-                                toastr.error(res.info);
-                            } else {
-                                // 转换成功后。预览文件
-                                document.getElementById("loading").style.display = "none";
-                                sendPost('${ctx}/user/previewAffix',{'affixId':id},true,function (res) {
-                                    if(res.status) {
-                                        //TODO 上线记得修改为服务器地址
-                                        var url = "http://localhost:8080/" + res.info;
-                                        window.open(url);
-                                    } else {
-                                        toastr.error(res.info);
-                                    }
-                                },function (error) {
-                                    toastr.error("系统错误");
-                                    return false;
-                                });
-                            }
-                        },function (error) {
-                            toastr.error("系统错误");
-                            return false;
-                        });
-                    }
+                    },function (error) {
+                        toastr.error("系统错误");
+                        return false;
+                    });
+                } else {
+                    toastr.warning("该格式不支持预览");
                 }
             }
         }
