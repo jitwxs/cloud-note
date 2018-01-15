@@ -1,9 +1,8 @@
 package cn.edu.jit.entry;
 
-import java.io.Serializable;
 import java.util.Date;
 
-public class ArticleRecycle implements Serializable {
+public class ArticleRecycle {
     private String id;
 
     private String title;
@@ -15,6 +14,8 @@ public class ArticleRecycle implements Serializable {
     private Integer isOpen;
 
     private String shareUrl;
+
+    private Integer star;
 
     private Date createDate;
 
@@ -66,6 +67,14 @@ public class ArticleRecycle implements Serializable {
 
     public void setShareUrl(String shareUrl) {
         this.shareUrl = shareUrl == null ? null : shareUrl.trim();
+    }
+
+    public Integer getStar() {
+        return star;
+    }
+
+    public void setStar(Integer star) {
+        this.star = star;
     }
 
     public Date getCreateDate() {

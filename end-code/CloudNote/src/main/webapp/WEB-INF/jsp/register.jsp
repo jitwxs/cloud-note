@@ -137,9 +137,9 @@
 
                     <!--返回登陆-->
                     <div class="form-group">
-                        <a href="${ctx}/login" style="text-decoration: none;">
+                        <a href="${ctx}/index" style="text-decoration: none;">
                             <input id="backtoLogin" type="backtoLogin" class="form-control btn-lg "
-                                   value="返&nbsp;&nbsp;回&nbsp;&nbsp;登&nbsp;&nbsp;陆"
+                                   value="返&nbsp;&nbsp;回&nbsp;&nbsp;首&nbsp;&nbsp;页"
                                    style="height: 50px;background: white;border: solid 1px darkgrey;
                                    color:indianred;text-align: center;">
                         </a>
@@ -174,7 +174,7 @@
                     <div class="form-group has-feedback">
                         <div class="input-group">
                             <span class="input-group-addon"><span class="glyphicon glyphicon-adjust"></span></span>
-                            <input id="sex" class="form-control" name="sex" placeholder="请输入性别（男或女）" maxlength="20" type="text" style="height: 50px;">
+                            <input id="sex" class="form-control" name="sex" placeholder="请输入性别（男或女，默认为男）" maxlength="20" type="text" style="height: 50px;">
                         </div>
                         <span style="color:red;display: none;" class="tips"></span>
                         <span style="display: none;" class=" glyphicon glyphicon-remove form-control-feedback"></span>

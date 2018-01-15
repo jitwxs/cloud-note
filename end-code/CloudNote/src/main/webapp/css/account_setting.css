@@ -1,13 +1,14 @@
+/* 账户信息 */
 @media  screen and (min-width: 200px) {
     .box1{
         /*border:1px solid red;*/
-        height: 300px;
-        width: 500px;
+        height: 500px;
+        width: 800px;
     }
 }
 .box1{
     position: relative;
-    top:150px;
+    top:100px;
     margin-left:300px;
     margin-right: 300px;
     margin: 0px auto;
@@ -20,56 +21,94 @@
     font-size: 18px;
     /*float: right;*/
     margin-top: 40px;
-    margin-left: 20px;
+    margin-left: 120px;
 }
-.strong {
-    margin-top: 80px;
-}
-.strong p{
-    margin-left: 20px;
-    margin-top: 20px;
-    font-size: 0;
-    position: relative;
-}
-.strong p span{
-    display: inline-block;
-    font-weight: normal;
-    font-style: normal;
-    padding:0;
-    margin:0;
-    width:94px;
-    height:20px;
-    background: #f9d194;
-    font-size: 13px;
-    color:#fff;
-    text-align: center;
-    line-height: 20px;
-}
-#strongthTip{
-    background: #60ff40;
-    width: 100px;
-    height: 40px;
-    font-size: 20px;
-    color: black;
-    margin-left: 40px;
-    position: relative;
-    top:20px;
-}
-.strong p span.hover{
-    background: #f97101;
-}
-.strong p.active span:nth-child(2){
-    background: #f97101 ;
-}
-.strong p.active1 span{
-    background: #f97101;
+#login_btn{
+    color: white;
+    background: lightskyblue;
+    font-size: 18px;
+    float: left;
+    margin-top: 45px;
+    margin-left: 500px;
 }
 
-/*#logout_btn{*/
-    /*color: white;*/
-    /*background: lightskyblue;*/
-    /*font-size: 18px;*/
-    /*float: left;*/
-    /*margin-top: 0px;*/
-    /*margin-left: 50px;*/
-/*}*/
+
+/* 网盘 */
+#wangpan{
+    width:900px;
+    height: 530px;
+    background: white;
+    border: 1px solid black;
+    overflow:auto;
+}
+#head{
+    width: 860px;
+    height: 50px;
+    position: relative;
+    margin:0 auto;
+}
+#head a{
+    width: 120px;
+    height: 35px;
+    border:1px lightskyblue solid;
+    background: white;
+    color:lightskyblue;
+    margin-top:7px;
+    margin-left: 15px;
+    float: left;
+    outline:none;
+}
+.upload {
+    cursor:pointer;
+    position: relative;
+    display: inline-block;
+    background: #D0EEFF;
+    border: 1px solid #99D3F5;
+    border-radius: 4px;
+    padding: 4px 12px;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 28px;
+}
+.upload input {
+    position: absolute;
+    font-size: 100px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+.upload:hover {
+    background: #AADFFD;
+    border-color: #78C3F3;
+    color: #004974;
+    text-decoration: none;
+}
+#content a{
+    cursor: pointer;
+    text-decoration: none;
+}
+#content .wjj{
+    width:860px;
+    height:35px;
+    border-bottom: 1px grey solid;
+    /*background: pink;*/
+}
+#content .wj{
+    width:860px;
+    height:35px;
+    border-bottom: 1px grey solid;
+    /*background: pink;*/
+}
+#content .wjj a{
+    font-size: 15px;
+    line-height: 35px;
+}
+#content .wj a{
+    font-size: 15px;
+    line-height: 35px;
+}
+#wangpan .breadcrumb a{
+    cursor: pointer;
+}

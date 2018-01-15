@@ -1,5 +1,6 @@
 package cn.edu.jit.service.impl;
 
+import cn.edu.jit.entry.ArticleExample;
 import cn.edu.jit.entry.ArticleRecycle;
 import cn.edu.jit.entry.ArticleRecycleExample;
 import cn.edu.jit.mapper.ArticleRecycleMapper;
@@ -31,6 +32,16 @@ public class ArticleRecycleServiceImpl implements ArticleRecycleService {
     @Override
     public int removeById(String id) {
         return articleRecycleMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public List<ArticleRecycle> listSelfRecycle(String uid) {
+        ArticleRecycleExample articleRecycleExample = new ArticleRecycleExample();
+
+        ArticleRecycleExample.Criteria criteria = articleRecycleExample.createCriteria();
+        criteria.andUserIdEqualTo(uid);
+
+        return articleRecycleMapper.selectByExample(articleRecycleExample);
     }
 
     @Override

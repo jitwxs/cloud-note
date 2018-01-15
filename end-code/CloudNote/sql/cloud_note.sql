@@ -3603,7 +3603,7 @@ CREATE TABLE `article` (
   PRIMARY KEY (`id`),
   KEY `fk_user` (`user_id`),
   KEY `fk_dir` (`dir_id`),
-  CONSTRAINT `fk_dir` FOREIGN KEY (`dir_id`) REFERENCES `directory` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_dir` FOREIGN KEY (`dir_id`) REFERENCES `ArticleDir` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `userid` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -3661,7 +3661,7 @@ CREATE TABLE `article_recycle` (
   PRIMARY KEY (`id`),
   KEY `fk_user` (`user_id`),
   KEY `fk_dir` (`dir_id`),
-  CONSTRAINT `article_recycle_ibfk_1` FOREIGN KEY (`dir_id`) REFERENCES `directory` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `article_recycle_ibfk_1` FOREIGN KEY (`dir_id`) REFERENCES `ArticleDir` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `article_recycle_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -3690,10 +3690,10 @@ INSERT INTO `article_tag` VALUES ('fe214b804f9c4dc29d26cd7387e9e075', '72f8cb5a0
 INSERT INTO `article_tag` VALUES ('6b95c2e225d14ecfb9598c179113459b', '80891bad802e4268b36ef6986da49129');
 
 -- ----------------------------
--- Table structure for directory
+-- Table structure for ArticleDir
 -- ----------------------------
-DROP TABLE IF EXISTS `directory`;
-CREATE TABLE `directory` (
+DROP TABLE IF EXISTS `ArticleDir`;
+CREATE TABLE `ArticleDir` (
   `id` varchar(64) NOT NULL,
   `uid` varchar(64) DEFAULT NULL,
   `name` varchar(32) NOT NULL COMMENT '目录名称',
@@ -3703,17 +3703,17 @@ CREATE TABLE `directory` (
   PRIMARY KEY (`id`),
   KEY `fk_uid` (`uid`),
   KEY `fk_parent` (`parent_id`),
-  CONSTRAINT `fk_parent` FOREIGN KEY (`parent_id`) REFERENCES `directory` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_parent` FOREIGN KEY (`parent_id`) REFERENCES `ArticleDir` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_uid` FOREIGN KEY (`uid`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of directory
+-- Records of ArticleDir
 -- ----------------------------
-INSERT INTO `directory` VALUES ('d397f5558ee14111aa372765bcea6ae8', 'bae70d0c41ab4b578b88b59ebe037a7c', 'xxx', 'fbb0d6df4163404e983d01f8d44e9f8b', '2018-01-11 11:38:22', null);
-INSERT INTO `directory` VALUES ('fb5b394c5a5b4526a7adcdea2e104b74', 'bae70d0c41ab4b578b88b59ebe037a7c', 'qqq', 'root', '2018-01-11 11:38:26', '2018-01-11 11:40:07');
-INSERT INTO `directory` VALUES ('fbb0d6df4163404e983d01f8d44e9f8b', 'bae70d0c41ab4b578b88b59ebe037a7c', 'js', 'root', '2018-01-11 11:38:16', null);
-INSERT INTO `directory` VALUES ('root', null, '我的文件夹', null, '2018-01-08 11:23:57', null);
+INSERT INTO `ArticleDir` VALUES ('d397f5558ee14111aa372765bcea6ae8', 'bae70d0c41ab4b578b88b59ebe037a7c', 'xxx', 'fbb0d6df4163404e983d01f8d44e9f8b', '2018-01-11 11:38:22', null);
+INSERT INTO `ArticleDir` VALUES ('fb5b394c5a5b4526a7adcdea2e104b74', 'bae70d0c41ab4b578b88b59ebe037a7c', 'qqq', 'root', '2018-01-11 11:38:26', '2018-01-11 11:40:07');
+INSERT INTO `ArticleDir` VALUES ('fbb0d6df4163404e983d01f8d44e9f8b', 'bae70d0c41ab4b578b88b59ebe037a7c', 'js', 'root', '2018-01-11 11:38:16', null);
+INSERT INTO `ArticleDir` VALUES ('root', null, '我的文件夹', null, '2018-01-08 11:23:57', null);
 
 -- ----------------------------
 -- Table structure for file_convert

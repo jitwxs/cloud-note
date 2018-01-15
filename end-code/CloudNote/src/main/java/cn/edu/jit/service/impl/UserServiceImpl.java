@@ -6,6 +6,7 @@ import cn.edu.jit.global.GlobalFunction;
 import cn.edu.jit.mapper.LoginMapper;
 import cn.edu.jit.mapper.UserMapper;
 import cn.edu.jit.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -63,8 +64,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> listAllUser() {
+    public int countBySex(String sex) {
         UserExample userExample = new UserExample();
+        UserExample.Criteria criteria = userExample.createCriteria();
+        criteria.andSexEqualTo(sex);
+        return userMapper.countByExample(userExample);
+    }
+
+    @Override
+    public List<User> listAllUser(String orderBy) {
+        UserExample userExample = new UserExample();
+        userExample.setOrderByClause(orderBy);
         return userMapper.selectByExample(userExample);
     }
 }

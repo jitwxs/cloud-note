@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class DirectoryExample {
+public class PanDirExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public DirectoryExample() {
+    public PanDirExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 

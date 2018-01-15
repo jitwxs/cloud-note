@@ -41,8 +41,7 @@
 
     function cancelShare() {
         var noteId = $("#noteId").val();
-        var url = $("#shareUrl").val();
-        sendPost('${ctx}/user/cancelShare', {'noteId': noteId, "url":url}, true, function (msg) {
+        sendPost('${ctx}/user/cancelShare', {'noteId': noteId}, true, function (msg) {
             if(msg.status) {
                 toastr.success("取消分享成功");
             } else {

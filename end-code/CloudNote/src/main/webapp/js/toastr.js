@@ -497,7 +497,7 @@ toastr.options = {
 
     "hideDuration": "100",//消失的动画时间
 
-    "timeOut": "1000", //展现时间
+    "timeOut": "3000", //展现时间
 
     "extendedTimeOut": "100",//加长展示时间
 

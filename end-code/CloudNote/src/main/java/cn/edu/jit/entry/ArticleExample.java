@@ -515,6 +515,66 @@ public class ArticleExample {
             return (Criteria) this;
         }
 
+        public Criteria andStarIsNull() {
+            addCriterion("star is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStarIsNotNull() {
+            addCriterion("star is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStarEqualTo(Integer value) {
+            addCriterion("star =", value, "star");
+            return (Criteria) this;
+        }
+
+        public Criteria andStarNotEqualTo(Integer value) {
+            addCriterion("star <>", value, "star");
+            return (Criteria) this;
+        }
+
+        public Criteria andStarGreaterThan(Integer value) {
+            addCriterion("star >", value, "star");
+            return (Criteria) this;
+        }
+
+        public Criteria andStarGreaterThanOrEqualTo(Integer value) {
+            addCriterion("star >=", value, "star");
+            return (Criteria) this;
+        }
+
+        public Criteria andStarLessThan(Integer value) {
+            addCriterion("star <", value, "star");
+            return (Criteria) this;
+        }
+
+        public Criteria andStarLessThanOrEqualTo(Integer value) {
+            addCriterion("star <=", value, "star");
+            return (Criteria) this;
+        }
+
+        public Criteria andStarIn(List<Integer> values) {
+            addCriterion("star in", values, "star");
+            return (Criteria) this;
+        }
+
+        public Criteria andStarNotIn(List<Integer> values) {
+            addCriterion("star not in", values, "star");
+            return (Criteria) this;
+        }
+
+        public Criteria andStarBetween(Integer value1, Integer value2) {
+            addCriterion("star between", value1, value2, "star");
+            return (Criteria) this;
+        }
+
+        public Criteria andStarNotBetween(Integer value1, Integer value2) {
+            addCriterion("star not between", value1, value2, "star");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateDateIsNull() {
             addCriterion("create_date is null");
             return (Criteria) this;

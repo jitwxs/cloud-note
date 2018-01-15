@@ -71,7 +71,7 @@
 </div>
 
 <script>
-    $(function() {
+$(function() {
         // 初始化头部小头像和下拉框名
         sendGet('${ctx}/showSelfInfo',{},true,function (res) {
             var userTel = res.userDto.tel;

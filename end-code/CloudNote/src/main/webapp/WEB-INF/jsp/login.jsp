@@ -32,31 +32,29 @@
             height:50px;
         }
         #main{
-            width:880px;
-            height:410px;
+            width:900px;
             background: white;
-            /*border:solid black 1px;*/
             margin:0 auto;
             margin-top: 100px;
             position: relative;
-            box-shadow:0 0 3px #f3f7fc
+            box-shadow:0px 0px  10px 5px #f4e6ff;
         }
         #main .left{
-            margin-left: 5px;
+            margin-left: 15px;
             /*border:1px solid red;*/
             float: left;
         }
         #main .right{
-            margin-right:5px ;
+            margin-left:10px ;
             /*border:1px solid red;*/
-            float: right;
+            float:left;
         }
         #main .right a{
             border-radius: 8px;
             width: 70%;
             height:50px;
             padding:13px;
-            margin-left:50px;
+            margin-left:60px;
             margin-top: 35px;
             background: white;
             color: lightskyblue;
@@ -83,39 +81,41 @@
             font-size: 18px;
             background: white;
             margin-top: 18px;
-            margin-right: 50px;
+            margin-right: 45px;
             float: right;
         }
     </style>
 </head>
 
 <body>
-<div id="main" >
-    <div class="left" style="width: 420px;height: 410px;">
-        <p style="font-size: 18px;text-align: center;margin-top: 30px">手机号登录</p>
+<div id="main" style="height:490px;" >
+    <p style="font-size: 30px;text-align: center;padding-top: 15px;font-family: Serif;">欢迎使用无道云笔记</p>
+    <div class="left " style="width: 420px;height: 420px;">
+        <p style="font-size: 18px;text-align: center;margin-top: 30px;font-family: Serif;">手机号登录</p>
         <form method="post" action="${ctx}/login" onsubmit="return httpPost()">
-            <div class="form-group" style="width: 250px;height: 50px;margin: 0 auto;margin-top: 20px">
-                <input  id="tel" class="form-control" type="text" name="tel" maxlength="11"  placeholder="手机号" >
+            <div class="form-group" style="width: 307px;height: 50px;margin: 0 auto;margin-top: 45px;margin-left: 70px">
+                <input style="width: 307px;height: 45px;" id="tel" class="form-control" type="text" name="tel" maxlength="11"  placeholder="手机号" >
             </div>
-            <div class="form-group" style="width: 250px;height: 50px;margin: 0 auto;margin-top: 20px">
-                <input id="password" class="form-control" type="password" name="password" placeholder="密码" required="required">
+            <div class="form-group" style="width: 307px;height: 50px;margin: 0 auto;margin-top: 20px;margin-left: 70px">
+                <input style="width: 307px;height: 45px;"id="password" class="form-control" type="password" name="password" placeholder="密码">
             </div>
-            <div style="width:100px ;height: 40px;margin-left: 300px;margin-top: 10px">
+            <div style="width:100px ;height: 40px;margin-left:313px;margin-top: 10px">
                 <a href="${ctx}/foundPassword">忘记密码？</a>
             </div>
-            <button  id="login_btn" type="submit"  class="btn btn-default" >登录</button>
+
+            <button id="login_btn" type="submit"  class="btn btn-default" >登录</button>
             <button id="register_btn" type="button" class="btn btn-default" onclick="window.location='${ctx}/register'">注册</button>
         </form>
     </div>
-
-    <div class="right" style="width: 420px;height: 410px;">
-        <p style="font-size: 18px;text-align: center;margin-top: 30px">其他账号登录</p>
+    <div class="center" style="height: 340px;margin-left:20px;margin-top: 20px;background: #f4e6ff;width: 1px;float: left;"></div>
+    <div class="right " style="width: 420px;height: 420px;">
+        <p style="font-size: 18px;text-align: center;margin-top: 30px;font-family: Serif;">其他账号登录</p>
         <a class="btn" style="padding-left: 33px" onclick="window.location.href='${ctx}/qqLogin'"><img src="${ctx}/images/qq.png">  使用QQ登录</a>
-        <a style="margin-top: 40px;padding-left: 40px" class="btn"><img src="${ctx}/images/weixin.png">  使用微信登录</a>
-        <a style="margin-top: 40px;padding-left: 55px" class="btn" onclick="window.location.href='${ctx}/githubLogin'"><img src="${ctx}/images/github.png">  使用Github登录</a>
+        <a style="margin-top: 40px;padding-left: 40px" class="btn"   onclick="loginWchat()"><img src="${ctx}/images/weixin.png">  使用微信登录</a>
+        <a style="margin-top: 40px;padding-left: 55px"class="btn"   onclick="window.location.href='${ctx}/githubLogin'"><img src="${ctx}/images/github.png">  使用Github登录</a>
     </div>
-
 </div>
+
 <script>
     function httpPost() {
         var flag;

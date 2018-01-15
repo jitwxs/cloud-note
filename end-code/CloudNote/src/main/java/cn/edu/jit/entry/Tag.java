@@ -3,6 +3,11 @@ package cn.edu.jit.entry;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * 标签实体类
+ * @author jitwxs
+ * @date 2018/1/3 14:13
+ */
 public class Tag implements Serializable {
     private String id;
 

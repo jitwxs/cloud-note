@@ -11,12 +11,13 @@
     <link rel="stylesheet" href="${ctx}/css/bootstrap.css">
     <%-- 弹窗CSS --%>
     <link rel="stylesheet" href="${ctx}/css/toastr.css">
-    <%-- 自定义CSS --%>
-    <link rel="stylesheet" href="${ctx}/css/custom.css">
+    <%--&lt;%&ndash; 自定义CSS &ndash;%&gt;--%>
+    <%--<link rel="stylesheet" href="${ctx}/css/custom.css">--%>
     <link rel="stylesheet" href="${ctx}/css/account_setting.css">
     <%-- jQuery first, then Bootstrap JS. --%>
     <script src="${ctx}/js/jquery-3.2.1.min.js"></script>
     <script src="${ctx}/js/bootstrap.js"></script>
+    <script src="${ctx}/js/jquery.contextify.js"></script>
     <%-- 弹窗依赖 --%>
     <script src="${ctx}/js/toastr.js"></script>
     <%-- 封装ajax --%>
@@ -48,7 +49,7 @@
                         <div id="showName"><label id="userSmallName"></label><span class="caret"></span></div>
                     </a>
                     <ul class="dropdown-menu">
-                        <li ><a href="${ctx}/user/index">返回首页</a></li>
+                        <li ><a href="${ctx}/user/index">返回笔记</a></li>
                         <li class="divider"></li>
                         <li ><a href="${ctx}/logout">退出</a></li>
                     </ul>
@@ -64,7 +65,7 @@
             <ul class="nav nav-tabs" style="margin-top: 60px;float: right;width: 100%">
                 <li ><a href="${ctx}/user/index" style="margin-left: 630px;">返回笔记</a></li>
                 <li><a href="${ctx}/user/accountInfo">账号信息</a></li>
-                <li><a href="${ctx}/user/showShareNote">我的分享</a></li>
+                <li><a href="${ctx}/user/accountShare">我的分享</a></li>
                 <li><a href="${ctx}/user/disk">我的网盘</a></li>
                 <li><a href="${ctx}/user/resetPassword">更改密码</a></li>
             </ul>

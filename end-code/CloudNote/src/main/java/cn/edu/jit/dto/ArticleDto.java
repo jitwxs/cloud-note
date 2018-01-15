@@ -14,6 +14,19 @@ public class ArticleDto extends Article {
 
     private String authorTel;
 
+    /**
+     * 摘要信息
+     */
+    private String abstractText;
+
+    public String getAbstractText() {
+        return abstractText;
+    }
+
+    public void setAbstractText(String abstractText) {
+        this.abstractText = abstractText;
+    }
+
     public String getAuthorName() {
         return authorName;
     }

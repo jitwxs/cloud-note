@@ -14,9 +14,11 @@ public interface ArticleRecycleService {
 
     int save(ArticleRecycle articleRecycle);
 
-    public ArticleRecycle getById(String id);
+    ArticleRecycle getById(String id);
 
-    public int removeById(String id);
+    int removeById(String id);
 
-    public List<ArticleRecycle> listAllRecycle();
+    List<ArticleRecycle> listSelfRecycle(String uid);
+
+    List<ArticleRecycle> listAllRecycle();
 }

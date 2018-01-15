@@ -13,12 +13,31 @@
     font-size: 200px;
 }
 
-/*目录di*/
+/*目录div*/
 .wjj_div{
     margin-left: 10px;
 }
 
-/** loding **/
+.notediv{
+    height:20px;
+    margin-top: 10px;
+}
+
+.notediv a{
+    margin-top: 10px;
+    margin-left: 40px;
+    font-size: 13px;
+    color: gray;
+    text-decoration: none;
+    cursor: pointer;
+    line-height: 20px;
+    color: #337ab7
+}
+
+
+
+
+/** loading **/
 
 #loading
 {

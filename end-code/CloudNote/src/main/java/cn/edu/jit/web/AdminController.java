@@ -1,5 +1,6 @@
 package cn.edu.jit.web;
 
+
 import cn.edu.jit.dto.ArticleDto;
 import cn.edu.jit.dto.ArticleRecycleDto;
 import cn.edu.jit.dto.UserDto;
@@ -10,30 +11,18 @@ import cn.edu.jit.service.*;
 import cn.edu.jit.util.Sha1Utils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.sun.deploy.security.MSCryptoDSASignature;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 管理员web层
@@ -43,6 +32,9 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/admin")
 public class AdminController {
+
+    @Resource(name = "logServiceImpl")
+    private LogService logService;
 
     @Resource(name = "userServiceImpl")
     private UserService userService;
@@ -98,32 +90,108 @@ public class AdminController {
 
     @RequestMapping(value = "index")
     public String index(HttpServletRequest request, HttpServletResponse response) {
-        String data = GlobalFunction.getDate();
-        Cookie cookie = new Cookie("lastLoginTime", data);
-        // 登录时间保存30天
-        cookie.setMaxAge(60 * 60 * 24 * 30);
-        response.addCookie(cookie);
-
-        Cookie[] cookies = request.getCookies();
-        String result = "";
-        if(cookies.length > 0) {
-            for (Cookie ck: cookies) {
-                if("lastLoginTime".equals(ck.getName())) {
-                    String lastLoginTime = ck.getValue();
-                    result = "上次登陆：" + lastLoginTime.replace('#',' ');
-                }
-            }
-        } else {
-            result = "上次登陆：未知";
-        }
-        // 是否显示登陆信息
-        if(GlobalConstant.HAS_SHOW_LOGIN_INFO) {
-            request.setAttribute("lastLoginTime", result);
-            GlobalConstant.HAS_SHOW_LOGIN_INFO = false;
-        }
-        return "admin/left";
+        return "admin/userInfo";
     }
 
+    /*---------   网站信息区域（Start）   ----------*/
+
+    /**
+     * 用户信息UI
+     */
+    @RequestMapping(value = "userInfo", method = {RequestMethod.GET})
+    public String userInfoUI() {
+        return "/admin/userInfo";
+    }
+
+    /**
+     * 准备用户信息数据
+     */
+    @RequestMapping(value = "preparerUserInfo", method = {RequestMethod.GET})
+    public void userInfoUI(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        try {
+            Map<Object, Object> objects = new HashMap<>();
+
+            List<User> users = userService.listAllUser("create_date");
+
+            List<UserInfo> regInfo = new ArrayList<>();
+
+            // 准备数据
+            User endUser = users.get(users.size() - 1);
+            Date endDate = endUser.getCreateDate();
+            UserInfo userInfo = new UserInfo();
+            userInfo.setDate(GlobalFunction.getDate2Day(endDate));
+            userInfo.setTempTotal(users.size());
+            String sex = endUser.getSex();
+            if("男".equals(sex)) {
+                userInfo.setMaleNum(userInfo.getMaleNum() + 1);
+            } else if("女".equals(sex)) {
+                userInfo.setFemaleNum(userInfo.getFemaleNum() + 1);
+            }
+
+            for(int i=users.size()-2; i>=0; i--) {
+                User nowUser = users.get(i);
+                User prevUser = users.get(i + 1);
+
+                Date nowDate = nowUser.getCreateDate();
+                Date prevDate = prevUser.getCreateDate();
+
+                if(!DateUtils.isSameDay(nowDate, prevDate)) {
+                    regInfo.add(userInfo);
+                    userInfo = new UserInfo();
+                    userInfo.setDate(GlobalFunction.getDate2Day(nowDate));
+                    userInfo.setTempTotal(i + 1);
+                }
+                String nowSex = nowUser.getSex();
+                if("男".equals(nowSex)) {
+                    userInfo.setMaleNum(userInfo.getMaleNum() + 1);
+                } else if("女".equals(nowSex)) {
+                    userInfo.setFemaleNum(userInfo.getFemaleNum() + 1);
+                }
+            }
+            regInfo.add(userInfo);
+
+            // 拼接JSON串
+            int maleCount = userService.countBySex("男");
+            int femaleCount = userService.countBySex("女");
+            String[] date = new String[regInfo.size()];
+            Integer[] maleNum = new Integer[regInfo.size()];
+            Integer[] femaleNum = new Integer[regInfo.size()];
+            Integer[] tempTotal = new Integer[regInfo.size()];
+            for(int i=regInfo.size()-1, j=0; i>=0; i--, j++) {
+                UserInfo ui = regInfo.get(i);
+                date[j] = ui.getDate();
+                maleNum[j] = ui.getMaleNum();
+                femaleNum[j] = ui.getFemaleNum();
+                tempTotal[j] = ui.getTempTotal();
+
+            }
+
+            objects.put("maleCount", maleCount);
+            objects.put("femaleCount", femaleCount);
+            objects.put("date",date);
+            objects.put("maleNum",maleNum);
+            objects.put("femaleNum",femaleNum);
+            objects.put("tempTotal",tempTotal);
+            String data = JSON.toJSONString(objects, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 系统日志UI
+     */
+    @RequestMapping(value = "systemLog", method = {RequestMethod.GET})
+    public String systemLogUI(Model model) {
+        List<Log> lists = logService.listAll();
+        model.addAttribute("lists", lists);
+        return "/admin/systemLog";
+    }
+
+
+    /*---------   网站信息区域（Start）   ----------*/
 
     /*---------   用户管理区域（Start）   ----------*/
     /**
@@ -131,7 +199,7 @@ public class AdminController {
      */
     @RequestMapping(value = "showAllUser", method = {RequestMethod.GET})
     public String showAllUser(Model model) {
-        List<User> list = userService.listAllUser();
+        List<User> list = userService.listAllUser("create_date");
         model.addAttribute("userList", list);
         return "admin/showAllUser";
     }

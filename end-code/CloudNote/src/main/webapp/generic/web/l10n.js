@@ -305,7 +305,7 @@ document.webL10n = (function(window, document, undefined) {
       // we might have a pre-compiled dictionary instead
       var dict = getL10nDictionary();
       if (dict && dict.locales && dict.default_locale) {
-        console.log('using the embedded JSON directory, early way out');
+        console.log('using the embedded JSON ArticleDir, early way out');
         gL10nData = dict.locales[lang];
         if (!gL10nData) {
           var defaultLocale = dict.default_locale.toLowerCase();

@@ -22,5 +22,12 @@ public interface UserService {
 
     int removeByTel(String tel);
 
-    List<User> listAllUser();
+    /**
+     * 根据性别统计用户量
+     * @param sex 男or女
+     * @return 数量
+     */
+    int countBySex(String sex);
+
+    List<User> listAllUser(String orderBy);
 }

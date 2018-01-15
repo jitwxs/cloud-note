@@ -66,6 +66,7 @@
             $("#userSign").val(res.userDto.sign);
 
             // 动态添加省级下拉框
+            $("#areaSelect1").html('');
             for(var i=0; i<res.areas.length; i++) {
                 $("#areaSelect1").append("<option value='"+res.areas[i].id+"'>"+res.areas[i].name+"</option>");
             }

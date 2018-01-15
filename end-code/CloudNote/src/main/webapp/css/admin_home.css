@@ -2,14 +2,13 @@
 /* 以下实际使用若已初始化可删除 .nav height父级需逐级设置为100%*/
 body,html{height: 100%;background: #E2E2E2}
 body,ul{margin:0;padding:0}
-body{font:14px "微软雅黑","宋体","Arial Narrow",HELVETICA;-webkit-text-size-adjust:100%;} 
+body{font:14px "微软雅黑","宋体","Arial Narrow",HELVETICA;-webkitt-ext-size-adjust:100%;}
 li{list-style:none}
-
 a{text-decoration:none;}
 /* 以上实际使用若已初始化可删除 */
 
 /* nav */
-.nav{width: 220px;height: 100%;background: #263238;transition: all .3s; position: absolute;top:0;left: 0;}
+.nav{width: 220px;height: 1000px;background: #263238;transition: all .3s; position: absolute;top:0;left: 0;}
 .nav a{display: block;overflow: hidden;padding-left: 20px;line-height: 46px;max-height: 46px;color: #ABB1B7;transition: all .3s;}
 .nav a span{margin-left: 30px;}
 .nav-item{position: relative;}
@@ -21,8 +20,9 @@ a{text-decoration:none;}
 
 /* 此处修改导航图标 可自定义iconfont 替换*/
 .icon_1::after{content: "\e62b";}
-.icon_2::after{content: "\e669";}
-.icon_3::after{content: "\e61d";}
+.icon_3::after{content: "\e685";}
+.icon_2::after{content: "\e61d";}
+.icon_4::after{content:"\e65c";}
 /*---------------------*/
 .nav-more{float:right;margin-right: 20px;font-size: 12px;transition: transform .3s;}
 /* 此处为导航右侧箭头 如果自定义iconfont 也需要替换*/
@@ -50,6 +50,19 @@ a{text-decoration:none;}
 .nav-mini.nav .nav-item:hover .nav-item a{color:#FFF;}
 .nav-mini.nav .nav-item:hover a:before{opacity:1;}
 .nav-mini.nav .nav-item:hover ul{display: block;}
+.diy_container{
+    width:60%;
+    height: 400px;
+    margin: 0 auto;
+    margin-left: 30%;
+}
+.diy_table{
+    width:60%;
+    height: 400px;
+    margin: 0 auto;
+    margin-left: 30%;
+    margin-top:100px;
+}
 
 
 

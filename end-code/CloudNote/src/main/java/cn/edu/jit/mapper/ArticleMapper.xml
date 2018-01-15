@@ -8,6 +8,7 @@
     <result column="dir_id" property="dirId" jdbcType="VARCHAR" />
     <result column="is_open" property="isOpen" jdbcType="INTEGER" />
     <result column="share_url" property="shareUrl" jdbcType="VARCHAR" />
+    <result column="star" property="star" jdbcType="INTEGER" />
     <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
     <result column="modifed_date" property="modifedDate" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -70,7 +71,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, title, user_id, dir_id, is_open, share_url, create_date, modifed_date
+    id, title, user_id, dir_id, is_open, share_url, star, create_date, modifed_date
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.edu.jit.entry.ArticleExample" >
     select
@@ -105,10 +106,12 @@
   <insert id="insert" parameterType="cn.edu.jit.entry.Article" >
     insert into article (id, title, user_id, 
       dir_id, is_open, share_url, 
-      create_date, modifed_date)
+      star, create_date, modifed_date
+      )
     values (#{id,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, 
       #{dirId,jdbcType=VARCHAR}, #{isOpen,jdbcType=INTEGER}, #{shareUrl,jdbcType=VARCHAR}, 
-      #{createDate,jdbcType=TIMESTAMP}, #{modifedDate,jdbcType=TIMESTAMP})
+      #{star,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{modifedDate,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.jit.entry.Article" >
     insert into article
@@ -130,6 +133,9 @@
       </if>
       <if test="shareUrl != null" >
         share_url,
+      </if>
+      <if test="star != null" >
+        star,
       </if>
       <if test="createDate != null" >
         create_date,
@@ -156,6 +162,9 @@
       </if>
       <if test="shareUrl != null" >
         #{shareUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="star != null" >
+        #{star,jdbcType=INTEGER},
       </if>
       <if test="createDate != null" >
         #{createDate,jdbcType=TIMESTAMP},
@@ -192,6 +201,9 @@
       <if test="record.shareUrl != null" >
         share_url = #{record.shareUrl,jdbcType=VARCHAR},
       </if>
+      <if test="record.star != null" >
+        star = #{record.star,jdbcType=INTEGER},
+      </if>
       <if test="record.createDate != null" >
         create_date = #{record.createDate,jdbcType=TIMESTAMP},
       </if>
@@ -211,6 +223,7 @@
       dir_id = #{record.dirId,jdbcType=VARCHAR},
       is_open = #{record.isOpen,jdbcType=INTEGER},
       share_url = #{record.shareUrl,jdbcType=VARCHAR},
+      star = #{record.star,jdbcType=INTEGER},
       create_date = #{record.createDate,jdbcType=TIMESTAMP},
       modifed_date = #{record.modifedDate,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -235,6 +248,9 @@
       <if test="shareUrl != null" >
         share_url = #{shareUrl,jdbcType=VARCHAR},
       </if>
+      <if test="star != null" >
+        star = #{star,jdbcType=INTEGER},
+      </if>
       <if test="createDate != null" >
         create_date = #{createDate,jdbcType=TIMESTAMP},
       </if>
@@ -251,13 +267,13 @@
       dir_id = #{dirId,jdbcType=VARCHAR},
       is_open = #{isOpen,jdbcType=INTEGER},
       share_url = #{shareUrl,jdbcType=VARCHAR},
+      star = #{star,jdbcType=INTEGER},
       create_date = #{createDate,jdbcType=TIMESTAMP},
       modifed_date = #{modifedDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=VARCHAR}
   </update>
-
   <select id="listArticleByTagName" resultMap="BaseResultMap">
-    select article.id,title,user_id,dir_id,is_open,share_url,article.create_date,article.modifed_date
+    select article.id,title,user_id,dir_id,is_open,share_url,star,article.create_date,article.modifed_date
     from article,article_tag,tag
     where article.id=article_tag.article_id
     and article_tag.tag_id=tag.id

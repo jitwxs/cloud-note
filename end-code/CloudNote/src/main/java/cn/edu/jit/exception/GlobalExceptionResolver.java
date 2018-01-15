@@ -1,5 +1,6 @@
 package cn.edu.jit.exception;
 
+import cn.edu.jit.global.GlobalConstant;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.springframework.web.servlet.HandlerExceptionResolver;
@@ -16,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 public class GlobalExceptionResolver implements HandlerExceptionResolver {
 
     @Override
-    public ModelAndView resolveException(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) {
+    public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object o, Exception e) {
         ModelAndView modelAndView = new ModelAndView();
 
         UserException userException;

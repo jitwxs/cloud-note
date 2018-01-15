@@ -4,11 +4,8 @@ import cn.edu.jit.entry.*;
 import cn.edu.jit.dto.UserDto;
 import cn.edu.jit.global.GlobalConstant;
 import cn.edu.jit.global.GlobalFunction;
-import cn.edu.jit.service.AreaService;
-import cn.edu.jit.service.SupportAreaService;
+import cn.edu.jit.service.*;
 import cn.edu.jit.util.Sha1Utils;
-import cn.edu.jit.service.LoginService;
-import cn.edu.jit.service.UserService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
@@ -47,6 +44,9 @@ import java.util.*;
 @Controller
 public class SystemController {
 
+    @Resource(name = "logServiceImpl")
+    private LogService logService;
+
     @Resource(name = "loginServiceImpl")
     private LoginService loginService;
 
@@ -71,11 +71,13 @@ public class SystemController {
         GlobalConstant.UPLOAD_PATH  = request.getSession().getServletContext().getRealPath("upload");
         GlobalConstant.USER_HOME_PATH = GlobalConstant.UPLOAD_PATH  + "/"  + GlobalFunction.getSelfTel();
         GlobalConstant.USER_ARTICLE_PATH  = GlobalConstant.USER_HOME_PATH  + "/" + "article";
+        GlobalConstant.USER_SHARE_PATH = GlobalConstant.USER_ARTICLE_PATH + "/" + "share";
         GlobalConstant.USER_IMG_PATH = GlobalConstant.USER_HOME_PATH  + "/" + "images";
         GlobalConstant.USER_PAN_PATH = GlobalConstant.USER_HOME_PATH  + "/"  + "pan" ;
 
         GlobalFunction.createDir(GlobalConstant.TEMP_PATH);
         GlobalFunction.createDir(GlobalConstant.USER_ARTICLE_PATH);
+        GlobalFunction.createDir(GlobalConstant.USER_SHARE_PATH);
         GlobalFunction.createDir(GlobalConstant.USER_IMG_PATH);
         GlobalFunction.createDir(GlobalConstant.USER_PAN_PATH);
     }
@@ -203,6 +205,9 @@ public class SystemController {
         // 初始化项目路径
         initPath(request);
 
+        // 保存日志
+        logService.saveLog(request, GlobalConstant.LOG_USER.type, GlobalConstant.LOG_USER.USER_LOGIN.getName(), getSelfId());
+
         // 所有用户均重定向对应首页
         if (subject.hasRole(GlobalConstant.ROLE.ADMIN.getName())) {
             GlobalConstant.HAS_SHOW_LOGIN_INFO = true;
@@ -213,11 +218,6 @@ public class SystemController {
         } else {
             return "/login";
         }
-    }
-
-    @RequestMapping(value = "logout")
-    public String logout(){
-        return "redirect:/logout";
     }
 
     @RequestMapping(value = "register", method = {RequestMethod.GET})
@@ -293,16 +293,31 @@ public class SystemController {
     }
 
     @RequestMapping(value = "register", method = {RequestMethod.POST})
-    public String register(Register register) {
-        Area area = areaService.getByName(register.getArea());
+    public String register(Register register, HttpServletRequest request) {
         User user = new User();
-        BeanUtils.copyProperties(register, user);
+
+        String inputArea = register.getArea();
+        if(!StringUtils.isBlank(inputArea)) {
+            Area area = areaService.getByName(register.getArea());
+            if (area != null) {
+                user.setArea(area.getId());
+            }
+        }
+        if(!StringUtils.isBlank(register.getEmail())) {
+            user.setEmail(register.getEmail());
+        }
+
+        // 性别默认为男
+        if(!StringUtils.isBlank(register.getSex())) {
+            user.setSex(register.getSex());
+        } else {
+            user.setSex("男");
+        }
 
         user.setId(GlobalFunction.getUUID());
+        user.setTel(register.getTel());
+        user.setName(register.getName());
         user.setCreateDate(new Date());
-        if (area != null) {
-            user.setArea(area.getId());
-        }
 
         Login login = new Login();
         login.setTel(user.getTel());
@@ -313,6 +328,9 @@ public class SystemController {
         // 必须先保存Login表，外键约束
         loginService.save(login);
         userService.save(user);
+
+        // 保存日志
+        logService.saveLog(request, GlobalConstant.LOG_USER.type, GlobalConstant.LOG_USER.USER_REG.getName(), getSelfId());
 
         return "redirect:/login";
     }
@@ -418,6 +436,10 @@ public class SystemController {
                     info = "修改密码失败";
                 }
             }
+
+            // 保存日志
+            logService.saveLog(request, GlobalConstant.LOG_USER.type, GlobalConstant.LOG_USER.FIND_PASSWORD.getName(), getSelfId());
+
             // status：是否成功；info：成功返回null，失败返回错误原因
             Message msg = new Message();
             msg.setStatus(status);
@@ -425,6 +447,8 @@ public class SystemController {
             String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
         } catch (IOException e) {
+            // 保存日志
+            logService.saveLog(request, e, GlobalConstant.LOG_USER.type, GlobalConstant.LOG_USER.FIND_PASSWORD.getName(), getSelfId());
             e.printStackTrace();
         }
     }
@@ -432,28 +456,30 @@ public class SystemController {
     @RequestMapping(value = "showUserCity", method = {RequestMethod.GET})
     public void showUserCity(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
-        List<User> lists = userService.listAllUser();
+        List<User> lists = userService.listAllUser("null");
         Map<String,Integer> map = new HashMap<>(16);
         try {
             if(lists.size() > 0) {
                 for(User user : lists) {
-                    Area area = areaService.getById(user.getArea());
-                    String temp = area.getName();
-                    String name = "";
-                    if(temp.endsWith("市")) {
-                        name = temp.substring(0, temp.length() -1 );
-                    } else if(temp.endsWith("区") || temp.endsWith("县")) {
-                        Area area1 = areaService.getById(area.getPid());
-                        name = area1.getName().substring(0, temp.length() -1 );
-                    }
+                    if(user.getArea() != null) {
+                        Area area = areaService.getById(user.getArea());
+                        String temp = area.getName();
+                        String name = "";
+                        if(temp.endsWith("市")) {
+                            name = temp.substring(0, temp.length() -1 );
+                        } else if(temp.endsWith("区") || temp.endsWith("县")) {
+                            Area area1 = areaService.getById(area.getPid());
+                            name = area1.getName().substring(0, temp.length() -1 );
+                        }
 
-                    if(map.containsKey(name)) {
-                        map.put(name, map.get(name) + 1);
-                    } else {
-                        // 只显示可预览的城市
-                        SupportArea supportArea = supportAreaService.getByName(name);
-                        if(supportArea != null) {
-                            map.put(name, 1);
+                        if(map.containsKey(name)) {
+                            map.put(name, map.get(name) + 1);
+                        } else {
+                            // 只显示可预览的城市
+                            SupportArea supportArea = supportAreaService.getByName(name);
+                            if(supportArea != null) {
+                                map.put(name, 1);
+                            }
                         }
                     }
                 }
@@ -500,13 +526,16 @@ public class SystemController {
             String id = getSelfId();
             UserDto userDto = new UserDto();
             User user = userService.getById(id);
-            Area area = areaService.getById(user.getArea());
+            Area area = null;
             BeanUtils.copyProperties(user, userDto);
-            if(area != null) {
+
+            Integer areaId = user.getArea();
+            if(areaId != null) {
+                area = areaService.getById(user.getArea());
                 userDto.setAreaName(area.getName());
             }
-            List<Area> areas = areaService.listByPid(0);
 
+            List<Area> areas = areaService.listByPid(0);
             message.setUserDto(userDto);
             message.setAreas(areas);
             String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
@@ -561,7 +590,12 @@ public class SystemController {
                 }
             }
             userService.update(user);
+
+            // 保存日志
+            logService.saveLog(request, GlobalConstant.LOG_USER.type, GlobalConstant.LOG_USER.MODIFY_INFO.getName(), getSelfId());
         } catch (Exception e) {
+            // 保存日志
+            logService.saveLog(request, e, GlobalConstant.LOG_USER.type, GlobalConstant.LOG_USER.MODIFY_INFO.getName(), getSelfId());
             e.printStackTrace();
         }
 

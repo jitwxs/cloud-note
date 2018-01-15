@@ -7,6 +7,11 @@ package cn.edu.jit.global;
  */
 public class GlobalConstant {
     /**
+     * 服务器路径
+     */
+    public static String SER_URL = "http://localhost:8080";
+
+    /**
      * 是否显示登陆信息
      */
     public static boolean HAS_SHOW_LOGIN_INFO = false;
@@ -14,37 +19,42 @@ public class GlobalConstant {
     /**
      * 分享模板路径
      */
-    public static String SHARE_TEMPLATE = null;
+    public static String SHARE_TEMPLATE;
 
     /**
      * 临时文件夹路径
      */
-    public static String TEMP_PATH = null;
+    public static String TEMP_PATH;
 
     /**
      * 上传目录文件夹
      */
-    public static String UPLOAD_PATH = null;
+    public static String UPLOAD_PATH;
 
     /**
      * 用户家文件夹
      */
-    public static String USER_HOME_PATH = null;
+    public static String USER_HOME_PATH;
 
     /**
      * 用户图片文件夹
      */
-    public static String USER_IMG_PATH = null;
+    public static String USER_IMG_PATH;
 
     /**
      * 用户笔记文件夹
      */
-    public static String USER_ARTICLE_PATH = null;
+    public static String USER_ARTICLE_PATH;
+
+    /**
+     * 用户笔记分享文件夹
+     */
+    public static String USER_SHARE_PATH;
 
     /**
      * 用户网盘文件夹
      */
-    public static String USER_PAN_PATH = null;
+    public static String USER_PAN_PATH;
 
     /**
      * 笔记后缀
@@ -65,6 +75,16 @@ public class GlobalConstant {
      * 笔记默认内容
      */
     public static String ARTICLE_DEFAULT_CONTENT = "<p>欢迎使用 <b>无道云笔记</b></p>";
+
+    /**
+     * 每次显示分享的数目
+     */
+    public static Integer SHOW_SHARE_NUM = 7;
+
+    /**
+     * 笔记摘要长度
+     */
+    public static Integer NOTE_ABSTARCT_LENGTH = 50;
 
     /**
      * 短信签名
@@ -161,9 +181,169 @@ public class GlobalConstant {
         }
 
         public String getName() {
-            for (ROLE role : ROLE.values()) {
-                if (role.getIndex() == index) {
-                    return role.name;
+            for (ARTICLE_STATUS articleStatus : ARTICLE_STATUS.values()) {
+                if (articleStatus.getIndex() == index) {
+                    return articleStatus.name;
+                }
+            }
+            return null;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public int getIndex() {
+            return index;
+        }
+
+        public void setIndex(int index) {
+            this.index = index;
+        }
+    }
+
+    /**
+     * 系统日志
+     */
+    public static enum LOG_SYSTEM {
+        SHARE_CONTROL("分享审核",1),
+        BLOCK_USER("封禁用户",2);
+
+        private String name;
+        private int index;
+        public static int type = 1;
+
+        private LOG_SYSTEM(String name, int index) {
+            this.name = name;
+            this.index = index;
+        }
+
+        public String getName() {
+            for (LOG_SYSTEM logSystem : LOG_SYSTEM.values()) {
+                if (logSystem.getIndex() == index) {
+                    return logSystem.name;
+                }
+            }
+            return null;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public int getIndex() {
+            return index;
+        }
+
+        public void setIndex(int index) {
+            this.index = index;
+        }
+    }
+
+    /**
+     * 用户日志
+     */
+    public static enum LOG_USER {
+        USER_LOGIN("用户登陆",1),
+        USER_REG("用户注册",2),
+        FIND_PASSWORD("找回密码",3),
+        RESET_PASSWORD("重置密码",4),
+        MODIFY_INFO("修改信息",5);
+
+        private String name;
+        private int index;
+        public static int type = 2;
+
+        private LOG_USER(String name, int index) {
+            this.name = name;
+            this.index = index;
+        }
+
+        public String getName() {
+            for (LOG_USER logUser : LOG_USER.values()) {
+                if (logUser.getIndex() == index) {
+                    return logUser.name;
+                }
+            }
+            return null;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public int getIndex() {
+            return index;
+        }
+
+        public void setIndex(int index) {
+            this.index = index;
+        }
+    }
+
+    /**
+     * 笔记日志
+     */
+    public static enum LOG_NOTE {
+        CREATE_NOTE("创建笔记",1),
+        FOREVER_REMOVE_NOTE("永久删除笔记",2),
+        SHARE_NOTE("分享笔记",3),
+        CANCEL_SHARE_NOTE("取消分享笔记",4),
+        UPLOAD_NOTE("上传笔记",5),
+        UPLOAD_AFFIX("上传附件",6);
+
+        private String name;
+        private int index;
+        public static int type = 2;
+
+        private LOG_NOTE(String name, int index) {
+            this.name = name;
+            this.index = index;
+        }
+
+        public String getName() {
+            for (LOG_NOTE logNote : LOG_NOTE.values()) {
+                if (logNote.getIndex() == index) {
+                    return logNote.name;
+                }
+            }
+            return null;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public int getIndex() {
+            return index;
+        }
+
+        public void setIndex(int index) {
+            this.index = index;
+        }
+    }
+
+    /**
+     * 网盘日志
+     */
+    public static enum LOG_PAN {
+        UPLOAD_FILE("上传文件",1),
+        DOWNLOAD_FILE("下载文件",2),
+        REMOVE_FILE("删除文件",3);
+
+        private String name;
+        private int index;
+        public static int type = 2;
+
+        private LOG_PAN(String name, int index) {
+            this.name = name;
+            this.index = index;
+        }
+
+        public String getName() {
+            for (LOG_PAN logPan : LOG_PAN.values()) {
+                if (logPan.getIndex() == index) {
+                    return logPan.name;
                 }
             }
             return null;

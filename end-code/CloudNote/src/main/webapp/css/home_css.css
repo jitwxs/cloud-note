@@ -96,3 +96,37 @@
 #tag{
     width:470%;
 }
+
+/* 分享页面 */
+
+#container_share{
+  width: 230px;
+  margin: 0 auto;
+}
+.share{
+ cursor: pointer;
+ border-bottom: 1px dotted darkslategrey;
+ padding-bottom: 5px
+}
+.share h5{
+ font-weight: 800;
+ padding-left: 5px;
+ padding-right: 5px
+}
+.share .content{
+ font-size: 10px;
+ font-family: Serif;
+ padding-left: 5px;
+ padding-right: 5px
+}
+.share span{
+ display: inline;
+ margin-left: 60px
+}
+.share .username{
+ display: inline;
+ font-size: 10px;
+ margin-left: 5px;
+ font-family: Serif;
+ margin-bottom: 5px
+}

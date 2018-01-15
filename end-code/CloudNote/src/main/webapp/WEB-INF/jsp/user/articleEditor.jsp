@@ -243,8 +243,7 @@
                 if(previewFlag) {
                     sendPost('${ctx}/user/previewAffix',{'affixId':id},true,function (res) {
                         if(res.status) {
-                            //TODO 上线记得修改为服务器地址
-                            var url = "http://localhost:8080/" + res.info;
+                            var url = res.info;
                             window.open(url);
                         } else {
                             toastr.error(res.info);
@@ -257,14 +256,14 @@
                     document.getElementById("loading").style.display = "block";
                     sendPost('${ctx}/user/convertFile',{'affixId':id},true,function (res) {
                         if(!res.status) {
+                            document.getElementById("loading").style.display = "none";
                             toastr.error(res.info);
                         } else {
                             // 转换成功后。预览文件
                             document.getElementById("loading").style.display = "none";
                             sendPost('${ctx}/user/previewAffix',{'affixId':id},true,function (res) {
                                 if(res.status) {
-                                    //TODO 上线记得修改为服务器地址
-                                    var url = "http://localhost:8080/" + res.info;
+                                    var url = res.info;
                                     window.open(url);
                                 } else {
                                     toastr.error(res.info);
