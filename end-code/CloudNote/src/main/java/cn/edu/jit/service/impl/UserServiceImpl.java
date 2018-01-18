@@ -56,14 +56,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int removeByTel(String tel) {
-        UserExample userExample = new UserExample();
-        UserExample.Criteria criteria = userExample.createCriteria();
-        criteria.andTelEqualTo(tel);
-        return userMapper.deleteByExample(userExample);
-    }
-
-    @Override
     public int countBySex(String sex) {
         UserExample userExample = new UserExample();
         UserExample.Criteria criteria = userExample.createCriteria();

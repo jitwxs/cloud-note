@@ -87,52 +87,6 @@ public class GlobalFunction {
     }
 
     /**
-     * 删除文件夹及其所有文件
-     * @param folderPath 文件夹路径
-     */
-    public static boolean delFolder(String folderPath) throws Exception{
-        //删除完里面所有内容
-        boolean flag = delAllFile(folderPath);
-        if(!flag) {
-            return false;
-        }
-        File myFilePath = new File(folderPath);
-        myFilePath.delete(); //删除空文件夹
-        return true;
-    }
-
-    private static boolean delAllFile(String path) throws Exception{
-        boolean flag = false;
-        File file = new File(path);
-        if (!file.exists()) {
-            return false;
-        }
-        if (!file.isDirectory()) {
-            return false;
-        }
-        String[] tempList = file.list();
-        File temp = null;
-        for (int i = 0; i < tempList.length; i++) {
-            if (path.endsWith(File.separator)) {
-                temp = new File(path + tempList[i]);
-            } else {
-                temp = new File(path + File.separator + tempList[i]);
-            }
-            if (temp.isFile()) {
-                temp.delete();
-            }
-            if (temp.isDirectory()) {
-                //先删除文件夹里面的文件
-                delAllFile(path + "/" + tempList[i]);
-                //再删除空文件夹
-                delFolder(path + "/" + tempList[i]);
-                flag = true;
-            }
-        }
-        return flag;
-    }
-
-    /**
      * 删除单个文件
      */
     public static boolean deleteSignalFile(String filePath) {
@@ -229,13 +183,6 @@ public class GlobalFunction {
         request.setTemplateCode(GlobalConstant.MOULD_ID);
         //可选:模板中的变量替换JSON串,如模板内容为"亲爱的${name},您的验证码为${code}"时,此处的值为
         request.setTemplateParam("{\"code\":\"" + code + "\"}");
-
-        //选填-上行短信扩展码(无特殊需求用户请忽略此字段)
-        //request.setSmsUpExtendCode("90997");
-
-        //可选:outId为提供给业务方扩展字段,最终在短信回执消息中将此值带回给调用者
-        request.setOutId("yourOutId");
-
         //hint 此处可能会抛出异常，注意catch
         SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
 

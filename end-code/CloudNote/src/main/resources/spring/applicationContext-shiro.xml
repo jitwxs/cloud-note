@@ -38,12 +38,14 @@
                 /registerCheck = anon
                 /register = anon
                 /foundPassword = anon
-                # 发送验证码
-                /smsVerification = anon
-                # 验证验证码
+                # 验证码
                 /codeCheck = anon
+                /smsVerification = anon
                 # 显示用户城市分布
                 /showUserCity = anon
+                # 笔记Star
+                /getStar = anon
+                /star = anon
 
                 # 注销请求
                 /logout = logout

@@ -119,7 +119,7 @@ public class GlobalConstant {
     /**
      * 权限枚举
      */
-    public static enum ROLE {
+    public enum ROLE {
         /**
          * 管理员
          */
@@ -162,7 +162,7 @@ public class GlobalConstant {
     /**
      * 文章状态枚举
      */
-    public static enum ARTICLE_STATUS {
+    public enum ARTICLE_STATUS {
         /**
          * 非分享
          */
@@ -205,9 +205,13 @@ public class GlobalConstant {
     /**
      * 系统日志
      */
-    public static enum LOG_SYSTEM {
-        SHARE_CONTROL("分享审核",1),
-        BLOCK_USER("封禁用户",2);
+    public enum LOG_SYSTEM {
+        SHARE_CANCEL("取消分享",1),
+        SHARE_DEL("删除分享",2),
+        USER_DEL("删除用户",3),
+        USER_BLOCK("封禁用户",4),
+        CANCEL_BLOCK("取消封禁",5);
+
 
         private String name;
         private int index;
@@ -243,7 +247,7 @@ public class GlobalConstant {
     /**
      * 用户日志
      */
-    public static enum LOG_USER {
+    public enum LOG_USER {
         USER_LOGIN("用户登陆",1),
         USER_REG("用户注册",2),
         FIND_PASSWORD("找回密码",3),
@@ -284,17 +288,17 @@ public class GlobalConstant {
     /**
      * 笔记日志
      */
-    public static enum LOG_NOTE {
+    public enum LOG_NOTE {
         CREATE_NOTE("创建笔记",1),
-        FOREVER_REMOVE_NOTE("永久删除笔记",2),
+        FOREVER_REMOVE_NOTE("永久删除",2),
         SHARE_NOTE("分享笔记",3),
-        CANCEL_SHARE_NOTE("取消分享笔记",4),
+        CANCEL_SHARE_NOTE("取消分享",4),
         UPLOAD_NOTE("上传笔记",5),
         UPLOAD_AFFIX("上传附件",6);
 
         private String name;
         private int index;
-        public static int type = 2;
+        public static int type = 3;
 
         private LOG_NOTE(String name, int index) {
             this.name = name;
@@ -326,14 +330,14 @@ public class GlobalConstant {
     /**
      * 网盘日志
      */
-    public static enum LOG_PAN {
-        UPLOAD_FILE("上传文件",1),
-        DOWNLOAD_FILE("下载文件",2),
-        REMOVE_FILE("删除文件",3);
+    public enum LOG_PAN {
+        FILE_UPLOAD("上传文件",1),
+        FILE_DOWNLOAD("下载文件",2),
+        FILE_DEL("删除文件",3);
 
         private String name;
         private int index;
-        public static int type = 2;
+        public static int type = 4;
 
         private LOG_PAN(String name, int index) {
             this.name = name;

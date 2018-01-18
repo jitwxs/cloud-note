@@ -9,6 +9,16 @@ import cn.edu.jit.entry.User;
 public class UserDto extends User {
     private String areaName;
 
+    private String roleName;
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
     public String getAreaName() {
         return areaName;
     }

@@ -1,5 +1,7 @@
 package cn.edu.jit.service.impl;
 
+import cn.edu.jit.entry.ArticleTagExample;
+import cn.edu.jit.entry.Data;
 import cn.edu.jit.entry.Log;
 import cn.edu.jit.entry.LogExample;
 import cn.edu.jit.global.GlobalFunction;
@@ -45,8 +47,27 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public List<Log> listAll() {
+    public Log getById(String id) {
+        return logMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public List<Log> listByType(Integer type, String orderBy) {
         LogExample logExample = new LogExample();
+        logExample.setOrderByClause(orderBy);
+        LogExample.Criteria criteria = logExample.createCriteria();
+        criteria.andTypeEqualTo(type);
+
         return logMapper.selectByExample(logExample);
+    }
+
+    @Override
+    public int removeById(String id) {
+        return logMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public List<Data> countUserByTitle(String title) {
+        return logMapper.countUserByTitle(title);
     }
 }

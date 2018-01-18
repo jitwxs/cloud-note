@@ -14,9 +14,13 @@ public interface ArticleTagService {
 
     int remove(ArticleTagKey articleTagKey);
 
+    /**
+     * 移除文章所有标签
+     */
     int removeAllByArticleId(String articleId);
 
+    /**
+     * 获取文章所有标签
+     */
     List<ArticleTagKey> listByArticleId(String articleId);
-
-    int countByArticleId(String articleId);
 }

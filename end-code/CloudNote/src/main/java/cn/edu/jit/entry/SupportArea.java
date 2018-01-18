@@ -1,6 +1,12 @@
 package cn.edu.jit.entry;
 
-public class SupportArea {
+import java.io.Serializable;
+
+/**
+ * 首页支持地区实体类
+ * @author jitwxs
+ */
+public class SupportArea implements Serializable {
     private String name;
 
     public String getName() {

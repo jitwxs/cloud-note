@@ -6,6 +6,7 @@
     <result column="userId" property="userid" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="size" property="size" jdbcType="VARCHAR" />
+    <result column="dir_id" property="dirId" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="modifed_time" property="modifedTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -68,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, userId, name, size, create_time, modifed_time
+    id, userId, name, size, dir_id, create_time, modifed_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.edu.jit.entry.UserPanExample" >
     select
@@ -102,11 +103,11 @@
   </delete>
   <insert id="insert" parameterType="cn.edu.jit.entry.UserPan" >
     insert into user_pan (id, userId, name, 
-      size, create_time, modifed_time
-      )
+      size, dir_id, create_time, 
+      modifed_time)
     values (#{id,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
-      #{size,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{modifedTime,jdbcType=TIMESTAMP}
-      )
+      #{size,jdbcType=VARCHAR}, #{dirId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifedTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.jit.entry.UserPan" >
     insert into user_pan
@@ -122,6 +123,9 @@
       </if>
       <if test="size != null" >
         size,
+      </if>
+      <if test="dirId != null" >
+        dir_id,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -142,6 +146,9 @@
       </if>
       <if test="size != null" >
         #{size,jdbcType=VARCHAR},
+      </if>
+      <if test="dirId != null" >
+        #{dirId,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -172,6 +179,9 @@
       <if test="record.size != null" >
         size = #{record.size,jdbcType=VARCHAR},
       </if>
+      <if test="record.dirId != null" >
+        dir_id = #{record.dirId,jdbcType=VARCHAR},
+      </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
@@ -189,6 +199,7 @@
       userId = #{record.userid,jdbcType=VARCHAR},
       name = #{record.name,jdbcType=VARCHAR},
       size = #{record.size,jdbcType=VARCHAR},
+      dir_id = #{record.dirId,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       modifed_time = #{record.modifedTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -207,6 +218,9 @@
       <if test="size != null" >
         size = #{size,jdbcType=VARCHAR},
       </if>
+      <if test="dirId != null" >
+        dir_id = #{dirId,jdbcType=VARCHAR},
+      </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -221,6 +235,7 @@
     set userId = #{userid,jdbcType=VARCHAR},
       name = #{name,jdbcType=VARCHAR},
       size = #{size,jdbcType=VARCHAR},
+      dir_id = #{dirId,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       modifed_time = #{modifedTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=VARCHAR}

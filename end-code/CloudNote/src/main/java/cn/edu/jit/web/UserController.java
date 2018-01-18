@@ -70,6 +70,12 @@ public class  UserController {
     @Resource(name = "loginServiceImpl")
     private LoginService loginService;
 
+    @Resource(name = "userPanServiceImpl")
+    private UserPanService userPanService;
+
+    @Resource(name = "panDirServiceImpl")
+    private PanDirService panDirService;
+
     /*---------   普通方法区域（START）   ----------*/
 
     /**
@@ -106,7 +112,7 @@ public class  UserController {
     }
 
     /**
-     * 生成目录树
+     * 生成笔记目录树
      * @param directoryTree 树根
      */
     private void initDirectoryTree(DirectoryTree directoryTree) {
@@ -128,6 +134,52 @@ public class  UserController {
             initDirectoryTree(dt);
             directoryTree.addData(dt);
         }
+    }
+
+    /**
+     * 生成云盘目录树
+     * @param directoryTree 树根
+     */
+    private void initPanDirectoryTree(DirectoryTree directoryTree) {
+        String uid = getSelfId();
+        String dirId = directoryTree.getId();
+
+        List<PanDir> childDirs = panDirService.listByParentId(uid, dirId);
+        List<UserPan> userPans = userPanService.listUserPanByDir(uid, dirId);
+        if(childDirs.size() == 0 && userPans.size() == 0) {
+            return;
+        }
+        for (UserPan userPan: userPans) {
+            DirectoryTree dt = new DirectoryTree(userPan.getId(),userPan.getName());
+            dt.setData(null);
+            directoryTree.addData(dt);
+        }
+        for (PanDir childDir: childDirs) {
+            DirectoryTree dt = new DirectoryTree(childDir.getId(), childDir.getName());
+            initPanDirectoryTree(dt);
+            directoryTree.addData(dt);
+        }
+    }
+
+    /**
+     * 递归删除云盘目录
+     */
+    private boolean deletePanFile(String dirId){
+        List<UserPan> userPans = userPanService.listUserPanByDir(getSelfId(),dirId);
+        List<PanDir> panDirs = panDirService.listByParentId(getSelfId(),dirId);
+        for (UserPan userPan: userPans) {
+            String path = GlobalConstant.USER_PAN_PATH + "/" +userPan.getId();
+            if (GlobalFunction.deleteSignalFile(path)) {
+                userPanService.removeById(userPan.getId());
+            } else {
+                return false;
+            }
+        }
+        for (PanDir panDir: panDirs) {
+            deletePanFile(panDir.getId());
+        }
+        panDirService.remove(dirId);
+        return true;
     }
 
     /**
@@ -189,14 +241,27 @@ public class  UserController {
     /**
      * 创建笔记分享页面
      * @param noteId 笔记id
-     * @param title 笔记标题
      * @param outputPath 输出路径（空代表新建，非空代表更新）
      * @return 输出路径
      */
-    private String createSharePage(String noteId, String title, String outputPath) throws IOException {
+    private String createSharePage(String noteId, String outputPath) throws IOException {
         int len;
         char[] buf = new char[1024];
         String temp;
+
+        // 获取笔记标题和作者
+        Article article = articleService.getById(noteId);
+        String title = article.getTitle();
+        User user = userService.getById(article.getUserId());
+        String author = user.getName();
+        String star = String.valueOf(article.getStar());
+        String createDate = GlobalFunction.getDate2Day(article.getCreateDate());
+        String iconUrl = user.getIcon();
+        String iconRealUrl = "";
+        if(!StringUtils.isBlank(iconUrl)){
+            iconRealUrl = GlobalFunction.getRealUrl(iconUrl);
+        }
+
         String inputPath = GlobalConstant.USER_ARTICLE_PATH + "/" + noteId + "/" + title + GlobalConstant.NOTE_SUFFIX;
 
         // 如果输出路径为空，则新建笔记分享页面，否则更新到输出路径中
@@ -210,14 +275,34 @@ public class  UserController {
 
         while((temp = br.readLine()) != null) {
             osw.write(temp);
-            // 加入标题和正文
-            if("\t<title>".equals(temp)) {
-                osw.write(title);
-            } else if ("<body>".equals(temp)) {
-                while((len = isr.read(buf)) > 0) {
-                    osw.write(buf, 0, len);
-                }
+            switch (temp) {
+                case "<!-- title -->":
+                case "<title>":
+                        osw.write(title);
+                        break;
+                case "<!-- userIcon -->":
+                        if(!StringUtils.isBlank(iconRealUrl)) {
+                            osw.write("<img class='user_icon' style='width: 50px;height: 50px;border-radius:50%' src="+iconRealUrl+">");
+                        }
+                        break;
+                case "<!-- userName -->":
+                        osw.write(author);
+                        break;
+                case "<!-- create_date -->":
+                        osw.write(createDate);
+                        break;
+                case "<!-- noteId -->":
+                        osw.write(noteId);
+                        break;
+                case "<!-- content -->":
+                        while((len = isr.read(buf)) > 0) {
+                            osw.write(buf, 0, len);
+                        }
+                        break;
+                default:
+                        break;
             }
+            osw.write("\n");
             osw.flush();
         }
         br.close();
@@ -608,26 +693,33 @@ public class  UserController {
             if (StringUtils.isBlank(noteId) || StringUtils.isBlank(noteName)) {
                 status = false;
             } else {
-                //1. 更新笔记文件
-                String content = request.getParameter("data");
-                String targetFilePath = GlobalConstant.USER_ARTICLE_PATH + "/" + noteId + "/" + noteName + GlobalConstant.NOTE_SUFFIX;
-
-                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(targetFilePath), "UTF-8");
-                writer.write(content);
-                writer.flush();
-                writer.close();
-
-                // 2.更新笔记数据库
                 Article article = articleService.getById(noteId);
                 if(article == null) {
                     status = false;
                 } else {
+                    // 1.更新笔记数据库
+                    String content = request.getParameter("data");
+                    if(!article.getTitle().equals(noteName)) {
+                        String dirPath = GlobalConstant.USER_ARTICLE_PATH + "/" + noteId;
+                        String oldName = article.getTitle() + GlobalConstant.NOTE_SUFFIX;
+                        String newName = noteName + GlobalConstant.NOTE_SUFFIX;
+                        GlobalFunction.renameFile(dirPath, oldName, newName);
+                        article.setTitle(noteName);
+                    }
                     articleService.update(article);
+
+                    //2. 更新笔记文件
+                    String targetFilePath = GlobalConstant.USER_ARTICLE_PATH + "/" + noteId + "/" + noteName + GlobalConstant.NOTE_SUFFIX;
+                    OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(targetFilePath), "UTF-8");
+                    writer.write(content);
+                    writer.flush();
+                    writer.close();
+
                     // 3.更新分享页面
                     if(article.getIsOpen() == GlobalConstant.ARTICLE_STATUS.SHARE.getIndex()) {
                         String url = article.getShareUrl();
                         if(url != null) {
-                            createSharePage(noteId, noteName, url);
+                            createSharePage(noteId, url);
                         }
                     }
                 }
@@ -763,6 +855,36 @@ public class  UserController {
     }
 
     /**
+     * 清空回收站
+     */
+    @RequestMapping(value = "clearRubbish", method = {RequestMethod.GET})
+    public void clearRubbish( HttpServletResponse response) {
+        try {
+            String uid = getSelfId();
+            Message message = new Message();
+            if(!StringUtils.isBlank(uid)) {
+                response.setContentType("text/html;charset=utf-8");
+
+                List<ArticleRecycle> list = articleRecycleService.listSelfRecycle(uid);
+                for (ArticleRecycle articleRecycle : list) {
+                    String articleId = articleRecycle.getId();
+                    String dirPath = GlobalConstant.USER_ARTICLE_PATH + "/" + articleId;
+                    FileUtils.deleteQuietly(new File(dirPath));
+                    articleRecycleService.removeById(articleId);
+                }
+
+                message.setStatus(true);
+            } else {
+                message.setStatus(false);
+            }
+            String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * 恢复笔记
      */
     @RequestMapping(value = "recoverNote", method = {RequestMethod.POST})
@@ -818,7 +940,7 @@ public class  UserController {
                     String realUrl = GlobalFunction.getRealUrl(article.getShareUrl());
                     message.setInfo(realUrl);
                 } else if(article.getIsOpen() == GlobalConstant.ARTICLE_STATUS.NOT_SHARE.getIndex()) {
-                    String url = createSharePage(noteId, article.getTitle(), null);
+                    String url = createSharePage(noteId, null);
                     if(!StringUtils.isBlank(url)) {
                         // 更新数据库
                         article.setIsOpen(GlobalConstant.ARTICLE_STATUS.SHARE.getIndex());
@@ -1320,4 +1442,314 @@ public class  UserController {
     }
 
     /*---------   目录管理区域（END）   ----------*/
+
+    /*---------   网盘管理区域（Start）   ----------*/
+    /**
+     * 初始化云盘目录树
+     */
+    @RequestMapping(value = "initUserPanDir", method = {RequestMethod.GET})
+    public void initUserPanDir(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        String id = request.getParameter("dirId");
+        try {
+            // 顶层目录 id:root name:我的网盘
+            DirectoryTree directoryTree = new DirectoryTree(id,"我的网盘");
+            initPanDirectoryTree(directoryTree);
+            String data = JSON.toJSONString(directoryTree, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 上传云盘文件
+     */
+    @RequestMapping(value = "uploadPan", method = {RequestMethod.POST})
+    public void uploadPan(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        try {
+            DiskFileItemFactory factory = new DiskFileItemFactory(1024 * 1024, new File(GlobalConstant.TEMP_PATH));
+            ServletFileUpload upload = new ServletFileUpload(factory);
+            upload.setHeaderEncoding("UTF-8");
+            Message message = new Message();
+            boolean status = true;
+
+            if (ServletFileUpload.isMultipartContent(request)) {
+                List<FileItem> fileItems = upload.parseRequest(request);
+                if (fileItems.size() != 0) {
+                    String dirId = null;
+                    String fileName = null;
+                    for (FileItem item : fileItems) {
+                        if (item.isFormField()) {
+                            dirId = item.getString("UTF-8");
+                        } else {
+                            fileName = item.getName();
+                            if (StringUtils.isBlank(fileName)) {
+                                continue;
+                            }
+                            //处理重名
+                            List<UserPan> list = userPanService.getByName(dirId, fileName);
+                            String name = fileName .substring(0,fileName .lastIndexOf("."));
+                            String prefix=fileName.substring(fileName.lastIndexOf("."));
+                            if (!list.isEmpty()) {
+                                for (int i = 1; ; i++) {
+                                    String tempName = name + "(" + Integer.toString(i) + ")" + prefix;
+                                    List<UserPan> list1 = userPanService.getByName(dirId, tempName);
+                                    if (list1.isEmpty()) {
+                                        fileName = name + "(" + Integer.toString(i) + ")" + prefix;
+                                        break;
+                                    }
+                                }
+                            }
+                            String userPanId = GlobalFunction.getUUID();
+                            String filePath = GlobalConstant.USER_PAN_PATH + "/" + userPanId;
+
+                            // 存入服务器
+                            GlobalFunction.uploadFile(item, filePath);
+
+                            // 加入数据库
+                            UserPan userPan = new UserPan();
+                            userPan.setId(userPanId);
+                            userPan.setUserid(getSelfId());
+                            userPan.setName(fileName);
+                            userPan.setDirId(dirId);
+                            userPan.setSize(Long.toString(FileUtils.sizeOf(new File(filePath))));
+                            userPan.setCreateTime(new Date());
+                            if (userPanService.save(userPan) != 1) {
+                                status = false;
+                            }
+
+                            message.setInfo(userPan.getId());
+                            message.setStatus(status);
+                            message.setName(userPan.getName());
+                            // 保存日志
+                            logService.saveLog(request, GlobalConstant.LOG_PAN.type, GlobalConstant.LOG_PAN.FILE_UPLOAD.getName(), getSelfId());
+                        }
+                    }
+                    String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+                    response.getWriter().write(data);
+                }
+            }
+        } catch (Exception e) {
+            // 保存日志
+            logService.saveLog(request, e, GlobalConstant.LOG_PAN.type, GlobalConstant.LOG_PAN.FILE_UPLOAD.getName(), getSelfId());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 下载云盘文件
+     */
+    @RequestMapping(value = "downloadUserPan", method = {RequestMethod.GET})
+    public void downloadUserPan(HttpServletRequest request, HttpServletResponse response) {
+        // 设置编码（如果文件名乱码，尝试打开解决问题）
+        // fileName = new String(fileName.getBytes("ISO8859-1"),"UTF-8");
+        String fileName = request.getParameter("panName");
+        String userPanId = request.getParameter("panId");
+        try {
+            // 得到用于返回给客户端的编码后的文件名
+            String agent = request.getHeader("User-Agent");
+            String fileNameEncode = solveFileNameEncode(agent, fileName);
+            // 客户端判断下载文件类型
+            response.setContentType(request.getSession().getServletContext().getMimeType(fileName));
+            // 关闭客户端的默认解析
+            response.setHeader("Content-Disposition", "attachment;filename=" + fileNameEncode);
+            // 获得文件真实下载路径
+            String path = GlobalConstant.USER_PAN_PATH + "/" + userPanId;
+            // 下载文件
+            GlobalFunction.downloadFile(path, response.getOutputStream());
+
+            // 保存日志
+            logService.saveLog(request, GlobalConstant.LOG_PAN.type, GlobalConstant.LOG_PAN.FILE_DOWNLOAD.getName(), getSelfId());
+        } catch (IOException e) {
+            // 保存日志
+            logService.saveLog(request, e, GlobalConstant.LOG_PAN.type, GlobalConstant.LOG_PAN.FILE_DOWNLOAD.getName(), getSelfId());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 模糊匹配查找云盘文件名
+     */
+    @RequestMapping(value = "panSearch", method = {RequestMethod.POST})
+    public void panSearch(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        String searchKey = request.getParameter("searchKey");
+        try {
+            Message message = new Message();
+            if(StringUtils.isBlank(searchKey)) {
+                message.setStatus(false);
+            } else {
+                // 查询文件
+                List<UserPan> userPans = userPanService.listUserPanByTitle(getSelfId(),searchKey);
+                // 查询文件夹
+                ArrayList<DirectoryTree> list = new  ArrayList<>();
+                List<PanDir> panDirs = panDirService.listPanDirByTitle(getSelfId(),searchKey);
+                for (PanDir panDir :panDirs) {
+                    DirectoryTree directoryTree = new DirectoryTree(panDir.getId(),panDir.getName());
+                    list.add(directoryTree);
+                }
+                //TODO 加上文件内容搜索
+
+                if(userPans.size() == 0 && panDirs.size() == 0) {
+                    message.setStatus(false);
+                } else {
+                    message.setStatus(true);
+                    message.setDirectoryTrees(list);
+                    message.setUserFiles(userPans);
+                }
+            }
+            String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 新建云盘目录
+     */
+    @RequestMapping(value = "createPanDir", method = {RequestMethod.POST})
+    public void createPanDir(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        Boolean status = true;
+        String info = null;
+        try {
+            String parentId = request.getParameter("parentId");
+            String dirName = request.getParameter("dirName");
+            Message msg = new Message();
+            List<PanDir> list = panDirService.getByName(getSelfId(), parentId, dirName);
+            if (list.size() != 0) {
+                status = false;
+                info = "文件夹重名!请更换文件夹名";
+            } else{
+                PanDir directory = new PanDir();
+                String dirId = GlobalFunction.getUUID();
+                directory.setId(dirId);
+                directory.setName(dirName);
+                directory.setUid(getSelfId());
+                directory.setParentId(parentId);
+                directory.setCreateDate(new Date());
+                int i = panDirService.save(directory);
+                if(i != 1) {
+                    status = false;
+                    info = "保存数据库失败!";
+                }
+                msg.setDirId(dirId);
+                msg.setInfo(dirId);
+            }
+            msg.setInfo(info);
+            msg.setStatus(status);
+
+            String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 重命名云盘文件
+     */
+    @RequestMapping(value = "renamePan", method = {RequestMethod.POST})
+    public void renamePan(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        Boolean status = true;
+        String info = null;
+        try {
+            String panId = request.getParameter("panId");
+            String panName = request.getParameter("panName");
+            UserPan userPan = userPanService.getById(panId);
+            List<UserPan> list = userPanService.getByName(userPan.getDirId(), panName);
+            if (list.size() != 0) {
+                status = false;
+                info = "文件重名!请更换文件名";
+            } else{
+                userPan.setName(panName);
+                if (userPanService.updateById(userPan) != 1) {
+                    status = false;
+                    info = "数据库重命名失败";
+                }
+            }
+            Message msg = new Message();
+            msg.setStatus(status);
+            msg.setName(panName);
+            msg.setInfo(info);
+            String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 重命名云盘目录
+     */
+    @RequestMapping(value = "renamePanDir", method = {RequestMethod.POST})
+    public void renamePanDir(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        Boolean status = true;
+        String info = null;
+        try {
+            String dirId = request.getParameter("dirId");
+            String dirName = request.getParameter("dirName");
+            PanDir directory = panDirService.getById(dirId);
+            List<PanDir> list = panDirService.getByName(getSelfId(), directory.getParentId(), dirName);
+            if (list.size() != 0) {
+                status = false;
+                info = "文件夹重名!请更换文件夹名";
+            } else{
+                directory.setName(dirName);
+                int i = panDirService.update(directory);
+                if(i != 1) {
+                    status = false;
+                    info = "更新数据库失败";
+                }
+            }
+            Message msg = new Message();
+            msg.setStatus(status);
+            msg.setInfo(info);
+            String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 删除云盘文件或目录
+     */
+    @RequestMapping(value = "removePan", method = {RequestMethod.POST})
+    public void removePan(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        Boolean status = true;
+        String deleteId = request.getParameter("deleteId");
+        //判断删除文件还是目录
+        if (panDirService.getById(deleteId) != null) {
+            //删除目录
+            if(!deletePanFile(deleteId)) {
+                status = false;
+            }
+        } else {
+            //删除文件
+            if (!GlobalFunction.deleteSignalFile(GlobalConstant.USER_PAN_PATH + "/" + deleteId)) {
+                status = false;
+            }
+            userPanService.removeById(deleteId);
+        }
+        try {
+            // 保存日志
+            logService.saveLog(request, GlobalConstant.LOG_PAN.type, GlobalConstant.LOG_PAN.FILE_DEL.getName(), getSelfId());
+            Message msg = new Message();
+            msg.setStatus(status);
+            String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (IOException e) {
+            // 保存日志
+            logService.saveLog(request, e, GlobalConstant.LOG_PAN.type, GlobalConstant.LOG_PAN.FILE_DEL.getName(), getSelfId());
+            e.printStackTrace();
+        }
+    }
+    /*---------   网盘管理区域（END）   ----------*/
 }

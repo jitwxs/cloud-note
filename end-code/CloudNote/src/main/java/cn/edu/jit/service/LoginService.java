@@ -15,6 +15,6 @@ public interface LoginService {
 
     int update(Login login);
 
-    public int removeByTel(String tel);
+    int removeByTel(String tel);
 
 }

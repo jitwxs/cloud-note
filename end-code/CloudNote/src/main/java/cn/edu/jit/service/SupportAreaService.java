@@ -7,5 +7,6 @@ import cn.edu.jit.entry.SupportArea;
  * @date 2018/1/12 14:49
  */
 public interface SupportAreaService {
+
     SupportArea getByName(String name);
 }

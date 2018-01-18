@@ -15,6 +15,7 @@ import com.qq.connect.api.qzone.UserInfo;
 import com.qq.connect.javabeans.AccessToken;
 import com.qq.connect.javabeans.qzone.UserInfoBean;
 import com.qq.connect.oauth.Oauth;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -32,7 +33,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.swing.*;
 import java.io.*;
 import java.util.*;
 
@@ -56,8 +56,14 @@ public class SystemController {
     @Resource(name = "areaServiceImpl")
     private AreaService areaService;
 
+    @Resource(name = "articleServiceImpl")
+    private ArticleService articleService;
+
     @Resource(name = "supportAreaServiceImpl")
     private SupportAreaService supportAreaService;
+
+    @Resource(name = "userBlacklistServiceImpl")
+    private UserBlacklistService userBlacklistService;
 
     private String getSelfId() {
         User user = userService.getByTel(GlobalFunction.getSelfTel());
@@ -171,6 +177,7 @@ public class SystemController {
     public void loginCheck(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
         Boolean status = true;
+        String info = "";
         String tel = request.getParameter("tel");
         String password = request.getParameter("password");
 
@@ -180,12 +187,32 @@ public class SystemController {
             // 账户不存在或密码错误
             if (login == null) {
                 status = false;
+                info = "账户不存在";
             } else if(!Sha1Utils.validatePassword(password, login.getPassword())) {
                 status = false;
+                info = "密码错误";
+            }
+
+            // 判断账户是否被封禁
+            if(status) {
+                User user = userService.getByTel(tel);
+                List<UserBlacklist> list = userBlacklistService.listValid(user.getId());
+                if(list.size() > 0) {
+                    Date maxDate = new Date();
+                    for(UserBlacklist userBlacklist : list) {
+                        Date tempDate = userBlacklist.getEndDate();
+                        if(tempDate.compareTo(maxDate) >= 0) {
+                            maxDate = tempDate;
+                        }
+                    }
+                    status = false;
+                    info = "账户被封禁，解封时间为：" + GlobalFunction.getDate2Second(maxDate);
+                }
             }
 
             Message message = new Message();
             message.setStatus(status);
+            message.setInfo(info);
             String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
         }catch (IOException e) {
@@ -218,6 +245,11 @@ public class SystemController {
         } else {
             return "/login";
         }
+    }
+
+    @RequestMapping(value = "logout")
+    public String logout(){
+        return "redirect:/logout";
     }
 
     @RequestMapping(value = "register", method = {RequestMethod.GET})
@@ -332,7 +364,7 @@ public class SystemController {
         // 保存日志
         logService.saveLog(request, GlobalConstant.LOG_USER.type, GlobalConstant.LOG_USER.USER_REG.getName(), getSelfId());
 
-        return "redirect:/login";
+        return "redirect:login";
     }
 
     /**
@@ -488,8 +520,8 @@ public class SystemController {
             List<Data> datas = new ArrayList<>();
             for (Map.Entry<String, Integer> entry : map.entrySet()) {
                 Data data = new Data();
-                data.setName(entry.getKey());
-                data.setValue(String.valueOf(entry.getValue()));
+                data.setK(entry.getKey());
+                data.setV(String.valueOf(entry.getValue()));
                 datas.add(data);
             }
 
@@ -526,13 +558,19 @@ public class SystemController {
             String id = getSelfId();
             UserDto userDto = new UserDto();
             User user = userService.getById(id);
-            Area area = null;
             BeanUtils.copyProperties(user, userDto);
 
+            // 设置所在地区
             Integer areaId = user.getArea();
             if(areaId != null) {
-                area = areaService.getById(user.getArea());
+                Area area = areaService.getById(user.getArea());
                 userDto.setAreaName(area.getName());
+            }
+            // 设置头像真实路径
+            String iconUrl = user.getIcon();
+            if(!StringUtils.isBlank(iconUrl)) {
+                String iconRealUrl = GlobalFunction.getRealUrl(iconUrl);
+                userDto.setIcon(iconRealUrl);
             }
 
             List<Area> areas = areaService.listByPid(0);
@@ -584,7 +622,7 @@ public class SystemController {
                             GlobalFunction.uploadFile(item, targetFilePath);
 
                             // 设置数据库中头像url
-                            user.setIcon(fileName);
+                            user.setIcon(targetFilePath);
                         }
                     }
                 }
@@ -606,6 +644,60 @@ public class SystemController {
             return "redirect:/user/index";
         } else {
             return "/login";
+        }
+    }
+
+    @RequestMapping(value = "getStar", method = {RequestMethod.GET})
+    public void getStar(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        Message message = new Message();
+        Boolean status = false;
+        String noteId = request.getParameter("noteId").trim();
+        try {
+            if(!StringUtils.isBlank(noteId)) {
+                Article article = articleService.getById(noteId);
+                if(article != null) {
+                    String star = String.valueOf(article.getStar());
+                    status = true;
+                    message.setInfo(star);
+                }
+            }
+            message.setStatus(status);
+            String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 更新star数目
+     */
+    @RequestMapping(value = "star", method = {RequestMethod.POST})
+    public void star(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        Boolean status = false;
+        Message message = new Message();
+        String star = request.getParameter("like_num");
+        String noteId = request.getParameter("noteId").trim();
+        try {
+            if(!StringUtils.isBlank(noteId)) {
+                if(!StringUtils.isBlank(star)) {
+                    Integer starNum = Integer.parseInt(star);
+
+                    Article article = articleService.getById(noteId);
+
+                    int tempStar = article.getStar() + starNum;
+                    article.setStar(tempStar < 0 ? 0 : tempStar);
+                    articleService.update(article);
+                    status = true;
+                }
+            }
+            message.setStatus(status);
+            String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

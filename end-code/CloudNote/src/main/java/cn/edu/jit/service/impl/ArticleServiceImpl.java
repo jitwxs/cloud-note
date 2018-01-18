@@ -46,12 +46,6 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> listAllArticle() {
-        ArticleExample articleExample = new ArticleExample();
-        return articleMapper.selectByExample(articleExample);
-    }
-
-    @Override
     public List<Article> listArticleByTitle(String uid, String title) {
         ArticleExample articleExample = new ArticleExample();
 
@@ -60,16 +54,6 @@ public class ArticleServiceImpl implements ArticleService {
         // 加上通配符
         title = "%" + title + "%";
         criteria.andTitleLike(title);
-
-        return articleMapper.selectByExample(articleExample);
-    }
-
-    @Override
-    public List<Article> listArticleByUid(String uid) {
-        ArticleExample articleExample = new ArticleExample();
-
-        ArticleExample.Criteria criteria = articleExample.createCriteria();
-        criteria.andUserIdEqualTo(uid);
 
         return articleMapper.selectByExample(articleExample);
     }
@@ -110,16 +94,6 @@ public class ArticleServiceImpl implements ArticleService {
         criteria.andIsOpenEqualTo(GlobalConstant.ARTICLE_STATUS.SHARE.getIndex());
 
         return articleMapper.selectByExample(articleExample);
-    }
-
-    @Override
-    public int countArticle(String uid) {
-        ArticleExample articleExample = new ArticleExample();
-
-        ArticleExample.Criteria criteria = articleExample.createCriteria();
-        criteria.andUserIdEqualTo(uid);
-
-        return articleMapper.countByExample(articleExample);
     }
 
     @Override

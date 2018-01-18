@@ -17,7 +17,5 @@ public interface ArticleAffixService {
 
     int removeById(String id);
 
-    int removeAllByArticleId(String articleId);
-
     int save(ArticleAffix articleAffix);
 }

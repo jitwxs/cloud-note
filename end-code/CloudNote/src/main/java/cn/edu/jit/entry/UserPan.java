@@ -3,6 +3,10 @@ package cn.edu.jit.entry;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * 网盘实体类
+ * @author jitwxs
+ */
 public class UserPan implements Serializable {
     private String id;
 
@@ -11,6 +15,8 @@ public class UserPan implements Serializable {
     private String name;
 
     private String size;
+
+    private String dirId;
 
     private Date createTime;
 
@@ -46,6 +52,14 @@ public class UserPan implements Serializable {
 
     public void setSize(String size) {
         this.size = size == null ? null : size.trim();
+    }
+
+    public String getDirId() {
+        return dirId;
+    }
+
+    public void setDirId(String dirId) {
+        this.dirId = dirId == null ? null : dirId.trim();
     }
 
     public Date getCreateTime() {

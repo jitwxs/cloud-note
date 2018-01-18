@@ -1,5 +1,6 @@
 package cn.edu.jit.mapper;
 
+import cn.edu.jit.entry.Data;
 import cn.edu.jit.entry.Log;
 import cn.edu.jit.entry.LogExample;
 import java.util.List;
@@ -27,4 +28,6 @@ public interface LogMapper {
     int updateByPrimaryKeySelective(Log record);
 
     int updateByPrimaryKey(Log record);
+
+    List<Data> countUserByTitle(String title);
 }

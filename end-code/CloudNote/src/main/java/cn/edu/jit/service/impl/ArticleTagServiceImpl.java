@@ -49,14 +49,4 @@ public class ArticleTagServiceImpl implements ArticleTagService {
 
         return articleTagMapper.selectByExample(articleTagExample);
     }
-
-    @Override
-    public int countByArticleId(String articleId) {
-        ArticleTagExample articleTagExample = new ArticleTagExample();
-
-        ArticleTagExample.Criteria criteria = articleTagExample.createCriteria();
-        criteria.andArticleIdEqualTo(articleId);
-
-        return articleTagMapper.countByExample(articleTagExample);
-    }
 }

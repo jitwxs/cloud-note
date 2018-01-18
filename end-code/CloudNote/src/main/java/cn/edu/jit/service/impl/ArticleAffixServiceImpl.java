@@ -39,16 +39,6 @@ public class ArticleAffixServiceImpl implements ArticleAffixService {
     }
 
     @Override
-    public int removeAllByArticleId(String articleId) {
-        ArticleAffixExample articleAffixExample = new ArticleAffixExample();
-
-        ArticleAffixExample.Criteria criteria = articleAffixExample.createCriteria();
-        criteria.andArticleidEqualTo(articleId);
-
-        return articleAffixMapper.deleteByExample(articleAffixExample);
-    }
-
-    @Override
     public int save(ArticleAffix articleAffix) {
         return articleAffixMapper.insertSelective(articleAffix);
     }

@@ -37,6 +37,8 @@
                     <ul class="dropdown-menu">
                         <li ><a href="javascript:void(0)" onclick="showSelfInfo()" data-toggle="modal" data-target="#showSelfInfoModal">我的信息</a></li>
                         <li class="divider"></li>
+                        <li><a href="${ctx}/user/disk">我的网盘</a></li>
+                        <li class="divider"></li>
                         <li id="accountSet"><a href="${ctx}/user/accountInfo">用户中心</a></li>
                         <li class="divider"></li>
                         <li ><a href="${ctx}/logout">注销</a></li>
@@ -55,9 +57,8 @@
             $("#userName").val(res.userDto.name);
             $("#userEmail").val(res.userDto.email);
             $("#userArea").val(res.userDto.areaName);
+            $("#userBigIcon").attr('src', res.userDto.icon);
 
-            // 设置头像url
-            $("#userBigIcon").attr('src',"${ctx}/upload/"+ res.userDto.tel + "/images/" + res.userDto.icon);
             //初始化更新头像信息
             $("#uploadIcon").val('');
             $("#fileName").html('');

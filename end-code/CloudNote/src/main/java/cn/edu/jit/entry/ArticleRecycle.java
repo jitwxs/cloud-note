@@ -1,8 +1,13 @@
 package cn.edu.jit.entry;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ArticleRecycle {
+/**
+ * 笔记回收实体类
+ * @author jitwxs
+ */
+public class ArticleRecycle implements Serializable {
     private String id;
 
     private String title;

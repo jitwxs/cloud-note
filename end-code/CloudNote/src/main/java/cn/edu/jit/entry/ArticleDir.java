@@ -1,8 +1,13 @@
 package cn.edu.jit.entry;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ArticleDir {
+/**
+ * 文章目录实体类
+ * @author jitwxs
+ */
+public class ArticleDir implements Serializable {
     private String id;
 
     private String uid;

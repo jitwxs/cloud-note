@@ -7,35 +7,148 @@
 <jsp:include page="left.jsp"/>
 
 <body>
-    <div class="container" style="text-align: center;">
-        <h2 >系统日志</h2>
-        <table class="table table-responsive table-bordered table-hover">
-            <thead>
-            <tr>
-                <th>标题</th>
-                <th>访问IP</th>
-                <th>用户代理</th>
-                <th>请求路径</th>
-                <th>记录时间</th>
-                <th>请求参数</th>
-                <th>异常信息</th>
-            </tr>
-            </thead>
-            <tbody>
-                <c:forEach items="${lists}" var="item">
-                    <tr>
-                        <td>${item.title}</td>
-                        <td>${item.ip}</td>
-                        <td>${item.userAgent}</td>
-                        <td>${item.requestUrl}</td>
-                        <td><fmt:formatDate value="${item.createDate}" dateStyle="medium" pattern="yyyy-MM-dd HH:mm"/></td>
-                        <td>${item.params}</td>
-                        <td>${item.exception}</td>
-                    </tr>
-                </c:forEach>
-            </tbody>
+<!--主体-->
+<div class="container" style="height: 1000px;width: 100%; text-align: center;">
+    <h2 style="margin-bottom: 30px;">系统日志</h2>
+    <div id="toolbar" style="margin-right: 20px;">
+
+        <button id="btn_delete" type="button" class="btn btn-default" onclick="delete_more()">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true">删除</span>
+        </button>
+
+    </div>
+    <div style="width: 80%;float: right;margin-right: 50px;">
+        <table id="systemLogTable" class="table table-responsive table-bordered tab-content" style="margin-right: 10%;">
         </table>
     </div>
+</div>
+
+<script>
+    //    注册事件
+    window.operateEvents = {
+        'click .detail': function (e, value, row, index) {
+            var logId = row.id;
+            showLog(logId);
+        },
+        'click .del': function (e, value, row, index) {
+            var logId = row.id;
+            var url = 'systemLog';
+            deleteLog(logId, url);
+        }
+    };
+
+    function AddFunctionAlty(value, row, index) {
+        return ['  <button id="btn_detail" type="button" class="btn btn-default detail">\n' +
+        '            <span class="glyphicon glyphicon-search" aria-hidden="true" ></span>\n' +
+        '        </button>',
+            '  <button id="btn_delect" type="button" class="btn btn-default del">\n' +
+            '            <span class="glyphicon glyphicon-remove" aria-hidden="true" ></span>\n' +
+            '        </button>'].join("")
+    }
+
+    $(function () {
+        sendGet('${ctx}/admin/prepareSystemLog',{},false,function (value) {
+            $table = $('#systemLogTable').bootstrapTable(
+                {
+                    data: value,   //最终的JSON数据放在这里
+                    striped: true,
+                    cache: false,
+                    height:700,
+                    toolbar:'#toolbar',
+                    pagination: true,
+                    sidePagination: "client",
+                    pageNumber: 1,
+                    pageSize: 10,
+                    pageList: [5, 10, 20],
+                    showColumns: true,
+                    minimunCountColumns: 2,
+                    sort: false,
+                    sortOrder: "asc",
+                    search: true,
+                    showRefresh: true,
+                    clickToSelect:true,
+                    showToggle:true,
+                    cardView: false,    //是否显示详细视图
+                    detaView:false,
+                    showExport: true,//显示导出按钮
+                    exportTypes:  ['excel','json', 'xml', 'txt', 'sql'],
+                    columns: [
+                        {
+                            field:"checked",
+                            checkbox:true
+                        },
+                        {
+                            field: 'title',
+                            title: 'title',
+                            align: 'center',
+                            valign: 'center',
+                            sortable: true
+                        },
+                        {
+                            field: 'ip',
+                            title: 'ip',
+                            align: 'center',
+                            valign: 'center',
+                            sortable: true
+                        },
+                        {
+                            field: 'userName',
+                            title: 'userName',
+                            align: 'center',
+                            valign: 'center',
+                            sortable: true
+                        },
+                        {
+                            field: 'requestUrl',
+                            title: 'requestUrl',
+                            align: 'center',
+                            valign: 'center',
+                            sortable: true
+                        },
+                        {
+                            field: 'createDate',
+                            title: 'createDate',
+                            align: 'center',
+                            valign: 'center',
+                            sortable: true
+                        },
+                        {
+                            field: 'params',
+                            title: 'params',
+                            width: 200,
+                            align: 'center',
+                            valign: 'center',
+                            sortable: true
+                        },
+                        {
+                            field: 'method',
+                            title: 'method',
+                            align: 'center',
+                            valign: 'center',
+                            sortable: true
+                        },
+                        {
+                            field:"button",
+                            title:"operate",
+                            align: 'center',
+                            formatter:AddFunctionAlty,
+                            events:operateEvents
+                        }
+                    ]
+                })
+        },function (error) {
+            toastr.error("系统错误");
+            return false;
+        });
+    })
+
+    function delete_more() {
+        var row = $(systemLogTable).bootstrapTable('getSelections');
+        var url = 'systemLog';
+        deleteLog(row, url);
+    }
+
+</script>
 </body>
 
 </html>

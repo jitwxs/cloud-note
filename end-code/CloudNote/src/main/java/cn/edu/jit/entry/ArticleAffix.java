@@ -3,6 +3,10 @@ package cn.edu.jit.entry;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * 笔记附件实体类
+ * @author jitwxs
+ */
 public class ArticleAffix implements Serializable{
     private String id;
 

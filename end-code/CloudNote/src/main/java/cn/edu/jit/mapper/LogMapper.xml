@@ -14,6 +14,10 @@
     <result column="params" property="params" jdbcType="VARCHAR" />
     <result column="exception" property="exception" jdbcType="VARCHAR" />
   </resultMap>
+  <resultMap id="DataResultMap" type="cn.edu.jit.entry.Data" >
+    <result column="k" property="k" jdbcType="VARCHAR" />
+    <result column="v" property="v" jdbcType="VARCHAR" />
+  </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >
@@ -303,4 +307,12 @@
       exception = #{exception,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+  <select id="countUserByTitle" resultMap="DataResultMap">
+    select
+    DATE_FORMAT(create_date,'%Y-%m-%d') k,
+    count(DISTINCT user_id) v
+    from log
+    where title=#{title}
+    group by k;
+  </select>
 </mapper>

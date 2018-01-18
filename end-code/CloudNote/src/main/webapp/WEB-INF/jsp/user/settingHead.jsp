@@ -11,8 +11,6 @@
     <link rel="stylesheet" href="${ctx}/css/bootstrap.css">
     <%-- 弹窗CSS --%>
     <link rel="stylesheet" href="${ctx}/css/toastr.css">
-    <%--&lt;%&ndash; 自定义CSS &ndash;%&gt;--%>
-    <%--<link rel="stylesheet" href="${ctx}/css/custom.css">--%>
     <link rel="stylesheet" href="${ctx}/css/account_setting.css">
     <%-- jQuery first, then Bootstrap JS. --%>
     <script src="${ctx}/js/jquery-3.2.1.min.js"></script>
@@ -78,7 +76,7 @@
         // 初始化头部小头像和下拉框名
         sendGet('${ctx}/showSelfInfo',{},true,function (res) {
             $("#userSmallName").html(res.userDto.name);
-            $("#userSmallIcon").attr('src',"${ctx}/upload/"+ res.userDto.tel + "/images/" + res.userDto.icon);
+            $("#userSmallIcon").attr('src', res.userDto.icon);
         },function (error) {
             toastr.error("系统错误");
             return false;

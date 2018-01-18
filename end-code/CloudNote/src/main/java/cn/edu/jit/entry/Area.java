@@ -2,6 +2,10 @@ package cn.edu.jit.entry;
 
 import java.io.Serializable;
 
+/**
+ * 地区实体类
+ * @author jitwxs
+ */
 public class Area implements Serializable {
     private Integer id;
 

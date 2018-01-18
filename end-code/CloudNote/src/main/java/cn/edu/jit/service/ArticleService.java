@@ -18,8 +18,6 @@ public interface ArticleService {
 
     Article getById(String id);
 
-    List<Article> listArticleByUid(String uid);
-
     /**
      * 查询指定用户按标题匹配笔记
      * @param uid 用户id
@@ -58,15 +56,6 @@ public interface ArticleService {
      */
     List<Article> listAnotherShareArticle(String uid);
 
-    /**
-     * 查询用户笔记数量
-     * @param uid 用户id
-     * @return
-     */
-    int countArticle(String uid);
-
-    List<Article> listAllArticle();
-
-    public List<Article> listAllShareArticle();
+    List<Article> listAllShareArticle();
 
 }

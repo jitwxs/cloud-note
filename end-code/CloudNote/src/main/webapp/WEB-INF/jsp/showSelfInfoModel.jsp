@@ -51,7 +51,7 @@
                             <input type="text" class="form-control" id="userArea" disabled>
                         </div>
                         <div class="col-sm-3">
-                            <select data-live-search="true" id="areaSelect1"  class="form-control">
+                            <select data-live-search="true" id="areaSelect1" class="form-control">
                                 <option value=-1>请选择省/市</option>
                             </select>
                         </div>

@@ -1,22 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/global/taglib.jsp" %>
 
-<%--<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1" style="height: 1500px;">--%>
-    <%--<table class="table table-responsive">--%>
-        <%--<thead>--%>
-        <%--<tr>--%>
-            <%--<th>用户</th>--%>
-            <%--<th>标题</th>--%>
-            <%--<th>链接</th>--%>
-        <%--</tr>--%>
-        <%--</thead>--%>
-        <%--<tbody id="shareArticleTBody">--%>
-            <%--<td colspan="3" style="text-align: center">没有找到他人分享的笔记</td>--%>
-        <%--</tbody>--%>
-    <%--</table>--%>
-<%--</nav>--%>
-
-
 <!--侧边栏-->
 <nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1" style="height: 1500px;background: #f7f7f7;">
     <div id="container_share">
@@ -25,7 +9,6 @@
         <a id="changeshare" style="width: 230px;height: 50px;line-height: 50px;margin-left: 70px;cursor: pointer;text-decoration: none"><img src="${ctx}/images/changeshare.png"> 换一批</a>
     </div>
 </nav>
-
 
 <script>
     var menuLeft = document.getElementById('cbp-spmenu-s1'),  //nav整个导航栏
@@ -63,7 +46,7 @@
                 if (msg.status){
                     initShare(msg.articleDtos);
                 } else {
-                    toastr.warning("没有找到分享的内容");
+                    toastr.info("没有找到分享的内容");
                     return false;
                 }
             },function (error) {
@@ -81,7 +64,7 @@
                         //在container_share里添加新的元素
                         initShare(msg.articleDtos);
                     } else {
-                        toastr.error("没有找到分享的内容");
+                        toastr.info("没有找到分享的内容");
                         return false;
                     }
                 },function (error) {
@@ -92,47 +75,11 @@
 
             //点击分享页div跳转到新页面
             $('.share').on('click',function () {
-                alert("bbb")
                 var url = $(this).attr('shareurl');
-                alert(url)
                 window.open(url);
             });
 
         }
         classie.toggle(menuLeft, 'cbp-spmenu-open');   //nav 的left:0
     });
-
-
-
-
-    <%--showLeftPush.onclick = function () {--%>
-        <%--var nav_id = document.getElementById("cbp-spmenu-s1");--%>
-        <%--classie.toggle(this, 'active');--%>
-        <%--classie.toggle(body, 'cbp-spmenu-push-toright');   //body 左移200px--%>
-        <%--// 侧边栏弹出时事件--%>
-        <%--if($('body').hasClass('cbp-spmenu-push-toright')) {--%>
-            <%--sendGet('${ctx}/user/showOtherShareNote',{},true,function (res) {--%>
-                <%--if(res.status) {--%>
-                    <%--var info = "";--%>
-                    <%--for(var i=0; i<res.articleDtos.length; i++) {--%>
-                        <%--var name = res.articleDtos[i].authorName;--%>
-                        <%--var title = res.articleDtos[i].title;--%>
-                        <%--var url = res.articleDtos[i].shareUrl;--%>
-                        <%--info += '<tr><td>'+name+'</td>\n' +--%>
-                            <%--'<td>'+title+'</td>\n' +--%>
-                            <%--'            <td>\n' +--%>
-                            <%--'                <a target="_blank" href="'+url+'">查看分享</a>\n' +--%>
-                            <%--'            </td>\n' +--%>
-                            <%--'        </tr>';--%>
-                    <%--}--%>
-
-                    <%--$("#shareArticleTBody").html(info);--%>
-                <%--}--%>
-            <%--},function (error) {--%>
-                <%--toastr.error("系统错误");--%>
-                <%--return false;--%>
-            <%--});--%>
-        <%--}--%>
-        <%--classie.toggle(menuLeft, 'cbp-spmenu-open');   //nav 的left:0--%>
-    <%--};--%>
 </script>

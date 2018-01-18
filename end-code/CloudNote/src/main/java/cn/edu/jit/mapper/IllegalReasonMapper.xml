@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.edu.jit.mapper.IllegalReasonMapper" >
-  <resultMap id="BaseResultMap" type="cn.edu.jit.entry.IllegalReasonKey" >
+  <resultMap id="BaseResultMap" type="cn.edu.jit.entry.IllegalReason" >
     <id column="id" property="id" jdbcType="VARCHAR" />
-    <id column="name" property="name" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -80,10 +80,15 @@
       order by ${orderByClause}
     </if>
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="cn.edu.jit.entry.IllegalReasonKey" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from illegal_reason
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from illegal_reason
     where id = #{id,jdbcType=VARCHAR}
-      and name = #{name,jdbcType=VARCHAR}
   </delete>
   <delete id="deleteByExample" parameterType="cn.edu.jit.entry.IllegalReasonExample" >
     delete from illegal_reason
@@ -91,11 +96,11 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="cn.edu.jit.entry.IllegalReasonKey" >
+  <insert id="insert" parameterType="cn.edu.jit.entry.IllegalReason" >
     insert into illegal_reason (id, name)
     values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="cn.edu.jit.entry.IllegalReasonKey" >
+  <insert id="insertSelective" parameterType="cn.edu.jit.entry.IllegalReason" >
     insert into illegal_reason
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -141,5 +146,19 @@
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.edu.jit.entry.IllegalReason" >
+    update illegal_reason
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.edu.jit.entry.IllegalReason" >
+    update illegal_reason
+    set name = #{name,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

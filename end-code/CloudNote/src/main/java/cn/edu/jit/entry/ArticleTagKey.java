@@ -2,6 +2,10 @@ package cn.edu.jit.entry;
 
 import java.io.Serializable;
 
+/**
+ * 笔记标签实体类
+ * @author jitwxs
+ */
 public class ArticleTagKey implements Serializable {
     private String articleId;
 

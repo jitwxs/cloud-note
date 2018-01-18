@@ -1,8 +1,13 @@
 package cn.edu.jit.entry;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class UserBlacklist {
+/**
+ * 小黑屋实体类
+ * @author jitwxs
+ */
+public class UserBlacklist implements Serializable {
     private String id;
 
     private String userId;

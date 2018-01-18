@@ -1,8 +1,13 @@
 package cn.edu.jit.entry;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class PanDir {
+/**
+ * 网盘目录实体类
+ * @author jitwxs
+ */
+public class PanDir implements Serializable {
     private String id;
 
     private String uid;

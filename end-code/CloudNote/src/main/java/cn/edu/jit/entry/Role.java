@@ -3,6 +3,10 @@ package cn.edu.jit.entry;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * 权限实体类
+ * @author jitwxs
+ */
 public class Role implements Serializable {
     private Integer id;
 

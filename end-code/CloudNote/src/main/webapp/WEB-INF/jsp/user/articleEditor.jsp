@@ -1,6 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/global/taglib.jsp" %>
 
+
+<style>
+    .wjj_div{
+        margin-left: 10px;
+    }
+</style>
 <div class="col-md-10" style="float: right">
     <form class="form-inline">
         <div class="form-group">
@@ -143,10 +149,20 @@
             if(noteId == null || noteId == "") {
                 toastr.warning("未选择笔记");
                 return false;
+            } else if(noteName == null || noteName == "") {
+                toastr.warning("笔记标题不能为空")
+                return false;
             } else {
                 sendPost('${ctx}/user/saveNote',{'noteId':noteId, 'noteName':noteName, 'data':content,'tag':editorTags},true,function (msg) {
                     if(msg.status) {
                         toastr.success("笔记已保存");
+                        var $jsNoteBtns = $('.js_note_btn');
+                        for (var i = 0; i < $jsNoteBtns.length; i++ ){
+                            if ($($jsNoteBtns[i]).attr('index-id') == noteId){
+                                $($jsNoteBtns[i]).text(noteName);
+                                break;
+                            }
+                        }
                     } else {
                         toastr.error("保存失败");
                     }
@@ -155,6 +171,7 @@
                     return false;
                 });
             }
+
         }
 
         // 实时更新选中的文件名

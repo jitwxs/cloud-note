@@ -1,7 +1,7 @@
 package cn.edu.jit.mapper;
 
+import cn.edu.jit.entry.IllegalReason;
 import cn.edu.jit.entry.IllegalReasonExample;
-import cn.edu.jit.entry.IllegalReasonKey;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
@@ -10,15 +10,21 @@ public interface IllegalReasonMapper {
 
     int deleteByExample(IllegalReasonExample example);
 
-    int deleteByPrimaryKey(IllegalReasonKey key);
+    int deleteByPrimaryKey(String id);
 
-    int insert(IllegalReasonKey record);
+    int insert(IllegalReason record);
 
-    int insertSelective(IllegalReasonKey record);
+    int insertSelective(IllegalReason record);
 
-    List<IllegalReasonKey> selectByExample(IllegalReasonExample example);
+    List<IllegalReason> selectByExample(IllegalReasonExample example);
 
-    int updateByExampleSelective(@Param("record") IllegalReasonKey record, @Param("example") IllegalReasonExample example);
+    IllegalReason selectByPrimaryKey(String id);
 
-    int updateByExample(@Param("record") IllegalReasonKey record, @Param("example") IllegalReasonExample example);
+    int updateByExampleSelective(@Param("record") IllegalReason record, @Param("example") IllegalReasonExample example);
+
+    int updateByExample(@Param("record") IllegalReason record, @Param("example") IllegalReasonExample example);
+
+    int updateByPrimaryKeySelective(IllegalReason record);
+
+    int updateByPrimaryKey(IllegalReason record);
 }

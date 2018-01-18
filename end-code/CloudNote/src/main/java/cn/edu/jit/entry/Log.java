@@ -1,12 +1,17 @@
 package cn.edu.jit.entry;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 
 import cn.edu.jit.global.GlobalFunction;
 import org.apache.commons.lang3.StringUtils;
 
-public class Log {
+/**
+ * 日志实体类
+ * @author jitwxs
+ */
+public class Log implements Serializable {
     private String id;
 
     private String userId;

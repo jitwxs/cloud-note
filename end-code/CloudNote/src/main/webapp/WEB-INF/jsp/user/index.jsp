@@ -16,8 +16,6 @@
     <link rel="stylesheet" href="${ctx}/css/wangEditor-fullscreen-plugin.css">
     <%-- 弹窗CSS --%>
     <link rel="stylesheet" href="${ctx}/css/toastr.css">
-    <%-- 自定义CSS --%>
-    <link rel="stylesheet" href="${ctx}/css/custom.css">
     <%-- home页CSS --%>
     <link rel="stylesheet" href="${ctx}/css/home_css.css">
     <%-- jQuery first, then Bootstrap JS. --%>
@@ -76,7 +74,7 @@ $(function() {
         sendGet('${ctx}/showSelfInfo',{},true,function (res) {
             var userTel = res.userDto.tel;
             $("#userSmallName").html(res.userDto.name);
-            $("#userSmallIcon").attr('src',"${ctx}/upload/"+ userTel + "/images/" + res.userDto.icon);
+            $("#userSmallIcon").attr('src', res.userDto.icon);
         },function (error) {
             toastr.error("系统错误");
             return false;

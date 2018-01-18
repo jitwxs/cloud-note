@@ -20,8 +20,6 @@ public interface UserService {
 
     int update(User user);
 
-    int removeByTel(String tel);
-
     /**
      * 根据性别统计用户量
      * @param sex 男or女

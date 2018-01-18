@@ -42,16 +42,6 @@ public class ArticleDirServiceImpl implements ArticleDirService {
     }
 
     @Override
-    public List<ArticleDir> listByUid(String uid) {
-        ArticleDirExample articleDirExample = new ArticleDirExample();
-
-        ArticleDirExample.Criteria criteria = articleDirExample.createCriteria();
-        criteria.andUidEqualTo(uid);
-
-        return articleDirMapper.selectByExample(articleDirExample);
-    }
-
-    @Override
     public List<ArticleDir> listByParentId(String uid, String parentId) {
         ArticleDirExample articleDirExample = new ArticleDirExample();
 

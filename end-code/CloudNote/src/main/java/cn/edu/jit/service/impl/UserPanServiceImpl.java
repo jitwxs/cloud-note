@@ -1,5 +1,7 @@
 package cn.edu.jit.service.impl;
 
+import cn.edu.jit.entry.PanDir;
+import cn.edu.jit.entry.PanDirExample;
 import cn.edu.jit.entry.UserPan;
 import cn.edu.jit.entry.UserPanExample;
 import cn.edu.jit.mapper.UserPanMapper;
@@ -20,18 +22,17 @@ public class UserPanServiceImpl implements UserPanService {
     UserPanMapper userPanMapper;
 
     @Override
-    public List<UserPan> listByUserId(String userId) {
-        UserPanExample userPanExample = new UserPanExample();
-
-        UserPanExample.Criteria criteria = userPanExample.createCriteria();
-        criteria.andUseridEqualTo(userId);
-
-        return userPanMapper.selectByExample(userPanExample);
+    public UserPan getById(String id) {
+        return userPanMapper.selectByPrimaryKey(id);
     }
 
     @Override
-    public UserPan getById(String id) {
-        return userPanMapper.selectByPrimaryKey(id);
+    public List<UserPan> getByName(String dirId, String name) {
+        UserPanExample userPanExample = new UserPanExample();
+        UserPanExample.Criteria criteria = userPanExample.createCriteria();
+        criteria.andNameEqualTo(name);
+        criteria.andDirIdEqualTo(dirId);
+        return userPanMapper.selectByExample(userPanExample);
     }
 
     @Override
@@ -58,5 +59,28 @@ public class UserPanServiceImpl implements UserPanService {
     @Override
     public int save(UserPan userPan) {
        return userPanMapper.insertSelective(userPan);
+    }
+
+    @Override
+    public List<UserPan> listUserPanByDir(String uid, String dirId) {
+        UserPanExample userPanExample = new UserPanExample();
+
+        UserPanExample.Criteria criteria = userPanExample.createCriteria();
+        criteria.andUseridEqualTo(uid);
+        criteria.andDirIdEqualTo(dirId);
+        return userPanMapper.selectByExample(userPanExample);
+    }
+
+    @Override
+    public List<UserPan> listUserPanByTitle(String uid, String title) {
+        UserPanExample userPanExample = new UserPanExample();
+
+        UserPanExample.Criteria criteria = userPanExample.createCriteria();
+        criteria.andUseridEqualTo(uid);
+        // 加上通配符
+        title = "%" + title + "%";
+        criteria.andNameLike(title);
+
+        return userPanMapper.selectByExample(userPanExample);
     }
 }

@@ -20,9 +20,14 @@ public class UserInfo implements Serializable {
     private Integer maleNum;
 
     /**
-     * 当如女性注册数量
+     * 当日女性注册数量
      */
     private Integer femaleNum;
+
+    /**
+     * 当日宗注册量（maleNum + femaleNum）
+     */
+    private Integer num;
 
     /**
      * 最初到当日的总注册量
@@ -32,6 +37,14 @@ public class UserInfo implements Serializable {
     public UserInfo() {
         this.maleNum = 0;
         this.femaleNum = 0;
+    }
+
+    public Integer getNum() {
+        return num;
+    }
+
+    public void setNum(Integer num) {
+        this.num = num;
     }
 
     public String getDate() {

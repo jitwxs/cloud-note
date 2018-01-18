@@ -43,10 +43,4 @@ public class ArticleRecycleServiceImpl implements ArticleRecycleService {
 
         return articleRecycleMapper.selectByExample(articleRecycleExample);
     }
-
-    @Override
-    public List<ArticleRecycle> listAllRecycle() {
-        ArticleRecycleExample articleRecycleExample = new ArticleRecycleExample();
-        return articleRecycleMapper.selectByExample(articleRecycleExample);
-    }
 }

@@ -149,6 +149,14 @@ public class Message implements Serializable {
         this.user = user;
     }
 
+    public List<DirectoryTree> getDirectoryTrees() {
+        return directoryTrees;
+    }
+
+    public void setDirectoryTrees(List<DirectoryTree> directoryTrees) {
+        this.directoryTrees = directoryTrees;
+    }
+
     private Boolean status;
 
     private String info;
@@ -182,5 +190,7 @@ public class Message implements Serializable {
     private List<UserPan> userFiles;
 
     private List<Area> areas;
+
+    private List<DirectoryTree> directoryTrees;
 
 }

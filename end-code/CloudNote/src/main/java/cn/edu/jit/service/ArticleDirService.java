@@ -18,7 +18,8 @@ public interface ArticleDirService {
 
     ArticleDir getById(String id);
 
-    List<ArticleDir> listByUid(String uid);
-
+    /**
+     * 指定用户指定目录下所有子目录
+     */
     List<ArticleDir> listByParentId(String uid, String parentId);
 }

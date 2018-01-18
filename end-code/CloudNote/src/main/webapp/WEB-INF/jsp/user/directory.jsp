@@ -6,26 +6,29 @@
 noteId、noteName即使页面刷新也不会置空，
 正常判断使用：affixNoteId和editorTitle代替，这两个变量在页面刷新时会置空
 --%>
+<style>
+    .wjj_div{
+        margin-left: 10px;
+    }
+    
+</style>
 
-<div class="col-md-2">
-    <div class="wjj">
+<div class="col-md-2" style="overflow: hidden">
+    <div class="wjj" >
         <a class="btn js_zwjj_btn" index-id="root"><img src="${ctx}/images/wjj2.png" width="15px" height="15px">
             我的文件夹</a>
-        <div class="wjj_div">
+        <div class="wjj_div" style="">
 
         </div>
     </div>
 
-    <div id="div_rubbish" style="margin-top: 20px">
-        <a id="rubbish" style="cursor: pointer;height: 15px;font-size: 14px;color: #337ab7;display:block;margin-left:14px;text-decoration: none"><img src="${ctx}/images/rubbish.png" >回收站</a>
+    <div id="div_rubbish" style="margin-top: 20px;">
+        <a id="rubbish" style="cursor: pointer;height: 20px;font-size: 15px;color: #337ab7;display:block;margin-left:14px;text-decoration: none">
+            <img src="${ctx}/images/rubbish.png" >回收站</a>
         <div id="rubbish_container">
-
         </div>
     </div>
-
 </div>
-
-
 
 <script>
     /*一些全局变量*/
@@ -59,6 +62,10 @@ noteId、noteName即使页面刷新也不会置空，
             {text: '彻底删除', onclick: forever_remove}
         ]};
 
+    var options5 = {items:[
+            {text: '清空回收站', onclick: clearRubbish}
+        ]};
+
     var dirTPL = '' +
         '              <div class="wjj">\n' +
         '                    <input type="text" name="dir_name" value="新建文件夹">' +
@@ -85,8 +92,14 @@ noteId、noteName即使页面刷新也不会置空，
         return false;
     });
 
+    //回收站的右击绑定事件
+    $('#rubbish').bind("contextmenu",function () {
+    });
+    $('#rubbish').contextify(options5);
+
     showDir($('.wjj_div'), dirAttr);
     showRubbish();
+    initUI();
 
     function showDir($item, dir) {
         for (var i = 0; i < dir.length; i++) {
@@ -115,7 +128,7 @@ noteId、noteName即使页面刷新也不会置空，
         sendGet('${ctx}/user/initRecycleFile',{}, false, function (res) {
             //在rubbish——container追加文件
             for(var i=0; i<res.length; i++) {
-                $('#rubbish_container').append('<div class="notediv">\n' +
+                $('#rubbish_container').append('<div class="notediv" >\n' +
                     '            <a class="rubbish_file" index-id="'+res[i].id+'">'+res[i].title+'</a>\n' +
                     '        </div>\n');
             }
@@ -153,23 +166,27 @@ noteId、noteName即使页面刷新也不会置空，
     }
 
     function forever_remove() {
-        var id = $chooseDir.attr('index-id');
-        var $parent = $chooseDir.parent();
-        sendPost('${ctx}/user/foreverRemoveNote',{'noteId':id}, true, function (msg) {
-            if (msg.status) {
-                //删除这个笔记在回收站的位置
-                $parent.remove();
-                toastr.success("笔记已彻底删除");
-            } else {
-                toastr.error("删除失败");
-            }
-        },function (error) {
-            toastr.error("系统错误");
+        var msg = "从回收站中删除将无法恢复，确认删除吗";
+        if(confirm(msg)) {
+            var id = $chooseDir.attr('index-id');
+            var $parent = $chooseDir.parent();
+            sendPost('${ctx}/user/foreverRemoveNote',{'noteId':id}, true, function (msg) {
+                if (msg.status) {
+                    //删除这个笔记在回收站的位置
+                    $parent.remove();
+                    toastr.success("笔记已彻底删除");
+                } else {
+                    toastr.error("删除失败");
+                }
+            },function (error) {
+                toastr.error("系统错误");
+                return false;
+            });
+            initUI();
+        } else {
             return false;
-        });
-        initUI();
+        }
     }
-    initUI();
 
     function createDir() {
         var $choosenId = $chooseDir;
@@ -198,7 +215,7 @@ noteId、noteName即使页面刷新也不会置空，
         var $choosenId = $chooseDir;
         var id = $choosenId.attr('index-id');
         var name = $choosenId.text();
-        var msg = "删除笔记后笔记将被丢入垃圾桶，确认不考虑下(ｏ ‵-′)ノ";
+        var msg = "删除笔记后笔记将被丢入垃圾桶，确认删除？";
         if (confirm(msg)){
             //发送要删除的笔记的id
             sendPost('${ctx}/user/removeNote', {'noteId': id}, false, function (msg) {
@@ -225,7 +242,7 @@ noteId、noteName即使页面刷新也不会置空，
         var $parent = $choosenId.parent();
         var id = $choosenId.attr('index-id');
 
-        var msg = "删除目录后笔记将被归入上层文件夹，确定？";
+        var msg = "删除目录后笔记将被归入上层文件夹，确认删除？";
         if (confirm(msg)){
             //发送要删除的目录的id
             sendPost('${ctx}/user/removeDir', {'dirId': id}, false, function (msg) {
@@ -257,22 +274,27 @@ noteId、noteName即使页面刷新也不会置空，
         $('input[name=dir_name]').blur(function () {
             //获取名字
             var name = $('input[name=dir_name]').val();
-            //发送给服务器
-            sendPost('${ctx}/user/renameDir', {'dirId': dirId, 'dirName': name}, false, function (msg) {
-                if (!msg.status) {
-                    toastr.error("生成目录失败");
-                    return false
-                }
-                else return true;
-            }, function (error) {
-                toastr.error("系统错误");
-                return false;
-            });
-            var $parent = $('input[name=dir_name]').parent();
-            $('input[name=dir_name]').remove();
-            //生成目录
-            $parent.prepend('<a class="btn js_wjj_btn" index-id="" ><img src="${ctx}/images/wjj3.png" width="20px" height="20px">' + name + '</a>');
-            initUI();
+            if(name == "" || name == null) {
+                toastr.warning("目录名不能为空");
+            } else {
+                //发送给服务器
+                sendPost('${ctx}/user/renameDir', {'dirId': dirId, 'dirName': name}, false, function (msg) {
+                    if (!msg.status) {
+                        toastr.error("生成目录失败");
+                        return false
+                    }
+                    else return true;
+                }, function (error) {
+                    toastr.error("系统错误");
+                    return false;
+                });
+                var $parent = $('input[name=dir_name]').parent();
+                $('input[name=dir_name]').remove();
+                //生成目录
+                $parent.prepend('<a class="btn js_wjj_btn" index-id="'+dirId+'" ><img src="${ctx}/images/wjj3.png" width="20px" height="20px">' + name + '</a>');
+                initUI();
+            }
+
         })
     }
 
@@ -288,23 +310,27 @@ noteId、noteName即使页面刷新也不会置空，
         $('input[name=note_name]').blur(function () {
             //获取名字
             var name = $('input[name=note_name]').val();
-            //发送给服务器
-            sendPost('${ctx}/user/renameNote', {'noteId': noteId, 'noteName': name}, false, function (msg) {
-                if (!msg.status) {
-                    toastr.error("生成笔记失败");
+            if(name == null || name == "") {
+                toastr.warning("笔记名不能为空");
+            } else {
+                //发送给服务器
+                sendPost('${ctx}/user/renameNote', {'noteId': noteId, 'noteName': name}, false, function (msg) {
+                    if (!msg.status) {
+                        toastr.error("生成笔记失败");
+                        return false;
+                    }
+                    else return true;
+                }, function (error) {
+                    toastr.error("系统错误");
                     return false;
-                }
-                else return true;
-            }, function (error) {
-                toastr.error("系统错误");
-                return false;
-            });
-            //把文本框删掉
-            var $parent = $('input[name=note_name]').parent();
-            $('input[name=note_name]').remove();
-            //生成笔记
-            $parent.prepend('<a class="btn js_note_btn" index-id="">' + name + '</a>');
-            initUI();
+                });
+                //把文本框删掉
+                var $parent = $('input[name=note_name]').parent();
+                $('input[name=note_name]').remove();
+                //生成笔记
+                $parent.prepend('<a class="btn js_note_btn" index-id="'+noteId+'">' + name + '</a>');
+                initUI();
+            }
         });
     }
 
@@ -369,13 +395,34 @@ noteId、noteName即使页面刷新也不会置空，
         });
     }
 
+    //清空回收站事件
+    function clearRubbish() {
+        var msg = "确定要清空回收站吗？";
+        if(confirm(msg)) {
+            sendGet('${ctx}/user/clearRubbish',{},false,function (res) {
+                if(res.status) {
+                    $('#rubbish_container').children().remove();
+                    toastr.success("清空成功");
+                } else {
+                    toastr.error("清空失败");
+                }
+            },function (error) {
+                toastr.error("系统错误");
+                return false;
+            });
+        } else {
+            return false;
+        }
+    }
+
     function initUI() {
         //回收站文件的右击事件
         $('.rubbish_file').bind("contextmenu",function () {
             //记录右键点击的元素
             $chooseDir = $(this);
-        })
+        });
         $('.rubbish_file').contextify(options4);
+
 
         $(".js_zwjj_btn").bind("contextmenu", function(){
             //记录右键点击的元素
@@ -398,24 +445,28 @@ noteId、noteName即使页面刷新也不会置空，
             //获取名字
             var name = $('input[name=dir_name]').val();
             var parent_id = $chooseDir.attr('index-id');
-            //发送给服务器
-            sendPost('${ctx}/user/createDir', {'parentId': parent_id, 'dirName': name}, false, function (msg) {
-                if (!msg.status) {
-                    toastr.error("创建目录失败");
+            if(name == null || name == "") {
+                toastr.warning("目录名不能为空");
+            } else {
+                //发送给服务器
+                sendPost('${ctx}/user/createDir', {'parentId': parent_id, 'dirName': name}, false, function (msg) {
+                    if (!msg.status) {
+                        toastr.error("创建目录失败");
+                        return false;
+                    }
+                    else {
+                        //把文本框删掉
+                        var $parent = $('input[name=dir_name]').parent();
+                        $('input[name=dir_name]').remove();
+                        //生成目录
+                        $parent.prepend('<a class="btn js_wjj_btn" index-id="'+msg.dirId+'" ><img src="${ctx}/images/wjj3.png" width="20px" height="20px">' + name + '</a>');
+                        initUI();
+                    }
+                }, function (error) {
+                    toastr.error("系统错误");
                     return false;
-                }
-                else {
-                    //把文本框删掉
-                    var $parent = $('input[name=dir_name]').parent();
-                    $('input[name=dir_name]').remove();
-                    //生成目录
-                    $parent.prepend('<a class="btn js_wjj_btn" index-id="'+msg.dirId+'" ><img src="${ctx}/images/wjj3.png" width="20px" height="20px">' + name + '</a>');
-                    initUI();
-                }
-            }, function (error) {
-                toastr.error("系统错误");
-                return false;
-            });
+                });
+            }
         });
 
         //生成笔记
@@ -428,24 +479,28 @@ noteId、noteName即使页面刷新也不会置空，
         $('input[name=note_name]').blur(function () {
             //获取名字
             var name = $('input[name=note_name]').val();
-            var parent_id = $chooseDir.attr('index-id');
-            //发送给服务器
-            sendPost('${ctx}/user/createNote', {'parentId': parent_id, 'noteName': name}, false, function (msg) {
-                if (!msg.status) {
-                    toastr.error("创建笔记失败");
+            if(name == null || name == "") {
+                toastr.warning("笔记名不能为空");
+            } else {
+                var parent_id = $chooseDir.attr('index-id');
+                //发送给服务器
+                sendPost('${ctx}/user/createNote', {'parentId': parent_id, 'noteName': name}, false, function (msg) {
+                    if (!msg.status) {
+                        toastr.error("创建笔记失败");
+                        return false;
+                    } else  {
+                        //把文本框删掉
+                        var $parent = $('input[name=note_name]').parent();
+                        $('input[name=note_name]').remove();
+                        //生成笔记
+                        $parent.prepend('<a class="btn js_note_btn" index-id="'+msg.noteId+'" style="margin-left: 20px">' + name + '</a>');
+                        initUI();
+                    }
+                }, function () {
+                    toastr.error("系统错误");
                     return false;
-                } else  {
-                    //把文本框删掉
-                    var $parent = $('input[name=note_name]').parent();
-                    $('input[name=note_name]').remove();
-                    //生成笔记
-                    $parent.prepend('<a class="btn js_note_btn" index-id="'+msg.noteId+'" style="margin-left: 20px">' + name + '</a>');
-                    initUI();
-                }
-            }, function () {
-                toastr.error("系统错误");
-                return false;
-            });
+                });
+            }
         });
 
         //实现目录收放
@@ -480,7 +535,7 @@ noteId、noteName即使页面刷新也不会置空，
             flushNote(noteId, noteName);
         });
 
-        //    回收站的点击事件
+        // 回收站的点击事件
         $('#rubbish').on('click',function () {
             //点击收起下面的文件
             if ($('#rubbish_container').hasClass('hidden')){
@@ -489,7 +544,6 @@ noteId、noteName即使页面刷新也不会置空，
                 $('#rubbish_container').addClass('hidden')
             }
         });
-
 
         window.onunload = function () {
             $("#editorTitle").val("");

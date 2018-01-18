@@ -1,8 +1,13 @@
 package cn.edu.jit.entry;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Article {
+/**
+ * 笔记实体类
+ * @author jitwxs
+ */
+public class Article implements Serializable {
     private String id;
 
     private String title;

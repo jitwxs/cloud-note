@@ -1,16 +1,16 @@
 package cn.edu.jit.web;
 
 
-import cn.edu.jit.dto.ArticleDto;
-import cn.edu.jit.dto.ArticleRecycleDto;
-import cn.edu.jit.dto.UserDto;
+import cn.edu.jit.dto.*;
 import cn.edu.jit.entry.*;
 import cn.edu.jit.global.GlobalConstant;
 import cn.edu.jit.global.GlobalFunction;
 import cn.edu.jit.service.*;
-import cn.edu.jit.util.Sha1Utils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.sun.org.apache.regexp.internal.RE;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
@@ -21,7 +21,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -48,19 +52,42 @@ public class AdminController {
     @Resource(name = "areaServiceImpl")
     private AreaService areaService;
 
-    @Resource(name = "articleRecycleServiceImpl")
-    private ArticleRecycleService articleRecycleService;
+    @Resource(name = "illegalReasonServiceImpl")
+    private IllegalReasonService illegalReasonService;
+
+    @Resource(name = "userBlacklistServiceImpl")
+    private UserBlacklistService userBlacklistService;
 
     /*---------   普通方法区域（START）   ----------*/
-    /**
-     * 获取当前用户id
-     */
+
     private String getSelfId() {
         User user = userService.getByTel(GlobalFunction.getSelfTel());
         return user.getId();
     }
 
-    private List<ArticleDto> article2ArticleDto(List<Article> articles) {
+    private List<UserDto> user2Dto(List<User> users) {
+        List<UserDto> result = new ArrayList<>();
+
+        for(User user : users) {
+            UserDto userDto = new UserDto();
+            BeanUtils.copyProperties(user, userDto);
+            if(userDto.getArea() != null) {
+                Area area = areaService.getById(user.getArea());
+                userDto.setAreaName(area.getName());
+            }
+
+            int roleId = loginService.getByTel(user.getTel()).getRoleId();
+            if(roleId == GlobalConstant.ROLE.ADMIN.getIndex()) {
+                userDto.setRoleName(GlobalConstant.ROLE.ADMIN.getName());
+            } else if(roleId == GlobalConstant.ROLE.USER.getIndex()) {
+                userDto.setRoleName(GlobalConstant.ROLE.USER.getName());
+            }
+            result.add(userDto);
+        }
+        return result;
+    }
+
+    private List<ArticleDto> article2Dto(List<Article> articles) {
         List<ArticleDto> lists = new ArrayList<>();
 
         for (Article article: articles) {
@@ -68,32 +95,78 @@ public class AdminController {
             BeanUtils.copyProperties(article, articleDto);
             User user = userService.getById(article.getUserId());
             articleDto.setAuthorTel(user.getTel());
+            articleDto.setAuthorName(user.getName());
+            if(!StringUtils.isBlank(article.getShareUrl())) {
+                articleDto.setShareUrl(GlobalFunction.getRealUrl(article.getShareUrl()));
+            }
             lists.add(articleDto);
         }
         return  lists;
     }
 
-    private List<ArticleRecycleDto> articleRecycle2ArticleRecycleDto(List<ArticleRecycle> articlesRecycle) {
-        List<ArticleRecycleDto> lists = new ArrayList<>();
+    private List<UserBlacklistDto> userBlacklist2Dto(List<UserBlacklist> userBlacklists) {
+        List<UserBlacklistDto> result = new ArrayList<>();
 
-        for (ArticleRecycle articleRecycle: articlesRecycle) {
-            ArticleRecycleDto articleRecycleDto = new ArticleRecycleDto();
-            BeanUtils.copyProperties(articleRecycle, articleRecycleDto);
-            User user = userService.getById(articleRecycle.getUserId());
-            articleRecycleDto.setAuthorTel(user.getTel());
-            lists.add(articleRecycleDto);
+        for(UserBlacklist userBlacklist : userBlacklists) {
+            UserBlacklistDto userBlacklistDto = new UserBlacklistDto();
+            BeanUtils.copyProperties(userBlacklist, userBlacklistDto);
+
+            String userId = userBlacklist.getUserId();
+            if(userId != null) {
+                User user = userService.getById(userId);
+                IllegalReason illegalReason = illegalReasonService.getById(userBlacklist.getReasonId());
+
+                if(user != null) {
+                    userBlacklistDto.setUserName(user.getName());
+                    userBlacklistDto.setTel(user.getTel());
+                }
+                if(illegalReason != null) {
+                    userBlacklistDto.setIllegalName(illegalReason.getName());
+                }
+
+                if(userBlacklistDto.getEndDate().compareTo(new Date()) <= 0) {
+                    userBlacklistDto.setStatus("失效");
+                } else {
+                    userBlacklistDto.setStatus("有效");
+                }
+            }
+            result.add(userBlacklistDto);
         }
-        return  lists;
+        return result;
+    }
+
+    private LogDto log2LogDto(Log log) {
+        LogDto logDto = new LogDto();
+        BeanUtils.copyProperties(log, logDto);
+        User user = userService.getById(log.getUserId());
+        if(user != null) {
+            logDto.setUserName(user.getName());
+        }
+        return logDto;
+    }
+
+    private List<LogDto> log2LogDto(List<Log> list) {
+        List<LogDto> result = new ArrayList<>();
+        for(Log log : list) {
+            LogDto logDto = new LogDto();
+            BeanUtils.copyProperties(log, logDto);
+            User user = userService.getById(log.getUserId());
+            if(user != null) {
+                logDto.setUserName(user.getName());
+            }
+            result.add(logDto);
+        }
+        return result;
     }
 
     /*---------   普通方法区域（END）   ----------*/
 
+    /*---------   网站信息区域（Start）   ----------*/
+
     @RequestMapping(value = "index")
-    public String index(HttpServletRequest request, HttpServletResponse response) {
+    public String index() {
         return "admin/userInfo";
     }
-
-    /*---------   网站信息区域（Start）   ----------*/
 
     /**
      * 用户信息UI
@@ -107,10 +180,10 @@ public class AdminController {
      * 准备用户信息数据
      */
     @RequestMapping(value = "preparerUserInfo", method = {RequestMethod.GET})
-    public void userInfoUI(HttpServletRequest request, HttpServletResponse response) {
+    public void preparerUserInfo(HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
         try {
-            Map<Object, Object> objects = new HashMap<>();
+            Map<Object, Object> objects = new HashMap<>(16);
 
             List<User> users = userService.listAllUser("create_date");
 
@@ -137,6 +210,7 @@ public class AdminController {
                 Date prevDate = prevUser.getCreateDate();
 
                 if(!DateUtils.isSameDay(nowDate, prevDate)) {
+                    userInfo.setNum(userInfo.getMaleNum() + userInfo.getFemaleNum());
                     regInfo.add(userInfo);
                     userInfo = new UserInfo();
                     userInfo.setDate(GlobalFunction.getDate2Day(nowDate));
@@ -154,68 +228,35 @@ public class AdminController {
             // 拼接JSON串
             int maleCount = userService.countBySex("男");
             int femaleCount = userService.countBySex("女");
-            String[] date = new String[regInfo.size()];
-            Integer[] maleNum = new Integer[regInfo.size()];
-            Integer[] femaleNum = new Integer[regInfo.size()];
-            Integer[] tempTotal = new Integer[regInfo.size()];
-            for(int i=regInfo.size()-1, j=0; i>=0; i--, j++) {
-                UserInfo ui = regInfo.get(i);
-                date[j] = ui.getDate();
-                maleNum[j] = ui.getMaleNum();
-                femaleNum[j] = ui.getFemaleNum();
-                tempTotal[j] = ui.getTempTotal();
 
-            }
-
+            objects.put("regInfo", regInfo);
             objects.put("maleCount", maleCount);
             objects.put("femaleCount", femaleCount);
-            objects.put("date",date);
-            objects.put("maleNum",maleNum);
-            objects.put("femaleNum",femaleNum);
-            objects.put("tempTotal",tempTotal);
+
             String data = JSON.toJSONString(objects, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
-        }catch (Exception e) {
+        }catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * 系统日志UI
+     * 登陆信息UI
      */
-    @RequestMapping(value = "systemLog", method = {RequestMethod.GET})
-    public String systemLogUI(Model model) {
-        List<Log> lists = logService.listAll();
-        model.addAttribute("lists", lists);
-        return "/admin/systemLog";
-    }
-
-
-    /*---------   网站信息区域（Start）   ----------*/
-
-    /*---------   用户管理区域（Start）   ----------*/
-    /**
-     *  显示所有普通用户
-     */
-    @RequestMapping(value = "showAllUser", method = {RequestMethod.GET})
-    public String showAllUser(Model model) {
-        List<User> list = userService.listAllUser("create_date");
-        model.addAttribute("userList", list);
-        return "admin/showAllUser";
+    @RequestMapping(value = "loginInfo", method = {RequestMethod.GET})
+    public String loginInfoUI() {
+        return "/admin/loginInfo";
     }
 
     /**
-     * 获取指定用户所有文章
+     * 准备登陆信息数据
      */
-    @RequestMapping(value = "showUserArticle", method = {RequestMethod.POST})
-    public void showUserArticle(HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "preparerLoginInfo", method = {RequestMethod.GET})
+    public void preparerLoginInfo(HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
         try {
-            String userId = request.getParameter("id");
-            List<Article> articles = articleService.listArticleByUid(userId);
-            Message message = new Message();
-            message.setArticles(articles);
-            String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            List<Data> list = logService.countUserByTitle(GlobalConstant.LOG_USER.USER_LOGIN.getName());
+            String data = JSON.toJSONString(list, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
         } catch (IOException e) {
             e.printStackTrace();
@@ -223,144 +264,239 @@ public class AdminController {
     }
 
     /**
-     *  显示所有分享笔记
+     * 分享信息UI
      */
-    @RequestMapping(value = "showShareNote", method = {RequestMethod.GET})
-    public String showShareNote(Model model) {
-        List<Article> tempList = articleService.listAllShareArticle();
-        List<ArticleDto> list = article2ArticleDto(tempList);
-        model.addAttribute("noteList", list);
-        return "admin/showShareNote";
+    @RequestMapping(value = "shareInfo", method = {RequestMethod.GET})
+    public String shareInfoUI() {
+        return "/admin/shareInfo";
     }
 
     /**
-     *  显示所有回收笔记
+     * 准备分享信息数据
      */
-    @RequestMapping(value = "showNoteRecycle", method = {RequestMethod.GET})
-    public String showNoteRecycle(Model model) {
-        List<ArticleRecycle> tempList = articleRecycleService.listAllRecycle();
-        List<ArticleRecycleDto> list = articleRecycle2ArticleRecycleDto(tempList);
-        model.addAttribute("recycleList", list);
-        return "admin/showNoteRecycle";
+    @RequestMapping(value = "preparerShareInfo", method = {RequestMethod.GET})
+    public void preparerShareInfo(HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        try {
+            List<Data> list = logService.countUserByTitle(GlobalConstant.LOG_NOTE.SHARE_NOTE.getName());
+            String data = JSON.toJSONString(list, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*---------   网站信息区域（End）   ----------*/
+
+    /*---------   笔记管理区域（Start）   ----------*/
+    /**
+     * 笔记日志UI
+     */
+    @RequestMapping(value = "noteLog", method = {RequestMethod.GET})
+    public String noteLogUI() {
+        return "admin/noteLog";
     }
 
     /**
-     *  显示所有笔记
+     * 准备笔记日志
      */
-    @RequestMapping(value = "showAllNote", method = {RequestMethod.GET})
-    public String showAllNote(Model model) {
-        List<Article> tempList = articleService.listAllArticle();
-        List<ArticleDto> list = article2ArticleDto(tempList);
-        model.addAttribute("noteList", list);
-        return "admin/showAllNote";
+    @RequestMapping(value = "prepareNoteLog", method = {RequestMethod.GET})
+    public void prepareNoteLog(HttpServletResponse response) {
+        try {
+            response.setContentType("text/html;charset=utf-8");
+            List<Log> lists = logService.listByType(GlobalConstant.LOG_NOTE.type, "create_date desc");
+
+            List<LogDto> result = log2LogDto(lists);
+            String data = JSON.toJSONString(result, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 分享审核UI
+     */
+    @RequestMapping(value = "shareAudit", method = {RequestMethod.GET})
+    public String shareAuditUI() {
+        return "admin/shareAudit";
     }
 
     /**
-     * 删除文章
+     * 准备分享审核数据
      */
-    @RequestMapping(value = "deleteArticle", method = {RequestMethod.GET})
-    public String deleteArticle(String id) {
-        ArticleRecycle articleRecycle = new ArticleRecycle();
-        Article article = articleService.getById(id);
-        BeanUtils.copyProperties(article, articleRecycle);
-        articleService.removeById(id);
-        articleRecycleService.save(articleRecycle);
-        return "redirect:/admin/showAllNote";
+    @RequestMapping(value = "prepareShareAudit", method = {RequestMethod.GET})
+    public void prepareShareAudit(HttpServletResponse response) {
+        try {
+            response.setContentType("text/html;charset=utf-8");
+            List<Article> tempList = articleService.listAllShareArticle();
+            List<ArticleDto> list = article2Dto(tempList);
+            String data = JSON.toJSONString(list, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * 取消分享
      */
     @RequestMapping(value = "cancelShare", method = {RequestMethod.GET})
-    public String cancelShare(String id) {
+    public String cancelShare(String id, HttpServletRequest request) {
         Article article = articleService.getById(id);
         article.setIsOpen(GlobalConstant.ARTICLE_STATUS.NOT_SHARE.getIndex());
-        article.setModifedDate(new Date());
+        if(!StringUtils.isBlank(article.getShareUrl())) {
+            GlobalFunction.deleteSignalFile(article.getShareUrl());
+            article.setShareUrl(null);
+        }
         articleService.update(article);
-        return "redirect:/admin/showShareNote";
+
+        // 保存日志
+        logService.saveLog(request, GlobalConstant.LOG_SYSTEM.type, GlobalConstant.LOG_SYSTEM.SHARE_CANCEL.getName(), getSelfId());
+
+        return "redirect:/admin/shareAudit";
     }
 
     /**
-     * 还原文章
+     * 删除文章，管理员删除的文章，不进入回收站
      */
-    @RequestMapping(value = "restoreArticle", method = {RequestMethod.GET})
-    public String restoreArticle(String id) {
-        Article article = new Article();
-        ArticleRecycle articleRecycle = articleRecycleService.getById(id);
-        BeanUtils.copyProperties(articleRecycle, article);
-        articleRecycleService.removeById(id);
-        articleService.save(article);
-        return "redirect:/admin/showNoteRecycle";
+    @RequestMapping(value = "deleteArticle", method = {RequestMethod.GET})
+    public String deleteArticle(String[] ids, HttpServletRequest request) {
+        for(String id : ids) {
+            if(!StringUtils.isBlank(id)) {
+                articleService.removeById(id);
+                // 保存日志
+                logService.saveLog(request, GlobalConstant.LOG_SYSTEM.type, GlobalConstant.LOG_SYSTEM.SHARE_DEL.getName(), getSelfId());
+            }
+        }
+        return "redirect:/admin/shareAudit";
+    }
+
+    /*---------   笔记管理区域（End）   ----------*/
+
+    /*---------   用户管理区域（Start）   ----------*/
+    /**
+     *  用户列表UI
+     */
+    @RequestMapping(value = "userList", method = {RequestMethod.GET})
+    public String userListUI() {
+        return "admin/userList";
+    }
+
+    /**
+     * 准备用户列表
+     */
+    @RequestMapping(value = "prepareUserList", method = {RequestMethod.GET})
+    public void prepareUserList(HttpServletResponse response) {
+        try {
+            response.setContentType("text/html;charset=utf-8");
+            List<User> list = userService.listAllUser("create_date");
+            List<UserDto> userDtos = user2Dto(list);
+            String data = JSON.toJSONString(userDtos, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 用户日志UI
+     */
+    @RequestMapping(value = "userLog", method = {RequestMethod.GET})
+    public String userLogUI() {
+        return "/admin/userLog";
+    }
+
+    /**
+     * 准备用户日志
+     */
+    @RequestMapping(value = "prepareUserLog", method = {RequestMethod.GET})
+    public void prepareUserLog(HttpServletResponse response) {
+        try {
+            response.setContentType("text/html;charset=utf-8");
+            List<Log> lists = logService.listByType(GlobalConstant.LOG_USER.type, "create_date desc");
+
+            List<LogDto> result = log2LogDto(lists);
+            String data = JSON.toJSONString(result, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * 删除用户
      */
     @RequestMapping(value = "deleteUser", method = {RequestMethod.GET})
-    public String deleteUser(String tel) throws Exception{
-        Login login = loginService.getByTel(tel);
-        if (login == null) {
-            throw new Exception("用户不存在!");
-        } else {
-            //login表和user表中删除此用户
+    public String deleteUser(String[] tels, HttpServletRequest request) {
+        for(String tel : tels) {
+            // 无需删除User表，级联于Login表
             loginService.removeByTel(tel);
-            userService.removeByTel(tel);
-            //删除此用户的文件
-            try {
-                GlobalFunction.delFolder(GlobalConstant.UPLOAD_PATH + "/" + tel);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+
+            // 安全删除文件夹
+            File file = new File(GlobalConstant.UPLOAD_PATH + "/" + tel);
+            FileUtils.deleteQuietly(file);
         }
-        return "redirect:/admin/showAllUser";
+
+        // 保存日志
+        logService.saveLog(request, GlobalConstant.LOG_SYSTEM.type, GlobalConstant.LOG_SYSTEM.USER_DEL.getName(), getSelfId());
+        return "redirect:/admin/userList";
     }
 
     /**
-     * 跳转添加用户
+     * 显示用户信息
      */
-    @RequestMapping(value = "addNewUser", method = {RequestMethod.GET})
-    public String addNewUser() {
-        return "admin/addNewUser";
-    }
-
-    /**
-     * 添加用户
-     */
-    @RequestMapping(value = "addUser", method = {RequestMethod.POST})
-    public void addUser(HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "showUserInfo", method = {RequestMethod.POST})
+    public void showUserInfo(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
         String tel = request.getParameter("tel");
-        String password = request.getParameter("password");
-        String name = request.getParameter("name");
-        String email = request.getParameter("email");
-//        String area = request.getParameter("area");
-        String sex = request.getParameter("sex");
-        String sign = request.getParameter("sign");
-
         try {
-            Login checkLogin = loginService.getByTel(tel);
-            Message message = new Message();
-            if (checkLogin != null) {
-                message.setStatus(false);
-                message.setInfo("用户已存在");
-            } else {
-                Login login = new Login();
-                User user = new User();
-                login.setCreateDate(new Date());
-                String encryptedPassword = Sha1Utils.entryptPassword(password);
-                login.setPassword(encryptedPassword);
-                login.setTel(tel);
-                loginService.save(login);
-//                user.setArea(area);
-                user.setCreateDate(new Date());
-                user.setEmail(email);
-                user.setId(GlobalFunction.getUUID());
-                user.setName(name);
-                user.setSex(sex);
-                user.setSign(sign);
-                userService.save(user);
-                message.setStatus(true);
-                message.setInfo("添加成功");
+            User user = userService.getByTel(tel);
+            UserDto userDto = new UserDto();
+            BeanUtils.copyProperties(user, userDto);
+
+            if(userDto.getArea() != null) {
+                Area area = areaService.getById(user.getArea());
+                userDto.setAreaName(area.getName());
+            }
+
+            String data = JSON.toJSONString(userDto, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 打入小黑屋前验证
+     */
+    @RequestMapping(value = "addBlacklistCheck", method = {RequestMethod.POST})
+    public void addBlacklistCheck(HttpServletRequest request, HttpServletResponse response) {
+        Message message = new Message();
+        response.setContentType("text/html;charset=utf-8");
+        // 如果已经存在有效的封禁记录，提示管理员到期时间，以及是否要继续封禁
+        String tel = request.getParameter("tel");
+        try {
+            User user = userService.getByTel(tel);
+            if(!StringUtils.isBlank(tel)) {
+                List<UserBlacklist> list = userBlacklistService.listValid(user.getId());
+                if(list.size() > 0) {
+                    Date maxDate = new Date();
+                    for(UserBlacklist userBlacklist : list) {
+                        Date tempDate = userBlacklist.getEndDate();
+                        if(tempDate.compareTo(maxDate) >= 0) {
+                            maxDate = tempDate;
+                        }
+                    }
+                    message.setStatus(true);
+                    String info = "共计查到" + list.size() + "条有效记录，最后解封时间为："
+                            + GlobalFunction.getDate2Second(maxDate) +"，是否继续添加封禁记录？";
+                    message.setInfo(info);
+                } else {
+                    message.setStatus(false);
+                }
             }
             String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
@@ -370,80 +506,52 @@ public class AdminController {
     }
 
     /**
-     * 显示用户信息
+     * 打入小黑屋
      */
-    @RequestMapping(value = "showUserInfo", method = {RequestMethod.GET})
-    public void showUserInfo(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
-        String tel = request.getParameter("tel");
+    @RequestMapping(value = "addToBlackHome", method = {RequestMethod.POST})
+    public String addToBlacklist(UserBlacklist userBlacklist, Integer duration, HttpServletRequest request) {
         try {
-            User user = userService.getByTel(tel);
-            Area area = areaService.getById(user.getArea());
-            UserDto userDto = new UserDto();
-            BeanUtils.copyProperties(user, userDto);
-            userDto.setAreaName(area.getName());
-
-            List<Area> areas = areaService.listByPid(0);
-
-            List<Object> objects = new LinkedList<>();
-            objects.add(userDto);
-            objects.add(areas);
-            String data = JSON.toJSONString(objects, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
-            response.getWriter().write(data);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 修改用户信息
-     * */
-    @RequestMapping(value = "saveUserInfo", method = {RequestMethod.POST})
-    public String saveUserInfo(User user, HttpServletRequest request) {
-        String id = user.getId();
-        User tempUser = userService.getById(id);
-        user.setCreateDate(tempUser.getCreateDate());
-        if (user.getArea() == -1) {
-            user.setArea(tempUser.getArea());
-        }
-        user.setModifedDate(new Date());
-        userService.update(user);
-        return "redirect:/admin/showAllUser";
-    }
-
-    /**
-     * 修改用户密码
-     * */
-    @RequestMapping(value = "saveUserLogin", method = {RequestMethod.POST})
-    public String saveUserLogin(Login templogin, HttpServletRequest request) {
-        String tel = templogin.getTel();
-        String password = templogin.getPassword();
-        String encryptedPassword = Sha1Utils.entryptPassword(password);
-        Login login = loginService.getByTel(tel);
-        login.setPassword(encryptedPassword);
-        login.setModifiedDate(new Date());
-        loginService.update(login);
-        return "redirect:/admin/showAllUser";
-    }
-
-    /**
-     * 验证密码
-     */
-    @RequestMapping(value = "verifyPassword", method = {RequestMethod.POST})
-    public void resetPassword(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
-        try {
-            String passWord = request.getParameter("password");
-            Login login = loginService.getByTel(GlobalFunction.getSelfTel());
-            Message msg = new Message();
-            if (!Sha1Utils.validatePassword(passWord, login.getPassword())) {
-                msg.setStatus(false);
-                msg.setInfo("密码错误");
+            userBlacklist.setId(GlobalFunction.getUUID());
+            Date d = new Date();
+            userBlacklist.setCreateDate(d);
+            if(duration == 9999) {
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                userBlacklist.setEndDate(df.parse("9999-12-31 00:00"));
             } else {
-                msg.setStatus(true);
-                msg.setInfo("验证成功");
+                userBlacklist.setEndDate(new Date(d.getTime() + duration * 24 * 60 * 60 * 1000));
             }
-            String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            userBlacklistService.save(userBlacklist);
+
+            // 保存日志
+            logService.saveLog(request, GlobalConstant.LOG_SYSTEM.type, GlobalConstant.LOG_SYSTEM.USER_BLOCK.getName(), getSelfId());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            // 保存日志
+            logService.saveLog(request, e, GlobalConstant.LOG_SYSTEM.type, GlobalConstant.LOG_SYSTEM.USER_BLOCK.getName(), getSelfId());
+        }
+        return "redirect:/admin/userList";
+    }
+
+    /**
+     *  小黑屋UI
+     */
+    @RequestMapping(value = "blackHome", method = {RequestMethod.GET})
+    public String blackHomeUI() {
+        return "admin/blackHome";
+    }
+
+    /**
+     * 准备小黑屋数据
+     */
+    @RequestMapping(value = "prepareBlackHome", method = {RequestMethod.GET})
+    public void prepareBlackHome(HttpServletResponse response) {
+        try {
+            response.setContentType("text/html;charset=utf-8");
+            List<UserBlacklist> tempList = userBlacklistService.listAll("create_date");
+
+            List<UserBlacklistDto> list = userBlacklist2Dto(tempList);
+
+            String data = JSON.toJSONString(list, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
         } catch (IOException e) {
             e.printStackTrace();
@@ -451,16 +559,172 @@ public class AdminController {
     }
 
     /**
-     * 重置密码
+     * 取消黑名单
      */
-    @RequestMapping(value = "resetPassword", method = {RequestMethod.POST})
-    public String resetPassword(String newPassword) {
-        Login login = loginService.getByTel(GlobalFunction.getSelfTel());
-        String encryptedPassword = Sha1Utils.entryptPassword(newPassword);
-        login.setPassword(encryptedPassword);
-        login.setModifiedDate(new Date());
-        loginService.update(login);
-        return "redirect:/logout";
+    @RequestMapping(value = "cancelBlacklist", method = {RequestMethod.GET})
+    public String cancelBlacklist(String id, HttpServletRequest request) {
+        UserBlacklist userBlacklist = userBlacklistService.getById(id);
+        userBlacklist.setEndDate(new Date());
+        userBlacklistService.update(userBlacklist);
+        // 保存日志
+        logService.saveLog(request, GlobalConstant.LOG_SYSTEM.type, GlobalConstant.LOG_SYSTEM.CANCEL_BLOCK.getName(), getSelfId());
+        return "redirect:/admin/blackHome";
     }
-    /*---------   用户管理区域（END）   ----------*/
+
+    /**
+     * 删除封禁记录
+     */
+    @RequestMapping(value = "removeBlacklistRecord", method = {RequestMethod.GET})
+    public String removeBlacklistRecord(String[] ids) {
+        for(String id : ids) {
+            if(!StringUtils.isBlank(id)) {
+                userBlacklistService.removeById(id);
+            }
+        }
+        return "redirect:/admin/blackHome";
+    }
+
+    /*---------   用户管理区域（End）   ----------*/
+
+    /*---------   网盘管理区域（Start）   ----------*/
+    /**
+     * 网盘日志UI
+     */
+    @RequestMapping(value = "panLog", method = {RequestMethod.GET})
+    public String panLogUI(Model model) {
+        List<Log> lists = logService.listByType(GlobalConstant.LOG_PAN.type, "create_date desc");
+        model.addAttribute("lists", lists);
+        return "/admin/panLog";
+    }
+
+    /**
+     * 准备用户日志
+     */
+    @RequestMapping(value = "preparePanLog", method = {RequestMethod.GET})
+    public void preparePanLog(HttpServletResponse response) {
+        try {
+            response.setContentType("text/html;charset=utf-8");
+            List<Log> lists = logService.listByType(GlobalConstant.LOG_PAN.type, "create_date desc");
+
+            List<LogDto> result = log2LogDto(lists);
+            String data = JSON.toJSONString(result, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*---------   网盘管理区域（End）   ----------*/
+
+
+    /*---------   系统管理区域（Start）   ----------*/
+    /**
+     * 系统设置UI
+     */
+    @RequestMapping(value = "systemSetting", method = {RequestMethod.GET})
+    public String systemSettingUI(Model model) {
+        List<IllegalReason> list = illegalReasonService.listAll();
+        model.addAttribute("IllegalReasonList", list);
+        return "admin/systemSetting";
+    }
+
+    /**
+     * 系统日志UI
+     */
+    @RequestMapping(value = "systemLog", method = {RequestMethod.GET})
+    public String systemLogUI() {
+        return "admin/systemLog";
+    }
+
+    /**
+     * 准备系统日志
+     */
+    @RequestMapping(value = "prepareSystemLog", method = {RequestMethod.GET})
+    public void prepareSystemLog(HttpServletResponse response) {
+        try {
+            response.setContentType("text/html;charset=utf-8");
+            List<Log> lists = logService.listByType(GlobalConstant.LOG_SYSTEM.type, "create_date desc");
+
+            List<LogDto> result = log2LogDto(lists);
+            String data = JSON.toJSONString(result, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 获取日志
+     */
+    @RequestMapping(value = "getLogInfo", method = {RequestMethod.POST})
+    public void getLogInfo(HttpServletRequest request, HttpServletResponse response) {
+        String id = request.getParameter("id");
+        response.setContentType("text/html;charset=utf-8");
+        try {
+            if(!StringUtils.isBlank(id)) {
+                Log log = logService.getById(id);
+                LogDto logDto = log2LogDto(log);
+                String data = JSON.toJSONString(logDto, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+                response.getWriter().write(data);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 删除日志
+     */
+    @RequestMapping(value = "deleteLog", method = {RequestMethod.GET})
+    public String deleteLog(String[] logIds, String url) {
+        for(String id : logIds) {
+            logService.removeById(id);
+        }
+        return "redirect:/admin/" + url;
+    }
+
+    /**
+     * 删除封禁原因
+     */
+    @RequestMapping(value = "deleteIllegal", method = {RequestMethod.GET})
+    public String deleteIllegal(String id) {
+        illegalReasonService.removeById(id);
+        return "redirect:/admin/systemSetting";
+    }
+
+    /**
+     * 修改封禁原因
+     * */
+    @RequestMapping(value = "updateIllegal", method = {RequestMethod.POST})
+    public String updateIllegal(IllegalReason illegalReason) {
+        illegalReasonService.update(illegalReason);
+        return "redirect:/admin/systemSetting";
+    }
+
+    /**
+     * 添加封禁原因
+     * */
+    @RequestMapping(value = "addIllegal", method = {RequestMethod.POST})
+    public String addIllegal(IllegalReason illegalReason) {
+        illegalReason.setId(GlobalFunction.getUUID());
+        illegalReasonService.save(illegalReason);
+        return "redirect:/admin/systemSetting";
+    }
+
+    /**
+     * 获取所有封禁原因
+     */
+    @RequestMapping(value = "listIllegal", method = {RequestMethod.GET})
+    public void listIllegal(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        try {
+            List<IllegalReason> list = illegalReasonService.listAll();
+            String data = JSON.toJSONString(list, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*---------   系统管理区域（End）   ----------*/
 }

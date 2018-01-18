@@ -385,6 +385,76 @@ public class UserPanExample {
             return (Criteria) this;
         }
 
+        public Criteria andDirIdIsNull() {
+            addCriterion("dir_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirIdIsNotNull() {
+            addCriterion("dir_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirIdEqualTo(String value) {
+            addCriterion("dir_id =", value, "dirId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirIdNotEqualTo(String value) {
+            addCriterion("dir_id <>", value, "dirId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirIdGreaterThan(String value) {
+            addCriterion("dir_id >", value, "dirId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirIdGreaterThanOrEqualTo(String value) {
+            addCriterion("dir_id >=", value, "dirId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirIdLessThan(String value) {
+            addCriterion("dir_id <", value, "dirId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirIdLessThanOrEqualTo(String value) {
+            addCriterion("dir_id <=", value, "dirId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirIdLike(String value) {
+            addCriterion("dir_id like", value, "dirId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirIdNotLike(String value) {
+            addCriterion("dir_id not like", value, "dirId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirIdIn(List<String> values) {
+            addCriterion("dir_id in", values, "dirId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirIdNotIn(List<String> values) {
+            addCriterion("dir_id not in", values, "dirId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirIdBetween(String value1, String value2) {
+            addCriterion("dir_id between", value1, value2, "dirId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirIdNotBetween(String value1, String value2) {
+            addCriterion("dir_id not between", value1, value2, "dirId");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateTimeIsNull() {
             addCriterion("create_time is null");
             return (Criteria) this;

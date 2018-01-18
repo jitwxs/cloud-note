@@ -1,8 +1,6 @@
 package cn.edu.jit.service;
 
-import cn.edu.jit.entry.Article;
 import cn.edu.jit.entry.ArticleRecycle;
-import cn.edu.jit.entry.ArticleRecycleExample;
 
 import java.util.List;
 
@@ -19,6 +17,4 @@ public interface ArticleRecycleService {
     int removeById(String id);
 
     List<ArticleRecycle> listSelfRecycle(String uid);
-
-    List<ArticleRecycle> listAllRecycle();
 }

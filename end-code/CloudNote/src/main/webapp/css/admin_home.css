@@ -62,9 +62,16 @@ a{text-decoration:none;}
     margin: 0 auto;
     margin-left: 30%;
     margin-top:100px;
+    margin-top: 20px;
+
 }
 
+.detail{
+    background: #0d77b6;
+}
 
-
+.del{
+    background:hotpink;
+}
 
 

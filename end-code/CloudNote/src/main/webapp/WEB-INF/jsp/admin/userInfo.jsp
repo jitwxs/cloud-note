@@ -9,29 +9,22 @@
 <body style="width: 100%;height: 1000px;" >
 
     <div class="container" style="height: 1000px;width: 100%; text-align: center;">
-        <h2 >用户信息统计</h2>
+        <h2 >用户量统计</h2>
         <div id="usernum" class="diy_container"></div>
         <div id="table" class="diy_table">
-            <table class="table table-responsive table-bordered table-hover">
-                <thead>
-                <tr>
-                    <th>时间</th>
-                    <th>当日注册量</th>
-                    <th>总注册量</th>
-                </tr>
-                </thead>
-                <tbody id="userInfoBody">
-                </tbody>
+            <table class="table table-responsive table-bordered table-hover tab-content " id="user_table">
             </table>
         </div>
     </div>
 
     <script>
-
         //userNum表格
         var userNum = echarts.init(document.getElementById('usernum'));
         var pies=[];
-
+        var x = [];
+        var male= [];
+        var female = [];
+        var sum = [];
         var useroption = {
             title: {
                 text: '用户量统计'
@@ -116,37 +109,33 @@
         userNum.setOption(useroption);
 
         sendGet('${ctx}/admin/preparerUserInfo',{},false,function (data) {
-            var res = "";
-            for(var i=0; i<data.date.length; i++) {
-                var countUser = data.maleNum[i] + data.femaleNum[i];
-                res += '<tr>\n' +
-                    '                    <td>'+data.date[i]+'</td>\n' +
-                    '                    <td>'+countUser+'</td>\n' +
-                    '                    <td>'+data.tempTotal[i]+'</td>\n' +
-                    '                </tr>';
-            }
-            $("#userInfoBody").html(res);
-
             pies.push(data.maleCount);
             pies.push(data.femaleCount);
+            var temp = data.regInfo;
+            for(var i=temp.length-1;i>=0;i--) {
+                x.push(temp[i].date);
+                male.push(temp[i].maleNum);
+                female.push(temp[i].femaleNum);
+                sum.push(temp[i].tempTotal);
+            }
             userNum.setOption({
                 xAxis: {
-                    data: data.date
+                    data: x
                 },
                 series: [
                     {
                         // 根据名字对应到相应的系列
                         name:'男性',
-                        data: data.maleNum
+                        data: male
                     },
                     {
                         // 根据名字对应到相应的系列
                         name:'女性',
-                        data: data.femaleNum
+                        data: female
                     },
                     {
                         name:'总注册量',
-                        data:data.tempTotal
+                        data: sum
                     },
                     {
                         name:'比例',
@@ -154,6 +143,49 @@
                     }
 
                 ]
+            });
+
+            // 表格
+            $('#user_table').bootstrapTable({
+                cache: false,
+                showExport: true,//显示导出按钮
+                striped: true,
+                pagination: true,
+                pageSize: 10,
+                height:300,
+                pageNumber:1,
+                pageList: [10, 20, 50, 100, 200, 500],
+                search: true,
+                showColumns: true,
+                showRefresh: false,
+                exportTypes:  ['excel','json', 'xml', 'txt', 'sql'],
+                clickToSelect: true,
+                sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
+                columns:
+                    [
+                        {
+                            field:"date",
+                            title:"日期",
+                            align:"center",
+                            valign:"middle",
+                            sortable:"true"
+                        },
+                        {
+                            field:"num",
+                            title:"当日注册量",
+                            align:"center",
+                            valign:"middle",
+                            sortable:"true"
+                        },
+                        {
+                            field:"tempTotal",
+                            title:"总注册量",
+                            align:"center",
+                            valign:"middle",
+                            sortable:"true"
+                        }
+                    ],
+                data:temp
             });
         },function (error) {
             toastr.error("系统错误");

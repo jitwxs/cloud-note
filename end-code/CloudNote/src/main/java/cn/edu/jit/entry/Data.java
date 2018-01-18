@@ -6,24 +6,24 @@ import java.io.Serializable;
  * @author jitwxs
  * @date 2018/1/12 10:26
  */
-public class Data implements Serializable{
-    private String name;
+public class Data implements Serializable {
+    private String k;
 
-    private String value;
+    private String v;
 
-    public String getName() {
-        return name;
+    public String getK() {
+        return k;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setK(String k) {
+        this.k = k;
     }
 
-    public String getValue() {
-        return value;
+    public String getV() {
+        return v;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setV(String v) {
+        this.v = v;
     }
 }

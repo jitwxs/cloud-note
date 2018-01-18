@@ -1,6 +1,12 @@
 package cn.edu.jit.entry;
 
-public class FileConvert {
+import java.io.Serializable;
+
+/**
+ * 文件转换实体类
+ * @author jitwxs
+ */
+public class FileConvert implements Serializable {
     private String affixId;
 
     private String path;

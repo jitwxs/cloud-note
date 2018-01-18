@@ -128,7 +128,7 @@
         }
         sendPost('${ctx}/loginCheck',{'tel': tel,'password': password},false,function (msg) {
             if (!msg.status) {
-                toastr.error("账号或密码错误");
+                toastr.error(msg.info);
                flag = false;
             } else {
                 flag = true;

@@ -1,11 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/global/taglib.jsp" %>
+
 <!DOCTYPE html>
 <html lang="en" >
 
 <head>
     <meta charset="UTF-8">
-    <title>Simple Image Slider</title>
+    <title>无道云笔记</title>
     <script src="${ctx}/js/jquery-3.2.1.min.js"></script>
     <script src="${ctx}/js/bootstrap.js"></script>
     <script src="${ctx}/js/chinamap.js"></script>
@@ -14,90 +15,103 @@
     <link rel="stylesheet" href="${ctx}/css/bootstrap.css">
     <link rel="stylesheet" href="${ctx}/css/chinamap.css">
 </head>
+
 <body>
-
-<div class="mynav">
-    <ul>
-        <li class="a1"><a href="#">无道云笔记</a></li>
-        <li class="b1"><a href="javascript:void(0)" onclick="window.location.href='${ctx}/index.jsp'">首页</a></li>
-        <li class="c1"><a href="javascript:void(0)" onclick="window.location.href='${ctx}/login'">登录</a></li>
-        <li class="d1"><a href="javascript:void(0)" onclick="window.location.href='${ctx}/register'">注册</a></li>
-        <li class="e1"><a href="javascript:void(0)" onclick="window.location.href='#'">关注我们</a></li>
-    </ul>
-</div>
-<span class="target"></span>
-
-
-
-<div id="wrapper">
-    <div id="slider-wrap">
-        <ul id="slider">
-            <li data-color="#1abc9c">
-                <div>
-                    <h3>Slide #1</h3>
-                    <span>Sub-title #1</span>
-                </div>
-                <i class="fa fa-image"></i>
-            </li>
-
-            <li data-color="#3498db">
-                <div>
-                    <h3>Slide #2</h3>
-                    <span>Sub-title #2</span>
-                </div>
-                <i class="fa fa-gears"></i>
-            </li>
-        </ul>
-
-        <!--controls-->
-        <div class="btns" id="next"><i class="fa fa-arrow-right"></i></div>
-        <div class="btns" id="previous"><i class="fa fa-arrow-left"></i></div>
-        <div id="counter"></div>
-        <div id="pagination-wrap">
-            <ul>
-            </ul>
-        </div>
-        <!--controls-->
+<div class="navbar navbar-fixed-top " style="background-color: #4494ff">
+    <div class="navbar-header">
+        <a class="navbar-brand" href="#" style="font-size: 20px;color: white">无道云笔记</a>
+        <button type="button" class="navbar-toggle navbar-toggle-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-toggle navbar-toggle-collapse navbar-login" href="${ctx}/login">登录</a>
     </div>
-</div>
-<div id="map" style="height: 600px;width: 100%;"></div>
-<div id="block2" class="section" style="width: 1300px;margin: 0 auto;">
-    <div class="container" style="width: 98%">
-        <div class="block_title" style="position: relative;">用云笔记挑战年薪百万
-            <svg width="100%" height="10px" version="1.1" style="position: relative;top: -20px;">
-                <line x1="424" y1="0" x2="820px" y2="0px" style="stroke: rgb(99,99,99);stroke-width: 6px"/>
-            </svg>
-        </div>
-        <ul class="xz_list clearfix" style="list-style-type: none">
-            <li>
-                <div class="wrap"><img src="${ctx}/images/block2a.png" class="main"><img
-                        src="${ctx}/images/block21.png" class="a image"><img
-                        src="${ctx}/images/block22.png" class="b imagef"><img
-                        src="${ctx}/images/block22a.png" class="c"><img
-                        src="${ctx}/images/block23.png" class="d image">
-                </div>
-            </li>
-            <li><img src="${ctx}/images/block2b.png"></li>
+    <div class="navbar-nav-collapse" id="navbar-link">
+        <ul class="navbar-nav navbar-right">
+            <li><a class="navbar-nav-link active" href="${ctx}/">首页</a></li>
+            <li><a class="navbar-nav-link" href="${ctx}/login">登录</a></li>
+            <li><a class="navbar-nav-link" href="${ctx}/register">注册</a></li>
+
         </ul>
     </div>
 </div>
+<div style="height: 98%;width:100%;margin-top: 50px">
+    <canvas class="canvas" style="height:98%;width: 100%;"></canvas>
+    <div class="help"></div>
+    <div class="ui" style="display: none">
+        <input class="ui-input" type="text"/>
+    </div>
+    <div class="overlay">
+        <div class="tabs">
+            <div class="tabs-labels">
+                <span class="tabs-label"></span>
+            </div>
+            <div class="tabs-panels">
+                <ul class="tabs-panel commands">
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="data-manager">
+    <div class="container text-center">
+        <div class="row">
+            <div class="col-xs-12 text-center"><h2>记录、保存、整理、分享</h2></div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4 col-xs-6">
+                <img class="img-responsive center-block" src="${ctx}/images/note.png">
+                <h3>记录</h3>
+                <p>以文字、清单、图片、等形式记录，一次记录永久保存。</p>
+            </div>
+            <div class="col-sm-4 col-xs-6">
+                <img class="img-responsive center-block" src="${ctx}/images/edit.png">
+                <h3>编辑</h3>
+                <p>遵循Office习惯的轻量级编辑工具，同时支持各种格式转换，帮你写出漂亮的文档。</p>
+            </div>
+            <div class="col-sm-4 col-xs-6">
+                <img class="img-responsive center-block" src="${ctx}/images/save.png">
+                <h3>保存</h3>
+                <p>资料永久保存，无需担心资料丢失。</p>
+            </div>
+            <div class="col-sm-4 col-xs-6">
+                <img class="img-responsive center-block" src="${ctx}/images/share.png">
+                <h3>共享</h3>
+                <p>用链接、QQ、微信等方式分享资料给任何人，用群组和团队成员一起共享资料。</p>
+            </div>
+            <div class="col-sm-4 col-xs-6">
+                <img class="img-responsive center-block" src="${ctx}/images/arrange.png">
+                <h3>整理</h3>
+                <p>使用多级文件夹、标签和笔记内链整理资料，让资料井井有条。</p>
+            </div>
+            <div class="col-sm-4 col-xs-6">
+                <img class="img-responsive center-block" src="${ctx}/images/search.png">
+                <h3>查找</h3>
+                <p>通过文件夹、关键词搜索、快捷方式、近期笔记和消息等方式快速找到所需资料。</p>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="container2 mooc-box">
-    <img src="${ctx}/images/index.png" alt="">
     <p>无道云笔记在线记录平台</p>
     <h2>轻松 · 高效 · 超越期待</h2>
-    <a href="#">立即使用</a>
+    <a href="${ctx}/login" >立即使用</a>
 </div>
+<div id="map" style="height: 600px;width: 100%;"></div>
 <div class="footer">
-    <div class="myfooter" style="padding-top: 10px">
-        <div class="footer_text"><a class="footer" target="_blank" href="http://www.miitbeian.gov.cn/">苏 ICP 备 16061429
+    <div class="myfooter" style="padding-top:20px">
+        <div class="footer_text"><a class="footer"  href="http://www.miitbeian.gov.cn/">苏 ICP 备 16061429
             号</a></div>
-        <div class="footer_text">Designed By <a class="footer" target="_blank" href="#">无道云笔记团队 </a>
+        <div class="footer_text">Designed By <a class="footer" >无道云笔记团队 </a>
             &copy; 2018
         </div>
-        <div class="footer_text">邮箱：xxxxxxxxxxx.com | 地址：南京市江宁区弘景大道99号</div>
+        <div class="footer_text">邮箱：jitwxs@foxmail.com | 地址：南京市江宁区弘景大道99号</div>
     </div>
 </div>
-<script  src="js/lunbo.js"></script>
+<script src="${ctx}/js/index.js"></script>
 <script>
     var map = L.map('map');
     var baseLayers = {
@@ -233,23 +247,11 @@
     };
 
     var NJData = [];
-    //          var NJData = [
-    //              [{name: "南京"}, {name: "上海", value: 80}],
-    //              [{name: "南京"}, {name: "广州", value: 90}],
-    //              [{name: "南京"}, {name: "大连", value: 80}],
-    //              [{name: "南京"}, {name: "南宁", value: 70}],
-    //              [{name: "南京"}, {name: "南昌", value: 60}],
-    //              [{name: "南京"}, {name: "拉萨", value: 50}],
-    //              [{name: "南京"}, {name: "长春", value: 40}],
-    //              [{name: "南京"}, {name: "包头", value: 30}],
-    //              [{name: "南京"}, {name: "重庆", value: 20}],
-    //              [{name: "南京"}, {name: "常州", value: 10}]
-    //          ];
 
     sendGet('${ctx}/showUserCity',{},false,function (res) {
         for(var i=0; i<res.length; i++) {
-            var key = res[i].name;
-            var val = res[i].value*10;
+            var key = res[i].k;
+            var val = res[i].v*10;
             NJData.push([{name: "南京"}, {name: key, value: val}]);
         }
     },function (error) {
@@ -397,6 +399,7 @@
     // 使用刚指定的配置项和数据显示图表。
     overlay.setOption(option);
 </script>
+
 </body>
 
 </html>

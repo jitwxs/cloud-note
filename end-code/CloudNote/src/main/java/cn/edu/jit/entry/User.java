@@ -3,6 +3,10 @@ package cn.edu.jit.entry;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * 用户实体类
+ * @author jitwxs
+ */
 public class User implements Serializable {
     private String id;
 
