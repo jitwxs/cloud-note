@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>管理员界面</title>
+
+	<link rel="stylesheet" type="text/css" href="bootstrap-3.3.7-dist/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/admin_home.css">
+	<link rel="stylesheet" type="text/css" href="css/admin_iconfont.css">
+	<link rel="stylesheet" type="text/css" href="css/toastr.css">
+	<link href="bootstrap-3.3.7-dist/css/bootstrap-theme.min.css" >
+	<link href="/css/bootstrap-table.css">
+
+	<script src="js/echarts.js" type="text/javascript"></script>
+	<script src="js/jquery.min.js" type="text/javascript"></script>
+	<script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+	<script src="js/toastr.js" type="text/javascript"></script>
+	<script type="text/javascript" src="js/admin_nav.js"></script>
+	<script src="js/bootstrap-table.js"></script>
+	<script src="js/bootstrap-table-zh-CN.js"></script>
+	<script src="js/bootstrap-table-export.js"></script>
+	<script src="js/jquery.cookie.js"></script>
+</head>
+<body style="width: 100%;height: 1000px;" >
+<!--侧边栏-->
+	<div class="nav">
+		<!-- 汉堡图标 -->
+	        <div class="nav-top">
+	            <div id="mini" style="border-bottom:1px solid rgba(255,255,255,.1)"><img src="img/mini.png" ></div>
+
+	        </div>
+		<!--列表-->
+	        <ul id="sbwxs">
+				<!--网站管理-->
+	            <li class="nav-item">
+	                <a href="javascript:;">
+						<!--网站配置的图标和文字-->
+						<i class="my-icon nav-icon icon_1"></i>
+						<span>网站信息</span>
+						<i class="my-icon nav-more"></i>
+					</a>
+	                <ul>
+	                    <li><a href="javascript:;"><span>用户信息</span></a></li>
+	                    <li><a href="javascript:;"><span>登陆时间</span></a></li>
+	                    <li><a href="javascript:;"><span>登陆地点</span></a></li>
+	                    <li><a href="javascript:;"><span>文章分享</span></a></li>
+	                    <li><a href="javascript:;"><span>系统日志</span></a></li>
+						<li><a href="javascript:;"><span>系统设置</span></a></li>
+	                </ul>
+	            </li>
+
+				<!--笔记管理-->
+	            <li class="nav-item">
+	                <a href="javascript:;">
+						<i class="my-icon nav-icon icon_2"></i>
+						<span>笔记管理</span>
+						<i class="my-icon nav-more"></i>
+					</a>
+	                <ul>
+	                    <li><a href="javascript:;"><span>笔记审核</span></a></li>
+	                    <li><a href="javascript:;"><span>分享管理</span></a></li>
+						<li><a href="javascript:;"><span>笔记回收</span></a></li>
+	                    <li><a href="javascript:;"><span>笔记日志</span></a></li>
+	                </ul>
+	            </li>
+
+				<!--用户管理-->
+	            <li class="nav-item">
+					<a href="javascript:;">
+						<i class="my-icon nav-icon icon_3"></i>
+						<span>用户管理</span>
+						<i class="my-icon nav-more"></i>
+					</a>
+					<ul>
+						<li><a href="javascript:;"><span>用户列表</span></a></li>
+						<li><a href="javascript:;"><span>添加用户</span></a></li>
+						<li><a href="javascript:;"><span>小黑屋</span></a></li>
+					</ul>
+				</li>
+
+				<!--个人账户设置-->
+				<li class="nav-item">
+					<a href="javascript:;">
+						<i class="my-icon nav-icon icon_4"></i>
+						<span>账户设置</span>
+						<i class="my-icon nav-more"></i>
+					</a>
+					<ul>
+						<li><a href="javascript:;"><span>更改密码</span></a></li>
+						<li><a href="javascript:;"><span>注销登陆</span></a></li>
+					</ul>
+				</li>
+
+
+			</ul>
+
+	</div>
+	<!--主体-->
+	<div class="container" style="height: 1000px;width: 100%; text-align: center;">
+		<h2 style="margin-bottom: 30px;">用户信息统计</h2>
+			<div id="usernum" class="diy_container" ></div>
+		<div id="table" class="diy_table" style="height: 500px;">
+			<table id="userTable">
+			</table>
+
+		</div>
+	</div>
+<script>
+
+    //usernum图表
+    var userNum_echarts = echarts.init(document.getElementById('usernum'));
+    var useroption = {
+        title: {
+            text: '用户量统计'
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+        toolbox: {
+            show : true,
+            y: 'bottom',
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType : {show: true, type: ['line', 'bar']},
+                restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+        legend: {
+            data:['男性', '女性']
+        },
+        grid:{
+            x:25,
+            y:45,
+            x2:50,
+            y2:50,
+            borderWidth:1
+        },
+        xAxis : [
+            {
+                type : 'category',
+                splitLine : {show : false},
+                data : []
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value',
+                position: 'right'
+            }
+        ],
+        series : [
+            {
+                name:'男性',
+                type:'bar',
+                tooltip : {trigger: 'item'},
+//                stack: '广告',
+                data: [0,0,0,1]
+            },
+            {
+                name:'女性',
+                type:'bar',
+                tooltip : {trigger: 'item'},
+//                stack: '广告',
+                data:[1,1,1,0]
+            },
+            {
+                name:'总注册量',
+                type:'line',
+                data: [1,2,3,4]
+            },
+
+            {
+                name:'比例',
+                type:'pie',
+                itemStyle : {
+                    normal : {
+                        label : {
+                            show : false
+                        },
+                        labelLine : {
+                            show : false
+                        }
+                    },
+                    emphasis : {
+                        label : {
+                            show : true,
+                            position : 'center',
+                            textStyle : {
+                                fontSize : '30',
+                                fontWeight : 'bold'
+                            }
+                        }
+                    }
+                },
+                tooltip : {
+                    trigger: 'item',
+                    formatter: '{b} : {c} ({d}%)'
+                },
+                center: [130,100],
+                radius : [0, 50],
+//                itemStyle :　{
+//                    normal : {
+//                        labelLine : {
+//                            length : 20
+//                        }
+//                    }
+//                },
+                data: [
+					{
+					    value:3,
+						name:"男性"
+                    },
+					{
+					    value:2,
+						name: "女性"
+					}
+				]
+            }
+
+    ]
+    };
+	userNum_echarts.setOption(useroption);
+    //true 异步
+    sendGet('...',{},true,function (res) {
+        pies.push(data.maleCount);
+        pies.push(data.femaleCount);
+        userNum_echarts.setOption({
+            xAxis: {
+                data: data.date
+            },
+            series: [
+                {
+                    // 根据名字对应到相应的系列
+                    name:'男性',
+                    data: data.maleNum
+                },
+                {
+                    // 根据名字对应到相应的系列
+                    name:'女性',
+                    data: data.femaleNum
+                },
+                {
+                    name:'比例',
+                    data:pies,
+
+                }
+
+            ]
+        });
+    },function (error) {
+        toastr.error("系统错误");
+        return false;
+    })
+
+	//user表格
+    function initTable() {
+        jQuery.ajax({
+            url: "ashx/GuideManagement.ashx",
+            type: "post",
+            dataType: "json",
+            data: '',
+            success: function (value) {
+                $table = $('#userTable').bootstrapTable(
+                    {
+                        data: value,   //最终的JSON数据放在这里
+                        height: $(window).height() - 100,
+                        striped: true,
+						cache: false,
+                        pagination: true,
+                        sidePagination: "client",
+                        pageNumber: 1,
+                        pageSize: 10,
+                        pageList: [5, 10, 20],
+                        showColumns: true,
+                        minimunCountColumns: 2,
+						sort: false,
+						sortOrder: "asc",
+                        search: true,
+                        showRefresh: true,
+						clickToSelect:true,
+						showToggle:true,
+                        cardView: false,    //是否显示详细视图
+						detaView:false,
+                        columns: [
+                            {
+                                field: 'createDate',   //列ID同时也是指定要显示的数据的ID
+                                title: 'createDate',
+                                width: 100,
+                                align: 'center',
+                                valign: 'center',
+                                sortable: true
+
+                            },
+                            {
+                                field: 'exception',
+                                title: 'exception',
+                                align: 'center',
+                                valign: 'center',
+                                sortable: true
+
+                            },
+                            {
+								field: 'id',
+                                title: 'id',
+                                align: 'center',
+                                valign: 'center',
+                                sortable: true
+                            },
+                            {
+                                field: 'ip',
+                                title: 'ip',
+                                align: 'center',
+                                valign: 'center',
+                                sortable: true
+                            },
+                            {
+                                field: 'method',
+                                title: 'method',
+                                align: 'center',
+                                valign: 'center',
+                                sortable: true
+                            },
+                            {
+                                field: 'params',
+                                title: 'params',
+                                align: 'center',
+                                valign: 'center',
+                                sortable: true
+                            },
+                            {
+                                field: 'requestUrl',
+                                title: 'requestUrl',
+                                align: 'center',
+                                valign: 'center',
+                                sortable: true
+                            },
+                            {
+                                field: 'title',
+                                title: 'title',
+                                align: 'center',
+                                valign: 'center',
+                                sortable: true
+                            },
+                            {
+                                field: 'type',
+                                title: 'type',
+                                align: 'center',
+                                valign: 'center',
+                                sortable: true
+                            },
+                            {
+                                field: 'userAgent',
+                                title: 'userAgent',
+                                align: 'center',
+                                valign: 'center',
+                                sortable: true
+                            },
+                            {
+                                field: 'userId',
+                                title: 'userId',
+                                align: 'center',
+                                valign: 'center',
+                                sortable: true
+                            }
+                        ]
+                    })
+            }
+        })
+    }
+
+</script>
+</body>
+</html>

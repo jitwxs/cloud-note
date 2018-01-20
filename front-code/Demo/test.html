@@ -1,122 +1,109 @@
-<!DOCTYPE html>
-<html lang="zh">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Bootstrap3 整体</title>
-	<link rel='stylesheet prefetch' href='bootstrap-3.3.7-dist/css/bootstrap.min.css'>
-	<link rel="stylesheet" type="text/css" href="css/htmleaf-demo.css">
-	<link rel="stylesheet" href="css/style.css">
-	<link rel="stylesheet" type="text/css" href="css/default.css" />
-	<link rel="stylesheet" type="text/css" href="css/component.css" />
-	<style>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>bootstrap-table表格客户端分页</title>
+    <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="./css/bootstrap-table.css" />
 
-	</style>
-
-	<script src="js/modernizr.custom.js"></script>
-	<script src="jquery/jquery-1.11.3.min.js"></script>
-	<script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
-</head>
-<body>
-<nav class="navbar navbar-inverse" style="height: 50px;" id="top_nav">
-
-	<div class="container-fluid" style="margin-left: 300px;">
-		<!--无道云的图标-->
-		<div class="navbar-header">
-			<a class="navbar-brand" href="#">
-				<img alt="Brand" src="...">
-			</a>
-		</div>
-
-		<!--设置-->
-		<ul class="nav navbar-nav navbar-right">
-			<li class="dropdown">
-				<a style="background: none" href="#" class="dropdown-toggle" data-toggle="dropdown" >
-					设置 <b class="caret"></b>
-				</a>
-				<ul class="dropdown-menu">
-					<li id="msg" ><a href="#">个人信息</a></li>
-					<li class="divider"></li>
-					<li id="account"><a href="#">账户设置</a></li>
-					<li class="divider"></li>
-					<li id="share" ><a href="#">查看分享</a></li>
-					<li class="divider"></li>
-					<li id="help" ><a href="#">帮助</a></li>
-
-
-				</ul>
-			</li>
-		</ul>
-		<!--头像-->
-		<div class=" navbar-right" style="margin-right: 30px;">
-			<img src="cinqueterre.jpg" class="img-responsive" alt="Cinque Terre">
-		</div>
-		<!--搜索-->
-		<div>
-			<form class="navbar-form navbar-left" role="search">
-				<div class="form-group">
-					<input type="text" class="form-control" style="border:none; background:none;outline:none;" placeholder="Search" />
-				</div>
-				<button type="submit" class="btn btn-default">查找</button>
-			</form>
-			</button>
-		</div>
-	</div>
-
-
-</nav>
-<div id="wrapper" >
-	<div class="overlay"></div>
-	<!-- Sidebar -->
-	<nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation" >
-	</nav>
-	<div id="page-content-wrapper">
-		<button type="button" class="hamburger is-closed animated fadeInLeft" data-toggle="offcanvas">
-			<span class="hamb-top"></span>
-			<span class="hamb-middle"></span>
-			<span class="hamb-bottom"></span>
-		</button>
-		<div class="container">
-			<div class="row">
-				<input type="text" style="width: 200px;height: 100px;">
-
-			</div>
-		</div>
-	</div>
-	<!-- /#page-content-wrapper -->
-
-</div>
-<!-- /#wrapper -->
-<script src='bootstrap-3.3.7-dist/js/bootstrap.min.js'></script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        var trigger = $('.hamburger'),
-            overlay = $('.overlay'),
-            isClosed = false;
-
-        trigger.click(function () {
-            hamburger_cross();
-        });
-
-        function hamburger_cross() {
-
-            if (isClosed == true) {
-                overlay.hide();
-                trigger.removeClass('is-open');
-                trigger.addClass('is-closed');
-                isClosed = false;
-            } else {
-                overlay.show();
-                trigger.removeClass('is-closed');
-                trigger.addClass('is-open');
-                isClosed = true;
-            }
+    <script type="text/javascript" src="js/jquery-3.2.1.js"></script>
+    <script type="text/javascript" src="bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+    <script type="text/javascript" src="js/bootstrap-table.js"></script>
+    <script type="text/javascript" src="js/tableExport.js"></script>
+    <script type="text/javascript" src="js/bootstrap-table-export.js"></script>
+    <script type="text/javascript" src="js/bootstrap-table-toolbar.js"></script>
+    <style>
+        .bsss{
+            background: yellow;
         }
+    </style>
+</head>
+<body >
+<div id="reportTableDiv"  style="width: 80%">
+    <div id="toolbar" style="margin-right: 20px;float: right;margin-left: 200px;">
+        <button id="btn_delete" type="button" class="btn btn-default">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>删除
+        </button>
+    </div>
+    <table id="reportTable" class="table table-bordered tab-content"></table>
+</div>
 
-        $('[data-toggle="offcanvas"]').click(function () {
-            $('#wrapper').toggleClass('toggled');
+
+<!--模态框-->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                点击关闭按钮检查事件功能。
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    关闭
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+
+<script type="text/javascript">
+    window.operateEvents = {
+        'click .bsss': function (e, value, row, index) {
+            document.getElementById("modal-body").innerHTML="";
+            document.getElementById("modal-body").innerHTML="姓名："+row.name+"年龄："+row.age;
+        }
+    };
+    //手动制造30条数据
+    var datas  = [];
+    for(var i=0;i<30;i++){
+        datas[i]={"name":"傻逼wxs"+i+"号","age":"年龄："+i+"岁","sex":"男"+i}
+    }
+    /**
+     * @return {string}
+     */
+    function AddFunctionAlty(value, row, index) {
+        return ['<button type="button" class="bsss btn btn-default" id="button1"  data-toggle="modal" data-target="#myModal">详情</button>'].join("")
+    }
+    $(function () {
+        $('#reportTable').bootstrapTable({
+         //   method: 'get',
+            cache: false,
+            height: 700,
+            toolbar: "#toolbar",
+            striped: true,
+            pagination: true,
+            pageSize: 10,
+            pageNumber:1,
+            pageList: [10, 20, 50, 100, 200, 500],
+            sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
+            search: true,
+            showColumns: true,
+            showRefresh: true,
+            showExport: true,//显示导出按钮
+            exportTypes:  ['excel','json', 'xml', 'txt', 'sql'],
+            clickToSelect: true,
+
+            columns:
+                [
+                    {field:"checked",checkbox:true},
+                    {field:"name",title:"测试姓名",align:"center",valign:"middle",sortable:"true"},
+                    {field:"age",title:"年龄",align:"center",valign:"middle",sortable:"true"},
+                    {field:"sex",title:"性别",align:"center",valign:"middle",sortable:"true"},
+                    {field:"button", title:"详情",formatter:AddFunctionAlty,events:operateEvents}
+                ],
+            data:datas
         });
+
+
     });
+    $(function () { $('#myModal').modal('hide')});
+
 </script>
+
 </body>
 </html>

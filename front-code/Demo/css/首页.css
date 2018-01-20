@@ -1,0 +1,609 @@
+/*GLOBALS*/
+*{
+	margin: 0;
+	padding: 0;
+}
+body {
+	background: #fbfcfe;
+	font-family: 'Open Sans', Arial, sans-serif;
+
+}
+/*导航栏*/
+.mynav {
+	background-color: rgba(83, 180, 147, 0.18);
+	position: relative;
+	width: 100%;
+	height: 80px;
+	margin:0 auto;
+
+
+}
+.mynav ul {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	justify-content: center;
+	-ms-flex-wrap: wrap;
+	flex-wrap: wrap;
+	list-style-type: none;
+	padding: 0;
+}
+
+.mynav .a1{
+	position: absolute;
+	top:10px;
+	left: 200px;
+	font-size: 25px;
+}
+
+.mynav .b1{
+	position: relative;
+	top:10px;
+	left: 240px;
+	font-size: 20px;
+}
+.mynav .c1{
+	position: relative;
+	top:10px;
+	left: 260px;
+	font-size: 20px;
+}
+.mynav .d1{
+	position: relative;
+	top:10px;
+	left: 280px;
+	font-size: 20px;
+}
+.mynav .e1{
+	position: relative;
+	top:10px;
+	left: 330px;
+	font-size: 20px;
+}
+.mynav a {
+	display: block;
+	font-size: 25px;
+	color: rgba(0, 0, 0, 0.89);
+	text-decoration: none;
+	padding: 7px 10px;
+	/*position: relative;*/
+}
+
+.target {
+	position: absolute;
+	border-bottom: 4px solid transparent;
+	z-index: -1;
+	-webkit-transform: translateX(-60px);
+	transform: translateX(-60px);
+}
+
+.mynav a,
+.target {
+	-webkit-transition: all .35s ease-in-out;
+	transition: all .35s ease-in-out;
+}
+
+.mooc-box {
+	position: relative;
+	padding: 0 10px
+}
+
+.mooc-box img {
+	width: 100%;
+	max-width: 1170px;
+	display: block;
+	margin: 0 auto;
+	vertical-align: middle;
+	border-radius: 4px
+}
+
+.mooc-box p {
+	width: 100%;
+	font-size: 24px;
+	color: #ffffff;
+	position: absolute;
+	top: 29%;
+	text-align: center;
+	left: 0
+}
+
+.mooc-box h2 {
+	width: 100%;
+	text-align: center;
+	color: #ffffff;
+	position: absolute;
+	top: 36%;
+	font-size: 48px;
+	font-weight: 400;
+	left: 0
+}
+
+.mooc-box a {
+	width: 140px;
+	height: 40px;
+	display: block;
+	left: 50%;
+	margin-left: -70px;
+	bottom: 12%;
+	position: absolute;
+	text-align: center;
+	line-height: 40px;
+	background: #0692E1;
+	color: #ffffff;
+	border-radius: 4px
+}
+
+@media screen and (min-width: 320px) and (max-width: 640px) {
+	.mooc-box p {
+		font-size: 10px;
+		top: 14%;
+		left: 0
+	}
+
+	.mooc-box h2 {
+		font-size: 15px;
+		top: 12%;
+		left: 0
+	}
+
+	.mooc-box a {
+		height: 24px;
+		bottom: 12%;
+		line-height: 24px;
+		font-size: 12px;
+		width: 80px;
+		margin-left: -40px
+	}
+}
+
+@media screen and (min-width: 641px) and (max-width: 959px) {
+	.mooc-box p {
+		top: 20%
+	}
+
+	.mooc-box h2 {
+		top: 26%
+	}
+}
+/*轮播*/
+*{margin:0; padding:0; list-style:none;}
+a{text-decoration:none;	color:#666;}
+a:hover{color:#1bc1a3;}
+body, hmtl{background: #ecf0f1; font-family: 'Anton', sans-serif;}
+
+
+#wrapper{
+	width:100%;
+	margin:0px auto;
+	height:100%;
+	position:relative;
+	color:#fff;
+	text-shadow:rgba(0,0,0,0.1) 2px 2px 0px;	
+}
+
+#slider-wrap{
+	width:100%;
+	height:100%;
+	position:relative;
+	overflow:hidden;
+}
+
+#slider-wrap ul#slider{
+	width:100%;
+	height:100%;
+	position:absolute;
+	top:0;
+	left:0;		
+}
+
+#slider-wrap ul#slider li{
+	float:left;
+	position:relative;
+	width:50%;
+	height:100%;
+	margin: 0px auto;
+}
+
+#slider-wrap ul#slider li > div{
+	position:absolute;
+	top:20px;
+	left:35px;	
+}
+
+#slider-wrap ul#slider li > div h3{
+	font-size:36px;
+	text-transform:uppercase;	
+}
+
+#slider-wrap ul#slider li > div span{
+	font-family: Neucha, Arial, sans serif;
+	font-size:21px;
+}
+
+#slider-wrap ul#slider li i{
+	text-align:center;
+	line-height:400px;
+	display:block;
+	width:100%;
+	font-size:90px;	
+}
+
+
+/*btns*/
+.btns{
+	position:absolute;
+	width:50px;
+	height:60px;
+	top:50%;
+	margin-top:-25px;
+	line-height:57px;
+	text-align:center;
+	cursor:pointer;
+	background:rgba(0,0,0,0.1);
+	z-index:50;
+	
+	
+	-webkit-user-select: none;  
+	-moz-user-select: none; 
+	-khtml-user-select: none; 
+	-ms-user-select: none;
+	
+	-webkit-transition: all 0.1s ease;
+	-moz-transition: all 0.1s ease;
+	-o-transition: all 0.1s ease;
+	-ms-transition: all 0.1s ease;
+	transition: all 0.1s ease;
+}
+
+.btns:hover{
+	background:rgba(0,0,0,0.3);	
+}
+
+#next{ right:-58px;border-radius:7px 0px 0px 7px;}
+#previous{left:-50px; border-radius:0px 7px 7px 7px;}
+#counter{
+
+}
+
+#slider-wrap.active #next{right:0px;}
+#slider-wrap.active #previous{left:0px;}
+
+
+/*bar*/
+#pagination-wrap{
+	margin-top:40%;
+	height:15px;
+	position:relative;
+	text-align:center;
+}
+
+#pagination-wrap ul {
+	width:100%;
+	position: relative;
+	top:-30px;
+	/*height: 50%;*/
+}
+/*小圆点*/
+#pagination-wrap ul li{
+	margin: 0 4px;
+	display: inline-block;
+	width:5px;
+	height:5px;
+	border-radius:50%;
+	background:#fff;
+	opacity:0.5;
+	position:relative;
+
+}
+
+#pagination-wrap ul li.active{
+    width:12px;
+    height:12px;
+    top:3px;
+	opacity:1;
+	box-shadow:rgba(0,0,0,0.1) 1px 1px 0px;	
+}
+
+/*ANIMATION*/
+#slider-wrap ul, #pagination-wrap ul li{
+	-webkit-transition: all 0.3s cubic-bezier(1,.01,.32,1);
+	-moz-transition: all 0.3s cubic-bezier(1,.01,.32,1);
+	-o-transition: all 0.3s cubic-bezier(1,.01,.32,1);
+	-ms-transition: all 0.3s cubic-bezier(1,.01,.32,1);
+	transition: all 0.3s cubic-bezier(1,.01,.32,1);	
+}
+
+/*第二块*/
+#block2 {
+	background-size: 100%;
+	padding: 10px 0 30px
+}
+#block2 .container > div.block_title {
+	font-size: 40px;
+	font-family: "agency fb";
+	text-align: center;
+	color: black;
+	margin-top: 90px;
+
+}
+#block2 .xz_list {
+	margin: 10px 0
+}
+
+#block2 .xz_list li {
+	padding: 0 8px;
+	margin-bottom: 20px;
+	text-align: center
+}
+
+#block2 .xz_list li:last-child {
+	margin-bottom: 0
+}
+
+#block2 .xz_list li:first-child img {
+	max-width: 311px
+}
+
+#block2 .xz_list li .wrap {
+	width: 311px;
+	margin: 0 auto;
+	position: relative
+}
+
+#block2 .xz_list li .wrap img {
+	width: auto
+}
+
+#block2 .xz_list li .wrap .a {
+	position: absolute;
+	top: 58px;
+	left: 76px
+}
+
+#block2 .xz_list li .wrap .b {
+	position: absolute;
+	top: 117px;
+	left: 157px
+}
+
+#block2 .xz_list li .wrap .c {
+	position: absolute;
+	bottom: 0;
+	left: 206px
+}
+
+#block2 .xz_list li .wrap .d {
+	position: absolute;
+	top: 221px;
+	left: 50px
+}
+
+#block2 .xz_list li img {
+	width: 100%;
+	max-width: 430px;
+	margin: 0 auto
+}
+
+.image {
+	-webkit-animation-name: spin;
+	-webkit-animation-duration: 4s;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function: linear;
+	-moz-animation-name: spin;
+	-moz-animation-duration: 4s;
+	-moz-animation-iteration-count: infinite;
+	-moz-animation-timing-function: linear;
+	-ms-animation-name: spin;
+	-ms-animation-duration: 4s;
+	-ms-animation-iteration-count: infinite;
+	-ms-animation-timing-function: linear;
+	animation-name: spin;
+	animation-duration: 4s;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear
+}
+
+.imagef {
+	-webkit-animation-name: spinf;
+	-webkit-animation-duration: 4s;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function: linear;
+	-moz-animation-name: spinf;
+	-moz-animation-duration: 4s;
+	-moz-animation-iteration-count: infinite;
+	-moz-animation-timing-function: linear;
+	-ms-animation-name: spinf;
+	-ms-animation-duration: 4s;
+	-ms-animation-iteration-count: infinite;
+	-ms-animation-timing-function: linear;
+	animation-name: spinf;
+	animation-duration: 4s;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear
+}
+
+@-ms-keyframes spin {
+	from {
+		-ms-transform: rotate(0)
+	}
+	to {
+		-ms-transform: rotate(360deg)
+	}
+}
+
+@-moz-keyframes spin {
+	from {
+		-moz-transform: rotate(0)
+	}
+	to {
+		-moz-transform: rotate(360deg)
+	}
+}
+
+@-webkit-keyframes spin {
+	from {
+		-webkit-transform: rotate(0)
+	}
+	to {
+		-webkit-transform: rotate(360deg)
+	}
+}
+
+@-ms-keyframes spinf {
+	from {
+		-ms-transform: rotate(360deg)
+	}
+	to {
+		-ms-transform: rotate(0)
+	}
+}
+
+@-moz-keyframes spinf {
+	from {
+		-moz-transform: rotate(360deg)
+	}
+	to {
+		-moz-transform: rotate(0)
+	}
+}
+
+@-webkit-keyframes spinf {
+	from {
+		-webkit-transform: rotate(360deg)
+	}
+	to {
+		-webkit-transform: rotate(0)
+	}
+}
+
+@media screen and (min-width: 414px) {
+	.test {
+		color: #122
+	}
+}
+
+@media screen and (min-width: 768px) {
+	#block2 {
+		padding: 30px 0 50px
+	}
+
+	#block2 .block_title {
+		margin: 0 0 30px
+	}
+
+	#block2 .xz_list {
+		margin: 30px 0
+	}
+
+	#block2 .xz_list li {
+		width: 50%;
+		float: left;
+		margin-bottom: 0
+	}
+}
+
+@media screen and (min-width: 1170px) {
+	.test {
+		color: #122
+	}
+}
+
+@-moz-keyframes spin {
+	from {
+		transform: rotate(0)
+	}
+	to {
+		transform: rotate(360deg)
+	}
+}
+
+@-webkit-keyframes spin {
+	from {
+		transform: rotate(0)
+	}
+	to {
+		transform: rotate(360deg)
+	}
+}
+
+@-o-keyframes spin {
+	from {
+		transform: rotate(0)
+	}
+	to {
+		transform: rotate(360deg)
+	}
+}
+
+@keyframes spin {
+	from {
+		transform: rotate(0)
+	}
+	to {
+		transform: rotate(360deg)
+	}
+}
+
+@-moz-keyframes spinf {
+	from {
+		transform: rotate(360deg)
+	}
+	to {
+		transform: rotate(0)
+	}
+}
+
+@-webkit-keyframes spinf {
+	from {
+		transform: rotate(360deg)
+	}
+	to {
+		transform: rotate(0)
+	}
+}
+
+@-o-keyframes spinf {
+	from {
+		transform: rotate(360deg)
+	}
+	to {
+		transform: rotate(0)
+	}
+}
+
+@keyframes spinf {
+	from {
+		transform: rotate(360deg)
+	}
+	to {
+		transform: rotate(0)
+	}
+}
+/*页脚*/
+div.footer {
+	background-color: rgba(118, 184, 159, 0.37);
+	height: 140px;
+	width: 100%;
+	margin: 0 auto;
+	margin-top: 20px;
+}
+
+div.footer_text {
+	color: #999;
+	line-height: 25px;
+	text-align: center;
+	/*margin-top: 10px;*/
+}
+
+a.footer {
+	color: #666;
+	text-decoration: none;
+}
+
+a:hover {
+	color: green
+}
+
+

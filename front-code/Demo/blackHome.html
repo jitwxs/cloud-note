@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>管理员界面</title>
+
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/admin_home.css">
+    <link rel="stylesheet" type="text/css" href="css/admin_iconfont.css">
+    <link rel="stylesheet" type="text/css" href="css/toastr.css">
+    <link href="bootstrap-3.3.7-dist/css/bootstrap-theme.min.css" >
+    <link href="css/bootstrap-table.css">
+
+    <script src="js/echarts.js" type="text/javascript"></script>
+    <script src="js/jquery.min.js" type="text/javascript"></script>
+    <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <script src="js/toastr.js" type="text/javascript"></script>
+    <script type="text/javascript" src="js/admin_nav.js"></script>
+    <script src="js/bootstrap-table.js"></script>
+    <script src="js/bootstrap-table-zh-CN.js"></script>
+    <script src="js/bootstrap-table-export.js"></script>
+    <script src="js/jquery.cookie.js"></script>
+</head>
+<body style="width: 100%;height: 1000px;" >
+<!--侧边栏-->
+<div class="nav">
+    <!-- 汉堡图标 -->
+    <div class="nav-top">
+        <div id="mini" style="border-bottom:1px solid rgba(255,255,255,.1)"><img src="img/mini.png" ></div>
+
+    </div>
+    <!--列表-->
+    <ul>
+        <!--网站管理-->
+        <li class="nav-item">
+            <a href="javascript:;">
+                <!--网站配置的图标和文字-->
+                <i class="my-icon nav-icon icon_1"></i>
+                <span>网站信息</span>
+                <i class="my-icon nav-more"></i>
+            </a>
+            <ul>
+                <li><a href="javascript:;"><span>用户信息</span></a></li>
+                <li><a href="javascript:;"><span>登陆时间</span></a></li>
+                <li><a href="javascript:;"><span>登陆地点</span></a></li>
+                <li><a href="javascript:;"><span>文章分享</span></a></li>
+                <li><a href="javascript:;"><span>系统日志</span></a></li>
+                <li><a href="javascript:;"><span>系统设置</span></a></li>
+            </ul>
+        </li>
+
+        <!--笔记管理-->
+        <li class="nav-item">
+            <a href="javascript:;">
+                <i class="my-icon nav-icon icon_2"></i>
+                <span>笔记管理</span>
+                <i class="my-icon nav-more"></i>
+            </a>
+            <ul>
+                <li><a href="javascript:;"><span>笔记审核</span></a></li>
+                <li><a href="javascript:;"><span>分享管理</span></a></li>
+                <li><a href="javascript:;"><span>笔记回收</span></a></li>
+                <li><a href="javascript:;"><span>笔记日志</span></a></li>
+            </ul>
+        </li>
+
+        <!--用户管理-->
+        <li class="nav-item">
+            <a href="javascript:;">
+                <i class="my-icon nav-icon icon_3"></i>
+                <span>用户管理</span>
+                <i class="my-icon nav-more"></i>
+            </a>
+            <ul>
+                <li><a href="javascript:;"><span>用户列表</span></a></li>
+                <li><a href="javascript:;"><span>添加用户</span></a></li>
+                <li><a href="javascript:;"><span>小黑屋</span></a></li>
+            </ul>
+        </li>
+
+        <!--个人账户设置-->
+        <li class="nav-item">
+            <a href="javascript:;">
+                <i class="my-icon nav-icon icon_4"></i>
+                <span>账户设置</span>
+                <i class="my-icon nav-more"></i>
+            </a>
+            <ul>
+                <li><a href="javascript:;"><span>更改密码</span></a></li>
+                <li><a href="javascript:;"><span>注销登陆</span></a></li>
+            </ul>
+        </li>
+
+
+    </ul>
+
+</div>
+<!--主体-->
+<div class="container" style="height: 1000px;width: 100%; text-align: center;">
+    <h2 style="margin-bottom: 30px;">小黑屋</h2>
+    <div id="toolbar" style="margin-right: 20px;">
+
+        <button id="btn_delete" type="button" class="btn btn-default" onclick="delect_more()">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true">删除</span>
+        </button>
+
+    </div>
+    <div style="width: 80%;float: right;margin-right: 50px;">
+        <table id="blackHomeTable" style="margin-right: 10%;">
+        </table>
+    </div>
+</div>
+
+<script>
+    function getCookie(c_name) {
+        if (document.cookie.length>0)
+        {
+            c_start=document.cookie.indexOf(c_name + "=");
+            if (c_start!=-1)
+            {
+                c_start=c_start + c_name.length+1 ;
+                c_end=document.cookie.indexOf(";",c_start);
+                if (c_end==-1) c_end=document.cookie.length;
+                return unescape(document.cookie.substring(c_start,c_end));
+            }
+        }
+        return "aaa";
+    }
+    window.onload=function(){
+        var c_name="listallwjh";
+        if(getCookie("listallwjh")!=null){
+            alert(getCookie("listallwjh"));
+
+        }
+    }
+    //    注册事件
+    window.operateEvents = {
+        'click .detail': function (e, value, row, index) {
+            var logId = row.id;
+            showLog(logId);
+        },
+        'click .del': function (e, value, row, index) {
+            var logId = row.id;
+            var url = '啦啦啦啦';
+            deleteLog(logId, url);
+        }
+    };
+
+    function AddFunctionAlty(value, row, index) {
+        return ['  <button id="btn_detail" type="button" class="btn btn-default detail">\n' +
+        '            <span class="glyphicon glyphicon-eye-open" aria-hidden="true" >解禁</span>\n' +
+        '        </button>',
+            '  <button id="btn_delect" type="button" class="btn btn-default del">\n' +
+            '            <span class="glyphicon glyphicon-remove" aria-hidden="true" >删除</span>\n' +
+            '        </button>'].join("")
+    }
+
+    $(function () {
+        sendGet('吴祥生大傻子',{},false,function (value) {
+            $table = $('#blackHomeTable').bootstrapTable(
+                {
+                    data: value,   //最终的JSON数据放在这里
+                    striped: true,
+                    cache: false,
+                    height:700,
+                    toolbar:'#toolbar',
+                    pagination: true,
+                    sidePagination: "client",
+                    pageNumber: 1,
+                    pageSize: 10,
+                    pageList: [5, 10, 20],
+                    showColumns: true,
+                    minimunCountColumns: 2,
+                    sort: false,
+                    sortOrder: "asc",
+                    search: true,
+                    showRefresh: true,
+                    clickToSelect:true,
+                    showToggle:true,
+                    cardView: false,    //是否显示详细视图
+                    detaView:false,
+                    showExport: true,//显示导出按钮
+                    exportTypes:  ['excel','json', 'xml', 'txt', 'sql'],
+                    columns: [
+                        {
+                            field:"checked",
+                            checkbox:true
+                        },
+                        {
+                            field: 'tel',
+                            title: '手机号',
+                            align: 'center',
+                            valign: 'center',
+                            sortable: true
+                        },
+                        {
+                            field: 'userName',
+                            title: '用户昵称',
+                            align: 'center',
+                            valign: 'center',
+                            sortable: true
+                        },
+                        {
+                            field: 'illegalName',
+                            title: '禁封原因',
+                            align: 'center',
+                            valign: 'center',
+                            sortable: true
+                        },
+                        {
+                            field: 'createDate',
+                            title: '起始时间',
+                            align: 'center',
+                            valign: 'center',
+                            sortable: true
+                        },
+                        {
+                            field: 'endDate',
+                            title: '终止时间',
+                            align: 'center',
+                            valign: 'center',
+                            sortable: true
+                        },
+                        {
+                            field: 'status',
+                            title: '状态',
+                            align: 'center',
+                            valign: 'center',
+                            sortable: true
+                        },
+                        {
+                            field:"button",
+                            title:"操作",
+                            align: 'center',
+                            formatter:AddFunctionAlty,
+                            events:operateEvents
+                        }
+                    ]
+                })
+        },function (error) {
+            toastr.error("系统错误");
+            return false;
+        });
+    })
+
+    function delect_more() {
+        var row = $(blackHomeTable).bootstrapTable('getSelections');
+        var url = '你你你你猜猜啊';
+        deleteLog(row, url);
+    }
+
+
+</script>
+</body>
+</html>

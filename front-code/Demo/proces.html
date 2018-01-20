@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>进度条</title>
+    <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="./font-awesome-4.7.0/css/font-awesome.css" />
+
+    <script type="text/javascript" src="js/jquery-3.2.1.js"></script>
+    <style>
+        .progress{
+            height: 30px;
+            line-height: 35px;
+            background: #809495;
+            box-shadow: none;
+            padding: 6px;
+            margin-top:20px;
+            overflow: visible;
+            border-radius:10px;
+        }
+        .progress:after{
+            content: "";
+            display: block;
+            border-top: 4px dashed #fff;
+            margin-top:8px;
+        }
+        .progress .progress-bar{
+            position: relative;
+            border-radius: 10px 0 0 10px;
+            animation: animate-positive 2s;
+        }
+        .progress .progress-bar span{
+            position: absolute;
+            top: -50px;
+            right: -40px;
+            color: #fff;
+            display: block;
+            font-size: 17px;
+            font-weight: bold;
+            padding: 5px 7px;
+            background: #333;
+            border-radius: 0 0 5px 5px;
+        }
+        .progress .progress-bar span:before{
+            content: "";
+            position: absolute;
+            bottom: -14px;
+            left: 18px;
+            border: 7px solid transparent;
+            border-top: 7px solid #333;
+        }
+        .progress .progress-bar span:after{
+            content: "\f072";
+            font-family: fontawesome;
+            font-size: 48px;
+            color: #333;
+            position: absolute;
+            top: 51px;
+            right: 6px;
+            transform: rotateZ(48deg);
+        }
+        /*使div元素匀速向下移动 css3新增@keyframes动画定义*/
+        @keyframes animate-positive {  0% {
+
+            width: 0;
+
+        }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+            <h3 class="progressbar-title">HTML5</h3>
+            <div class="progress">
+                <div  id="process" class="progress-bar" style="width: 80%; background:#005394;">
+                    <span id="spans">40%</span>
+                </div>
+            </div>
+
+            <h3 class="progressbar-title">CSS3</h3>
+            <div class="progress">
+                <div class="progress-bar" style="width: 85%; background:#d9534f;">
+                    <span>85%</span>
+                </div>
+            </div>
+
+            <h3 class="progressbar-title">Java Script</h3>
+            <div class="progress">
+                <div class="progress-bar" style="width: 40%; background:#f0ad4e;">
+                    <span>40%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="demo">
+
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col-md-offset-3 col-md-6">
+
+                <h3 class="progress-title">HTML5</h3>
+
+                <div class="progress">
+
+                    <div class="progress-bar" style="width:70%; background:#97c513;">
+
+                        <div class="progress-value">70%</div>
+
+                    </div>
+
+                </div>
+
+                <h3 class="progress-title">CSS3</h3>
+
+                <div class="progress">
+
+                    <div class="progress-bar" style="width:90%; background:#f2545b;">
+
+                        <div class="progress-value">90%</div>
+
+                    </div>
+
+                </div>
+
+                <h3 class="progress-title">J-Query</h3>
+
+                <div class="progress">
+
+                    <div class="progress-bar" style="width:55%; background:#ffc304;">
+
+                        <div class="progress-value">55%</div>
+
+                    </div>
+
+                </div>
+
+                <h3 class="progress-title">Bootstrap</h3>
+
+                <div class="progress">
+
+                    <div class="progress-bar" style="width:80%; background:#2e9dc2;">
+
+                        <div class="progress-value">80%</div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+    var pro=document.getElementById("process");
+    pro.style.background='red';
+    pro.style.width='100%';
+    $("#spans").text("aaa")
+
+
+</script>
+</body>
+</html>

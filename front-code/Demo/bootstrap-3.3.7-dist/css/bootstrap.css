@@ -11,7 +11,6 @@ html {
 }
 body {
   margin: 0;
-  padding: 0px;
 }
 article,
 aside,
@@ -1583,8 +1582,10 @@ pre code {
   overflow-y: scroll;
 }
 .container {
-  padding: 0px;
-  margin: 0px;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
 }
 @media (min-width: 768px) {
   .container {

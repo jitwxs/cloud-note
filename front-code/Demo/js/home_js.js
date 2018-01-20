@@ -3,6 +3,8 @@ var editor = new E('#main')
 editor.customConfig.onblur = function (html) {
     console.log('onblur', html)
 }
+editor.customConfig.zIndex = 100;
+
 editor.create()
 /*var dirAttr = [
     {
@@ -284,8 +286,8 @@ function headlinePost() {
         url:'/fileInfo',
         dataType:'json',
         data: {
-           'headline':headline,
-           'tag':tag
+            'headline':headline,
+            'tag':tag
         },
         success: function (msg) {
             if (msg == "保存成功") {

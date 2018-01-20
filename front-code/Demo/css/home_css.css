@@ -1,4 +1,3 @@
-
 /* General styles for all menus */
 .cbp-spmenu {
     background: #cfd3c7;
@@ -67,11 +66,9 @@
 }
 
 #home_body{
-   padding-top: 60px;
+    padding-top: 30px;
     padding-right: 0px;
     padding-left: 0px;
-    position: absolute;
-    width: 100%;
 }
 #home_nav{
     height: 50px;
@@ -88,23 +85,16 @@
     width:300%;
     border: none;
 }
-#submit_btn{
-    float: right;
-}
 #file_info:hover{
     color: #0d77b6;
 }
 #file_info_img{
     font-size:30px;
-    float: right;
     margin-left: 20px;
 }
-#flag{
-    margin-top: 5px;
-}
 #headline{
-    width: 500%;
+    width: 500px;
 }
-#tag{
-    width:470%;
+#submit_btn{
+    top:10px;
 }

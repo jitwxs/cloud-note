@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>管理员界面</title>
+
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/admin_home.css">
+    <link rel="stylesheet" type="text/css" href="css/admin_iconfont.css">
+    <link rel="stylesheet" type="text/css" href="css/toastr.css">
+    <link href="bootstrap-3.3.7-dist/css/bootstrap-theme.min.css" >
+    <link href="./css/bootstrap-table.css">
+
+    <script src="js/echarts.js" type="text/javascript"></script>
+    <script src="js/jquery.min.js" type="text/javascript"></script>
+    <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <script src="js/toastr.js" type="text/javascript"></script>
+    <script type="text/javascript" src="js/admin_nav.js"></script>
+    <script src="js/bootstrap-table.js"></script>
+    <script src="js/bootstrap-table-zh-CN.js"></script>
+    <script src="js/bootstrap-table-export.js"></script>
+</head>
+<body style="width: 100%;height: 1000px;" >
+<!--侧边栏-->
+<div class="nav">
+    <!-- 汉堡图标 -->
+    <div class="nav-top">
+        <div id="mini" style="border-bottom:1px solid rgba(255,255,255,.1)"><img src="img/mini.png" ></div>
+
+    </div>
+    <!--列表-->
+    <ul>
+        <!--网站管理-->
+        <li class="nav-item">
+            <a href="javascript:;">
+                <!--网站配置的图标和文字-->
+                <i class="my-icon nav-icon icon_1"></i>
+                <span>网站信息</span>
+                <i class="my-icon nav-more"></i>
+            </a>
+            <ul>
+                <li><a href="javascript:;"><span>用户信息</span></a></li>
+                <li><a href="javascript:;"><span>登陆时间</span></a></li>
+                <li><a href="javascript:;"><span>登陆地点</span></a></li>
+                <li><a href="javascript:;"><span>文章分享</span></a></li>
+                <li><a href="javascript:;"><span>系统日志</span></a></li>
+                <li><a href="javascript:;"><span>系统设置</span></a></li>
+            </ul>
+        </li>
+
+        <!--笔记管理-->
+        <li class="nav-item">
+            <a href="javascript:;">
+                <i class="my-icon nav-icon icon_2"></i>
+                <span>笔记管理</span>
+                <i class="my-icon nav-more"></i>
+            </a>
+            <ul>
+                <li><a href="javascript:;"><span>笔记审核</span></a></li>
+                <li><a href="javascript:;"><span>分享管理</span></a></li>
+                <li><a href="javascript:;"><span>笔记回收</span></a></li>
+                <li><a href="javascript:;"><span>笔记日志</span></a></li>
+            </ul>
+        </li>
+
+        <!--用户管理-->
+        <li class="nav-item">
+            <a href="javascript:;">
+                <i class="my-icon nav-icon icon_3"></i>
+                <span>用户管理</span>
+                <i class="my-icon nav-more"></i>
+            </a>
+            <ul>
+                <li><a href="javascript:;"><span>用户列表</span></a></li>
+                <li><a href="javascript:;"><span>添加用户</span></a></li>
+                <li><a href="javascript:;"><span>小黑屋</span></a></li>
+            </ul>
+        </li>
+
+        <!--个人账户设置-->
+        <li class="nav-item">
+            <a href="javascript:;">
+                <i class="my-icon nav-icon icon_4"></i>
+                <span>账户设置</span>
+                <i class="my-icon nav-more"></i>
+            </a>
+            <ul>
+                <li><a href="javascript:;"><span>更改密码</span></a></li>
+                <li><a href="javascript:;"><span>注销登陆</span></a></li>
+            </ul>
+        </li>
+
+
+    </ul>
+
+</div>
+<!--主体-->
+<div class="container" style="height: 1000px;width: 100%; text-align: center;">
+    <h2 style="margin-bottom: 30px;">用户网盘容量统计</h2>
+    <!--echarts图-->
+    <div  class="diy_container" >
+        <div id="panSpace" style="height: 100%;width: 100%;"></div>
+    </div>
+    <!--表格-->
+    <div id="table" class="diy_table ">
+
+        <table id="panSpaceTable" class="table table-responsive table-bordered tabel-hover tab-content"></table>
+
+    </div>
+</div>
+<script>
+
+    //usernum图表
+    var panSpaceTable = echarts.init(document.getElementById('panSpace'));
+    var labelTop = {
+        normal : {
+            label : {
+                show : true,
+                position : 'center',
+                formatter : '{b}',
+                textStyle: {
+                    baseline : 'bottom'
+                }
+            },
+            labelLine : {
+                show : false
+            }
+        }
+    };
+    var labelFromatter = {
+        normal : {
+            label : {
+                formatter : function (params){
+                    return 100 - params.value + '%'
+                },
+                textStyle: {
+                    baseline : 'top'
+                }
+            }
+        },
+    };
+    var labelBottom = {
+        normal : {
+            color: '#ccc',
+            label : {
+                show : true,
+                position : 'center'
+            },
+            labelLine : {
+                show : false
+            }
+        },
+        emphasis: {
+            color: 'rgba(100,,0,0)'
+        }
+    };
+    var radius = [40, 55];
+    optionwww = {
+        tooltip : {
+            show: true,
+            trigger: 'item'
+        },
+        legend: {
+            data:['人数']
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType : {show: true, type: ['line', 'bar']},
+                restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                data : ['10%','20%','30%','40%','50%','60%','70%','80%','90%','100%']
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value',
+                position: 'right'
+
+            }
+        ],
+        series : [
+
+            {
+                name:'人数',
+                type:'bar',
+                barWidth: 40, // 系列级个性化，柱形宽度
+                data:[],
+                itemStyle:{
+                    normal:{
+                        color:'#f5b031'
+                    }
+                },
+                markLine : {
+                    data : [
+                        {type : 'average', name : '平均值'}
+                    ]
+                }
+            },
+            {
+                name:'比例',
+                type : 'pie',
+                center : ['10%', '15%'],
+                radius : radius,
+                x: '0%', // for funnel
+                itemStyle : labelFromatter,
+                color:[ 'green','blueviolet'],
+                data : [
+                    {name:'other', value:100, itemStyle : labelBottom},
+                    {name:'已用容量', value:0,itemStyle : labelTop}
+                ]
+            }
+        ]
+    };
+    panSpaceTable.setOption(optionwww);
+    window.onresize = panSpaceTable.resize;//响应式表格
+
+    //表格
+
+
+    //true 异步
+
+    sendGet('大傻帽刘大壮',{},true,function (res) {
+        var y = [];
+        for(i=0;i<res.data.length;i++) {
+            y.push(res.data[i].date);
+        }
+
+        //填充图表数据
+        panSpaceTable.setOption({
+            series: [
+                {
+                    name:'人数',
+                    data: y
+                },
+                {
+                    name:'比例',
+                    data:[
+                        {name:'other', value:100-res.spare , itemStyle : labelBottom},
+                        {name:'已用容量', value:res.spare,itemStyle : labelTop}
+                    ]
+
+                }
+
+
+            ]
+        });
+
+        //填充表格数据
+        $('#panSpaceTable').bootstrapTable(
+            {
+                data: value,   //最终的JSON数据放在这里
+                height: $(window).height() - 100,
+                striped: true,
+                cache: false,
+                pagination: true,
+                sidePagination: "client",
+                pageNumber: 1,
+                pageSize: 10,
+                pageList: [5, 10, 20],
+                showColumns: true,
+                minimunCountColumns: 2,
+                sort: false,
+                sortOrder: "asc",
+                search: true,
+                showRefresh: true,
+                clickToSelect:true,
+                showToggle:true,
+                cardView: false,    //是否显示详细视图
+                detaView:false,
+                columns: [
+                    {
+                        field: 'used',
+                        title: '已使用量',
+                        width: 100,
+                        align: 'center',
+                        valign: 'center',
+                        sortable: true
+
+                    },
+                    {
+                        field: 'data',
+                        title: '人数',
+                        align: 'center',
+                        valign: 'center',
+                        sortable: true
+
+                    }
+                ]
+            })
+    },function (error) {
+        toastr.error("系统错误");
+        return false;
+    });
+
+
+</script>
+</body>
+</html>
