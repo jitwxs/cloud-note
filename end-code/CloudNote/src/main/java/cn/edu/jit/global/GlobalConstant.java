@@ -12,6 +12,11 @@ public class GlobalConstant {
     public static String SER_URL = "http://localhost:8080";
 
     /**
+     * 用户网盘默认大小：100MB
+     */
+    public static Integer DEFAULT_PAN_SIZE = 100 * 1024 * 1024;
+
+    /**
      * 是否显示登陆信息
      */
     public static boolean HAS_SHOW_LOGIN_INFO = false;
@@ -45,6 +50,11 @@ public class GlobalConstant {
      * 用户笔记文件夹
      */
     public static String USER_ARTICLE_PATH;
+
+    /**
+     * 用户笔记索引文件夹
+     */
+    public static String USER_ARTICLE_INDEX_PATH;
 
     /**
      * 用户笔记分享文件夹
@@ -117,17 +127,17 @@ public class GlobalConstant {
     public static final String DOMAIN = "dysmsapi.aliyuncs.com";
 
     /**
-     * 权限枚举
+     * 权限类型
      */
     public enum ROLE {
         /**
          * 管理员
          */
-        ADMIN("admin",1),
+        ADMIN("admin", 1),
         /**
          * 普通用户
          */
-        USER("user",2);
+        USER("user", 2);
 
         private String name;
         private int index;
@@ -160,28 +170,104 @@ public class GlobalConstant {
     }
 
     /**
-     * 文章状态枚举
+     * 消息类型
      */
-    public enum ARTICLE_STATUS {
-        /**
-         * 非分享
-         */
-        NOT_SHARE("not_share",0),
-        /**
-         * 分享
-         */
-        SHARE("share",1);
+    public enum NOTIFY {
+        NOTIFY_SYSTEM("系统消息", 1),
+        NOTIFY_NOTE("笔记消息", 2),
+        NOTIFY_OTHER("其他消息", 3);
 
         private String name;
         private int index;
+        public static int type = 5;
 
-        private ARTICLE_STATUS(String name, int index) {
+        private NOTIFY(String name, int index) {
             this.name = name;
             this.index = index;
         }
 
         public String getName() {
-            for (ARTICLE_STATUS articleStatus : ARTICLE_STATUS.values()) {
+            for (NOTIFY notify : NOTIFY.values()) {
+                if (notify.getIndex() == index) {
+                    return notify.name;
+                }
+            }
+            return null;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public int getIndex() {
+            return index;
+        }
+
+        public void setIndex(int index) {
+            this.index = index;
+        }
+    }
+
+    /**
+     * 消息状态
+     */
+    public enum NOTIFY_STATUS {
+        READ("已读", 1),
+        UNREAD("未读", 2);
+
+        private String name;
+        private int index;
+
+        private NOTIFY_STATUS(String name, int index) {
+            this.name = name;
+            this.index = index;
+        }
+
+        public String getName() {
+            for (NOTIFY_STATUS notifyStatus : NOTIFY_STATUS.values()) {
+                if (notifyStatus.getIndex() == index) {
+                    return notifyStatus.name;
+                }
+            }
+            return null;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public int getIndex() {
+            return index;
+        }
+
+        public void setIndex(int index) {
+            this.index = index;
+        }
+    }
+
+    /**
+     * 笔记状态
+     */
+    public enum NOTE_STATUS {
+        /**
+         * 非分享
+         */
+        NOT_SHARE("not_share", 0),
+        /**
+         * 分享
+         */
+        SHARE("share", 1);
+
+        private String name;
+        private int index;
+
+        private NOTE_STATUS(String name, int index) {
+            this.name = name;
+            this.index = index;
+        }
+
+        public String getName() {
+            for (NOTE_STATUS articleStatus : NOTE_STATUS.values()) {
                 if (articleStatus.getIndex() == index) {
                     return articleStatus.name;
                 }
@@ -206,11 +292,11 @@ public class GlobalConstant {
      * 系统日志
      */
     public enum LOG_SYSTEM {
-        SHARE_CANCEL("取消分享",1),
-        SHARE_DEL("删除分享",2),
-        USER_DEL("删除用户",3),
-        USER_BLOCK("封禁用户",4),
-        CANCEL_BLOCK("取消封禁",5);
+        SHARE_CANCEL("取消分享", 1),
+        SHARE_DEL("删除分享", 2),
+        USER_DEL("删除用户", 3),
+        USER_BLOCK("封禁用户", 4),
+        CANCEL_BLOCK("取消封禁", 5);
 
 
         private String name;
@@ -248,11 +334,11 @@ public class GlobalConstant {
      * 用户日志
      */
     public enum LOG_USER {
-        USER_LOGIN("用户登陆",1),
-        USER_REG("用户注册",2),
-        FIND_PASSWORD("找回密码",3),
-        RESET_PASSWORD("重置密码",4),
-        MODIFY_INFO("修改信息",5);
+        USER_LOGIN("用户登陆", 1),
+        USER_REG("用户注册", 2),
+        FIND_PASSWORD("找回密码", 3),
+        RESET_PASSWORD("重置密码", 4),
+        MODIFY_INFO("修改信息", 5);
 
         private String name;
         private int index;
@@ -289,12 +375,12 @@ public class GlobalConstant {
      * 笔记日志
      */
     public enum LOG_NOTE {
-        CREATE_NOTE("创建笔记",1),
-        FOREVER_REMOVE_NOTE("永久删除",2),
-        SHARE_NOTE("分享笔记",3),
-        CANCEL_SHARE_NOTE("取消分享",4),
-        UPLOAD_NOTE("上传笔记",5),
-        UPLOAD_AFFIX("上传附件",6);
+        CREATE_NOTE("创建笔记", 1),
+        FOREVER_REMOVE_NOTE("永久删除", 2),
+        SHARE_NOTE("分享笔记", 3),
+        CANCEL_SHARE_NOTE("取消分享", 4),
+        UPLOAD_NOTE("上传笔记", 5),
+        UPLOAD_AFFIX("上传附件", 6);
 
         private String name;
         private int index;
@@ -331,9 +417,9 @@ public class GlobalConstant {
      * 网盘日志
      */
     public enum LOG_PAN {
-        FILE_UPLOAD("上传文件",1),
-        FILE_DOWNLOAD("下载文件",2),
-        FILE_DEL("删除文件",3);
+        FILE_UPLOAD("上传文件", 1),
+        FILE_DOWNLOAD("下载文件", 2),
+        FILE_DEL("删除文件", 3);
 
         private String name;
         private int index;

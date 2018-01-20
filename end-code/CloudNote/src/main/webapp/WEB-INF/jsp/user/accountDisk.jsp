@@ -6,19 +6,31 @@
 
 <%-- 引入头部 --%>
 <jsp:include page="settingHead.jsp"/>
-<jsp:include page="uploadPanModel.jsp"/>
 
 <body>
 <div class="container">
+    <div class="row" style="margin-top: 20px">
+        <div class="col-md-offset-3 col-md-6">
+            <h5 class="progressbar-title" style="text-align: center">网盘总大小：<span id="totalSize"></span>MB</h5>
+            <div class="progress">
+                <div  id="process" class="progress-bar" style="width: 80%; background:#005394;">
+                    <span id="spans"></span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
     <div id="wangpan">
         <!--头部导航-->
         <div id="head" >
-            <a class="upload" onclick="uploadPan()">
+            <a class="upload">
+                <input type="file" id="uploadFile">
                 <img src="${ctx}/images/uploadfile.png">
                 上传文件
             </a>
             <a class="btn" id="xj-wjj-btn" ><img src="${ctx}/images/newfile.png"> 新建文件夹</a>
-            <input id="search_key" style="width: 245px;height: 35px;float: left;margin-left: 240px;margin-top:7px;" type="text" class="form-control"placeholder="搜索您的文件" />
+            <input id="search_key" style="width: 245px;height: 35px;float: left;margin-left: 240px;margin-top:7px;" type="text" class="form-control" placeholder="搜索您的文件" />
             <span class="input-group-btn">
                <button class="btn btn-info btn-search" style="float:left;margin-left: 5px;margin-top:7px;">查找</button>
             </span>
@@ -53,20 +65,20 @@
         '                    </div>';
 
 
-    //页面初始化时，，从服务器接收数据
+    //页面初始化时，从服务器接收数据
     sendGet("${ctx}/user/initUserPanDir", {'dirId':"root"}, false, function (msg) {
         if (msg){
-//            获取数据放入dirAttr
+            // 获取数据放入dirAttr
             dirAttr = msg.data;
-            //新建一个最大的面包屑，id为主文件夹的id
+            // 新建一个最大的面包屑，id为主文件夹的id
             $('.breadcrumb').append('<li><a id="mainbread" index-id="'+msg.id+'" >全部文件</a></li>');
         }
         else{
-            toastr.error("页面初始化失败！");
+            toastr.error("页面初始化失败");
             return false;
         }
     },function (error) {
-        toastr.error("出错了！");
+        toastr.error("系统错误");
         return false;
     });
     //页面初始化的数据展示在屏幕上
@@ -90,6 +102,9 @@
 
     initUI();
     function initUI() {
+        // 初始化网盘大小
+        initSize();
+
         //当前左击的元素
         $('.wenjianjia').off('click').on('click',function () {
             //包裹目录的div
@@ -113,24 +128,24 @@
                     initUI();
                     return true;
                 } else {
-                    toastr.error("打开目录失败！");
+                    toastr.error("打开目录失败");
                     return false;
                 }
             },function (error) {
-                toastr.error("出错了！");
+                toastr.error("系统错误");
                 return false;
             });
         });
 
         //最大的面包屑事件
-        $('#mainbread').on('click',function () {
-            //获取当前面包屑的id，，即最上层文件夹的id
+        $('#mainbread').off('click').on('click',function () {
+            // 获取当前面包屑的id，，即最上层文件夹的id
             var id = $(this).attr('index-id');
-            //删除当前content下级的div的内容
+            // 删除当前content下级的div的内容
             $('.neirong').children().remove();
-            //删除当前面包屑的后面所有的面包屑
+            // 删除当前面包屑的后面所有的面包屑
             $(this).parent().nextAll().remove();
-//        获取该id所属的data数据即文件数据
+            // 获取该id所属的data数据即文件数据
             sendGet("${ctx}/user/initUserPanDir", {'dirId':id}, false, function (msg) {
                 if (msg) {
                     //在获取数据放入dirAttr
@@ -138,13 +153,11 @@
                     //在content里面新加一个包裹
                     showDir($('.neirong'),dirAttr);
                     initUI();
-                    return true;
                 } else {
-                    toastr.error("跳转失败！");
-                    return false;
+                    toastr.error("跳转失败");
                 }
             },function (error) {
-                toastr.error("出错了！");
+                toastr.error("系统错误");
                 return false;
             });
         });
@@ -168,11 +181,11 @@
                     initUI();
                     return true;
                 } else {
-                    toastr.error("跳转失败！");
+                    toastr.error("跳转失败");
                     return false;
                 }
             },function (error) {
-                toastr.error("出错了！");
+                toastr.error("系统错误");
                 return false;
             });
         });
@@ -208,7 +221,7 @@
                             return false;
                         }
                     },function (error) {
-                        toastr.error("出错了！");
+                        toastr.error("系统错误");
                         return false;
                     });
                 }
@@ -246,7 +259,7 @@
                             return false;
                         }
                     },function (error) {
-                        toastr.error("出错了！");
+                        toastr.error("系统错误");
                         return false;
                     });
                 }
@@ -258,8 +271,7 @@
             var id = $(this).prev().prev().prev().attr('index-id');
             var name = $(this).prev().prev().prev().text();
 
-            var url = "${ctx}/user/downloadUserPan?panId=" + id + "&panName=" + name;
-            window.location.href = url;
+            window.location.href = "${ctx}/user/downloadUserPan?panId=" + id + "&panName=" + name;
             initUI();
         });
 
@@ -278,15 +290,12 @@
                         $parent.remove();
                         initUI();
                         toastr.success("删除成功");
-                        return true;
                     } else {
                         toastr.error("删除失败");
-                        return false;
                     }
                 },function (error) {
-                    toastr.error("出错了！");
-                    return false;
-                })
+                    toastr.error("系统错误");
+                });
             } else {
                 return false;
             }
@@ -333,23 +342,60 @@
                         return false;
                     }
                 },function (error) {
-                    toastr.error("出错了！");
+                    toastr.error("系统错误");
                     return false;
                 })
             }
         });
     });
 
-    //上传文件
-    function uploadPan() {
+    // 上传文件
+    $("input[type='file']").change(function(){
         //找当前父目录，，就是面包屑的最后一个的id
         var parent = $('.breadcrumb a').last().attr('index-id');
-        //赋值给input
-        $('#uploadNote_parent').val(parent);
-        console.log($('#uploadNote_parent').val());
-        $("#uploadPanName").html("当前未选择文件!");
-        $('#uploadPanModal').modal('show');
-    }
+        var file = this.files[0];
+        var fileSize = file.size;
+        var usedSize = parseInt($("#spans").text());
+        var totalSize = parseInt($("#totalSize").text());
+
+        if((fileSize / 1024 / 1024 + usedSize) > totalSize) {
+            toastr.warning("超出容量限制");
+        } else {
+            var formData = new FormData();
+            formData.append("dirId", parent);
+            formData.append("file", file);
+
+            $.ajax({
+                url : "${ctx}/user/uploadPan",
+                type : 'post',
+                data : formData,
+                async:false,
+                dataType:'json',
+                // 告诉jQuery不要去处理发送的数据
+                processData : false,
+                // 告诉jQuery不要去设置Content-Type请求头
+                contentType : false,
+                success:function(msg) {
+                    $('#uploadPanModal').modal('hide');
+                    if (msg.status) {
+                        $('#content').append('<div class="wj">\n' +
+                            '                        <a class="wenjian" index-id="'+msg.info+'"><img src="${ctx}/images/file.png">'+msg.name+'</a>\n' +
+                            '                        <a  class="delete"><img src="${ctx}/images/delete.png"></a>\n' +
+                            '                        <a  class="rename_note"><img src="${ctx}/images/rename.png"></a>\n' +
+                            '                        <a class="download"><img src="${ctx}/images/download.png"></a>\n' +
+                            '                    </div>');
+                        initUI();
+                    } else {
+                        toastr.error("上传文件失败");
+                    }
+                },
+                error : function(msg) {
+                    toastr.error("系统错误");
+                    return false;
+                }
+            });
+        }
+    });
 
     //查找事件
     $('.btn-search').on('click',function () {
@@ -370,11 +416,34 @@
                 return false;
             }
         },function (error) {
-            toastr.error("出错了！");
+            toastr.error("系统错误");
             return false;
         })
-    })
+    });
 
+    function initSize() {
+        sendGet("${ctx}/user/initUserPanSize", {}, false, function (msg) {
+            var pro=document.getElementById("process");
+
+            var percent = parseInt(msg.usedPerfect);
+            var totalSize = parseInt(msg.size) / 1024 / 1024;
+
+            if(percent <= 60) {
+                pro.style.background='green';
+            } else if(percent <= 90) {
+                pro.style.background='yellow';
+            } else {
+                pro.style.background='red';
+            }
+
+            pro.style.width= percent + '%';
+            $("#totalSize").text(totalSize);
+            $("#spans").text(percent + '%');
+        },function (error) {
+            toastr.error("系统错误");
+            return false;
+        });
+    }
 </script>
 </body>
 </html>

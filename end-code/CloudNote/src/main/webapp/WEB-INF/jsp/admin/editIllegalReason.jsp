@@ -16,7 +16,8 @@
                         <input type="hidden" class="form-control" id="illegalReasonId" name="id">
                         <label for="illegalReasonName" class="col-sm-2 control-label">原因</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="illegalReasonName" name="name" required="required">
+                            <input type="text" class="form-control" id="illegalReasonName" name="name"
+                                   required="required">
                         </div>
                     </div>
                 </form>
@@ -30,7 +31,6 @@
 </div>
 
 <script>
-    // 提交表单
     function checkEditIllegal() {
         $("#updateIllegalForm").submit();
     }

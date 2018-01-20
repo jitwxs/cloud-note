@@ -40,7 +40,7 @@ public interface ArticleService {
      * @param dirId 目录id
      * @return
      */
-    List<Article> listArticleByDir(String uid, String dirId);
+    List<Article> listArticleByDir(String uid, String dirId, String orderBy);
 
     /**
      * 查询指定用户所有分享的笔记
@@ -57,5 +57,7 @@ public interface ArticleService {
     List<Article> listAnotherShareArticle(String uid);
 
     List<Article> listAllShareArticle();
+
+    List<Article> listArticleByName(String uid, String dirId, String noteName);
 
 }

@@ -64,9 +64,9 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> listArticleByDir(String uid, String dirId) {
+    public List<Article> listArticleByDir(String uid, String dirId, String orderBy) {
         ArticleExample articleExample = new ArticleExample();
-
+        articleExample.setOrderByClause(orderBy);
         ArticleExample.Criteria criteria = articleExample.createCriteria();
         criteria.andUserIdEqualTo(uid);
         criteria.andDirIdEqualTo(dirId);
@@ -80,7 +80,7 @@ public class ArticleServiceImpl implements ArticleService {
 
         ArticleExample.Criteria criteria = articleExample.createCriteria();
         criteria.andUserIdEqualTo(uid);
-        criteria.andIsOpenEqualTo(GlobalConstant.ARTICLE_STATUS.SHARE.getIndex());
+        criteria.andIsOpenEqualTo(GlobalConstant.NOTE_STATUS.SHARE.getIndex());
 
         return articleMapper.selectByExample(articleExample);
     }
@@ -91,7 +91,7 @@ public class ArticleServiceImpl implements ArticleService {
 
         ArticleExample.Criteria criteria = articleExample.createCriteria();
         criteria.andUserIdNotEqualTo(uid);
-        criteria.andIsOpenEqualTo(GlobalConstant.ARTICLE_STATUS.SHARE.getIndex());
+        criteria.andIsOpenEqualTo(GlobalConstant.NOTE_STATUS.SHARE.getIndex());
 
         return articleMapper.selectByExample(articleExample);
     }
@@ -101,7 +101,19 @@ public class ArticleServiceImpl implements ArticleService {
         ArticleExample articleExample = new ArticleExample();
 
         ArticleExample.Criteria criteria = articleExample.createCriteria();
-        criteria.andIsOpenEqualTo(GlobalConstant.ARTICLE_STATUS.SHARE.getIndex());
+        criteria.andIsOpenEqualTo(GlobalConstant.NOTE_STATUS.SHARE.getIndex());
+
+        return articleMapper.selectByExample(articleExample);
+    }
+
+    @Override
+    public List<Article> listArticleByName(String uid, String dirId, String noteName) {
+        ArticleExample articleExample = new ArticleExample();
+
+        ArticleExample.Criteria criteria = articleExample.createCriteria();
+        criteria.andUserIdEqualTo(uid);
+        criteria.andDirIdEqualTo(dirId);
+        criteria.andTitleEqualTo(noteName);
 
         return articleMapper.selectByExample(articleExample);
     }

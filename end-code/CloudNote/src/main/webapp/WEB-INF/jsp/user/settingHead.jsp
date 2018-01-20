@@ -12,6 +12,8 @@
     <%-- 弹窗CSS --%>
     <link rel="stylesheet" href="${ctx}/css/toastr.css">
     <link rel="stylesheet" href="${ctx}/css/account_setting.css">
+    <%-- 进度条CSS --%>
+    <link rel="stylesheet" href="${ctx}/css/font-awesome.css">
     <%-- jQuery first, then Bootstrap JS. --%>
     <script src="${ctx}/js/jquery-3.2.1.min.js"></script>
     <script src="${ctx}/js/bootstrap.js"></script>
@@ -49,7 +51,7 @@
                     <ul class="dropdown-menu">
                         <li ><a href="${ctx}/user/index">返回笔记</a></li>
                         <li class="divider"></li>
-                        <li ><a href="${ctx}/logout">退出</a></li>
+                        <li ><a href="${ctx}/logout">注销</a></li>
                     </ul>
                 </li>
             </ul>
@@ -65,6 +67,7 @@
                 <li><a href="${ctx}/user/accountInfo">账号信息</a></li>
                 <li><a href="${ctx}/user/accountShare">我的分享</a></li>
                 <li><a href="${ctx}/user/disk">我的网盘</a></li>
+                <li><a href="${ctx}/user/notify">站内信</a></li>
                 <li><a href="${ctx}/user/resetPassword">更改密码</a></li>
             </ul>
         </div>

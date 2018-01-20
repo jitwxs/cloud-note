@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -52,11 +53,17 @@ public class AdminController {
     @Resource(name = "areaServiceImpl")
     private AreaService areaService;
 
+    @Resource(name = "notifyServiceImpl")
+    private NotifyService notifyService;
+
     @Resource(name = "illegalReasonServiceImpl")
     private IllegalReasonService illegalReasonService;
 
     @Resource(name = "userBlacklistServiceImpl")
     private UserBlacklistService userBlacklistService;
+
+    @Resource(name = "userPanServiceImpl")
+    private UserPanService userPanService;
 
     /*---------   普通方法区域（START）   ----------*/
 
@@ -142,6 +149,7 @@ public class AdminController {
         if(user != null) {
             logDto.setUserName(user.getName());
         }
+
         return logDto;
     }
 
@@ -345,7 +353,7 @@ public class AdminController {
     @RequestMapping(value = "cancelShare", method = {RequestMethod.GET})
     public String cancelShare(String id, HttpServletRequest request) {
         Article article = articleService.getById(id);
-        article.setIsOpen(GlobalConstant.ARTICLE_STATUS.NOT_SHARE.getIndex());
+        article.setIsOpen(GlobalConstant.NOTE_STATUS.NOT_SHARE.getIndex());
         if(!StringUtils.isBlank(article.getShareUrl())) {
             GlobalFunction.deleteSignalFile(article.getShareUrl());
             article.setShareUrl(null);
@@ -354,6 +362,22 @@ public class AdminController {
 
         // 保存日志
         logService.saveLog(request, GlobalConstant.LOG_SYSTEM.type, GlobalConstant.LOG_SYSTEM.SHARE_CANCEL.getName(), getSelfId());
+
+        // 发送消息
+        String sendId = getSelfId();
+        Notify notify = new Notify();
+        notify.setId(GlobalFunction.getUUID());
+        notify.setType(GlobalConstant.NOTIFY.NOTIFY_NOTE.getName());
+        notify.setSendId(sendId);
+        notify.setRecvId(article.getUserId());
+        notify.setStatus(GlobalConstant.NOTIFY_STATUS.UNREAD.getIndex());
+        notify.setTitle("分享笔记被取消");
+        notify.setContent("您的笔记文章《" + article.getTitle() +"》已被系统取消分享");
+        notify.setCreateDate(new Date());
+        notifyService.save(notify);
+
+        // 保存日志
+        logService.saveLog(request, GlobalConstant.NOTIFY.type, GlobalConstant.NOTIFY.NOTIFY_NOTE.getName(), sendId);
 
         return "redirect:/admin/shareAudit";
     }
@@ -368,6 +392,23 @@ public class AdminController {
                 articleService.removeById(id);
                 // 保存日志
                 logService.saveLog(request, GlobalConstant.LOG_SYSTEM.type, GlobalConstant.LOG_SYSTEM.SHARE_DEL.getName(), getSelfId());
+
+                // 发送消息
+                Article article = articleService.getById(id);
+                String sendId = getSelfId();
+                Notify notify = new Notify();
+                notify.setId(GlobalFunction.getUUID());
+                notify.setType(GlobalConstant.NOTIFY.NOTIFY_NOTE.getName());
+                notify.setSendId(sendId);
+                notify.setRecvId(article.getUserId());
+                notify.setStatus(GlobalConstant.NOTIFY_STATUS.UNREAD.getIndex());
+                notify.setTitle("分享笔记被删除");
+                notify.setContent("您的笔记文章《" + article.getTitle() +"》已被系统删除");
+                notify.setCreateDate(new Date());
+                notifyService.save(notify);
+
+                // 保存日志
+                logService.saveLog(request, GlobalConstant.NOTIFY.type, GlobalConstant.NOTIFY.NOTIFY_NOTE.getName(), sendId);
             }
         }
         return "redirect:/admin/shareAudit";
@@ -524,6 +565,24 @@ public class AdminController {
 
             // 保存日志
             logService.saveLog(request, GlobalConstant.LOG_SYSTEM.type, GlobalConstant.LOG_SYSTEM.USER_BLOCK.getName(), getSelfId());
+
+            // 发送消息
+            IllegalReason illegalReason = illegalReasonService.getById(userBlacklist.getReasonId());
+            String reason = illegalReason.getName();
+            String sendId = getSelfId();
+            Notify notify = new Notify();
+            notify.setId(GlobalFunction.getUUID());
+            notify.setType(GlobalConstant.NOTIFY.NOTIFY_SYSTEM.getName());
+            notify.setSendId(sendId);
+            notify.setRecvId(userBlacklist.getUserId());
+            notify.setStatus(GlobalConstant.NOTIFY_STATUS.UNREAD.getIndex());
+            notify.setTitle("账户被封禁");
+            notify.setContent("您的账户已被封禁，封禁原因：“" + reason +"”，解封时间为：" + GlobalFunction.getDate2Second(userBlacklist.getEndDate()));
+            notify.setCreateDate(new Date());
+            notifyService.save(notify);
+
+            // 保存日志
+            logService.saveLog(request, GlobalConstant.NOTIFY.type, GlobalConstant.NOTIFY.NOTIFY_SYSTEM.getName(), sendId);
         } catch (ParseException e) {
             e.printStackTrace();
             // 保存日志
@@ -568,6 +627,22 @@ public class AdminController {
         userBlacklistService.update(userBlacklist);
         // 保存日志
         logService.saveLog(request, GlobalConstant.LOG_SYSTEM.type, GlobalConstant.LOG_SYSTEM.CANCEL_BLOCK.getName(), getSelfId());
+
+        // 发送消息
+        String sendId = getSelfId();
+        Notify notify = new Notify();
+        notify.setId(GlobalFunction.getUUID());
+        notify.setType(GlobalConstant.NOTIFY.NOTIFY_SYSTEM.getName());
+        notify.setSendId(sendId);
+        notify.setRecvId(userBlacklist.getUserId());
+        notify.setStatus(GlobalConstant.NOTIFY_STATUS.UNREAD.getIndex());
+        notify.setTitle("账户被解封");
+        notify.setContent("您的账户已被解封，现在可以正常登陆了，以后可不要再干违规的事哦！");
+        notify.setCreateDate(new Date());
+        notifyService.save(notify);
+        // 保存日志
+        logService.saveLog(request, GlobalConstant.NOTIFY.type, GlobalConstant.NOTIFY.NOTIFY_SYSTEM.getName(), sendId);
+
         return "redirect:/admin/blackHome";
     }
 
@@ -587,6 +662,60 @@ public class AdminController {
     /*---------   用户管理区域（End）   ----------*/
 
     /*---------   网盘管理区域（Start）   ----------*/
+    /**
+     * 网盘信息UI
+     */
+    @RequestMapping(value = "panInfo", method = {RequestMethod.GET})
+    public String panInfoUI() {
+        return "/admin/panInfo";
+    }
+
+    /**
+     * 准备网盘信息
+     */
+    @RequestMapping(value = "preparePanInfo", method = {RequestMethod.GET})
+    public void preparePanInfo(HttpServletResponse response) {
+        try {
+            response.setContentType("text/html;charset=utf-8");
+            Map<String, Object> maps = new HashMap<>(16);
+
+            // 获取网盘容量百分比
+            List<User> users = userService.listAllUser(null);
+            int totalUsed = userPanService.countTotalUsedSize();
+
+            String temp = String.format("%.2f", (double) totalUsed / (users.size() * GlobalConstant.DEFAULT_PAN_SIZE));
+            double perfect = Double.parseDouble(temp) * 100;
+
+            int[] countUser = new int[10];
+            // 获取使用容量每10%的人数
+            for(User user : users) {
+                Integer used = userPanService.countUsedSize(user.getId());
+                if(used != null) {
+                    int per = (int)((double)used / GlobalConstant.DEFAULT_PAN_SIZE * 10);
+                    countUser[per]++;
+                } else {
+                    countUser[0]++;
+                }
+            }
+
+            List<Object> lists = new ArrayList<>();
+
+            for(int i=0; i<countUser.length; i++) {
+                Data data = new Data();
+                data.setK(i*10 +"% - " + (i+1)*10 + "%");
+                data.setV(countUser[i]);
+                lists.add(data);
+            }
+
+            maps.put("perfect", perfect);
+            maps.put("lists", lists);
+            String data = JSON.toJSONString(maps, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * 网盘日志UI
      */
@@ -715,7 +844,7 @@ public class AdminController {
      * 获取所有封禁原因
      */
     @RequestMapping(value = "listIllegal", method = {RequestMethod.GET})
-    public void listIllegal(HttpServletRequest request, HttpServletResponse response) {
+    public void listIllegal(HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
         try {
             List<IllegalReason> list = illegalReasonService.listAll();
@@ -727,4 +856,31 @@ public class AdminController {
     }
 
     /*---------   系统管理区域（End）   ----------*/
+
+    /*---------   消息管理区域（Start）   ----------*/
+    /**
+     * 消息日志UI
+     */
+    @RequestMapping(value = "notifyLog", method = {RequestMethod.GET})
+    public String notifyLogUI() {
+        return "admin/notifyLog";
+    }
+
+    /**
+     * 准备消息日志
+     */
+    @RequestMapping(value = "prepareNotifyLog", method = {RequestMethod.GET})
+    public void prepareNotifyLog(HttpServletResponse response) {
+        try {
+            response.setContentType("text/html;charset=utf-8");
+            List<Log> lists = logService.listByType(GlobalConstant.NOTIFY.type, "create_date desc");
+
+            List<LogDto> result = log2LogDto(lists);
+            String data = JSON.toJSONString(result, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    /*---------   消息管理区域（End）   ----------*/
 }

@@ -240,4 +240,13 @@
       modifed_time = #{modifedTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+  <select id="countUsedSize" parameterType="java.lang.String" resultType="java.lang.Integer" >
+    select sum(size)
+    from user_pan
+    where userId = #{uid}
+  </select>
+  <select id="countTotalUsedSize" parameterType="java.lang.String" resultType="java.lang.Integer" >
+    select sum(size)
+    from user_pan
+  </select>
 </mapper>

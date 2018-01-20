@@ -42,12 +42,24 @@ public class ArticleDirServiceImpl implements ArticleDirService {
     }
 
     @Override
-    public List<ArticleDir> listByParentId(String uid, String parentId) {
+    public List<ArticleDir> listByParentId(String uid, String parentId, String orderBy) {
+        ArticleDirExample articleDirExample = new ArticleDirExample();
+        articleDirExample.setOrderByClause(orderBy);
+        ArticleDirExample.Criteria criteria = articleDirExample.createCriteria();
+        criteria.andUidEqualTo(uid);
+        criteria.andParentIdEqualTo(parentId);
+
+        return articleDirMapper.selectByExample(articleDirExample);
+    }
+
+    @Override
+    public List<ArticleDir> getByName(String uid, String parentId, String dirName) {
         ArticleDirExample articleDirExample = new ArticleDirExample();
 
         ArticleDirExample.Criteria criteria = articleDirExample.createCriteria();
         criteria.andUidEqualTo(uid);
         criteria.andParentIdEqualTo(parentId);
+        criteria.andNameEqualTo(dirName);
 
         return articleDirMapper.selectByExample(articleDirExample);
     }

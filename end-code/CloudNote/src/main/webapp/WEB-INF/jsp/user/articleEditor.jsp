@@ -1,12 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/global/taglib.jsp" %>
 
-
-<style>
-    .wjj_div{
-        margin-left: 10px;
-    }
-</style>
 <div class="col-md-10" style="float: right">
     <form class="form-inline">
         <div class="form-group">
@@ -34,20 +28,28 @@
 
     <%-- 主编辑器 --%>
     <div id="editor" style="float: right;width:100%;">
-        <p><b style="font-size: 25px">当前未选中任何笔记，请先选中一个哦！！</b></p>
+        <p><b style="font-size: 20px">Tips: 您当前未选中笔记，先看看使用帮助吧！</b></p>
+        <p><b>新建目录：</b>点击左侧目录树中的任一目录，右击<span><b>新建目录</b></span></p>
+        <p><b>新建笔记：</b>点击左侧目录树中的任一目录，右击<span><b>新建笔记</b></span></p>
+        <p><b>重命名笔记：</b>点击左侧目录树中的任一目录，右击<span><b>重命名笔记</b></span></p>
+        <p><b>上传笔记：</b>点击左侧目录树中的任一目录，右击<span><b>上传笔记</b></span>，选择<span><b>无道云笔记文件(.note)</b></span></p>
+        <p><b>下载笔记：</b>点击左侧目录树中的任一目录，右击<span><b>下载笔记</b></span></p>
+        <p><b>分享笔记：</b>点击左侧目录树中的任一笔记，右击<span><b>分享</b></span>，你的笔记将会被公开，其他人通过链接可以查看该笔记</p>
+        <p><b>删除笔记：</b>点击左侧目录树中的任一笔记，右击<span><b>删除</b></span>，笔记将会放入回收站</p>
+        <p><b>删除回收站笔记：</b>点击左侧回收站中的任一笔记右击<span><b>删除</b></span>，或右击回收站选择<span><b>清空回收站</b></span></p>
     </div>
     <%-- 附件区域 --%>
     <div id="affixDiv" style="float: right;width:100%;margin-top: 10px">
-        <form method="post" action="${ctx}/user/uploadAffix" onsubmit="return checkSubmitAffix()" enctype="multipart/form-data">
+        <form class="form-horizontal" role="form" enctype="multipart/form-data">
             <input type="hidden" id="affixNoteId" name="noteId">
             <div>
                 <span class="btn btn-success fileinput-button">
                 <span>添加附件</span>
                 <input type="file" id="addAffix" name="addAffix">
             </span>
-                <span class="btn btn-default fileinput-button">
-                <span>上传附件（<<strong>10MB</strong>）</span>
-                <input type="submit">
+                <a class="btn btn-default fileinput-button" onclick="uploadAffix()">
+                    <span>上传附件（<<strong>10MB</strong>）</span>
+                </a>
             </span>
                 <label id="affixName"></label>
             </div>
@@ -108,6 +110,7 @@
         editor.customConfig.uploadImgShowBase64 = true;
 
         editor.customConfig.zIndex = 100;
+
         editor.create();
 
         // 初始化全屏插件
@@ -150,7 +153,7 @@
                 toastr.warning("未选择笔记");
                 return false;
             } else if(noteName == null || noteName == "") {
-                toastr.warning("笔记标题不能为空")
+                toastr.warning("笔记标题不能为空");
                 return false;
             } else {
                 sendPost('${ctx}/user/saveNote',{'noteId':noteId, 'noteName':noteName, 'data':content,'tag':editorTags},true,function (msg) {
@@ -180,24 +183,49 @@
             $("#affixName").html("当前选中："+file.name);
             fileSize = file.size;
         });
-
-        function checkSubmitAffix() {
+        
+        function uploadAffix() {
             var noteId = $("#affixNoteId").val();
+            var noteName = $("#editorTitle").val();
             var affixName = $("#affixName").html();
+
             if(noteId == null || noteId == "") {
                 toastr.warning("还没有选择笔记哦（´Д`）");
-                return false;
-            }
-            if(affixName == null || affixName == "") {
+            } else  if(affixName == null || affixName == "") {
                 toastr.warning("不选文件我咋上传呀(○´･д･)ﾉ");
-                return false;
+            } else {
+                var formData = new FormData();
+                var file = document.getElementById("addAffix").files[0];
+
+                formData.append("noteId", noteId);
+                formData.append("file", file);
+
+                $.ajax({
+                    url : "${ctx}/user/uploadAffix",
+                    type : 'post',
+                    data : formData,
+                    async:false,
+                    dataType:'json',
+                    // 告诉jQuery不要去处理发送的数据
+                    processData : false,
+                    // 告诉jQuery不要去设置Content-Type请求头
+                    contentType : false,
+                    success:function(msg) {
+                        if (msg.status) {
+                            toastr.success("上传成功");
+                            flushNote(noteId, noteName);
+                        } else {
+                            toastr.error("上传失败");
+                        }
+                    },
+                    error : function(msg) {
+                        toastr.error("系统错误");
+                        return false;
+                    }
+                });
             }
-            if(fileSize / (1024 * 1024) > 10) {
-                toastr.warning("附件太大啦！");
-                return false;
-            }
-            return true;
         }
+
 
         function deleteAffix(obj) {
             var id = obj.parentElement.parentElement.id;
@@ -249,7 +277,7 @@
                 }
                 // 如果不可预览，判断是否是可转换的数据类型
                 if(!previewFlag) {
-                    for(var i=0; i<convertArray.length; i++) {
+                    for(var i = 0; i < convertArray.length; i++) {
                         if(convertArray[i] == type) {
                             convertFlag = true;
                             break;

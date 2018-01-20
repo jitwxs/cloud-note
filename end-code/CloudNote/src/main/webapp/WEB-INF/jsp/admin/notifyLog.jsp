@@ -9,22 +9,23 @@
 <body class="admin_body">
 <!--主体-->
 <div class="admin_container">
-    <h2 class="admin_table_title">笔记日志</h2>
+    <h2 class="admin_table_title">消息日志</h2>
     <div id="toolbar" style="margin-right: 20px;">
 
-        <button id="btn_delete" type="button" class="btn btn-default" onclick="delect_more()">
+        <button id="btn_delete" type="button" class="btn btn-default" onclick="delete_more()">
             <span class="glyphicon glyphicon-remove" aria-hidden="true">删除</span>
         </button>
 
     </div>
     <div class="admin_table_div2">
-        <table id="noteTable" class="table table-responsive table-bordered tab-content table-hover"
+        <table id="notifyLogTable" class="table table-responsive table-bordered tab-content table-hover"
                style="margin-right: 10%;">
         </table>
     </div>
 </div>
 
 <script>
+    //    注册事件
     window.operateEvents = {
         'click .detail': function (e, value, row, index) {
             var logId = row.id;
@@ -32,7 +33,7 @@
         },
         'click .del': function (e, value, row, index) {
             var logId = row.id;
-            var url = 'noteLog';
+            var url = 'notifyLog';
             deleteLog(logId, url);
         }
     };
@@ -47,8 +48,8 @@
     }
 
     $(function () {
-        sendGet('${ctx}/admin/prepareNoteLog', {}, false, function (value) {
-            $table = $('#noteTable').bootstrapTable(
+        sendGet('${ctx}/admin/prepareNotifyLog', {}, false, function (value) {
+            $table = $('#notifyLogTable').bootstrapTable(
                 {
                     data: value,   //最终的JSON数据放在这里
                     striped: true,
@@ -142,9 +143,9 @@
         });
     });
 
-    function delect_more() {
-        var row = $(noteTable).bootstrapTable('getSelections');
-        var url = 'noteLog';
+    function delete_more() {
+        var row = $(panLogTable).bootstrapTable('getSelections');
+        var url = 'notifyLog';
         deleteLog(row, url);
     }
 

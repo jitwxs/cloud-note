@@ -6,25 +6,23 @@
 
 <jsp:include page="left.jsp"/>
 
-<body>
+<body class="admin_body">
 <!--主体-->
-<div class="container" style="height: 1000px;width: 100%; text-align: center;">
-    <h2 style="margin-bottom: 30px;">网盘日志</h2>
+<div class="admin_container">
+    <h2 class="admin_table_title">网盘日志</h2>
     <div id="toolbar" style="margin-right: 20px;">
-
         <button id="btn_delete" type="button" class="btn btn-default" onclick="delect_more()">
             <span class="glyphicon glyphicon-remove" aria-hidden="true">删除</span>
         </button>
-
     </div>
-    <div style="width: 80%;float: right;margin-right: 50px;">
-        <table id="panLogTable" class="table table-responsive table-bordered tab-content table-hover" style="margin-right: 10%;">
+    <div class="admin_table_div2">
+        <table id="panLogTable" class="table table-responsive table-bordered tab-content table-hover"
+               style="margin-right: 10%;">
         </table>
     </div>
 </div>
 
 <script>
-    //    注册事件
     window.operateEvents = {
         'click .detail': function (e, value, row, index) {
             var logId = row.id;
@@ -47,14 +45,14 @@
     }
 
     $(function () {
-        sendGet('${ctx}/admin/preparePanLog',{},false,function (value) {
+        sendGet('${ctx}/admin/preparePanLog', {}, false, function (value) {
             $table = $('#panLogTable').bootstrapTable(
                 {
                     data: value,   //最终的JSON数据放在这里
                     striped: true,
                     cache: false,
-                    height:700,
-                    toolbar:'#toolbar',
+                    height: 700,
+                    toolbar: '#toolbar',
                     pagination: true,
                     sidePagination: "client",
                     pageNumber: 1,
@@ -66,16 +64,16 @@
                     sortOrder: "asc",
                     search: true,
                     showRefresh: true,
-                    clickToSelect:true,
-                    showToggle:true,
+                    clickToSelect: true,
+                    showToggle: true,
                     cardView: false,    //是否显示详细视图
-                    detaView:false,
+                    detaView: false,
                     showExport: true,//显示导出按钮
-                    exportTypes:  ['excel','json', 'xml', 'txt', 'sql'],
+                    exportTypes: ['excel', 'json', 'xml', 'txt', 'sql'],
                     columns: [
                         {
-                            field:"checked",
-                            checkbox:true
+                            field: "checked",
+                            checkbox: true
                         },
                         {
                             field: 'title',
@@ -128,19 +126,19 @@
                             sortable: true
                         },
                         {
-                            field:"button",
-                            title:"operate",
+                            field: "button",
+                            title: "operate",
                             align: 'center',
-                            formatter:AddFunctionAlty,
-                            events:operateEvents
+                            formatter: AddFunctionAlty,
+                            events: operateEvents
                         }
                     ]
                 })
-        },function (error) {
+        }, function (error) {
             toastr.error("系统错误");
             return false;
         });
-    })
+    });
 
     function delect_more() {
         var row = $(panLogTable).bootstrapTable('getSelections');

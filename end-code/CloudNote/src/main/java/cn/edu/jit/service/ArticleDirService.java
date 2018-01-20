@@ -21,5 +21,7 @@ public interface ArticleDirService {
     /**
      * 指定用户指定目录下所有子目录
      */
-    List<ArticleDir> listByParentId(String uid, String parentId);
+    List<ArticleDir> listByParentId(String uid, String parentId, String orderBy);
+
+    List<ArticleDir> getByName(String uid, String parentId, String dirName);
 }

@@ -137,7 +137,7 @@
 
                     <!--返回登陆-->
                     <div class="form-group">
-                        <a href="${ctx}/index" style="text-decoration: none;">
+                        <a href="${ctx}/" style="text-decoration: none;">
                             <input id="backtoLogin" type="backtoLogin" class="form-control btn-lg "
                                    value="返&nbsp;&nbsp;回&nbsp;&nbsp;首&nbsp;&nbsp;页"
                                    style="height: 50px;background: white;border: solid 1px darkgrey;

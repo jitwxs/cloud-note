@@ -42,6 +42,7 @@
 <jsp:include page="../showSelfInfoModel.jsp"/>
 <jsp:include page="shareNoteModel.jsp"/>
 <jsp:include page="uploadNote.jsp"/>
+<jsp:include page="noteMoveToModel.jsp"/>
 
 <input type="hidden" id="lastLoginTime" value="${lastLoginTime}">
 
@@ -75,6 +76,14 @@ $(function() {
             var userTel = res.userDto.tel;
             $("#userSmallName").html(res.userDto.name);
             $("#userSmallIcon").attr('src', res.userDto.icon);
+
+            // 初始化未读消息
+            var unReadMsg = parseInt(res.info);
+            if (unReadMsg != 0){
+                $('.notice').text(unReadMsg);
+            } else {
+                $('.notice').hide();
+            }
         },function (error) {
             toastr.error("系统错误");
             return false;

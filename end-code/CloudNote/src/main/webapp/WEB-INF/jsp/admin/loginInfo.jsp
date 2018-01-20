@@ -6,10 +6,10 @@
 
 <jsp:include page="left.jsp"/>
 
-<body style="width: 100%;height: 1000px;" >
+<body class="admin_body">
 <!--主体-->
 <div class="container" style="height: 1000px;width: 100%; text-align: center;">
-    <h2 style="margin-left: 200px;">用户登陆统计</h2>
+    <h2 class="admin_table_title">用户登陆统计</h2>
     <div class="diy_container" id="login_statistics" style="height:400px;"></div>
     <div class="diy_table">
         <table id="DateTable" class="table table-responsive table-bordered tab-content table-hover"></table>
@@ -18,7 +18,7 @@
 
 <script>
     //时段登陆量统计
-    time_statistics={
+    time_statistics = {
         title: {
             text: '用户登陆统计'
         },
@@ -29,20 +29,20 @@
             }
         },
         toolbox: {
-            show : true,
+            show: true,
             y: 'bottom',
-            feature : {
-                mark : {show: true},
-                dataView : {show: true, readOnly: false},
-                magicType : {show: true, type: ['line', 'bar']},
-                restore : {show: true},
-                saveAsImage : {show: true}
+            feature: {
+                mark: {show: true},
+                dataView: {show: true, readOnly: false},
+                magicType: {show: true, type: ['line', 'bar']},
+                restore: {show: true},
+                saveAsImage: {show: true}
             }
         },
         xAxis: {
             type: 'category',
             boundaryGap: false,
-            data:[]
+            data: []
         },
         yAxis: {
             type: 'value',
@@ -76,15 +76,15 @@
             }
         ]
     };
-    var time_echarts=echarts.init(document.getElementById("login_statistics"));
+    var time_echarts = echarts.init(document.getElementById("login_statistics"));
     time_echarts.setOption(time_statistics);
 
     //true 异步
-    sendGet('${ctx}/admin/preparerLoginInfo',{},true,function (res) {
-        var date=[];
-        var loginNum=[];
-        for(var i=0;i<res.length;i++)
-        {
+    sendGet('${ctx}/admin/preparerLoginInfo', {}, true, function (res) {
+        var date = [];
+        var loginNum = [];
+        // 只显示最近十日记录
+        for (var i = 0; i < res.length && i < 10; i++) {
             date.push(res[i].k);
             loginNum.push(res[i].v);
         }
@@ -94,7 +94,7 @@
             },
             series: [
                 {
-                    name:'登陆量',
+                    name: '登陆量',
                     data: loginNum
                 }
             ]
@@ -106,38 +106,41 @@
             showExport: true,//显示导出按钮
             striped: true,
             pagination: true,
-            height:300,
+            height: 300,
             pageSize: 10,
-            pageNumber:1,
+            pageNumber: 1,
             pageList: [10, 20, 50, 100, 200, 500],
             search: true,
             showColumns: true,
             showRefresh: false,
-            exportTypes:  ['excel','json', 'xml', 'txt', 'sql'],
+            exportTypes: ['excel', 'json', 'xml', 'txt', 'sql'],
             clickToSelect: true,
             sidePagination: "client",   //分页方式：client客户端分页，server服务端分页（*）
             columns:
                 [
                     {
-                        field:"k",
-                        title:"日期",
-                        align:"center",
-                        valign:"middle",
-                        sortable:"true"
+                        field: "k",
+                        title: "日期",
+                        align: "center",
+                        valign: "middle",
+                        sortable: "true"
                     },
                     {
-                        field:"v",
-                        title:"今日登陆量",
-                        align:"center",
-                        valign:"middle",
-                        sortable:"true"
+                        field: "v",
+                        title: "今日登陆量",
+                        align: "center",
+                        valign: "middle",
+                        sortable: "true"
                     }
                 ],
-            data:res
+            data: res
         });
-    },function (error) {
+    }, function (error) {
         toastr.error("系统错误");
         return false;
+    });
+    $(window).on('resize', function () {
+        time_echarts.resize();
     });
 
 </script>

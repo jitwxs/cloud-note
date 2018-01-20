@@ -33,7 +33,8 @@
 <div class="nav">
     <!-- 汉堡图标 -->
     <div class="nav-top">
-        <div id="mini" style="border-bottom:1px solid rgba(255,255,255,.1)"><img src="${ctx}/images/admin_mini.png" ></div>
+        <div id="mini" style="border-bottom:1px solid rgba(255,255,255,.1)"><img src="${ctx}/images/admin_mini.png">
+        </div>
     </div>
     <!--列表-->
     <ul>
@@ -82,20 +83,33 @@
         <!--网盘管理-->
         <li class="nav-item">
             <a href="javascript:;">
-                <i class="my-icon nav-icon icon_3"></i>
+                <i class="my-icon nav-icon icon_4"></i>
                 <span>网盘管理</span>
                 <i class="my-icon nav-more"></i>
             </a>
             <ul>
-                <li><a href="#"><span>网盘信息</span></a></li>
+                <li><a href="${ctx}/admin/panInfo"><span>网盘信息</span></a></li>
                 <li><a href="${ctx}/admin/panLog"><span>网盘日志</span></a></li>
+            </ul>
+        </li>
+
+        <!--通知管理-->
+        <li class="nav-item">
+            <a href="javascript:;">
+                <i class="my-icon nav-icon icon_5"></i>
+                <span>消息管理</span>
+                <i class="my-icon nav-more"></i>
+            </a>
+            <ul>
+                <li><a href="#"><span>推送消息</span></a></li>
+                <li><a href="${ctx}/admin/notifyLog"><span>消息日志</span></a></li>
             </ul>
         </li>
 
         <!--系统管理-->
         <li class="nav-item">
             <a href="javascript:;">
-                <i class="my-icon nav-icon icon_4"></i>
+                <i class="my-icon nav-icon icon_6"></i>
                 <span>系统管理</span>
                 <i class="my-icon nav-more"></i>
             </a>
@@ -110,7 +124,7 @@
 
 <script>
     function showLog(logId) {
-        sendPost('${ctx}/admin/getLogInfo',{'id': logId},false,function (res) {
+        sendPost('${ctx}/admin/getLogInfo', {'id': logId}, false, function (res) {
             $("#logUserName").val(res.userName);
             $("#logType").val(res.title);
             $("#logIp").val(res.ip);
@@ -121,24 +135,24 @@
             $("#logParams").val(res.params);
             $("#logException").val(res.exception);
             $('#logModal').modal('show');
-        },function (error) {
+        }, function (error) {
             toastr.error("系统错误");
         });
     }
 
-    function deleteLog(logId,url) {
+    function deleteLog(logId, url) {
         var msg = "确定要删除选中日志吗？";
-        if (confirm(msg)){
+        if (confirm(msg)) {
             var logIds = new Array();
-            if(typeof (logId) == "string") {
+            if (typeof (logId) == "string") {
                 logIds.push(logId);
             } else if (typeof (logId) == "object") {
-                for(var i=0; i< logId.length; i++) {
+                for (var i = 0; i < logId.length; i++) {
                     logIds.push(logId[i].id);
                 }
             }
-            window.location.href="${ctx}/admin/deleteLog?logIds=" + logIds + "&url=" + url;
-        }else {
+            window.location.href = "${ctx}/admin/deleteLog?logIds=" + logIds + "&url=" + url;
+        } else {
             return false;
         }
     }

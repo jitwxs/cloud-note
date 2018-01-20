@@ -27,4 +27,8 @@ public interface UserPanMapper {
     int updateByPrimaryKeySelective(UserPan record);
 
     int updateByPrimaryKey(UserPan record);
+
+    Integer countUsedSize(String uid);
+
+    Integer countTotalUsedSize();
 }

@@ -65,6 +65,9 @@ public class SystemController {
     @Resource(name = "userBlacklistServiceImpl")
     private UserBlacklistService userBlacklistService;
 
+    @Resource(name = "notifyServiceImpl")
+    private NotifyService notifyService;
+
     private String getSelfId() {
         User user = userService.getByTel(GlobalFunction.getSelfTel());
         return user.getId();
@@ -77,6 +80,7 @@ public class SystemController {
         GlobalConstant.UPLOAD_PATH  = request.getSession().getServletContext().getRealPath("upload");
         GlobalConstant.USER_HOME_PATH = GlobalConstant.UPLOAD_PATH  + "/"  + GlobalFunction.getSelfTel();
         GlobalConstant.USER_ARTICLE_PATH  = GlobalConstant.USER_HOME_PATH  + "/" + "article";
+        GlobalConstant.USER_ARTICLE_INDEX_PATH  = GlobalConstant.USER_HOME_PATH  + "/" + "article_index";
         GlobalConstant.USER_SHARE_PATH = GlobalConstant.USER_ARTICLE_PATH + "/" + "share";
         GlobalConstant.USER_IMG_PATH = GlobalConstant.USER_HOME_PATH  + "/" + "images";
         GlobalConstant.USER_PAN_PATH = GlobalConstant.USER_HOME_PATH  + "/"  + "pan" ;
@@ -346,7 +350,8 @@ public class SystemController {
             user.setSex("男");
         }
 
-        user.setId(GlobalFunction.getUUID());
+        String userId = GlobalFunction.getUUID();
+        user.setId(userId);
         user.setTel(register.getTel());
         user.setName(register.getName());
         user.setCreateDate(new Date());
@@ -362,7 +367,7 @@ public class SystemController {
         userService.save(user);
 
         // 保存日志
-        logService.saveLog(request, GlobalConstant.LOG_USER.type, GlobalConstant.LOG_USER.USER_REG.getName(), getSelfId());
+        logService.saveLog(request, GlobalConstant.LOG_USER.type, GlobalConstant.LOG_USER.USER_REG.getName(), userId);
 
         return "redirect:login";
     }
@@ -486,7 +491,7 @@ public class SystemController {
     }
 
     @RequestMapping(value = "showUserCity", method = {RequestMethod.GET})
-    public void showUserCity(HttpServletRequest request, HttpServletResponse response) {
+    public void showUserCity(HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
         List<User> lists = userService.listAllUser("null");
         Map<String,Integer> map = new HashMap<>(16);
@@ -551,7 +556,7 @@ public class SystemController {
     }
 
     @RequestMapping(value = "showSelfInfo", method = {RequestMethod.GET})
-    public void showUserInfo(HttpServletRequest request, HttpServletResponse response) {
+    public void showUserInfo(HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
         Message message = new Message();
         try {
@@ -573,9 +578,13 @@ public class SystemController {
                 userDto.setIcon(iconRealUrl);
             }
 
+            // 获取未读消息数目
+            int count = notifyService.countUnRead(getSelfId());
+
             List<Area> areas = areaService.listByPid(0);
             message.setUserDto(userDto);
             message.setAreas(areas);
+            message.setInfo(String.valueOf(count));
             String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
         } catch (IOException e) {
@@ -584,7 +593,7 @@ public class SystemController {
     }
 
     @RequestMapping(value = "saveSelfInfo", method = {RequestMethod.POST})
-    public String saveUserInfo(HttpServletRequest request, HttpServletResponse response) {
+    public String saveUserInfo(HttpServletRequest request) {
         User user = new User();
         try {
             // 1.创建磁盘文件项工厂 sizeThreshold：每次缓存大小，单位为字节  File：临时文件路径
@@ -691,6 +700,25 @@ public class SystemController {
                     article.setStar(tempStar < 0 ? 0 : tempStar);
                     articleService.update(article);
                     status = true;
+
+                    // 发送消息
+                    String sendId = getSelfId();
+                    User user = userService.getById(sendId);
+                    String userName = user.getName();
+
+                    Notify notify = new Notify();
+                    notify.setId(GlobalFunction.getUUID());
+                    notify.setType(GlobalConstant.NOTIFY.NOTIFY_NOTE.getName());
+                    notify.setSendId(sendId);
+                    notify.setRecvId(article.getUserId());
+                    notify.setStatus(GlobalConstant.NOTIFY_STATUS.UNREAD.getIndex());
+                    notify.setTitle("分享笔记收到一个赞");
+                    notify.setContent("用户：“" + userName + "”刚刚给您的分享笔记《" + article.getTitle() +"》点了一个赞");
+                    notify.setCreateDate(new Date());
+                    notifyService.save(notify);
+
+                    // 保存日志
+                    logService.saveLog(request, GlobalConstant.NOTIFY.type, GlobalConstant.NOTIFY.NOTIFY_NOTE.getName(), sendId);
                 }
             }
             message.setStatus(status);

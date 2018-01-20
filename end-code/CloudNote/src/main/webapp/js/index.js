@@ -24,12 +24,12 @@ S.Drawing = (function () {
     var canvas,
         context,
         renderFn
-    requestFrame = window.requestAnimationFrame       ||
+    requestFrame = window.requestAnimationFrame ||
         window.webkitRequestAnimationFrame ||
-        window.mozRequestAnimationFrame    ||
-        window.oRequestAnimationFrame      ||
-        window.msRequestAnimationFrame     ||
-        function(callback) {
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function (callback) {
             window.setTimeout(callback, 1000 / 60);
         };
 
@@ -61,7 +61,7 @@ S.Drawing = (function () {
         },
 
         getArea: function () {
-            return { w: canvas.width, h: canvas.height };
+            return {w: canvas.width, h: canvas.height};
         },
 
         drawCircle: function (p, c) {
@@ -351,7 +351,7 @@ S.Color = function (r, g, b, a) {
 
 S.Color.prototype = {
     render: function () {
-        return 'rgba(' + this.r + ',' +  + this.g + ',' + this.b + ',' + this.a + ')';
+        return 'rgba(' + this.r + ',' + +this.g + ',' + this.b + ',' + this.a + ')';
     }
 };
 
@@ -515,7 +515,7 @@ S.ShapeBuilder = (function () {
             }
         }
 
-        return { dots: dots, w: w + fx, h: h + fy };
+        return {dots: dots, w: w + fx, h: h + fy};
     }
 
     function setFontSize(s) {
@@ -592,7 +592,7 @@ S.ShapeBuilder = (function () {
                 }
             }
 
-            return { dots: dots, w: width, h: height };
+            return {dots: dots, w: width, h: height};
         }
     };
 }());
@@ -726,10 +726,10 @@ function getParentByFilter(node, filterFn) {
     }
     return null;
 }
+
 // 下拉导航栏的点击事件
 (function () {
-    if(document.body.attachEvent)
-    {
+    if (document.body.attachEvent) {
         document.body.attachEvent("onclick", function (event) {
             var src = event.target || event.srcElement;
             var btn = getParentByFilter(src, function (node) {
@@ -754,8 +754,7 @@ function getParentByFilter(node, filterFn) {
             }
         });
     }
-    else
-    {
+    else {
         document.body.addEventListener("click", function (event) {
             var src = event.target || event.srcElement;
             var btn = getParentByFilter(src, function (node) {

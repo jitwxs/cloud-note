@@ -12,7 +12,7 @@ import java.util.List;
 public interface UserPanService {
     UserPan getById(String id);
 
-    List<UserPan> getByName(String dirId, String name);
+    List<UserPan> getByName(String dirId, String name, String uid);
 
     int removeById(String id);
 
@@ -31,4 +31,17 @@ public interface UserPanService {
     List<UserPan> listUserPanByDir(String uid, String dirId);
 
     List<UserPan> listUserPanByTitle(String uid, String title);
+
+    /**
+     * 用户已使用空间大小
+     * @param uid 用户id
+     * @return 单位B
+     */
+    Integer countUsedSize(String uid);
+
+    /**
+     * 获取整个服务器使用空间大小
+     * @return
+     */
+    Integer countTotalUsedSize();
 }

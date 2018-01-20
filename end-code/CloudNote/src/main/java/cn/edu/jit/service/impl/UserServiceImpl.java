@@ -59,7 +59,9 @@ public class UserServiceImpl implements UserService {
     public int countBySex(String sex) {
         UserExample userExample = new UserExample();
         UserExample.Criteria criteria = userExample.createCriteria();
-        criteria.andSexEqualTo(sex);
+        if(!StringUtils.isBlank(sex)) {
+            criteria.andSexEqualTo(sex);
+        }
         return userMapper.countByExample(userExample);
     }
 

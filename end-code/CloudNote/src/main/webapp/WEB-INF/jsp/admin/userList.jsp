@@ -6,25 +6,24 @@
 
 <jsp:include page="left.jsp"/>
 
-<body>
+<body class="admin_body">
 
 <!--主体-->
-<div class="container" style="height: 1000px;width: 100%; text-align: center;">
-    <h2 style="margin-bottom: 30px;">用户列表</h2>
+<div class="admin_container">
+    <h2 class="admin_table_title">用户列表</h2>
 
     <div id="toolbar" style="margin-right: 20px;">
         <button id="btn_delete" type="button" class="btn btn-default" onclick="delete_more()">
             <span class="glyphicon glyphicon-remove" aria-hidden="true">删除</span>
         </button>
     </div>
-    <div style="width: 80%;float: right;margin-right: 50px;">
+    <div class="admin_table_div2">
         <table id="userListTable" class="table table-responsive table-bordered tab-content table-hover" style="margin-right: 10%;">
         </table>
     </div>
 </div>
 
 <script>
-    //    注册事件
     window.operateEvents = {
         'click .detail': function (e, value, row, index) {
             var tel = row.tel;
@@ -174,7 +173,7 @@
             toastr.error("系统错误");
             return false;
         });
-    })
+    });
 
     function delete_more() {
         var row = $(userListTable).bootstrapTable('getSelections');

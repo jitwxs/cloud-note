@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class Data implements Serializable {
     private String k;
 
-    private String v;
+    private Object v;
 
     public String getK() {
         return k;
@@ -19,11 +19,11 @@ public class Data implements Serializable {
         this.k = k;
     }
 
-    public String getV() {
+    public Object getV() {
         return v;
     }
 
-    public void setV(String v) {
+    public void setV(Object v) {
         this.v = v;
     }
 }

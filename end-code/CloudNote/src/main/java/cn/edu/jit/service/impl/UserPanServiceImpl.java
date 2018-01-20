@@ -27,9 +27,10 @@ public class UserPanServiceImpl implements UserPanService {
     }
 
     @Override
-    public List<UserPan> getByName(String dirId, String name) {
+    public List<UserPan> getByName(String dirId, String name, String uid) {
         UserPanExample userPanExample = new UserPanExample();
         UserPanExample.Criteria criteria = userPanExample.createCriteria();
+        criteria.andUseridEqualTo(uid);
         criteria.andNameEqualTo(name);
         criteria.andDirIdEqualTo(dirId);
         return userPanMapper.selectByExample(userPanExample);
@@ -54,6 +55,16 @@ public class UserPanServiceImpl implements UserPanService {
     public int updateById(UserPan userpan) {
         userpan.setModifedTime(new Date());
         return userPanMapper.updateByPrimaryKey(userpan);
+    }
+
+    @Override
+    public Integer countUsedSize(String uid) {
+        return userPanMapper.countUsedSize(uid);
+    }
+
+    @Override
+    public Integer countTotalUsedSize() {
+        return userPanMapper.countTotalUsedSize();
     }
 
     @Override

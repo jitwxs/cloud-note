@@ -22,11 +22,17 @@
             </ul>
             <form class="navbar-form navbar-left">
                 <div class="form-group">
-                    <input type="text" class="form-control" id="searchContent" placeholder="文章、标签、内容">
+                    <input type="text" class="form-control" id="searchContent" placeholder="标题、标签、内容">
                 </div>
                 <button type="button" class="btn btn-default" onclick="nbSearch()">Search</button>
             </form>
             <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <div class="wrap" >
+                        <a href="${ctx}/user/notify"><img src="${ctx}/images/messagenews.png"></a>
+                        <div class="notice"></div>
+                    </div>
+                </li>
                 <li role="presentation">
                     <img id="userSmallIcon" class="img-responsive img-rounded" style="width: 50px;height: 50px" src="" >
                 </li>

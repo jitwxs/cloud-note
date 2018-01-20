@@ -1,21 +1,20 @@
 /* 账户信息 */
-@media  screen and (min-width: 200px) {
-    .box1{
-        /*border:1px solid red;*/
+@media screen and (min-width: 200px) {
+    .box1 {
         height: 500px;
         width: 800px;
     }
 }
-.box1{
+
+.box1 {
     position: relative;
-    top:100px;
-    margin-left:300px;
+    top: 100px;
+    margin-left: 300px;
     margin-right: 300px;
     margin: 0px auto;
-    /*font-family: "微软雅黑 Light";*/
 }
 
-#button{
+#button {
     color: white;
     background: lightskyblue;
     font-size: 18px;
@@ -23,7 +22,8 @@
     margin-top: 40px;
     margin-left: 120px;
 }
-#login_btn{
+
+#login_btn {
     color: white;
     background: lightskyblue;
     font-size: 18px;
@@ -38,8 +38,9 @@
     display: inline-block;
     overflow: hidden;
 }
-.fileinput-button input{
-    position:absolute;
+
+.fileinput-button input {
+    position: absolute;
     right: 0px;
     top: 0px;
     opacity: 0;
@@ -47,12 +48,12 @@
     font-size: 200px;
 }
 
-.notediv{
-    height:20px;
+.notediv {
+    height: 20px;
     margin-top: 10px;
 }
 
-.notediv a{
+.notediv a {
     margin-top: 10px;
     margin-left: 40px;
     font-size: 13px;
@@ -63,36 +64,38 @@
     color: #337ab7
 }
 
-
 /* 网盘 */
-#wangpan{
+#wangpan {
     margin-top: 15px;
-    width:1180px;
+    width: 1180px;
     /*height: 530px;*/
     background: white;
     /*border-shadow: 2px #f4e6ff;*/
-    overflow:auto;
+    overflow: auto;
 }
-#head{
+
+#head {
     width: 1140px;
     height: 50px;
     /*background: pink;*/
     position: relative;
-    margin:0 auto;
+    margin: 0 auto;
 }
-#head a{
+
+#head a {
     width: 120px;
     height: 35px;
-    border:1px lightskyblue solid;
+    border: 1px lightskyblue solid;
     background: white;
-    color:lightskyblue;
-    margin-top:7px;
+    color: lightskyblue;
+    margin-top: 7px;
     margin-left: 15px;
     float: left;
-    outline:none;
+    outline: none;
 }
+
 .upload {
-    cursor:pointer;
+    cursor: pointer;
     position: relative;
     display: inline-block;
     background: #D0EEFF;
@@ -105,6 +108,7 @@
     text-indent: 0;
     line-height: 28px;
 }
+
 .upload input {
     position: absolute;
     font-size: 100px;
@@ -112,77 +116,315 @@
     top: 0;
     opacity: 0;
 }
+
 .upload:hover {
     background: #AADFFD;
     border-color: #78C3F3;
     color: #004974;
     text-decoration: none;
 }
-#content{
+
+#content {
     margin-left: 20px;
     width: 1100px;
 }
-#content a{
+
+#content a {
     cursor: pointer;
     text-decoration: none;
 }
-#content .wjj{
-    line-height:45px ;
+
+#content .wjj {
+    line-height: 45px;
     margin-left: 15px;
     width: 1100px;
     height: 45px;
     border-bottom: 1px solid #f2f6fd;
 }
-#content .wj{
-    line-height:45px ;
+
+#content .wj {
+    line-height: 45px;
     margin-left: 15px;
     width: 1100px;
     height: 45px;
     border-bottom: 1px solid #f2f6fd;
 }
-#content .delete{
+
+#content .delete {
     margin-right: 200px;
-    line-height:45px ;
-    cursor:pointer;
+    line-height: 45px;
+    cursor: pointer;
     float: right;
 }
-#content .wjj a{
+
+#content .wjj a {
     font-size: 15px;
     line-height: 35px;
 }
-#content .wj a{
+
+#content .wj a {
     font-size: 15px;
     line-height: 35px;
 }
-#wangpan .breadcrumb a{
+
+#wangpan .breadcrumb a {
     cursor: pointer;
 }
-#content .rename_dir{
+
+#content .rename_dir {
     float: right;
-    line-height:45px ;
-    cursor:pointer;
+    line-height: 45px;
+    cursor: pointer;
     margin-right: 10px;
 }
-#content .rename_note{
+
+#content .rename_note {
     float: right;
-    line-height:45px ;
-    cursor:pointer;
+    line-height: 45px;
+    cursor: pointer;
     margin-right: 10px;
 }
-#content .download{
+
+#content .download {
     float: right;
-    line-height:45px ;
-    cursor:pointer;
+    line-height: 45px;
+    cursor: pointer;
     margin-right: 10px;
 }
-#content .wenjianjia{
+
+#content .wenjianjia {
     text-decoration: none;
-    cursor:pointer;
+    cursor: pointer;
 }
-#content .wenjian{
+
+#content .wenjian {
     text-decoration: none;
-    cursor:pointer;
+    cursor: pointer;
 }
-.shuru{
+
+.shuru {
     height: 30px;
 }
+
+/* 进度条*/
+
+.progress {
+    height: 30px;
+    line-height: 35px;
+    background: #809495;
+    box-shadow: none;
+    padding: 6px;
+    margin-top: 20px;
+    overflow: visible;
+    border-radius: 10px;
+}
+
+.progress:after {
+    content: "";
+    display: block;
+    border-top: 4px dashed #fff;
+    margin-top: 8px;
+}
+
+.progress .progress-bar {
+    position: relative;
+    border-radius: 10px 0 0 10px;
+    animation: animate-positive 2s;
+}
+
+.progress .progress-bar span {
+    position: absolute;
+    top: -50px;
+    right: -40px;
+    color: #fff;
+    display: block;
+    font-size: 17px;
+    font-weight: bold;
+    padding: 5px 7px;
+    background: #333;
+    border-radius: 0 0 5px 5px;
+}
+
+.progress .progress-bar span:before {
+    content: "";
+    position: absolute;
+    bottom: -14px;
+    left: 18px;
+    border: 7px solid transparent;
+    border-top: 7px solid #333;
+}
+
+.progress .progress-bar span:after {
+    content: "\f072";
+    font-family: fontawesome;
+    font-size: 48px;
+    color: #333;
+    position: absolute;
+    top: 51px;
+    right: 6px;
+    transform: rotateZ(48deg);
+}
+
+/*使div元素匀速向下移动 css3新增@keyframes动画定义*/
+@keyframes animate-positive {
+    0% {
+        width: 0;
+    }
+}
+
+/* 账户通知CSS */
+
+/*消息推送主体区域*/
+#message_nav {
+    width: 700px;
+    height: 30px;
+    position: relative;
+    left: 20%;
+    margin-top: 15px
+}
+
+#message_nav a {
+    float: left;
+    padding: 5px 10px 5px 10px;
+    color: #333333;
+    text-decoration: none;
+    cursor: pointer;
+    background: white;
+}
+
+#message_nav a:hover {
+    background: #bdbdbd;
+}
+
+#message_main_nav p {
+    float: left;
+    line-height: 40px;
+    font-weight: 700;
+}
+
+#message_main {
+    height: 750px;
+    width: 1340px;
+    margin: 0 auto;
+    margin-top: 10px;
+    position: relative;
+    background: white;
+}
+
+#message_main_nav {
+    width: 1340px;
+    height: 45px;
+    position: relative;
+    border-bottom: 1px solid darkgrey
+}
+
+#message_container {
+    height: 405px;
+    width: 1340px;
+    background: white;
+    overflow: auto
+}
+
+.message {
+    width: 1340px;
+    height: 45px;
+    border-bottom: 1px solid #eeeeee
+}
+
+.message_title {
+    cursor: pointer;
+    color: gray;
+    line-height: 40px;
+    font-size: 15px;
+    margin-left: 20px;
+    text-decoration: none
+}
+
+.read {
+    height: 10px;
+    float: right;
+    margin-right: 100px;
+    margin-top: 10px;
+    cursor: pointer
+}
+
+.remove_btn {
+    cursor: pointer;
+    float: right;
+    margin-top: 10px;
+    margin-right: 70px
+}
+
+.message_type {
+    float: right;
+    line-height: 45px;
+    font-size: 15px;
+    margin-right: 80px
+}
+
+.message_time {
+    float: right;
+    line-height: 45px;
+    font-size: 15px;
+    margin-right: 120px
+}
+
+.already_read {
+    color: gray;
+    height: 10px;
+    float: right;
+    margin-right: 142px;
+    margin-top: 10px;
+    text-decoration: none
+}
+/*消息推送主体区域结束*/
+
+/*消息展示主体区域*/
+#message_content_main {
+    height: 500px;
+    width: 1340px;
+    margin: 0 auto;
+    margin-top: 20px;
+    position: relative;
+    background: white;
+}
+
+#message_content_nav {
+    width: 1340px;
+    height: 45px;
+    position: relative;
+    border-bottom: 1px solid #eeeeee
+}
+
+#message_content_nav p {
+    float: left;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 45px;
+    margin-left: 20px
+}
+
+.message_content_detail {
+    width: 1340px;
+    height: 400px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.message_delete {
+    width: 1340px;
+    height: 50px;
+    position: relative;
+}
+
+.message_delete a {
+    background: lightskyblue;
+    width: 80px;
+    height: 40px;
+    line-height: 30px;
+    float: right;
+    margin-right: 20px;
+    border: 1px solid lightskyblue;
+    margin-top: 5px;
+    color: white
+}
+/*消息展示主体区域结束*/

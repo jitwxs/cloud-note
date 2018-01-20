@@ -1,4 +1,3 @@
-
 /*动态粒子效果css*/
 /*body {*/
 /*font-family: Helvetica Neue, "Microsoft Yahei", "微软雅黑", Helvetica, SimSun, SimHei;*/
@@ -31,7 +30,6 @@ a {
     transition: transform 0.7s cubic-bezier(0.694, 0.0482, 0.335, 1),
     opacity 0.7s cubic-bezier(0.694, 0.0482, 0.335, 1);
 }
-
 
 /*第二部分*/
 .data-manager {
@@ -95,7 +93,6 @@ a {
     }
 }
 
-
 * {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -113,8 +110,6 @@ body {
     font-size: 16px;
     color: #666;
 }
-
-
 
 body, h1, h2, h3, h4, p, ul, li {
     margin: 0;
@@ -154,7 +149,7 @@ a:hover, a:active {
 .container {
     margin-right: auto;
     margin-left: auto;
-    margin:0 auto;
+    margin: 0 auto;
 }
 
 .container-fluid {
@@ -229,7 +224,6 @@ a:hover, a:active {
 .col-xs-1 {
     width: 8.33333333%;
 }
-
 
 @media (min-width: 768px) {
     .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12 {
@@ -391,7 +385,6 @@ a:hover, a:active {
     cursor: pointer;
 }
 
-
 @media (max-width: 1023px) {
     .navbar-nav li {
         margin-right: 0;
@@ -461,7 +454,6 @@ a:hover, a:active {
     .navbar-brand {
         display: inline-block;
         margin-top: 11px;
-        width: 84px;
         height: 21px;
         background-image: url("#");
         background-size: cover;
@@ -495,6 +487,7 @@ a:hover, a:active {
         -o-transition: height 0.2s, background 0.2s;
         transition: height 0.2s, background 0.2s;
     }
+
     /*下拉导航栏*/
     .show .navbar-nav {
         height: 150px;
@@ -588,8 +581,9 @@ h4 {
         font-size: 14px;
     }
 }
+
 /*GLOBALS*/
-*{
+* {
     margin: 0;
     padding: 0;
 }
@@ -598,7 +592,7 @@ h4 {
     position: relative;
     /*padding: 0 10px;*/
     width: 100%;
-    height:500px;
+    height: 500px;
     background: url("/images/index_footer.jpg") no-repeat center center;
 
 }
@@ -671,6 +665,7 @@ h4 {
         top: 26%
     }
 }
+
 /*页脚*/
 div.footer {
     background-color: rgba(36, 36, 36, 0.78);

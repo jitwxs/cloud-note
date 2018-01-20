@@ -10,13 +10,14 @@
                 <h4 class="modal-title" id="myModalLabel">加入小黑屋</h4>
             </div>
             <div class="modal-body">
-                    <form class="form-horizontal" id="blackHomeForm" role="form" action="${ctx}/admin/addToBlackHome"
+                <form class="form-horizontal" id="blackHomeForm" role="form" action="${ctx}/admin/addToBlackHome"
                       method="post">
                     <input type="hidden" id="userBlacklistId" name="userId">
                     <div class="form-group">
                         <label for="userBlacklistTel" class="col-sm-2 control-label">封禁账户</label>
                         <div class="col-sm-10">
-                            <input readonly="readonly" type="text" class="form-control" id="userBlacklistTel" name="userTel">
+                            <input readonly="readonly" type="text" class="form-control" id="userBlacklistTel"
+                                   name="userTel">
                         </div>
                     </div>
                     <div class="form-group">
@@ -62,10 +63,10 @@
     function checkToBlacklist() {
         var tel = $("#userBlacklistTel").val();
 
-        sendPost('${ctx}/admin/addBlacklistCheck',{'tel':tel},false,function (res) {
+        sendPost('${ctx}/admin/addBlacklistCheck', {'tel': tel}, false, function (res) {
             if (res.status) {
-                var msg =  res.info;
-                if (!confirm(msg)){
+                var msg = res.info;
+                if (!confirm(msg)) {
                     $('#addBlackHomeModal').modal('hide');
                 } else {
                     $("#blackHomeForm").submit();
@@ -73,7 +74,7 @@
             } else {
                 $("#blackHomeForm").submit();
             }
-        },function (error) {
+        }, function (error) {
             toastr.error("系统错误");
         });
     }
