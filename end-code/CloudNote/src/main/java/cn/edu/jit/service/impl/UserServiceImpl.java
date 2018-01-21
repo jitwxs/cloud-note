@@ -71,4 +71,9 @@ public class UserServiceImpl implements UserService {
         userExample.setOrderByClause(orderBy);
         return userMapper.selectByExample(userExample);
     }
+
+    @Override
+    public List<String> listTelByTel(String tel) {
+        return userMapper.listTelByTel(tel);
+    }
 }

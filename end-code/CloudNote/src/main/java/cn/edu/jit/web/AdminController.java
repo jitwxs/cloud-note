@@ -53,6 +53,9 @@ public class AdminController {
     @Resource(name = "areaServiceImpl")
     private AreaService areaService;
 
+    @Resource(name = "roleServiceImpl")
+    private RoleService roleService;
+
     @Resource(name = "notifyServiceImpl")
     private NotifyService notifyService;
 
@@ -163,6 +166,32 @@ public class AdminController {
                 logDto.setUserName(user.getName());
             }
             result.add(logDto);
+        }
+        return result;
+    }
+
+    private List<NotifyDto> notify2Dto(List<Notify> list) {
+        List<NotifyDto> result = new ArrayList<>();
+        for(Notify notify : list) {
+            NotifyDto notifyDto = new NotifyDto();
+            BeanUtils.copyProperties(notify, notifyDto);
+
+            User sendUser = userService.getById(notify.getSendId());
+            notifyDto.setSendUser(sendUser.getTel());
+
+            Login sendLogin = loginService.getByTel(sendUser.getTel());
+            notifyDto.setSendUserType(roleService.getById(sendLogin.getRoleId()).getName());
+
+            User recvUser = userService.getById(notify.getRecvId());
+            notifyDto.setRecvUser(recvUser.getTel());
+
+            Integer status = notify.getStatus();
+            if(status == GlobalConstant.NOTIFY_STATUS.READ.getIndex()) {
+                notifyDto.setStatusName(GlobalConstant.NOTIFY_STATUS.READ.getName());
+            } else if(status == GlobalConstant.NOTIFY_STATUS.UNREAD.getIndex()) {
+                notifyDto.setStatusName(GlobalConstant.NOTIFY_STATUS.UNREAD.getName());
+            }
+            result.add(notifyDto);
         }
         return result;
     }
@@ -878,6 +907,124 @@ public class AdminController {
             List<LogDto> result = log2LogDto(lists);
             String data = JSON.toJSONString(result, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 消息推送UI
+     */
+    @RequestMapping(value = "systemNotify", method = {RequestMethod.GET})
+    public String sysMessageUI() {
+        return "admin/systemNotify";
+    }
+
+    /**
+     * 准备消息信息
+     */
+    @RequestMapping(value = "prepareSystemNotify", method = {RequestMethod.GET})
+    public void prepareSystemNotify(HttpServletResponse response) {
+        try {
+            response.setContentType("text/html;charset=utf-8");
+            List<Notify> notifies = notifyService.listAll("create_date desc");
+            List<NotifyDto> list = notify2Dto(notifies);
+
+            String data = JSON.toJSONString(list, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @RequestMapping(value = "deleteNotify", method = {RequestMethod.GET})
+    public String deleteNotify(String[] ids) {
+        for(String id : ids) {
+            notifyService.removeById(id);
+        }
+        return "redirect:/admin/systemNotify";
+    }
+
+    /**
+     * 获取手机号列表
+     */
+    @RequestMapping(value = "listTels", method = {RequestMethod.POST})
+    public void listTels(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        try {
+            Message message = new Message();
+            String tel = request.getParameter("tel");
+
+            if(StringUtils.isEmpty(tel)) {
+                List<String> tels = userService.listTelByTel("");
+                message.setStatus(true);
+                message.setList(tels);
+            } else {
+                if(!StringUtils.isNumeric(tel)) {
+                    message.setStatus(false);
+                } else {
+                    List<String> tels = userService.listTelByTel(tel);
+                    message.setStatus(true);
+                    message.setList(tels);
+                }
+            }
+
+            String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 发送消息
+     */
+    @RequestMapping(value = "sendNotify", method = {RequestMethod.POST})
+    public void sendNotify(HttpServletRequest request,  HttpServletResponse response) {
+        try {
+            Message message = new Message();
+            String type = request.getParameter("type");
+            String title = request.getParameter("title");
+            String content = request.getParameter("content");
+            String tel = request.getParameter("tel");
+
+            Notify notify = new Notify();
+            notify.setType(type);
+            notify.setTitle(title);
+            notify.setContent(content);
+            notify.setStatus(GlobalConstant.NOTIFY_STATUS.UNREAD.getIndex());
+            notify.setSendId(getSelfId());
+
+            // 接收者为所有人，循环发送
+            if("EveryBody".equals(tel)) {
+                List<User> users = userService.listAllUser(null);
+                for(User user : users) {
+                    notify.setId(GlobalFunction.getUUID());
+                    notify.setRecvId(user.getId());
+                    notify.setCreateDate(new Date());
+                    notifyService.save(notify);
+                }
+            } else {
+                User user = userService.getByTel(tel);
+                notify.setId(GlobalFunction.getUUID());
+                notify.setRecvId(user.getId());
+                notify.setCreateDate(new Date());
+                notifyService.save(notify);
+            }
+
+            message.setStatus(true);
+            String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+
+            // 保存日志
+            if( type.equals(GlobalConstant.NOTIFY.NOTIFY_SYSTEM.getName())) {
+                logService.saveLog(request, GlobalConstant.NOTIFY.type, GlobalConstant.NOTIFY.NOTIFY_SYSTEM.getName(), getSelfId());
+            } else if( type.equals(GlobalConstant.NOTIFY.NOTIFY_NOTE.getName())) {
+                logService.saveLog(request, GlobalConstant.NOTIFY.type, GlobalConstant.NOTIFY.NOTIFY_NOTE.getName(), getSelfId());
+            } else if( type.equals(GlobalConstant.NOTIFY.NOTIFY_OTHER.getName())) {
+                logService.saveLog(request, GlobalConstant.NOTIFY.type, GlobalConstant.NOTIFY.NOTIFY_OTHER.getName(), getSelfId());
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

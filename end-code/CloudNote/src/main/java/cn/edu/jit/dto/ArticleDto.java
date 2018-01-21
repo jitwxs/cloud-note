@@ -15,6 +15,11 @@ public class ArticleDto extends Article {
     private String authorTel;
 
     /**
+     * 作者头像
+     */
+    private String authorIcon;
+
+    /**
      * 摘要信息
      */
     private String abstractText;
@@ -38,4 +43,12 @@ public class ArticleDto extends Article {
     public String getAuthorTel() { return authorTel; }
 
     public void setAuthorTel(String authorTel) { this.authorTel = authorTel; }
+
+    public String getAuthorIcon() {
+        return authorIcon;
+    }
+
+    public void setAuthorIcon(String authorIcon) {
+        this.authorIcon = authorIcon;
+    }
 }

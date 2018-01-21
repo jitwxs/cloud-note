@@ -22,10 +22,15 @@ public interface UserService {
 
     /**
      * 根据性别统计用户量
-     * @param sex 男or女
+     * @param sex 男 or 女 or null
      * @return 数量
      */
     int countBySex(String sex);
 
     List<User> listAllUser(String orderBy);
+
+    /**
+     * 模糊匹配手机号列表
+     */
+    List<String> listTelByTel(String tel);
 }

@@ -34,7 +34,7 @@
     <script src="${ctx}/js/home_js.js"></script>
 </head>
 
-<body style="margin-top: 60px;position: absolute;width: 100%" id="home_body">
+<body style="margin-top: 60px;position: absolute;width: 100%;height: auto;" id="home_body">
 <div id="loading">
     <img src="${ctx}/images/loding.gif" class="img-responsive">
 </div>
@@ -53,7 +53,7 @@
 <jsp:include page="share.jsp"/>
 
 <%--主体--%>
-<div  class="container" style="padding-right: 0px; width:98%" id="left">
+<div  class="container" style="padding-right: 0px; width:98%;height: auto;" id="left">
     <div class="row">
         <div id="wangeditor" class="col-md-10">
             <%-- 目录区域 --%>
@@ -63,7 +63,7 @@
         </div>
 
         <%-- 广告位 --%>
-        <div class="col-md-2" id="advertisment" style="height: 700px;">
+        <div class="col-md-2 visible-lg" id="advertisment" style="height: 700px;z-index:999">
             <img src="${ctx}/images/advertiment.png" style="width:100%;height: 100%"/>
         </div>
     </div>
@@ -80,9 +80,9 @@ $(function() {
             // 初始化未读消息
             var unReadMsg = parseInt(res.info);
             if (unReadMsg != 0){
-                $('.notice').text(unReadMsg);
+                $('.badge').text(unReadMsg);
             } else {
-                $('.notice').hide();
+                $('.badge').hide();
             }
         },function (error) {
             toastr.error("系统错误");

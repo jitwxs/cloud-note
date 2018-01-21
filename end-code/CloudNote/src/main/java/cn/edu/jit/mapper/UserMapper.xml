@@ -287,4 +287,9 @@
       modifed_date = #{modifedDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+
+  <select id="listTelByTel" parameterType="java.lang.String" resultType="java.lang.String" >
+    select tel from user
+    where tel like #{tel}"%"
+  </select>
 </mapper>

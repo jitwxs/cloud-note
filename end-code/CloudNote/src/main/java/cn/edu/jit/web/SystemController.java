@@ -123,6 +123,37 @@ public class SystemController {
         }
     }
 
+    /**
+     * 拷贝头像
+     */
+    private void copyIcon(User user, String imagesPath) {
+        try {
+            if (user.getSex().equals("男")) {
+                FileInputStream fis = new FileInputStream(imagesPath + "/default_man.png");
+                FileOutputStream fos = new FileOutputStream(GlobalConstant.UPLOAD_PATH + "/" + user.getTel() + "/images/icon.png");
+                byte[] buff = new byte[1024];
+                int readed = -1;
+                while ((readed = fis.read(buff)) > 0) {
+                    fos.write(buff, 0, readed);
+                }
+                fis.close();
+                fos.close();
+            } else {
+                FileInputStream fis = new FileInputStream(imagesPath + "/default_woman.png");
+                FileOutputStream fos = new FileOutputStream(GlobalConstant.UPLOAD_PATH + "/" + user.getTel() + "/images/icon.png");
+                byte[] buff = new byte[1024];
+                int len;
+                while ((len = fis.read(buff)) > 0) {
+                    fos.write(buff, 0, len);
+                }
+                fis.close();
+                fos.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @RequestMapping(value = "qqLogin", method = {RequestMethod.GET})
     public void qqLogin(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
@@ -235,6 +266,15 @@ public class SystemController {
 
         // 初始化项目路径
         initPath(request);
+
+        // 初始化用户头像
+        User user = userService.getByTel(login.getTel());
+        if (user.getIcon() == null) {
+            String imagesPath = request.getSession().getServletContext().getRealPath("images");
+            user.setIcon(GlobalConstant.UPLOAD_PATH + "/" + user.getTel() + "/images/icon.png");
+            copyIcon(user,imagesPath);
+            userService.update(user);
+        }
 
         // 保存日志
         logService.saveLog(request, GlobalConstant.LOG_USER.type, GlobalConstant.LOG_USER.USER_LOGIN.getName(), getSelfId());

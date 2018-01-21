@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/global/taglib.jsp" %>
 
-<nav class="navbar navbar-default navbar-fixed-top">
+<nav class="navbar navbar-default navbar-fixed-top" style="background: #7c6aa6">
     <div class="container-fluid">
         <div class="navbar-header" style="margin-top: 10px;height: 40px;position: relative">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
@@ -17,8 +17,8 @@
             <img src="${ctx}/images/favicon.png" style="width: 50px;height: 40px;" alt="无道云笔记">
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
-            <ul class="nav navbar-nav">
-                <li><a id="showLeftPush" href="javascript:void(0)">随便逛逛</a></li>
+            <ul class="nav navbar-nav" style="margin-top: 5px;cursor: pointer">
+                <li><span id="showLeftPush" ><img src="${ctx}/images/look.png"></span></li>
             </ul>
             <form class="navbar-form navbar-left">
                 <div class="form-group">
@@ -26,24 +26,23 @@
                 </div>
                 <button type="button" class="btn btn-default" onclick="nbSearch()">Search</button>
             </form>
-            <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <div class="wrap" >
-                        <a href="${ctx}/user/notify"><img src="${ctx}/images/messagenews.png"></a>
-                        <div class="notice"></div>
-                    </div>
-                </li>
+            <ul class="nav navbar-nav navbar-right" >
                 <li role="presentation">
                     <img id="userSmallIcon" class="img-responsive img-rounded" style="width: 50px;height: 50px" src="" >
                 </li>
-                <li class="dropdown">
+                <li class="dropdown" id="changeColor">
                     <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        <div id="showName"><label id="userSmallName"></label><span class="caret"></span></div>
+                        <div id="showName">
+                            <label id="userSmallName" style="color: white"></label><span class="caret"></span>
+                            <span class="badge" style="background-color: red"></span>
+                        </div>
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu" >
                         <li ><a href="javascript:void(0)" onclick="showSelfInfo()" data-toggle="modal" data-target="#showSelfInfoModal">我的信息</a></li>
                         <li class="divider"></li>
                         <li><a href="${ctx}/user/disk">我的网盘</a></li>
+                        <li class="divider"></li>
+                        <li><a href="${ctx}/user/notify">站内信<span class="badge" style="background-color: red"></span></a></li>
                         <li class="divider"></li>
                         <li id="accountSet"><a href="${ctx}/user/accountInfo">用户中心</a></li>
                         <li class="divider"></li>

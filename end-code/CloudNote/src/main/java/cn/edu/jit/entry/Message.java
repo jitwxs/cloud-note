@@ -157,6 +157,14 @@ public class Message implements Serializable {
         this.directoryTrees = directoryTrees;
     }
 
+    public List<String> getList() {
+        return list;
+    }
+
+    public void setList(List<String> list) {
+        this.list = list;
+    }
+
     private Boolean status;
 
     private String info;
@@ -193,4 +201,5 @@ public class Message implements Serializable {
 
     private List<DirectoryTree> directoryTrees;
 
+    private List<String> list;
 }

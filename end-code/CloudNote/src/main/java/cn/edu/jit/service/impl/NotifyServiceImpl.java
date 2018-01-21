@@ -55,6 +55,13 @@ public class NotifyServiceImpl implements NotifyService {
     }
 
     @Override
+    public List<Notify> listAll(String orderBy) {
+        NotifyExample notifyExample = new NotifyExample();
+        notifyExample.setOrderByClause(orderBy);
+        return notifyMapper.selectByExample(notifyExample);
+    }
+
+    @Override
     public List<Notify> listBySendId(String sendId) {
         NotifyExample notifyExample = new NotifyExample();
 

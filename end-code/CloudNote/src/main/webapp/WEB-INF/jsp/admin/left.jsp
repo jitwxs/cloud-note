@@ -101,7 +101,7 @@
                 <i class="my-icon nav-more"></i>
             </a>
             <ul>
-                <li><a href="#"><span>推送消息</span></a></li>
+                <li><a href="${ctx}/admin/systemNotify"><span>推送消息</span></a></li>
                 <li><a href="${ctx}/admin/notifyLog"><span>消息日志</span></a></li>
             </ul>
         </li>

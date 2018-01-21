@@ -1176,11 +1176,19 @@ public class  UserController {
                     String realUrl = GlobalFunction.getRealUrl(url);
                     articleDto.setShareUrl(realUrl);
                     articleDto.setAuthorName(userService.getById(article.getUserId()).getName());
+
+                    User user = userService.getById(articleDto.getUserId());
+                    String iconUrl = user.getIcon();
+                    if(!StringUtils.isBlank(iconUrl)) {
+                        String iconRealUrl = GlobalFunction.getRealUrl(iconUrl);
+                        articleDto.setAuthorIcon(iconRealUrl);
+                    }
                     articleDtos.add(articleDto);
                 }
 
                 message.setStatus(true);
                 message.setArticleDtos(articleDtos);
+
             }
 
             String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);

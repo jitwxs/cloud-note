@@ -17,7 +17,7 @@
 </head>
 
 <body>
-<div class="navbar navbar-fixed-top " style="background-color: #4494ff">
+<div class="navbar navbar-fixed-top " style="background-color: #7c6aa6">
     <div class="navbar-header">
         <a class="navbar-brand" href="#" style="font-size: 20px;color: white">无道云笔记</a>
         <button type="button" class="navbar-toggle navbar-toggle-collapse">
@@ -29,9 +29,9 @@
     </div>
     <div class="navbar-nav-collapse" id="navbar-link">
         <ul class="navbar-nav navbar-right">
-            <li><a class="navbar-nav-link active" href="${ctx}/">首页</a></li>
-            <li><a class="navbar-nav-link" href="${ctx}/login">登录</a></li>
-            <li><a class="navbar-nav-link" href="${ctx}/register">注册</a></li>
+            <li><a class="navbar-nav-link active" href="${ctx}/" style="font-size: 20px;">首页</a></li>
+            <li><a class="navbar-nav-link" href="${ctx}/login" style="font-size: 20px;">登录</a></li>
+            <li><a class="navbar-nav-link" href="${ctx}/register" style="font-size: 20px;">注册</a></li>
 
         </ul>
     </div>
@@ -100,7 +100,7 @@
     <h2>轻松 · 高效 · 超越期待</h2>
     <a href="${ctx}/login" >立即使用</a>
 </div>
-<div id="map" style="height: 600px;width: 100%;"></div>
+<div id="map" style="height: 600px;width: 100%; background: #00192e "></div>
 <div class="footer">
     <div class="myfooter" style="padding-top:20px">
         <div class="footer_text"><a class="footer"  href="http://www.miitbeian.gov.cn/">苏 ICP 备 16061429

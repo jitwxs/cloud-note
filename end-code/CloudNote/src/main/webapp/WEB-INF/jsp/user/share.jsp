@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/jsp/global/taglib.jsp" %>
 
 <!--侧边栏-->
-<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1" style="height: 1500px;background: #f7f7f7;">
+<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1" style="height: 1500px;background:white;">
     <div id="container_share">
     </div>
     <div>
@@ -18,12 +18,17 @@
     //点击分享按钮后获取数据
     function initShare(divAttr) {
         for (var i=0;i<divAttr.length;i++){
-            $('#container_share').append('<div class="share" onclick="jumpShare(this)" share-url="'+divAttr[i].shareUrl+'">\n' +
-                '                <h5>'+divAttr[i].title+'</h5>\n' +
-                '                <p class="content" >'+divAttr[i].abstractText+'</p>\n' +
-                '                <p class="username" >来自：'+divAttr[i].authorName+'</p>\n' +
-                '                <span ><img src="${ctx}/images/star.png">'+divAttr[i].star+'</span>\n' +
-                '            </div>');
+            $('#container_share').append('<div class="share" style="width: 300px;height:;145px;position: relative;border-bottom: 1px solid #EEEEEE;" onclick="jumpShare(this)" share-url="'+divAttr[i].shareUrl+'"> \n' +
+                '<img class="photo" src="'+divAttr[i].authorIcon+'" style="width: 40px;height: 40px;border-radius: 50px;float: left;">\n' +
+                '<p class="title" style="font-size: 18px;width: 100px;float: left;font-weight: 500;margin:0;padding:0;margin-left: 15px;margin-top: 10px;">'+divAttr[i].title+'</p>\n' +
+                '<div style="width: 250px;height: 70px;margin-left: 5px;float: left;margin-top: 5px;" class="content_containere">\n' +
+                '<p class="content" style="padding: 0;margin: 0;">'+divAttr[i].abstractText+'</p>\n' +
+                '</div>\n' +
+                '<div style="width: 290px;height: 25px;float: left;margin-top: 10px;margin-left: 5px;" class="star_container">\n' +
+                '<span  class="stars"><img src="${ctx}/images/star.png" style="width: 20px;height: 20px;margin-left: 40px;font-size: 15px;"> '+divAttr[i].star+'</span>\n' +
+                '<span class="username" style="font-size: 15px;margin-left: 35px;">来自：'+divAttr[i].authorName+'</span>\n' +
+                '</div>\n' +
+                '</div>');
         }
     }
 
