@@ -707,15 +707,19 @@ public class AdminController {
         try {
             response.setContentType("text/html;charset=utf-8");
             Map<String, Object> maps = new HashMap<>(16);
+            double perfect;
+            int[] countUser = new int[10];
 
             // 获取网盘容量百分比
             List<User> users = userService.listAllUser(null);
-            int totalUsed = userPanService.countTotalUsedSize();
+            Integer totalUsed = userPanService.countTotalUsedSize();
+            if(totalUsed == null) {
+                perfect = 0;
+            } else {
+                String temp = String.format("%.2f", (double) totalUsed / (users.size() * GlobalConstant.DEFAULT_PAN_SIZE));
+                perfect = Double.parseDouble(temp) * 100;
+            }
 
-            String temp = String.format("%.2f", (double) totalUsed / (users.size() * GlobalConstant.DEFAULT_PAN_SIZE));
-            double perfect = Double.parseDouble(temp) * 100;
-
-            int[] countUser = new int[10];
             // 获取使用容量每10%的人数
             for(User user : users) {
                 Integer used = userPanService.countUsedSize(user.getId());

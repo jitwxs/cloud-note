@@ -52,16 +52,6 @@
         </div>
 
         <ul class="list-group">
-            <%-- 设置登陆信息 --%>
-            <li class="list-group-item">
-                <label>用户默认性别</label>
-                <label class="radio-inline">
-                    <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">男
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">女
-                </label>
-            </li>
             <li class="list-group-item">Dapibus ac facilisis in</li>
             <li class="list-group-item">Morbi leo risus</li>
             <li class="list-group-item">Porta ac consectetur ac</li>

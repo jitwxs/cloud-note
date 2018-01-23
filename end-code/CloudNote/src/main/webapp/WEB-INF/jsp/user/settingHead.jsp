@@ -25,15 +25,14 @@
 </head>
 
 <div style="width: 100%;">
-    <div class="row" style="background: #7c6aa6">
+    <div class="row" style="background: #7c6aa6;">
         <div >
-            <ul class="nav nav-tabs" style="margin-top: 30px;float: right;width: 100%;margin-left: 0px;">
-                <li style="margin-right: 30px;" ><a href="${ctx}/user/index" style="margin-left: 500px;">返回笔记</a></li>
-                <li style="margin-right: 30px;"><a href="${ctx}/user/accountInfo">账号信息</a></li>
-                <li style="margin-right: 30px;"><a href="${ctx}/user/accountShare">我的分享</a></li>
-                <li style="margin-right: 30px;"><a href="${ctx}/user/disk">我的网盘</a></li>
-                <li style="margin-right: 30px;"><a href="${ctx}/user/notify">站内信</a></li>
-                <li><a href="${ctx}/user/resetPassword">更改密码</a></li>
+            <ul class="nav nav-tabs" style="margin-top: 30px;width: 100%;">
+                <li style="margin-left:15%;" ><a style="color: white;" href="${ctx}/user/index">返回笔记</a></li>
+                <li style="margin-left: 5%;"><a style="color: white;" href="${ctx}/user/accountInfo">账号信息</a></li>
+                <li style="margin-left: 5%;"><a style="color: white;" href="${ctx}/user/accountShare">我的分享</a></li>
+                <li style="margin-left: 5%;"><a style="color: white;" href="${ctx}/user/disk">我的网盘</a></li>
+                <li style="margin-left: 5%;"><a style="color: white;" href="${ctx}/user/notify">站内信</a></li>
             </ul>
         </div>
     </div>

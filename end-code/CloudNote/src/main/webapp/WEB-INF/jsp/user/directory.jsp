@@ -398,7 +398,6 @@ noteId、noteName即使页面刷新也不会置空，
                         initUI();
                         return true;
                     }
-
                 }, function (error) {
                     toastr.error("系统错误");
                     return false;
@@ -449,17 +448,15 @@ noteId、noteName即使页面刷新也不会置空，
             }
 
             // 添加附件信息
-            if(msg.affixes.length > 0) {
-                var affixInfo = "";
-                for(var i=0; i< msg.affixes.length; i++) {
-                    affixInfo += '<tr id="'+msg.affixes[i].id+'">\n' +
-                        '            <td>'+msg.affixes[i].name+'</td>\n' +
-                        '            <td><button class="btn btn-info btn-sm" onclick="previewAffix(this)" value="'+msg.affixes[i].name+'">预览</button></td>\n' +
-                        '            <td><button class="btn btn-danger btn-sm" onclick="deleteAffix(this)">删除</button></td>\n' +
-                        '            </tr>';
-                }
-                $("#affixContentTBody").html(affixInfo);
+            var affixInfo = "";
+            for(var i=0; i< msg.affixes.length; i++) {
+                affixInfo += '<tr id="'+msg.affixes[i].id+'">\n' +
+                    '            <td>'+msg.affixes[i].name+'</td>\n' +
+                    '            <td><button class="btn btn-info btn-sm" onclick="previewAffix(this)" value="'+msg.affixes[i].name+'">预览</button></td>\n' +
+                    '            <td><button class="btn btn-danger btn-sm" onclick="deleteAffix(this)">删除</button></td>\n' +
+                    '            </tr>';
             }
+            $("#affixContentTBody").html(affixInfo);
 
             // 恢复笔记内容
             editor.txt.html(msg.info);
@@ -493,7 +490,7 @@ noteId、noteName即使页面刷新也不会置空，
     function moveNote() {
 
         $('.wjj_div_move').children().remove();
-        sendGet('${ctx}/user/moveArticleDir', {}, false, function (msg) {
+        sendGet('${ctx}/user/initMoveArticleDir', {}, false, function (msg) {
             dir = msg.data;
             showMove($('.wjj_div_move'),dir);
             $('#noteMoveToModel').modal('show');

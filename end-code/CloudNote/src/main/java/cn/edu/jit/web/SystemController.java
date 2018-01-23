@@ -5,8 +5,11 @@ import cn.edu.jit.dto.UserDto;
 import cn.edu.jit.global.GlobalConstant;
 import cn.edu.jit.global.GlobalFunction;
 import cn.edu.jit.service.*;
+import cn.edu.jit.util.HttpUtils;
 import cn.edu.jit.util.Sha1Utils;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.aliyuncs.exceptions.ClientException;
@@ -15,7 +18,6 @@ import com.qq.connect.api.qzone.UserInfo;
 import com.qq.connect.javabeans.AccessToken;
 import com.qq.connect.javabeans.qzone.UserInfoBean;
 import com.qq.connect.oauth.Oauth;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -124,6 +126,19 @@ public class SystemController {
     }
 
     /**
+     * GitHub用户转普通用户
+     * @return
+     */
+    private User gitHub2User(GitHubUser gitHubUser) {
+        User user = new User();
+        user.setId(GlobalFunction.getUUID());
+        user.setName(gitHubUser.getLogin());
+        user.setEmail(gitHubUser.getEmail());
+
+        return user;
+    }
+
+    /**
      * 拷贝头像
      */
     private void copyIcon(User user, String imagesPath) {
@@ -202,6 +217,46 @@ public class SystemController {
             e.printStackTrace();
         }
     }
+
+    @RequestMapping(value = "githubLogin", method = {RequestMethod.GET})
+    public void githubLogin(HttpServletResponse response) {
+        try {
+            response.setContentType("text/html;charset=utf-8");
+            String url = "https://github.com/login/oauth/authorize";
+            String param = "client_id=" + GlobalConstant.GITHUB_CLIENT_ID + "&state=" + GlobalFunction.getUUID()
+                    + "&redirect_uri=" + GlobalConstant.GITHUB_REDIRECT_URL;
+            System.out.println(url + "?" + param);
+            response.sendRedirect(url + "?" + param);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping(value = "githubCallback", method = {RequestMethod.GET})
+    public void githubCallback(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            response.setContentType("text/html;charset=utf-8");
+            String url = "https://github.com/login/oauth/access_token";
+            String code = request.getParameter("code");
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("client_id", GlobalConstant.GITHUB_CLIENT_ID);
+            jsonObject.put("client_secret", GlobalConstant.GITHUB_CLIENT_SECRET);
+            jsonObject.put("code", code);
+
+            String token = GlobalFunction.getGitHubToken(url, jsonObject);
+            JSONObject resultObj = HttpUtils.httpGet("https://api.github.com/user?access_token=" + token);
+
+            GitHubUser github = JSON.parseObject(resultObj.toJSONString(), new TypeReference<GitHubUser>() {});
+            User user = gitHub2User(github);
+
+            // 保存数据库
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     @RequestMapping(value = "login", method = {RequestMethod.GET})
     public String loginUI() {
@@ -583,13 +638,17 @@ public class SystemController {
     @RequestMapping(value = "getSecondArea", method = {RequestMethod.POST})
     public void getSecondArea(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
+        Message message = new Message();
         try {
             String areaId = request.getParameter("areaId");
             if (areaId != null) {
                 List<Area> lists = areaService.listByPid(Integer.parseInt(areaId));
-                String data = JSON.toJSONString(lists, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
-                response.getWriter().write(data);
+                message.setAreas(lists);
+            } else {
+                message.setStatus(false);
             }
+            String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
         } catch (IOException e) {
             e.printStackTrace();
         }

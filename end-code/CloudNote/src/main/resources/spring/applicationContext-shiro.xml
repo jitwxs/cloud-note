@@ -33,6 +33,8 @@
                 # 第三方登录请求
                 /qqLogin = anon
                 /afterQQLogin= anon
+                /githubLogin = anon
+                /githubCallback = anon
                 # 注册请求
                 /checkTelRegistered = anon
                 /registerCheck = anon
@@ -55,6 +57,7 @@
                 /js/** = anon
                 /images/** = anon
                 /fonts/** = anon
+                /upload/** = anon
 
                 # 配置为 anon 可以匿名访问，否则都需要登录访问，如果没登录会跳转到 /login 登录
 

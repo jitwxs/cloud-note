@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/global/taglib.jsp" %>
 
-<div class="col-md-10" style="float: right">
+<div class="col-md-10" style="float: right;">
     <form class="form-inline">
         <div class="form-group">
             <div class="input-group">
@@ -27,7 +27,7 @@
     <input type="hidden" id="noteName">
 
     <%-- 主编辑器 --%>
-    <div id="editor" style="float: right;width:100%;">
+    <div id="editor" style="float: right;width:100%;background: white">
         <p><b style="font-size: 20px">Tips: 您当前未选中笔记，先看看使用帮助吧！</b></p>
         <p><b>新建目录：</b>点击左侧目录树中的任一目录，右击<span><b>新建目录</b></span></p>
         <p><b>新建笔记：</b>点击左侧目录树中的任一目录，右击<span><b>新建笔记</b></span></p>
@@ -50,7 +50,7 @@
                 <a class="btn btn-default fileinput-button" onclick="uploadAffix()">
                     <span>上传附件（<<strong>10MB</strong>）</span>
                 </a>
-            </span>
+                </span>
                 <label id="affixName"></label>
             </div>
         </form>
@@ -64,7 +64,7 @@
                 </tr>
                 </thead>
                 <tbody id="affixContentTBody">
-                    <td colspan="3" style="text-align: center">该笔记还没有任何附件</td>
+                <td colspan="3" style="text-align: center">该笔记还没有任何附件</td>
                 </tbody>
             </table>
         </div>
@@ -101,6 +101,9 @@
             var noteName = $("#noteName").val();
             var editorTags = $("#editorTags").val();
             sendPost('${ctx}/user/saveNote',{'noteId':noteId, 'noteName':noteName, 'data':html,'tag':editorTags},true,function (msg) {
+                if(!msg.status) {
+                    toastr.error(msg.info);
+                }
             },function (error) {
                 return false;
             });
@@ -167,7 +170,7 @@
                             }
                         }
                     } else {
-                        toastr.error("保存失败");
+                        toastr.error(msg.info);
                     }
                 },function (error) {
                     toastr.error("系统错误");
@@ -183,49 +186,53 @@
             $("#affixName").html("当前选中："+file.name);
             fileSize = file.size;
         });
-        
+
         function uploadAffix() {
             var noteId = $("#affixNoteId").val();
             var noteName = $("#editorTitle").val();
             var affixName = $("#affixName").html();
 
             if(noteId == null || noteId == "") {
-                toastr.warning("还没有选择笔记哦（´Д`）");
+                toastr.warning("请先选择一篇笔记");
             } else  if(affixName == null || affixName == "") {
-                toastr.warning("不选文件我咋上传呀(○´･д･)ﾉ");
+                toastr.warning("请先选择上传文件");
             } else {
-                var formData = new FormData();
-                var file = document.getElementById("addAffix").files[0];
+                var maxSize = 10 * 1024 * 1024;
+                if(fileSize > maxSize) {
+                    toastr.warning("超出大小限制");
+                } else {
+                    var formData = new FormData();
+                    var file = document.getElementById("addAffix").files[0];
 
-                formData.append("noteId", noteId);
-                formData.append("file", file);
+                    formData.append("noteId", noteId);
+                    formData.append("file", file);
 
-                $.ajax({
-                    url : "${ctx}/user/uploadAffix",
-                    type : 'post',
-                    data : formData,
-                    async:false,
-                    dataType:'json',
-                    // 告诉jQuery不要去处理发送的数据
-                    processData : false,
-                    // 告诉jQuery不要去设置Content-Type请求头
-                    contentType : false,
-                    success:function(msg) {
-                        if (msg.status) {
-                            toastr.success("上传成功");
-                            flushNote(noteId, noteName);
-                        } else {
-                            toastr.error("上传失败");
+                    $.ajax({
+                        url : "${ctx}/user/uploadAffix",
+                        type : 'post',
+                        data : formData,
+                        async:false,
+                        dataType:'json',
+                        // 告诉jQuery不要去处理发送的数据
+                        processData : false,
+                        // 告诉jQuery不要去设置Content-Type请求头
+                        contentType : false,
+                        success:function(msg) {
+                            if (msg.status) {
+                                toastr.success("上传成功");
+                                flushNote(noteId, noteName);
+                            } else {
+                                toastr.error("上传失败");
+                            }
+                        },
+                        error : function(msg) {
+                            toastr.error("系统错误");
+                            return false;
                         }
-                    },
-                    error : function(msg) {
-                        toastr.error("系统错误");
-                        return false;
-                    }
-                });
+                    });
+                }
             }
         }
-
 
         function deleteAffix(obj) {
             var id = obj.parentElement.parentElement.id;
@@ -298,14 +305,11 @@
                         return false;
                     });
                 } else if(convertFlag) {
-                    document.getElementById("loading").style.display = "block";
                     sendPost('${ctx}/user/convertFile',{'affixId':id},true,function (res) {
                         if(!res.status) {
-                            document.getElementById("loading").style.display = "none";
                             toastr.error(res.info);
                         } else {
                             // 转换成功后。预览文件
-                            document.getElementById("loading").style.display = "none";
                             sendPost('${ctx}/user/previewAffix',{'affixId':id},true,function (res) {
                                 if(res.status) {
                                     var url = res.info;

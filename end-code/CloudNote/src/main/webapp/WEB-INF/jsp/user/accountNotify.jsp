@@ -6,10 +6,10 @@
 
 <jsp:include page="settingHead.jsp"/>
 
-<body style="background: #ededed">
+<body>
 
 <!--消息推送主体区域-->
-<div  id="message_list_show" >
+<div  id="message_list_show" style="width: 100%;">
 
     <!--消息导航栏-->
     <div id="message_nav" >
@@ -22,10 +22,10 @@
     <!--消息区域-->
     <div id="message_main" >
         <div id="message_main_nav" >
-            <p style="margin-left: 20px">消息</p>
-            <p style="margin-left: 700px">时间</p>
-            <p style="margin-left: 150px;">消息类型</p>
-            <p style="margin-left: 100px">操作</p>
+            <p class="msg" style="margin-left: 5%">消息</p>
+            <p class="operation" style=" margin-right: 18%;">操作</p>
+            <p class="msgtype" style="margin-right: 5%;">消息类型</p>
+            <p class="time" style="margin-right: 20%">时间</p>
         </div>
         <!--消息列表-->
         <div id="message_container">
@@ -105,9 +105,9 @@
     }
 
     // 初始化消息列表
-    sendGet('${ctx}/user/prepareNotify',{},false,function (data) {
+    sendGet('${ctx}/user/prepareNotify',{},false,function (res) {
         //全部消息
-        showMessage($('#message_container'),data);
+        showMessage($('#message_container'),res.notifies);
     },function (error) {
         toastr.error("系统错误");
         return false;
@@ -132,10 +132,10 @@
 
     //全部消息点击事件
     $('.message_all').off('click').on('click',function () {
-        sendGet('${ctx}/user/prepareNotify',{},false,function (data) {
+        sendGet('${ctx}/user/prepareNotify',{},false,function (res) {
             //删除原来message_container里的内容
             $('#message_container').children().remove();
-            showMessage($('#message_container'),data);
+            showMessage($('#message_container'),res.notifies);
             initmessageUI();
         },function (error) {
             toastr.error("获取全部消息出错！");
@@ -149,19 +149,21 @@
         $('#message_list_show').removeClass('hidden');
     });
 
-    //初始化事件
+    // 初始化事件
     function initmessageUI() {
-
-
-        //消息的点击事件
+        // 消息的点击事件
         $('.message_title').off('click').on('click',function () {
             //获取消息的id发送给服务器
             var name = $(this).text().trim();
             message_id = $(this).attr('index-id');
             //得到返回数据
             sendPost('${ctx}/user/getNotifyContent',{'id': message_id},false,function (res) {
-                $("#message_content_title").text(name);
-                $("#message_content_body").text(res);
+                if(res.status) {
+                    $("#message_content_title").text(name);
+                    $("#message_content_body").text(res.info);
+                } else {
+                    toastr.error("获取消息内容错误");
+                }
             },function (error) {
                 toastr.error("系统错误");
             });
@@ -191,7 +193,7 @@
                 toastr.error("系统错误");
             });
             if(flag) {
-                $(this).css({"color":"gray","margin-right":"142px"});
+                $(this).css({"color":"gray","margin-right":"10%"});
                 $(this).text("已读");
             }
         });
@@ -223,7 +225,8 @@
                     //返回列表页 重新从服务器获取信息
                     $('#message_content_show').addClass('hidden');
                     $('#message_list_show').removeClass('hidden');
-                    sendGet('${ctx}/user/prepareNotify',{},false,function (data) {
+                    sendGet('${ctx}/user/prepareNotify',{},false,function (res) {
+                        var data = res.notifies;
                         for(var i=0; i<data.length; i++) {
                             var id = data[i].id;
                             var title = data[i].title;

@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/global/taglib.jsp" %>
 
-<div class="modal fade" id="shareNoteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+<div class="modal fade" id="shareNoteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -16,10 +16,10 @@
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="shareUrl" readonly="readonly">
                     </div>
-                    <button class="col-sm-2 btn-primary" onclick="copyContent()">复制链接</button>
+                    <button class="col-sm-2 btn btn-primary" onclick="copyUrl()">复制链接</button>
                 </div>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer" style="margin-top: 40px">
                 <button type="button" class="btn btn-default" data-dismiss="modal" onclick="cancelShare()">取消分享</button>
                 <button type="button" class="btn btn-primary" onclick="goShare()">查看分享</button>
             </div>
@@ -28,7 +28,7 @@
 </div>
 
 <script>
-    function copyContent(){
+    function copyUrl() {
         $("#shareUrl").select();
         document.execCommand("Copy");
         toastr.success("复制成功");
@@ -36,13 +36,14 @@
 
     function goShare() {
         var url = $("#shareUrl").val();
+        $('#shareNoteModal').modal('hide');
         window.open(url);
     }
 
     function cancelShare() {
         var noteId = $("#noteId").val();
         sendPost('${ctx}/user/cancelShare', {'noteId': noteId}, true, function (msg) {
-            if(msg.status) {
+            if (msg.status) {
                 toastr.success("取消分享成功");
             } else {
                 toastr.error("取消分享失败");

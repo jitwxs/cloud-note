@@ -47,7 +47,7 @@
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="nameTypeRadios" value="指定用户">
+                                <input type="radio" name="nameTypeRadios" value="指定用户" checked>
                                 指定用户
                             </label>
                         </div>
@@ -90,10 +90,10 @@
 
     $("#user_choose").bind('input propertychange', function() {
         var tel = $("#user_choose").val();
+        toastr.info(tel);
         sendPost('${ctx}/admin/listTels',{'tel':tel},true,function (res) {
             if(res.status) {
                 $('#itemList').html('');
-
                 for (var i= 0;i<res.list.length;i++) {
                     $('#itemList').append('<option>'+res.list[i]+'</option>')
                 }

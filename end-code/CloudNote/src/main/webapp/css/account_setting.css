@@ -23,15 +23,6 @@
     margin-left: 120px;
 }
 
-#login_btn {
-    color: white;
-    background: lightskyblue;
-    font-size: 18px;
-    float: left;
-    margin-top: 45px;
-    margin-left: 500px;
-}
-
 /* 上传按钮 */
 .fileinput-button {
     position: relative;
@@ -67,17 +58,14 @@
 /* 网盘 */
 #wangpan {
     margin-top: 15px;
-    width: 1180px;
-    /*height: 530px;*/
+    width: 100%;
     background: white;
-    /*border-shadow: 2px #f4e6ff;*/
     overflow: auto;
 }
 
 #head {
-    width: 1140px;
+    width: 95%;
     height: 50px;
-    /*background: pink;*/
     position: relative;
     margin: 0 auto;
 }
@@ -126,7 +114,8 @@
 
 #content {
     margin-left: 20px;
-    width: 1100px;
+    /*width: 1100px;*/
+    width: 98%;
 }
 
 #content a {
@@ -137,7 +126,7 @@
 #content .wjj {
     line-height: 45px;
     margin-left: 15px;
-    width: 1100px;
+    width: 98%;
     height: 45px;
     border-bottom: 1px solid #f2f6fd;
 }
@@ -145,7 +134,7 @@
 #content .wj {
     line-height: 45px;
     margin-left: 15px;
-    width: 1100px;
+    width: 98%;
     height: 45px;
     border-bottom: 1px solid #f2f6fd;
 }
@@ -207,7 +196,6 @@
 }
 
 /* 进度条*/
-
 .progress {
     height: 30px;
     line-height: 35px;
@@ -296,15 +284,31 @@
     background: #bdbdbd;
 }
 
-#message_main_nav p {
+#message_main_nav .msg {
     float: left;
+    line-height: 40px;
+    font-weight: 700;
+}
+#message_main_nav .time{
+    float: right;
+    line-height: 40px;
+    font-weight: 700;
+}
+#message_main_nav .msgtype{
+    float: right;
+    line-height: 40px;
+    font-weight: 700;
+}
+#message_main_nav .operation{
+    float: right;
     line-height: 40px;
     font-weight: 700;
 }
 
 #message_main {
     height: 750px;
-    width: 1340px;
+    /*width: 1340px;*/
+    width: 100%;
     margin: 0 auto;
     margin-top: 10px;
     position: relative;
@@ -312,7 +316,8 @@
 }
 
 #message_main_nav {
-    width: 1340px;
+    /*width: 1340px;*/
+    width: 100%;
     height: 45px;
     position: relative;
     border-bottom: 1px solid darkgrey
@@ -320,13 +325,13 @@
 
 #message_container {
     height: 405px;
-    width: 1340px;
+    width: 100%;
     background: white;
     overflow: auto
 }
 
 .message {
-    width: 1340px;
+    width: 100%;
     height: 45px;
     border-bottom: 1px solid #eeeeee
 }
@@ -336,14 +341,14 @@
     color: gray;
     line-height: 40px;
     font-size: 15px;
-    margin-left: 20px;
+    margin-left: 2%;
     text-decoration: none
 }
 
 .read {
     height: 10px;
     float: right;
-    margin-right: 100px;
+    margin-right: 6.9%;
     margin-top: 10px;
     cursor: pointer
 }
@@ -352,28 +357,28 @@
     cursor: pointer;
     float: right;
     margin-top: 10px;
-    margin-right: 70px
+    margin-right: 5%;
 }
 
 .message_type {
     float: right;
     line-height: 45px;
     font-size: 15px;
-    margin-right: 80px
+    margin-right:5%;
 }
 
 .message_time {
     float: right;
     line-height: 45px;
     font-size: 15px;
-    margin-right: 120px
+    margin-right: 10%;
 }
 
 .already_read {
     color: gray;
     height: 10px;
     float: right;
-    margin-right: 142px;
+    margin-right: 10%;
     margin-top: 10px;
     text-decoration: none
 }
@@ -382,7 +387,8 @@
 /*消息展示主体区域*/
 #message_content_main {
     height: 500px;
-    width: 1340px;
+    /*width: 1340px;*/
+    width: 100%;
     margin: 0 auto;
     margin-top: 20px;
     position: relative;
@@ -390,7 +396,8 @@
 }
 
 #message_content_nav {
-    width: 1340px;
+    /*width: 1340px;*/
+    width: 100%;
     height: 45px;
     position: relative;
     border-bottom: 1px solid #eeeeee
@@ -405,13 +412,13 @@
 }
 
 .message_content_detail {
-    width: 1340px;
+    width: 100%;
     height: 400px;
     border-bottom: 1px solid #eeeeee;
 }
 
 .message_delete {
-    width: 1340px;
+    width: 100%;
     height: 50px;
     position: relative;
 }

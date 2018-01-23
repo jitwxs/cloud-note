@@ -19,7 +19,8 @@
 <body>
 <div class="navbar navbar-fixed-top " style="background-color: #7c6aa6">
     <div class="navbar-header">
-        <a class="navbar-brand" href="#" style="font-size: 20px;color: white">无道云笔记</a>
+        <img src="${ctx}/images/logo.png" style="width: 240px;height: 75px;">
+        <%--<a class="navbar-brand" href="#" style="font-size: 20px;color: white">无道云笔记</a>--%>
         <button type="button" class="navbar-toggle navbar-toggle-collapse">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>

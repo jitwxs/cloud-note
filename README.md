@@ -2,7 +2,7 @@
 
 ### 使用技术
 
-- 前端：Bootstrap
+- 前端：Bootstrap + Amaze UI
 
 - 开发工具；IDEA
 

@@ -5,124 +5,145 @@
     <meta charset="UTF-8">
 <title>
 </title>
-    <link rel="stylesheet" href="http://localhost:8080/css/bootstrap.css">
-    <script src="http://localhost:8080/js/jquery-3.2.1.min.js"></script>
-    <script src="http://localhost:8080/js/bootstrap.js"></script>
-    <script src="http://localhost:8080/js/http.js"></script>
+    <link rel="stylesheet" href="../../../../css/bootstrap.css">
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap.js"></script>
+    <script src="../../../../js/http.js"></script>
     <style type="text/css">
-        #articlescrap{
+        #articlescrap {
             position: relative;
             left: 20%;
             width: 60%;
             margin-left: 0;
             height: 800px;
         }
-        #articlescrap .article_title{
+
+        #articlescrap .article_title {
             margin-left: 60px
         }
-        #articlescrap .user_detail{
+
+        #articlescrap .user_detail {
             height: 50px;
-            margin-left:60px;
+            margin-left: 60px;
             margin-top: 20px;
             position: relative;
         }
-        #articlescrap .user_detail img{
-            border-radius:50%;
+
+        #articlescrap .user_detail img {
+            border-radius: 50%;
             float: left;
         }
-        #articlescrap .user_detail .username{
+
+        #articlescrap .user_detail .username {
             font-size: 15px;
             font-family: Serif;
             line-height: 20px;
             margin-left: 60px;
             margin-top: 0px;
         }
-        #articlescrap .note{
+
+        #articlescrap .note {
             width: 80%;
             margin: 0 auto;
             margin-top: 20px
         }
-        #articlescrap .note p{
+
+        #articlescrap .note p {
             line-height: 30px
         }
-        .like{
+
+        .like {
             width: 200px;
-            height:60px;
+            height: 60px;
             border-radius: 50px;
             border: 1px solid #ea6f5a;
             margin-left: 60px;
             position: relative
         }
-        .like .left{
+
+        .like .left {
             width: 90px;
             height: 30px;
             margin-top: 15px;
             float: left
         }
-        .like .left img{
+
+        .like .left img {
             width: 30px;
-            height:30px;
+            height: 30px;
             float: right
         }
-        .like .left p{
+
+        .like .left p {
             font-size: 20px;
             float: right;
             margin-left: 3px;
             color: #ea6f5a;
         }
-        .like .right{
+
+        .like .right {
             border-left: 1px solid #ea6f5a;
             width: 90px;
             height: 30px;
             margin-top: 15px;
-            float:right;
+            float: right;
         }
-        .like_num{
+
+        .like_num {
             font-size: 20px;
             margin-left: 15px;
             color: #ea6f5a
         }
-        .like{
+
+        .like {
             cursor: pointer;
         }
-        .user_detail .container_noteid{
+
+        .user_detail .container_noteid {
             width: 200px;
             height: 20px;
-            margin-left: 55px
+            margin-left: 55px;
         }
-        .user_detail .note_id{
+
+        .user_detail .note_id {
             font-family: Serif;
             color: #b6b6b6;
             font-size: 10px;
         }
-        .like_star{
+
+        .like_star {
             float: left;
             margin-left: 20px;
         }
-        .time{
+
+        .time {
             float: left;
-            margin-left: 0px
+            margin-left: 0px;
         }
-        .article_detail{
-            width: 500px;height: 20px;float:left;margin-left: 10px
+
+        .article_detail {
+            width: 500px;
+            height: 20px;
+            float: left;
+            margin-left: 10px
         }
     </style>
 </head>
 <body>
 
 <!-- 正文 -->
-<div id="articlescrap" >
+<div id="articlescrap">
     <div class="article_title"><h1>
 <!-- title -->
-        </h1>
+    </h1>
     </div>
     <div class="user_detail">
 <!-- userIcon -->
         <p class="username">
-<!-- userName -->
+            <!-- userName -->
         </p>
-        <div class="article_detail" >
-            <p class="time" >
+        <div class="article_detail">
+            <p class="time">
 <!-- create_date -->
             </p>
         </div>
@@ -137,10 +158,10 @@
     </div>
     <hr>
     <div class="like">
-        <div class="left" >
+        <div class="left">
             <p style="">Love</p>
-            <img class="aixin" src="http://localhost:8080/images/like1.png" >
-            <img class="aixin2 hidden" src="http://localhost:8080/images/like2.png" >
+            <img class="aixin" src="../../../../images/like1.png">
+            <img class="aixin2 hidden" src="../../../../images/like2.png">
         </div>
         <div class="right">
         </div>
@@ -148,24 +169,32 @@
 
 </div>
 <script>
+    function getHostPath() {
+        var curWwwPath = window.document.location.href;
+        var pathName = window.document.location.pathname;
+        var pos = curWwwPath.indexOf(pathName);
+        var hostPath = curWwwPath.substring(0, pos);
+        return hostPath;
+    }
+
     $(function () {
         var noteId = $('.note_id').text();
-        sendGet('http://localhost:8080/getStar',{'noteId':noteId},true,function (res) {
-            if(res.status) {
-                $('.right').append('<p class="like_num" >'+res.info+'</p>');
-                $('.article_detail').append('<p class="like_star" >Love '+ res.info +'</p>');
+        var getStarUrl = getHostPath() + "/getStar";
+        sendGet(getStarUrl, {'noteId': noteId}, true, function (res) {
+            if (res.status) {
+                $('.right').append('<p class="like_num" >' + res.info + '</p>');
+                $('.article_detail').append('<p class="like_star" >Love: ' + res.info + '</p>');
             } else {
                 toastr.error("Get star error");
                 return false;
             }
-        },function (error) {
+        }, function (error) {
             toastr.error("System error");
             return false;
         });
     });
 
-
-    $('.like').on('click',function () {
+    $('.like').on('click', function () {
         var noteId = $('.note_id').text();
         var num;
         if ($('.aixin2').hasClass('hidden')) {
@@ -177,18 +206,19 @@
             $('.aixin2').addClass('hidden');
             num = -1;
         }
-        sendPost('http://loca' +
-            'lhost:8080/star',{'like_num':num,'noteId':noteId},false,function (msg) {
+
+        var starUrl = getHostPath() + "/star";
+        sendPost(starUrl, {'like_num': num, 'noteId': noteId}, false, function (msg) {
             if (msg.status) {
                 var nowNum = parseInt($(".like_num").text()) + num;
                 $('.like_num').remove();
-                $('.right').append('<p class="like_num" >'+nowNum+'</p>');
+                $('.right').append('<p class="like_num" >' + nowNum + '</p>');
                 return true;
             } else {
                 toastr.error("Star failure");
                 return false;
             }
-        },function (error) {
+        }, function (error) {
             toastr.error("System error");
             return false;
         });

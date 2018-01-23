@@ -1,5 +1,7 @@
 package cn.edu.jit.global;
 
+import cn.edu.jit.util.HttpUtils;
+import com.alibaba.fastjson.JSONObject;
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsRequest;
@@ -11,6 +13,11 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.jsoup.Jsoup;
@@ -19,6 +26,7 @@ import org.jsoup.nodes.Document;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
@@ -275,5 +283,36 @@ public class GlobalFunction {
         StringWriter stringWriter = new StringWriter();
         e.printStackTrace(new PrintWriter(stringWriter));
         return stringWriter.toString();
+    }
+
+
+    public static String getGitHubToken(String url,JSONObject jsonParam){
+        String token = "";
+        DefaultHttpClient httpClient = new DefaultHttpClient();
+        HttpPost method = new HttpPost(url);
+        try {
+            if (null != jsonParam) {
+                StringEntity entity = new StringEntity(jsonParam.toString(), "utf-8");
+                entity.setContentEncoding("UTF-8");
+                entity.setContentType("application/json");
+                method.setEntity(entity);
+            }
+            HttpResponse result = httpClient.execute(method);
+            url = URLDecoder.decode(url, "UTF-8");
+            // 请求发送成功，并得到响应
+            if (result.getStatusLine().getStatusCode() == 200) {
+                try {
+                    // github返回的access_token数据不是json，只能手动处理
+                    String str = EntityUtils.toString(result.getEntity());
+                    String[] temp = str.split("&");
+                    token = temp[0].split("=")[1];
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return token;
     }
 }

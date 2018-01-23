@@ -587,7 +587,7 @@ h4 {
     /*padding: 0 10px;*/
     width: 100%;
     height: 500px;
-    background: url("/images/index_footer.jpg") no-repeat center center;
+    background: url("../images/index_footer.jpg") no-repeat center center;
 
 }
 

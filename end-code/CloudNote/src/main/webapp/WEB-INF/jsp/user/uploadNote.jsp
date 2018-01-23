@@ -34,25 +34,23 @@
 </div>
 
 <script>
-    // 提交表单
     function checkNote() {
         var tmpName = $("#uploadNote").val();
         if (tmpName != null && tmpName != "") {
             var point = tmpName.lastIndexOf(".");
             var type = tmpName.substr(point);
-            if(type != ".note"){
+            if (type != ".note") {
                 toastr.warning("上传错误");
                 return false;
             }
         }
-
         $("#uploadNoteForm").submit();
     }
 
     // 实时更新选中的文件名
-    $("input[type='file']").change(function(){
+    $("input[type='file']").change(function () {
         var file = this.files[0];
-        $("#uploadNoteName").html("当前选中："+file.name);
+        $("#uploadNoteName").html("当前选中：" + file.name);
     });
 
 </script>
