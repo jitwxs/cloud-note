@@ -288,21 +288,33 @@
     float: left;
     line-height: 40px;
     font-weight: 700;
+    position:relative;left: 5%;
+
 }
 #message_main_nav .time{
     float: right;
     line-height: 40px;
     font-weight: 700;
+    position:relative;right: 38%;
 }
 #message_main_nav .msgtype{
     float: right;
     line-height: 40px;
     font-weight: 700;
+    position:relative;right: 23%;
 }
 #message_main_nav .operation{
     float: right;
     line-height: 40px;
     font-weight: 700;
+    position:relative;
+    right: 18%;
+}
+@media screen and  (min-width:1360px){
+    .operation{
+        position: relative;
+        right: 20%;
+    }
 }
 
 #message_main {
@@ -346,10 +358,8 @@
 }
 
 .read {
-    height: 10px;
-    float: right;
-    margin-right: 6.9%;
-    margin-top: 10px;
+    font-size: 15px;
+    line-height: 45px;
     cursor: pointer
 }
 
@@ -376,11 +386,13 @@
 
 .already_read {
     color: gray;
-    height: 10px;
-    float: right;
-    margin-right: 10%;
-    margin-top: 10px;
+    font-size: 15px;
+    line-height: 45px;
     text-decoration: none
+}
+.read_container{
+    float: right;
+    margin-right: 6.9%;
 }
 /*消息推送主体区域结束*/
 

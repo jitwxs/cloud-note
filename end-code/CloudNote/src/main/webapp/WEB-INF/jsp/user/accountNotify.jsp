@@ -22,10 +22,10 @@
     <!--消息区域-->
     <div id="message_main" >
         <div id="message_main_nav" >
-            <p class="msg" style="margin-left: 5%">消息</p>
-            <p class="operation" style=" margin-right: 18%;">操作</p>
-            <p class="msgtype" style="margin-right: 5%;">消息类型</p>
-            <p class="time" style="margin-right: 20%">时间</p>
+            <p class="msg" >消息</p>
+            <p class="operation" >操作</p>
+            <p class="msgtype" >消息类型</p>
+            <p class="time" >时间</p>
         </div>
         <!--消息列表-->
         <div id="message_container">
@@ -72,7 +72,7 @@
                 t = '<div class="message">\n' +
                     '                        <a class="message_title" index-type="1" index-id="'+id+'" >\n' +
                     '                        <img src="${ctx}/images/alreadread.png">'+title+'</a>\n' +
-                    '                        <a class="already_read" >已读</a>\n' +
+                    '                        <div class="read_container" style="width:100px;line-height="45px"><a class="already_read" >已读</a></div>\n' +
                     '                        <img class="remove_btn" src="${ctx}/images/delete.png">\n' +
                     '                        <span class="message_type" >'+type+'</span>\n' +
                     '                        <span class="message_time" >'+date+'</span>\n' +
@@ -83,7 +83,7 @@
                 t = '<div class="message" >\n' +
                     '                <a class="message_title" index-type="2" index-id="'+id+'" >\n' +
                     '                    <img class="new_message" src="${ctx}/images/message.png">'+title+'</a>\n' +
-                    '                <a class="read" >标记为已读</a>\n' +
+                    '                <div class="read_container" style="width:100px;line-height="45px"><a class="read" >标记为已读</a></div>\n' +
                     '                <img class="remove_btn" src="${ctx}/images/delete.png" >\n' +
                     '                <span class="message_type" >'+type+'</span>\n' +
                     '                <span class="message_time" >'+date+'</span>\n' +
@@ -146,6 +146,14 @@
     $('.goback').on('click',function () {
         //向服务器发送请求，，获取数据
         $('#message_content_show').addClass('hidden');
+        sendGet('${ctx}/user/prepareNotify',{},false,function (res) {
+            //删除原来message_container里的内容
+            $('#message_container').children().remove();
+            showMessage($('#message_container'),res.notifies);
+            initmessageUI();
+        },function (error) {
+            toastr.error("获取全部消息出错！");
+        });
         $('#message_list_show').removeClass('hidden');
     });
 
@@ -176,7 +184,7 @@
 
         //标记为已读事件
         $('.read').off('click').on('click',function () {
-            var $prev = $(this).prev();
+            var $prev = $(this).parent().prev();
             //把id发送给服务器
             var id = $prev.attr('index-id');
             var flag = false;
@@ -193,7 +201,7 @@
                 toastr.error("系统错误");
             });
             if(flag) {
-                $(this).css({"color":"gray","margin-right":"10%"});
+                $(this).css({"color":"gray"});
                 $(this).text("已读");
             }
         });
@@ -238,7 +246,7 @@
                                 t = '<div class="message">\n' +
                                     '                        <a class="message_title" index-type="1" index-id="'+id+'" >\n' +
                                     '                        <img src="${ctx}/images/alreadread.png">'+title+'</a>\n' +
-                                    '                        <a class="already_read" >已读</a>\n' +
+                                    '                        <div class="read_container" style="width:100px;line-height="45px"><a class="already_read" >已读</a></div>\n' +
                                     '                        <img class="remove_btn" src="${ctx}/images/delete.png">\n' +
                                     '                        <span class="message_type" >'+type+'</span>\n' +
                                     '                        <span class="message_time" >'+date+'</span>\n' +
@@ -249,7 +257,7 @@
                                 t = '<div class="message" >\n' +
                                     '                <a class="message_title" index-type="2" index-id="'+id+'" >\n' +
                                     '                    <img class="new_message" src="${ctx}/images/message.png">'+title+'</a>\n' +
-                                    '                <a class="read" >标记为已读</a>\n' +
+                                    '                <div class="read_container" style="width:100px;height="45px"><a class="read" >标记为已读</a><div>\n' +
                                     '                <img class="remove_btn" src="${ctx}/images/delete.png" >\n' +
                                     '                <span class="message_type" >'+type+'</span>\n' +
                                     '                <span class="message_time" >'+date+'</span>\n' +

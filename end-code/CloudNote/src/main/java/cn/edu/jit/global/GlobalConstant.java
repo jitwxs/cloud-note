@@ -176,6 +176,49 @@ public class GlobalConstant {
     }
 
     /**
+     * 原因类型
+     */
+    public enum REASON {
+        /**
+         * 封禁原因
+         */
+        ILLEGAL("封禁", 1),
+        /**
+         * 笔记原因
+         */
+        SHARE("分享", 2);
+
+        private String name;
+        private int index;
+
+        private REASON(String name, int index) {
+            this.name = name;
+            this.index = index;
+        }
+
+        public String getName() {
+            for (REASON reason : REASON.values()) {
+                if (reason.getIndex() == index) {
+                    return reason.name;
+                }
+            }
+            return null;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public int getIndex() {
+            return index;
+        }
+
+        public void setIndex(int index) {
+            this.index = index;
+        }
+    }
+
+    /**
      * 消息类型
      */
     public enum NOTIFY {

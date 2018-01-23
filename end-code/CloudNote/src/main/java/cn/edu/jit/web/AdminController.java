@@ -8,10 +8,10 @@ import cn.edu.jit.global.GlobalFunction;
 import cn.edu.jit.service.*;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.sun.org.apache.regexp.internal.RE;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.apache.regexp.RE;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -59,8 +58,8 @@ public class AdminController {
     @Resource(name = "notifyServiceImpl")
     private NotifyService notifyService;
 
-    @Resource(name = "illegalReasonServiceImpl")
-    private IllegalReasonService illegalReasonService;
+    @Resource(name = "reasonServiceImpl")
+    private ReasonService reasonService;
 
     @Resource(name = "userBlacklistServiceImpl")
     private UserBlacklistService userBlacklistService;
@@ -79,6 +78,10 @@ public class AdminController {
         List<UserDto> result = new ArrayList<>();
 
         for(User user : users) {
+            // 对于未填写手机号的第三方用户，不做转换
+            if(StringUtils.isBlank(user.getTel())) {
+                continue;
+            }
             UserDto userDto = new UserDto();
             BeanUtils.copyProperties(user, userDto);
             if(userDto.getArea() != null) {
@@ -124,14 +127,14 @@ public class AdminController {
             String userId = userBlacklist.getUserId();
             if(userId != null) {
                 User user = userService.getById(userId);
-                IllegalReason illegalReason = illegalReasonService.getById(userBlacklist.getReasonId());
+                Reason reason = reasonService.getById(userBlacklist.getReasonId());
 
                 if(user != null) {
                     userBlacklistDto.setUserName(user.getName());
                     userBlacklistDto.setTel(user.getTel());
                 }
-                if(illegalReason != null) {
-                    userBlacklistDto.setIllegalName(illegalReason.getName());
+                if(reason != null) {
+                    userBlacklistDto.setIllegalName(reason.getName());
                 }
 
                 if(userBlacklistDto.getEndDate().compareTo(new Date()) <= 0) {
@@ -596,8 +599,8 @@ public class AdminController {
             logService.saveLog(request, GlobalConstant.LOG_SYSTEM.type, GlobalConstant.LOG_SYSTEM.USER_BLOCK.getName(), getSelfId());
 
             // 发送消息
-            IllegalReason illegalReason = illegalReasonService.getById(userBlacklist.getReasonId());
-            String reason = illegalReason.getName();
+            Reason reason =  reasonService.getById(userBlacklist.getReasonId());
+            String reasonName = reason.getName();
             String sendId = getSelfId();
             Notify notify = new Notify();
             notify.setId(GlobalFunction.getUUID());
@@ -606,10 +609,9 @@ public class AdminController {
             notify.setRecvId(userBlacklist.getUserId());
             notify.setStatus(GlobalConstant.NOTIFY_STATUS.UNREAD.getIndex());
             notify.setTitle("账户被封禁");
-            notify.setContent("您的账户已被封禁，封禁原因：“" + reason +"”，解封时间为：" + GlobalFunction.getDate2Second(userBlacklist.getEndDate()));
+            notify.setContent("您的账户已被封禁，封禁原因：“" + reasonName +"”，解封时间为：" + GlobalFunction.getDate2Second(userBlacklist.getEndDate()));
             notify.setCreateDate(new Date());
             notifyService.save(notify);
-
             // 保存日志
             logService.saveLog(request, GlobalConstant.NOTIFY.type, GlobalConstant.NOTIFY.NOTIFY_SYSTEM.getName(), sendId);
         } catch (ParseException e) {
@@ -785,8 +787,10 @@ public class AdminController {
      */
     @RequestMapping(value = "systemSetting", method = {RequestMethod.GET})
     public String systemSettingUI(Model model) {
-        List<IllegalReason> list = illegalReasonService.listAll();
-        model.addAttribute("IllegalReasonList", list);
+        List<Reason> illegalReason = reasonService.listAllByType(GlobalConstant.REASON.ILLEGAL.getIndex());
+        List<Reason> shareReason = reasonService.listAllByType(GlobalConstant.REASON.SHARE.getIndex());
+        model.addAttribute("illegalReason", illegalReason);
+        model.addAttribute("shareReason", shareReason);
         return "admin/systemSetting";
     }
 
@@ -848,28 +852,33 @@ public class AdminController {
     /**
      * 删除封禁原因
      */
-    @RequestMapping(value = "deleteIllegal", method = {RequestMethod.GET})
-    public String deleteIllegal(String id) {
-        illegalReasonService.removeById(id);
+    @RequestMapping(value = "deleteReason", method = {RequestMethod.GET})
+    public String deleteReason(String id) {
+        if(!StringUtils.isBlank(id)) {
+            reasonService.removeById(id);
+        }
         return "redirect:/admin/systemSetting";
     }
 
     /**
      * 修改封禁原因
      * */
-    @RequestMapping(value = "updateIllegal", method = {RequestMethod.POST})
-    public String updateIllegal(IllegalReason illegalReason) {
-        illegalReasonService.update(illegalReason);
+    @RequestMapping(value = "updateReason", method = {RequestMethod.POST})
+    public String updateReason(Reason reason) {
+        Reason r = reasonService.getById(reason.getId());
+        r.setName(reason.getName());
+        reasonService.update(r);
         return "redirect:/admin/systemSetting";
     }
 
     /**
-     * 添加封禁原因
+     * 添加原因
      * */
-    @RequestMapping(value = "addIllegal", method = {RequestMethod.POST})
-    public String addIllegal(IllegalReason illegalReason) {
-        illegalReason.setId(GlobalFunction.getUUID());
-        illegalReasonService.save(illegalReason);
+    @RequestMapping(value = "addReason", method = {RequestMethod.POST})
+    public String addReason(Reason reason) {
+        reason.setId(GlobalFunction.getUUID());
+        reason.setCreateDate(new Date());
+        reasonService.save(reason);
         return "redirect:/admin/systemSetting";
     }
 
@@ -880,7 +889,7 @@ public class AdminController {
     public void listIllegal(HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
         try {
-            List<IllegalReason> list = illegalReasonService.listAll();
+            List<Reason> list = reasonService.listAllByType(GlobalConstant.REASON.ILLEGAL.getIndex());
             String data = JSON.toJSONString(list, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
         } catch (IOException e) {

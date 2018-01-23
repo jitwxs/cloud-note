@@ -85,12 +85,15 @@
             toastr.info("想搜啥请告诉我呀");
             return false;
         } else {
+            $('.js_note_btn').css("color","#337AB7");
             sendPost('${ctx}/user/nbSearch', {'content': content}, true, function (msg) {
                 if(msg.status) {
                     for(var i=0; i<msg.articles.length; i++) {
                         var id = msg.articles[i].id;
-                        var $cur = $('div').find('a[index-id="'+id+'"]');
+                        // var $cur = $('div').find('a[index-id="'+id+'"]');
+                        var $cur = $(".js_note_btn[index-id="+id+"]");
                         $cur.css("color","red");
+
                     }
                 }
             }, function (error) {

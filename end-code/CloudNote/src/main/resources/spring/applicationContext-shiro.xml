@@ -31,6 +31,7 @@
                 /loginCheck = anon
                 /login = anon
                 # 第三方登录请求
+                /loginByThird = anon
                 /qqLogin = anon
                 /afterQQLogin= anon
                 /githubLogin = anon
@@ -57,7 +58,7 @@
                 /js/** = anon
                 /images/** = anon
                 /fonts/** = anon
-                /upload/** = anon
+                /upload/**/article/share/** = anon
 
                 # 配置为 anon 可以匿名访问，否则都需要登录访问，如果没登录会跳转到 /login 登录
 

@@ -381,7 +381,7 @@
                 success: function (msg) {
                     $('#uploadPanModal').modal('hide');
                     if (msg.status) {
-                        $('#content').append('<div class="wj">\n' +
+                        $('.neirong').append('<div class="wj">\n' +
                             '                        <a class="wenjian" index-id="' + msg.info + '"><img src="${ctx}/images/file.png">' + msg.name + '</a>\n' +
                             '                        <a  class="delete"><img src="${ctx}/images/delete.png"></a>\n' +
                             '                        <a  class="rename_note"><img src="${ctx}/images/rename.png"></a>\n' +

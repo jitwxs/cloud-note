@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50719
 File Encoding         : 65001
 
-Date: 2018-01-22 12:40:43
+Date: 2018-01-23 14:42:43
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -3611,6 +3611,9 @@ CREATE TABLE `article` (
 -- ----------------------------
 -- Records of article
 -- ----------------------------
+INSERT INTO `article` VALUES ('280b27703940450897bbc5c1b3930794', 'aaa', 'bae70d0c41ab4b578b88b59ebe037a7c', 'root', '1', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/article/share/c8355d397ddc48f590b8fb0d8f6b5bb9.html', '0', '2018-01-23 10:54:43', '2018-01-23 10:54:45');
+INSERT INTO `article` VALUES ('32f09f04e4174bf8ab55890309daae44', '西红柿炒鸡蛋', 'bae70d0c41ab4b578b88b59ebe037a7c', 'root', '0', '', '0', '2018-01-22 22:51:34', '2018-01-22 23:00:46');
+INSERT INTO `article` VALUES ('dd61d97bb2954b038edc760a82f425a6', 'java', 'bae70d0c41ab4b578b88b59ebe037a7c', 'root', '0', '', '0', '2018-01-22 22:50:09', '2018-01-22 23:00:57');
 
 -- ----------------------------
 -- Table structure for article_affix
@@ -3688,13 +3691,15 @@ CREATE TABLE `article_tag` (
   `tag_id` varchar(64) NOT NULL,
   PRIMARY KEY (`article_id`,`tag_id`),
   KEY `fk_tag` (`tag_id`),
-  CONSTRAINT `fk_article` FOREIGN KEY (`article_id`) REFERENCES `article` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_tag` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of article_tag
 -- ----------------------------
+INSERT INTO `article_tag` VALUES ('32f09f04e4174bf8ab55890309daae44', '0d40ccd6a8344fbdbc06a4e1c728dabb');
+INSERT INTO `article_tag` VALUES ('9df25f98f3934b84a57fe1c403174488', '56c3e409d5264f228e84d22bf97b0c0b');
+INSERT INTO `article_tag` VALUES ('dd61d97bb2954b038edc760a82f425a6', '56c3e409d5264f228e84d22bf97b0c0b');
 
 -- ----------------------------
 -- Table structure for file_convert
@@ -3709,21 +3714,6 @@ CREATE TABLE `file_convert` (
 
 -- ----------------------------
 -- Records of file_convert
--- ----------------------------
-
--- ----------------------------
--- Table structure for illegal_reason
--- ----------------------------
-DROP TABLE IF EXISTS `illegal_reason`;
-CREATE TABLE `illegal_reason` (
-  `id` varchar(64) NOT NULL,
-  `name` varchar(64) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of illegal_reason
 -- ----------------------------
 
 -- ----------------------------
@@ -3750,6 +3740,66 @@ CREATE TABLE `log` (
 -- ----------------------------
 -- Records of log
 -- ----------------------------
+INSERT INTO `log` VALUES ('0954bdf6e89c43e0977c4b88c75ccd3e', '2b65113913ed4685ab723c33c1ae5c57', '1', '封禁用户', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/addToBlackHome', '2018-01-23 14:41:27', 'POST', 'userId=bf47e566c52d44a6927d5513bd121719&userTel=13260908700&reasonId=61ec61c6c4ae42148313d9f69c0ffbdf&duration=3', '');
+INSERT INTO `log` VALUES ('0bf5d8ff18644abeb7f76123ec08d500', 'bae70d0c41ab4b578b88b59ebe037a7c', '4', '上传文件', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/user/uploadPan', '2018-01-23 10:50:51', 'POST', '', '');
+INSERT INTO `log` VALUES ('0e069da05f0145f7b5e098687758ab57', '2b65113913ed4685ab723c33c1ae5c57', '5', '系统消息', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/cancelBlacklist', '2018-01-23 14:41:38', 'GET', 'id=87c05c5cceed453cba67d4a8f52f0641', '');
+INSERT INTO `log` VALUES ('12a4ddb882ab4ba083ab4b106ca7b855', 'bae70d0c41ab4b578b88b59ebe037a7c', '3', '创建笔记', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/user/createNote', '2018-01-23 10:54:43', 'POST', 'parentId=root&noteName=aaa', '');
+INSERT INTO `log` VALUES ('15b3ede9d463417194cc4e63698a453b', 'bae70d0c41ab4b578b88b59ebe037a7c', '3', '分享笔记', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/user/shareNote', '2018-01-22 23:00:45', 'POST', 'noteId=32f09f04e4174bf8ab55890309daae44', '');
+INSERT INTO `log` VALUES ('1b4fd730ddfb4e9da4acb4eb2bf24c8e', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-23 10:54:59', 'POST', 'tel=15996363731&password=', '');
+INSERT INTO `log` VALUES ('212138e9eabb4d16912a996d09b89207', 'bae70d0c41ab4b578b88b59ebe037a7c', '3', '创建笔记', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/user/createNote', '2018-01-22 22:50:32', 'POST', 'parentId=root&noteName=c', '');
+INSERT INTO `log` VALUES ('238898f35ae943bfa614267715a8136d', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-22 23:33:45', 'POST', 'tel=15996363731&password=', '');
+INSERT INTO `log` VALUES ('23b716d4ce3849f3b0d77d47543ea570', 'bae70d0c41ab4b578b88b59ebe037a7c', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-22 22:26:41', 'POST', 'tel=18168404329&password=', '');
+INSERT INTO `log` VALUES ('259b2d3e43ef4ae7a9dbd4ae3c563764', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-23 14:35:08', 'POST', 'tel=15996363731&password=', '');
+INSERT INTO `log` VALUES ('260d8fca44234dcca4b042153f4df3a7', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-23 10:51:47', 'POST', 'tel=15996363731&password=', '');
+INSERT INTO `log` VALUES ('2d23b92186264f3f9463579defd79485', 'bae70d0c41ab4b578b88b59ebe037a7c', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-22 23:53:03', 'POST', 'tel=18168404329&password=', '');
+INSERT INTO `log` VALUES ('3b8d18642d014b0dadfd9f395aa85f8b', '2b65113913ed4685ab723c33c1ae5c57', '1', '删除分享', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/deleteArticle', '2018-01-23 10:51:56', 'GET', 'ids=9df25f98f3934b84a57fe1c403174488', '');
+INSERT INTO `log` VALUES ('3fc36539b32047cca5a2026f0c199e68', 'bae70d0c41ab4b578b88b59ebe037a7c', '3', '取消分享', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/user/cancelShare', '2018-01-22 23:00:57', 'POST', 'noteId=dd61d97bb2954b038edc760a82f425a6', '');
+INSERT INTO `log` VALUES ('4220a7be5bb442e19ea9ff2b9a216adb', 'bae70d0c41ab4b578b88b59ebe037a7c', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-22 22:30:34', 'POST', 'tel=18168404329&password=', '');
+INSERT INTO `log` VALUES ('48c649922d844a13b9cfe523748fbbae', 'bae70d0c41ab4b578b88b59ebe037a7c', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-23 10:52:50', 'POST', 'tel=18168404329&password=', '');
+INSERT INTO `log` VALUES ('499578119d9349b7ba0677e597d77284', 'bae70d0c41ab4b578b88b59ebe037a7c', '4', '删除文件', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/user/removePan', '2018-01-23 10:50:59', 'POST', 'deleteId=06c926f91476407fad7a265e7c744607', '');
+INSERT INTO `log` VALUES ('4b7b6db8c4ec42b99a1b6cef70cace1f', 'bae70d0c41ab4b578b88b59ebe037a7c', '5', '笔记消息', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/star', '2018-01-22 23:01:11', 'POST', 'like_num=1&noteId=\n9df25f98f3934b84a57fe1c403174488\n            ', '');
+INSERT INTO `log` VALUES ('4cb11370752e4350b29853dff59ba1e1', 'bae70d0c41ab4b578b88b59ebe037a7c', '3', '分享笔记', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/user/shareNote', '2018-01-22 23:07:13', 'POST', 'noteId=9df25f98f3934b84a57fe1c403174488', '');
+INSERT INTO `log` VALUES ('4f8771caedb94bc99ede9c223c01661e', 'bae70d0c41ab4b578b88b59ebe037a7c', '3', '取消分享', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/user/cancelShare', '2018-01-22 23:00:41', 'POST', 'noteId=32f09f04e4174bf8ab55890309daae44', '');
+INSERT INTO `log` VALUES ('53488a93bba34e7ba81c46be7d0a3fc1', 'bae70d0c41ab4b578b88b59ebe037a7c', '3', '分享笔记', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/user/shareNote', '2018-01-22 22:59:56', 'POST', 'noteId=32f09f04e4174bf8ab55890309daae44', '');
+INSERT INTO `log` VALUES ('57f9ae44121147f2a69c13265a494dbc', 'bae70d0c41ab4b578b88b59ebe037a7c', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-22 23:50:23', 'POST', 'tel=18168404329&password=', '');
+INSERT INTO `log` VALUES ('5ab292fc370c4cd7afa666fcda46002c', 'bae70d0c41ab4b578b88b59ebe037a7c', '3', '创建笔记', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/user/createNote', '2018-01-22 22:51:34', 'POST', 'parentId=root&noteName=西红柿炒鸡蛋', '');
+INSERT INTO `log` VALUES ('5bdbdd186fbb4a908f48d0b01101c8dd', 'bae70d0c41ab4b578b88b59ebe037a7c', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-22 22:49:49', 'POST', 'tel=18168404329&password=', '');
+INSERT INTO `log` VALUES ('5e2902f66a44429b939835ca76c1017c', 'bae70d0c41ab4b578b88b59ebe037a7c', '3', '取消分享', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/user/cancelShare', '2018-01-22 22:59:19', 'POST', 'noteId=32f09f04e4174bf8ab55890309daae44', '');
+INSERT INTO `log` VALUES ('67ec625bfdcf4aa9a74cf121e2744b9b', 'bae70d0c41ab4b578b88b59ebe037a7c', '3', '分享笔记', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/user/shareNote', '2018-01-22 22:58:25', 'POST', 'noteId=32f09f04e4174bf8ab55890309daae44', '');
+INSERT INTO `log` VALUES ('696df2d071294310ab7e298a36e378b3', 'bae70d0c41ab4b578b88b59ebe037a7c', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-22 17:00:51', 'POST', 'tel=18168404329&password=', '');
+INSERT INTO `log` VALUES ('6ea4bf8027ee418d8acaa6c09386852f', 'bae70d0c41ab4b578b88b59ebe037a7c', '3', '分享笔记', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/user/shareNote', '2018-01-22 23:01:05', 'POST', 'noteId=9df25f98f3934b84a57fe1c403174488', '');
+INSERT INTO `log` VALUES ('718a1018fe8244be844008f24ac84b4a', 'bae70d0c41ab4b578b88b59ebe037a7c', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-22 17:07:40', 'POST', 'tel=18168404329&password=', '');
+INSERT INTO `log` VALUES ('76c6e0ee2c56468384cb084b0bbc6b4f', 'bae70d0c41ab4b578b88b59ebe037a7c', '2', '重置密码', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/user/resetPassword', '2018-01-22 22:30:23', 'POST', 'newPassword=', '');
+INSERT INTO `log` VALUES ('78b7cad0b37c4c619da56cf388372dee', 'bae70d0c41ab4b578b88b59ebe037a7c', '4', '删除文件', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/user/removePan', '2018-01-23 10:50:58', 'POST', 'deleteId=d4fca02c5eb248f6b258aad6bb3f7d0c', '');
+INSERT INTO `log` VALUES ('85fb36983832471889b2258ac14d1883', 'bae70d0c41ab4b578b88b59ebe037a7c', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-23 10:46:54', 'POST', 'tel=18168404329&password=', '');
+INSERT INTO `log` VALUES ('8c77b4b59ba84faeb7c52a6782c61163', '2b65113913ed4685ab723c33c1ae5c57', '1', '取消封禁', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/cancelBlacklist', '2018-01-23 14:41:38', 'GET', 'id=87c05c5cceed453cba67d4a8f52f0641', '');
+INSERT INTO `log` VALUES ('9276c1ce8f764046b350553c71c67f4c', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-22 22:32:26', 'POST', 'tel=15996363731&password=', '');
+INSERT INTO `log` VALUES ('97056ad1afa642d7a00ae790f3f50fd6', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-22 22:38:21', 'POST', 'tel=15996363731&password=', '');
+INSERT INTO `log` VALUES ('9c9b325e087045a4ae94bd2f5bafce65', 'bae70d0c41ab4b578b88b59ebe037a7c', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-23 11:26:29', 'POST', 'tel=18168404329&password=', '');
+INSERT INTO `log` VALUES ('a2658068fedd4f71acc72299a34330ac', 'bae70d0c41ab4b578b88b59ebe037a7c', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-22 17:13:58', 'POST', 'tel=18168404329&password=', '');
+INSERT INTO `log` VALUES ('a69093d3fb3a4202852cd28f3d323660', 'bae70d0c41ab4b578b88b59ebe037a7c', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-23 11:31:05', 'POST', 'tel=18168404329&password=', '');
+INSERT INTO `log` VALUES ('a8387d11703946d8ae84ffdebb14cda3', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-23 14:40:55', 'POST', 'tel=15996363731&password=', '');
+INSERT INTO `log` VALUES ('ac41122d92fb4767b215f2b5e440054e', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-23 14:19:59', 'POST', 'tel=15996363731&password=', '');
+INSERT INTO `log` VALUES ('b3c4a4e90c644e4a9fb7cf5129e648b1', 'bae70d0c41ab4b578b88b59ebe037a7c', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-23 10:49:56', 'POST', 'tel=18168404329&password=', '');
+INSERT INTO `log` VALUES ('b51905a574d647e6b08caeed7fe4f485', 'bae70d0c41ab4b578b88b59ebe037a7c', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-22 23:45:03', 'POST', 'tel=18168404329&password=', '');
+INSERT INTO `log` VALUES ('b86e4e8b189e48cd9c1dd74071a10d54', 'bae70d0c41ab4b578b88b59ebe037a7c', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-23 11:01:21', 'POST', 'tel=18168404329&password=', '');
+INSERT INTO `log` VALUES ('c2b59986cb774b4bab8b70a3c42b5780', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-23 11:00:53', 'POST', 'tel=15996363731&password=', '');
+INSERT INTO `log` VALUES ('d1305980ca0e4b76aac8947fb51ad52f', 'bae70d0c41ab4b578b88b59ebe037a7c', '3', '分享笔记', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/user/shareNote', '2018-01-23 10:54:45', 'POST', 'noteId=280b27703940450897bbc5c1b3930794', '');
+INSERT INTO `log` VALUES ('d1fc29b33cac475a83c04969414f1681', 'bae70d0c41ab4b578b88b59ebe037a7c', '3', '取消分享', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/user/cancelShare', '2018-01-22 23:07:10', 'POST', 'noteId=9df25f98f3934b84a57fe1c403174488', '');
+INSERT INTO `log` VALUES ('d4f6d5f3c3274a14a4db7ecec55ee881', 'bae70d0c41ab4b578b88b59ebe037a7c', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-22 17:03:33', 'POST', 'tel=18168404329&password=', '');
+INSERT INTO `log` VALUES ('d68af99570a544e0b4af90cce38c473c', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-22 22:37:00', 'POST', 'tel=15996363731&password=', '');
+INSERT INTO `log` VALUES ('d9c03a84160441fd95385d6e498da4ca', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-23 12:36:46', 'POST', 'tel=15996363731&password=', '');
+INSERT INTO `log` VALUES ('da536fc6af344c8eb9402b9dea048f6a', 'bae70d0c41ab4b578b88b59ebe037a7c', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-23 09:09:07', 'POST', 'tel=18168404329&password=', '');
+INSERT INTO `log` VALUES ('dc4cd305bf9b4994b58669d183f34d67', 'bae70d0c41ab4b578b88b59ebe037a7c', '3', '分享笔记', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/user/shareNote', '2018-01-22 22:58:20', 'POST', 'noteId=9df25f98f3934b84a57fe1c403174488', '');
+INSERT INTO `log` VALUES ('de45ce709d544d8da2d25e9709bad520', 'bae70d0c41ab4b578b88b59ebe037a7c', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-23 10:25:13', 'POST', 'tel=18168404329&password=', '');
+INSERT INTO `log` VALUES ('dff9cbd03adc4aacba40d828e9b3a7c7', 'bae70d0c41ab4b578b88b59ebe037a7c', '3', '取消分享', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/user/cancelShare', '2018-01-22 23:00:46', 'POST', 'noteId=32f09f04e4174bf8ab55890309daae44', '');
+INSERT INTO `log` VALUES ('e35b2fde85fc44ff8f5873a9cc7649a3', '2b65113913ed4685ab723c33c1ae5c57', '5', '系统消息', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/addToBlackHome', '2018-01-23 14:41:27', 'POST', 'userId=bf47e566c52d44a6927d5513bd121719&userTel=13260908700&reasonId=61ec61c6c4ae42148313d9f69c0ffbdf&duration=3', '');
+INSERT INTO `log` VALUES ('e3ec4ea45dff46bfbf3791b1145d01ba', '1d1ac1da445b47198a9a990423199b02', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-22 23:32:59', 'POST', 'tel=17626014329&password=', '');
+INSERT INTO `log` VALUES ('e85de76793644e548004b78b08aea087', 'bae70d0c41ab4b578b88b59ebe037a7c', '3', '分享笔记', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/user/shareNote', '2018-01-22 23:00:56', 'POST', 'noteId=dd61d97bb2954b038edc760a82f425a6', '');
+INSERT INTO `log` VALUES ('f1cb20f1d3ae4e33a9f23ecf0feb5756', 'bae70d0c41ab4b578b88b59ebe037a7c', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-22 23:32:14', 'POST', 'tel=18168404329&password=', '');
+INSERT INTO `log` VALUES ('f57b963f60544f778976ccbeadaba165', 'bae70d0c41ab4b578b88b59ebe037a7c', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-22 14:01:04', 'POST', 'tel=18168404329&password=', '');
+INSERT INTO `log` VALUES ('f5c521a63ac545ec8bb6fc0ae9765e4e', 'bae70d0c41ab4b578b88b59ebe037a7c', '3', '创建笔记', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/user/createNote', '2018-01-22 22:50:09', 'POST', 'parentId=root&noteName=java', '');
+INSERT INTO `log` VALUES ('fa00b399a014441a87ce876c1527bd1a', 'bae70d0c41ab4b578b88b59ebe037a7c', '3', '取消分享', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/user/cancelShare', '2018-01-22 23:01:02', 'POST', 'noteId=9df25f98f3934b84a57fe1c403174488', '');
 
 -- ----------------------------
 -- Table structure for login
@@ -3769,7 +3819,6 @@ CREATE TABLE `login` (
 -- ----------------------------
 -- Records of login
 -- ----------------------------
-INSERT INTO `login` VALUES ('13260835337', '45aa5756aba7a4270954c944905889b09d01f8ffbb64471ff872f126', '2', '2018-01-18 10:19:40', null);
 INSERT INTO `login` VALUES ('13260908700', '1f33a9e2c6cd60881a1140e0f8016253b0761aa6844bc3a1eb48c9c5', '2', '2018-01-01 16:28:22', '2018-01-16 16:29:15');
 INSERT INTO `login` VALUES ('13260908701', '1f33a9e2c6cd60881a1140e0f8016253b0761aa6844bc3a1eb48c9c5', '2', '2018-01-02 16:29:32', null);
 INSERT INTO `login` VALUES ('13260908702', '1f33a9e2c6cd60881a1140e0f8016253b0761aa6844bc3a1eb48c9c5', '2', '2018-01-03 16:29:49', null);
@@ -3785,7 +3834,29 @@ INSERT INTO `login` VALUES ('13260909880', '364ca3cc2758a8a690535d2b86cd7eeff978
 INSERT INTO `login` VALUES ('15962930119', 'fc62c2168fb561adfccdb450aadde1e83a1354a462465bce64ef58e7', '2', '2018-01-11 09:40:26', null);
 INSERT INTO `login` VALUES ('15996363731', 'fc5754eeea833cf90c6e1e9f361233893029f169b3d71ba3ec258c99', '1', '2018-01-10 10:44:36', null);
 INSERT INTO `login` VALUES ('17626014329', 'c69698f8c78df1adb92751f2a01d38b929a554e765c6093d665e5134', '2', '2018-01-18 17:02:31', null);
-INSERT INTO `login` VALUES ('18168404329', '1f33a9e2c6cd60881a1140e0f8016253b0761aa6844bc3a1eb48c9c5', '2', '2018-01-02 16:58:12', '2018-01-13 16:08:18');
+INSERT INTO `login` VALUES ('18168404329', '5a3529bc3d9bdf63b1246d3f1b88f7a4936de4b71f5aba7a4842887a', '2', '2018-01-02 16:58:12', '2018-01-22 22:30:23');
+
+-- ----------------------------
+-- Table structure for login_by_third
+-- ----------------------------
+DROP TABLE IF EXISTS `login_by_third`;
+CREATE TABLE `login_by_third` (
+  `id` varchar(64) NOT NULL,
+  `third_type` varchar(64) DEFAULT NULL COMMENT '第三方平台名称',
+  `third_id` varchar(64) DEFAULT NULL COMMENT '第三方平台上用户id',
+  `user_id` varchar(64) DEFAULT NULL COMMENT '用户表id',
+  `useless_pwd` varchar(64) DEFAULT '1f33a9e2c6cd60881a1140e0f8016253b0761aa6844bc3a1eb48c9c5' COMMENT '无用字段，用于通过权限认证',
+  `create_date` datetime DEFAULT NULL,
+  `modifed_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `third_user_id` (`user_id`),
+  CONSTRAINT `third_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of login_by_third
+-- ----------------------------
+INSERT INTO `login_by_third` VALUES ('93f7ca123b39480abd55312e3acefe06', 'github', '22422341', '85d7585fd92d4538983dbaf0b1923df9', '1f33a9e2c6cd60881a1140e0f8016253b0761aa6844bc3a1eb48c9c5', '2018-01-23 11:17:03', null);
 
 -- ----------------------------
 -- Table structure for notify
@@ -3811,6 +3882,9 @@ CREATE TABLE `notify` (
 -- ----------------------------
 -- Records of notify
 -- ----------------------------
+INSERT INTO `notify` VALUES ('152ff763c2be4b5d81a00000214d2f70', '系统消息', '账户被解封', '您的账户已被解封，现在可以正常登陆了，以后可不要再干违规的事哦！', '2b65113913ed4685ab723c33c1ae5c57', 'bf47e566c52d44a6927d5513bd121719', '2', '2018-01-23 14:41:38', null);
+INSERT INTO `notify` VALUES ('ef499991561e470c9adfc6b8b0f5fa8d', '系统消息', '账户被封禁', '您的账户已被封禁，封禁原因：“222”，解封时间为：2018-01-26 14:41:27', '2b65113913ed4685ab723c33c1ae5c57', 'bf47e566c52d44a6927d5513bd121719', '2', '2018-01-23 14:41:27', null);
+INSERT INTO `notify` VALUES ('f417018e1e494acfa40ae2d26071b62b', '笔记消息', '分享笔记收到一个赞', '用户：“jitwxs”刚刚给您的分享笔记《c》点了一个赞', 'bae70d0c41ab4b578b88b59ebe037a7c', 'bae70d0c41ab4b578b88b59ebe037a7c', '1', '2018-01-22 23:01:11', '2018-01-23 10:54:16');
 
 -- ----------------------------
 -- Table structure for pan_dir
@@ -3833,7 +3907,26 @@ CREATE TABLE `pan_dir` (
 -- ----------------------------
 -- Records of pan_dir
 -- ----------------------------
+INSERT INTO `pan_dir` VALUES ('4ad07927d730464781dd4d085b07c65d', 'bae70d0c41ab4b578b88b59ebe037a7c', '新建文件夹', 'root', '2018-01-23 10:50:45', null);
 INSERT INTO `pan_dir` VALUES ('root', null, '我的文件夹', null, '2018-01-08 11:23:57', null);
+
+-- ----------------------------
+-- Table structure for reason
+-- ----------------------------
+DROP TABLE IF EXISTS `reason`;
+CREATE TABLE `reason` (
+  `id` varchar(64) NOT NULL,
+  `name` varchar(64) DEFAULT NULL,
+  `type` int(1) DEFAULT NULL,
+  `create_date` datetime DEFAULT NULL,
+  `modifed_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of reason
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for role
@@ -3996,6 +4089,7 @@ CREATE TABLE `tag` (
 -- Records of tag
 -- ----------------------------
 INSERT INTO `tag` VALUES ('0d40ccd6a8344fbdbc06a4e1c728dabb', '美食', '2018-01-22 11:22:10', null);
+INSERT INTO `tag` VALUES ('56c3e409d5264f228e84d22bf97b0c0b', '程序设计', '2018-01-22 22:50:15', null);
 
 -- ----------------------------
 -- Table structure for user
@@ -4003,13 +4097,13 @@ INSERT INTO `tag` VALUES ('0d40ccd6a8344fbdbc06a4e1c728dabb', '美食', '2018-01
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `id` varchar(64) NOT NULL,
-  `tel` varchar(16) NOT NULL,
+  `tel` varchar(16) DEFAULT NULL,
   `name` varchar(16) NOT NULL COMMENT '昵称',
   `email` varchar(32) DEFAULT NULL COMMENT '邮箱',
   `area` int(11) DEFAULT NULL COMMENT '地区',
   `sex` char(1) DEFAULT NULL COMMENT '性别',
   `icon` varchar(255) DEFAULT NULL,
-  `sign` varchar(32) DEFAULT NULL COMMENT '签名',
+  `sign` varchar(64) DEFAULT NULL COMMENT '签名',
   `create_date` datetime NOT NULL,
   `modifed_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -4022,11 +4116,11 @@ CREATE TABLE `user` (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('1d1ac1da445b47198a9a990423199b02', '17626014329', '爸爸合伙人', 'lalala@fierfox.com', '110000', '男', null, null, '2018-01-18 17:02:31', '2018-01-22 12:29:04');
+INSERT INTO `user` VALUES ('1d1ac1da445b47198a9a990423199b02', '17626014329', '爸爸合伙人', 'lalala@fierfox.com', '110000', '男', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/17626014329/images/icon.png', null, '2018-01-18 17:02:31', '2018-01-22 23:32:59');
 INSERT INTO `user` VALUES ('27d7410ccb414187b50d56426981f61f', '13260909880', '悦悦悦悦悦', null, null, '男', null, null, '2018-01-21 14:02:08', '2018-01-21 14:02:24');
-INSERT INTO `user` VALUES ('2b65113913ed4685ab723c33c1ae5c57', '15996363731', '刘畅是头猪猪', 'lc@foxmail.com', '540100', '女', null, null, '2018-01-10 10:44:36', null);
-INSERT INTO `user` VALUES ('a9ef6f6d32204b368477aead22046b1f', '13260835337', '爸爸合伙人', 'yangyun@fierfox.com', '350200', '女', null, '学不死就往死里学', '2018-01-18 10:19:40', '2018-01-18 10:27:34');
-INSERT INTO `user` VALUES ('bae70d0c41ab4b578b88b59ebe037a7c', '18168404329', 'jitwxs', 'jitwxs@foxmail.com', '320100', '男', null, '', '2018-01-02 16:58:12', '2018-01-22 11:13:11');
+INSERT INTO `user` VALUES ('2b65113913ed4685ab723c33c1ae5c57', '15996363731', '刘畅是头猪猪', 'lc@foxmail.com', '540100', '女', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/15996363731/images/icon.png', null, '2018-01-10 10:44:36', '2018-01-22 22:32:26');
+INSERT INTO `user` VALUES ('85d7585fd92d4538983dbaf0b1923df9', null, 'jitwxs', 'jitwxs@foxmail.com', null, null, null, null, '2018-01-23 11:17:03', null);
+INSERT INTO `user` VALUES ('bae70d0c41ab4b578b88b59ebe037a7c', '18168404329', 'jitwxs', 'jitwxs@foxmail.com', '320100', '男', 'C:\\Users\\wxs\\Documents\\GitHub\\CloudNote\\end-code\\CloudNote\\target\\CloudNote\\upload/18168404329/images/icon.png', '', '2018-01-02 16:58:12', '2018-01-22 17:13:58');
 INSERT INTO `user` VALUES ('bf47e566c52d44a4227d5513bd121719', '13260908703', '004', '004', '630100', '男', null, null, '2018-01-04 16:37:11', '2018-01-21 11:37:30');
 INSERT INTO `user` VALUES ('bf47e566c52d44a6227d5513bd121719', '13260908701', '002', '002', '140100', '男', null, null, '2018-01-02 16:35:23', null);
 INSERT INTO `user` VALUES ('bf47e566c52d44a692123313bd121719', '13260908706', '007', '007', '371100', '女', null, null, '2018-01-07 16:40:10', null);
@@ -4053,7 +4147,7 @@ CREATE TABLE `user_blacklist` (
   PRIMARY KEY (`id`),
   KEY `fkuserid` (`user_id`),
   KEY `fk_reason` (`reason_id`),
-  CONSTRAINT `fk_reason` FOREIGN KEY (`reason_id`) REFERENCES `illegal_reason` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_reason` FOREIGN KEY (`reason_id`) REFERENCES `reason` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fkuserid` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

@@ -27,8 +27,11 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -51,6 +54,9 @@ public class SystemController {
 
     @Resource(name = "loginServiceImpl")
     private LoginService loginService;
+
+    @Resource(name = "loginByThirdServiceImpl")
+    private LoginByThirdService loginByThirdService;
 
     @Resource(name = "userServiceImpl")
     private UserService userService;
@@ -134,7 +140,7 @@ public class SystemController {
         user.setId(GlobalFunction.getUUID());
         user.setName(gitHubUser.getLogin());
         user.setEmail(gitHubUser.getEmail());
-
+        user.setCreateDate(new Date());
         return user;
     }
 
@@ -225,7 +231,6 @@ public class SystemController {
             String url = "https://github.com/login/oauth/authorize";
             String param = "client_id=" + GlobalConstant.GITHUB_CLIENT_ID + "&state=" + GlobalFunction.getUUID()
                     + "&redirect_uri=" + GlobalConstant.GITHUB_REDIRECT_URL;
-            System.out.println(url + "?" + param);
             response.sendRedirect(url + "?" + param);
         } catch (Exception e) {
             e.printStackTrace();
@@ -233,30 +238,36 @@ public class SystemController {
     }
 
     @RequestMapping(value = "githubCallback", method = {RequestMethod.GET})
-    public void githubCallback(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            response.setContentType("text/html;charset=utf-8");
-            String url = "https://github.com/login/oauth/access_token";
-            String code = request.getParameter("code");
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("client_id", GlobalConstant.GITHUB_CLIENT_ID);
-            jsonObject.put("client_secret", GlobalConstant.GITHUB_CLIENT_SECRET);
-            jsonObject.put("code", code);
+    public String githubCallback(HttpServletRequest request, RedirectAttributes model) {
+        String url = "https://github.com/login/oauth/access_token";
+        String code = request.getParameter("code");
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("client_id", GlobalConstant.GITHUB_CLIENT_ID);
+        jsonObject.put("client_secret", GlobalConstant.GITHUB_CLIENT_SECRET);
+        jsonObject.put("code", code);
 
-            String token = GlobalFunction.getGitHubToken(url, jsonObject);
-            JSONObject resultObj = HttpUtils.httpGet("https://api.github.com/user?access_token=" + token);
+        String token = GlobalFunction.getGitHubToken(url, jsonObject);
+        JSONObject resultObj = HttpUtils.httpGet("https://api.github.com/user?access_token=" + token);
 
-            GitHubUser github = JSON.parseObject(resultObj.toJSONString(), new TypeReference<GitHubUser>() {});
+        GitHubUser github = JSON.parseObject(resultObj.toJSONString(), new TypeReference<GitHubUser>() {});
+
+        // 保存数据库
+        LoginByThird loginByThird = loginByThirdService.getByThirdTypeAndThirdId("github",github.getId());
+        if(loginByThird == null) {
             User user = gitHub2User(github);
-
-            // 保存数据库
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            userService.save(user);
+            loginByThird = new LoginByThird();
+            loginByThird.setId(GlobalFunction.getUUID());
+            loginByThird.setUserId(user.getId());
+            loginByThird.setThirdType("github");
+            loginByThird.setThirdId(github.getId());
+            loginByThird.setCreateDate(new Date());
+            loginByThirdService.save(loginByThird);
         }
+
+        model.addFlashAttribute("loginByThird", loginByThird);
+        return "redirect:/loginByThird";
     }
-
-
 
     @RequestMapping(value = "login", method = {RequestMethod.GET})
     public String loginUI() {
@@ -344,6 +355,23 @@ public class SystemController {
         } else {
             return "/login";
         }
+    }
+
+    @RequestMapping(value = "loginByThird", method = {RequestMethod.GET})
+    public String loginByThird(@ModelAttribute("loginByThird") LoginByThird loginByThird, HttpServletRequest request) {
+        // Shiro验证，第三方登陆密码均为123，没有实际作用
+        UsernamePasswordToken token = new UsernamePasswordToken(loginByThird.getId(), "123");
+        Subject subject = SecurityUtils.getSubject();
+
+        // 如果获取不到用户名就是登录失败，登录失败会直接抛出异常
+        subject.login(token);
+
+        // 保存日志
+        logService.saveLog(request, GlobalConstant.LOG_USER.type, GlobalConstant.LOG_USER.USER_LOGIN.getName(), getSelfId());
+
+        // 第三方登陆只允许是普通用户身份
+        GlobalConstant.HAS_SHOW_LOGIN_INFO = true;
+        return "redirect:/user/index";
     }
 
     @RequestMapping(value = "logout")

@@ -1,19 +1,19 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/global/taglib.jsp" %>
 
-<div class="modal fade" id="updateIllegalModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="addReasonModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="myModalLabel">修改原因</h4>
+                <h4 class="modal-title" id="myModalLabel">添加原因</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" id="updateIllegalForm" role="form" action="${ctx}/admin/updateIllegal"
+                <form class="form-horizontal" id="addReasonForm" role="form" action="${ctx}/admin/addReason"
                       method="post">
+                    <input type="hidden" id="reasonType" name="type">
                     <div class="form-group ">
-                        <input type="hidden" class="form-control" id="illegalReasonId" name="id">
                         <label for="illegalReasonName" class="col-sm-2 control-label">原因</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="illegalReasonName" name="name"
@@ -23,7 +23,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="checkEditIllegal()">保存</button>
+                <button type="button" class="btn btn-primary" onclick="submitAddReason()">保存</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
             </div>
         </div>
@@ -31,7 +31,7 @@
 </div>
 
 <script>
-    function checkEditIllegal() {
-        $("#updateIllegalForm").submit();
+    function submitAddReason() {
+        $("#addReasonForm").submit();
     }
 </script>

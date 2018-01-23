@@ -21,7 +21,7 @@
             $('#container_share').append('<div class="share"  onclick="jumpShare(this)" share-url="'+divAttr[i].shareUrl+'"> \n' +
                 '<img class="photo" src="'+divAttr[i].authorIcon+'" style="width: 40px;height: 40px;border-radius: 50px;float: left;">\n' +
                 '<p class="title" >'+divAttr[i].title+'</p>\n' +
-                '<div  class="content_containere">\n' +
+                '<div  class="content_container">\n' +
                 '<p class="content" >'+divAttr[i].abstractText+'</p>\n' +
                 '</div>\n' +
                 '<div  class="star_container">\n' +

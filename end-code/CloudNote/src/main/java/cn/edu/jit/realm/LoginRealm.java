@@ -1,7 +1,9 @@
 package cn.edu.jit.realm;
 
 import cn.edu.jit.entry.Login;
+import cn.edu.jit.entry.LoginByThird;
 import cn.edu.jit.entry.Role;
+import cn.edu.jit.global.GlobalConstant;
 import cn.edu.jit.util.Sha1Utils;
 import cn.edu.jit.service.LoginService;
 import cn.edu.jit.service.RoleService;
@@ -22,7 +24,7 @@ import java.util.Set;
  * @date 2018/1/2 19:24
  */
 @Component
-public class LoginRealm extends AuthorizingRealm{
+public class LoginRealm extends AuthorizingRealm {
 
     @Resource(name = "loginServiceImpl")
     private LoginService loginService;
@@ -30,49 +32,55 @@ public class LoginRealm extends AuthorizingRealm{
     @Resource(name = "roleServiceImpl")
     private RoleService roleService;
 
-    @Override
-    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        String tel = (String) getAvailablePrincipal(principalCollection);
-
-        Role role = null;
-
-        try {
-            Login login = loginService.getByTel(tel);
-            // 获取角色对象
-            role = roleService.getById(login.getRoleId());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        //通过用户名从数据库获取权限/角色信息
-        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-        Set<String> r = new HashSet<String>();
-        if (role != null) {
-            r.add(role.getName());
-            info.setRoles(r);
-        }
-        return info;
-    }
-
+    /**
+     * 身份验证
+     */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         // 获取用户名和密码
         String tel = (String) token.getPrincipal();
         String password = new String((char[])token.getCredentials());
 
-        Login login = null;
-        try {
-            login = loginService.getByTel(tel);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // 登录失败
-        if (login == null || !Sha1Utils.validatePassword(password, login.getPassword())) {
-           throw new IncorrectCredentialsException("登录失败，用户名或密码不正确！");
+        // 只有本站用户才要做用户名和密码验证，第三方用户直接通过
+        if(tel.length() <= 16) {
+            Login login = loginService.getByTel(tel);
+            // 登录失败
+            if (login == null || !Sha1Utils.validatePassword(password, login.getPassword())) {
+                throw new IncorrectCredentialsException("登录失败，用户名或密码不正确！");
+            }
         }
 
         // 身份验证通过,返回一个身份信息
-        AuthenticationInfo info = new SimpleAuthenticationInfo(tel,password,getName());
+        return new SimpleAuthenticationInfo(tel,password,getName());
+    }
+
+    /**
+     * 身份授权
+     */
+    @Override
+    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+        String tel = (String) getAvailablePrincipal(principalCollection);
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+
+        // 判断用户是本站用户还是第三方用户
+        if(tel.length() <= 16) {
+            Login login = loginService.getByTel(tel);
+            // 获取角色对象
+            Role role = roleService.getById(login.getRoleId());
+
+            //通过用户名从数据库获取权限/角色信息
+            Set<String> r = new HashSet<>();
+            if (role != null) {
+                r.add(role.getName());
+                info.setRoles(r);
+            }
+        } else {
+            // 第三方用户只有普通用户权限
+            Set<String> r = new HashSet<>();
+            r.add(GlobalConstant.ROLE.USER.getName());
+            info.setRoles(r);
+
+        }
 
         return info;
     }

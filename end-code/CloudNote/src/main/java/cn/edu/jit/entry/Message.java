@@ -203,14 +203,6 @@ public class Message implements Serializable {
         this.userBlacklistDtos = userBlacklistDtos;
     }
 
-    public List<IllegalReason> getIllegalReasons() {
-        return illegalReasons;
-    }
-
-    public void setIllegalReasons(List<IllegalReason> illegalReasons) {
-        this.illegalReasons = illegalReasons;
-    }
-
     public List<NotifyDto> getNotifyDtos() {
         return notifyDtos;
     }
@@ -268,6 +260,4 @@ public class Message implements Serializable {
     private List<UserDto> userDtos;
 
     private List<UserBlacklistDto> userBlacklistDtos;
-
-    private List<IllegalReason> illegalReasons;
 }

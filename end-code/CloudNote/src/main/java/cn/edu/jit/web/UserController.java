@@ -204,6 +204,7 @@ public class  UserController {
      */
     private String getAbstractText(ArticleDto articleDto) {
         StringBuilder result = new StringBuilder();
+        String indexStr = "<!-- content -->";
         try{
             char[] buf = new char[1024];
             boolean flag = true;
@@ -215,8 +216,8 @@ public class  UserController {
                 String temp = String.valueOf(buf);
                 if(!flag) {
                     result.append(GlobalFunction.getChineseFromHtml(temp));
-                } else if(flag && temp.contains("</title>")) {
-                    result.append(GlobalFunction.getChineseFromHtml(temp.substring(temp.indexOf("</title>"))));
+                } else if(flag && temp.contains(indexStr)) {
+                    result.append(GlobalFunction.getChineseFromHtml(temp.substring(temp.indexOf(indexStr))));
                     flag = false;
                 }
             }
@@ -912,6 +913,8 @@ public class  UserController {
                 if(articleRecycleService.removeById(noteId) == 1) {
                     status = true;
                 }
+                // 清除标签
+                articleTagService.removeAllByArticleId(noteId);
             }
 
             // 保存日志
@@ -990,6 +993,9 @@ public class  UserController {
                     String dirPath = GlobalConstant.USER_ARTICLE_PATH + "/" + articleId;
                     FileUtils.deleteQuietly(new File(dirPath));
                     articleRecycleService.removeById(articleId);
+
+                    // 清除标签
+                    articleTagService.removeAllByArticleId(articleId);
                 }
 
                 message.setStatus(true);
@@ -1987,6 +1993,8 @@ public class  UserController {
             String id = request.getParameter("id");
             if(!StringUtils.isBlank(id)) {
                 Notify notify = notifyService.getById(id);
+                notify.setStatus(1);
+                notifyService.update(notify);
                 message.setStatus(true);
                 message.setInfo(notify.getContent());
             } else {

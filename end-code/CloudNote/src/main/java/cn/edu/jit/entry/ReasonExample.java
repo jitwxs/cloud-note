@@ -1,16 +1,17 @@
 package cn.edu.jit.entry;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class IllegalReasonExample {
+public class ReasonExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public IllegalReasonExample() {
+    public ReasonExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -241,6 +242,186 @@ public class IllegalReasonExample {
 
         public Criteria andNameNotBetween(String value1, String value2) {
             addCriterion("name not between", value1, value2, "name");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeIsNull() {
+            addCriterion("type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeIsNotNull() {
+            addCriterion("type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeEqualTo(Integer value) {
+            addCriterion("type =", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNotEqualTo(Integer value) {
+            addCriterion("type <>", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeGreaterThan(Integer value) {
+            addCriterion("type >", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("type >=", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeLessThan(Integer value) {
+            addCriterion("type <", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeLessThanOrEqualTo(Integer value) {
+            addCriterion("type <=", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeIn(List<Integer> values) {
+            addCriterion("type in", values, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNotIn(List<Integer> values) {
+            addCriterion("type not in", values, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeBetween(Integer value1, Integer value2) {
+            addCriterion("type between", value1, value2, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNotBetween(Integer value1, Integer value2) {
+            addCriterion("type not between", value1, value2, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateDateIsNull() {
+            addCriterion("create_date is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateDateIsNotNull() {
+            addCriterion("create_date is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateDateEqualTo(Date value) {
+            addCriterion("create_date =", value, "createDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateDateNotEqualTo(Date value) {
+            addCriterion("create_date <>", value, "createDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateDateGreaterThan(Date value) {
+            addCriterion("create_date >", value, "createDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateDateGreaterThanOrEqualTo(Date value) {
+            addCriterion("create_date >=", value, "createDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateDateLessThan(Date value) {
+            addCriterion("create_date <", value, "createDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateDateLessThanOrEqualTo(Date value) {
+            addCriterion("create_date <=", value, "createDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateDateIn(List<Date> values) {
+            addCriterion("create_date in", values, "createDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateDateNotIn(List<Date> values) {
+            addCriterion("create_date not in", values, "createDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateDateBetween(Date value1, Date value2) {
+            addCriterion("create_date between", value1, value2, "createDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateDateNotBetween(Date value1, Date value2) {
+            addCriterion("create_date not between", value1, value2, "createDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifedDateIsNull() {
+            addCriterion("modifed_date is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifedDateIsNotNull() {
+            addCriterion("modifed_date is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifedDateEqualTo(Date value) {
+            addCriterion("modifed_date =", value, "modifedDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifedDateNotEqualTo(Date value) {
+            addCriterion("modifed_date <>", value, "modifedDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifedDateGreaterThan(Date value) {
+            addCriterion("modifed_date >", value, "modifedDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifedDateGreaterThanOrEqualTo(Date value) {
+            addCriterion("modifed_date >=", value, "modifedDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifedDateLessThan(Date value) {
+            addCriterion("modifed_date <", value, "modifedDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifedDateLessThanOrEqualTo(Date value) {
+            addCriterion("modifed_date <=", value, "modifedDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifedDateIn(List<Date> values) {
+            addCriterion("modifed_date in", values, "modifedDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifedDateNotIn(List<Date> values) {
+            addCriterion("modifed_date not in", values, "modifedDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifedDateBetween(Date value1, Date value2) {
+            addCriterion("modifed_date between", value1, value2, "modifedDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andModifedDateNotBetween(Date value1, Date value2) {
+            addCriterion("modifed_date not between", value1, value2, "modifedDate");
             return (Criteria) this;
         }
     }
