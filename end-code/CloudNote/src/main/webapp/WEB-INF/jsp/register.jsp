@@ -143,7 +143,7 @@
                             <input id="backtoLogin" type="backtoLogin" class="form-control btn-lg "
                                    value="返&nbsp;&nbsp;回&nbsp;&nbsp;首&nbsp;&nbsp;页"
                                    style="height: 50px;background: white;border: solid 1px darkgrey;
-                                   color:indianred;text-align: center;">
+                                   color:indianred;text-align: center;cursor: pointer">
                         </a>
                     </div>
 
@@ -213,19 +213,16 @@
 
 <script>
     $(function () {
-        var tel = $("#tel").val("");
-        var password = $("#password").val("");
-        var passwor1 = $("#password1").val("");
-        var verifyCode = $("#idcode-btn").val("");
-        var name = $("#second_name").val("");
-        var email = $("#email").val("");
-        var area = $("#area").val("");
-        var sex = $("#sex").val("");
+        $("#tel").val("");
+        $("#password").val("");
+        $("#password1").val("");
+        $("#idcode-btn").val("");
+        $("#second_name").val("");
+        $("#email").val("");
+        $("#area").val("");
+        $("#sex").val("");
     });
 
-    var regPasswordSpecial = /[~!@#%&=;':",./<>_\}\]\-\$\(\)\*\+\.\[\?\\\^\{\|]/;
-    var regPasswordAlpha = /[a-zA-Z]/;
-    var regPasswordNum = /[0-9]/;
     var password;
     var check = [false, false, false, false, true, true, true, true, true];
 
@@ -246,7 +243,6 @@
             }
         }, 1000);
     }
-
 
     // 发送短信验证
     $('#getting').click(function(){

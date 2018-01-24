@@ -47,7 +47,7 @@
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="nameTypeRadios" value="指定用户" checked>
+                                <input type="radio" name="nameTypeRadios" value="指定用户">
                                 指定用户
                             </label>
                         </div>
@@ -90,10 +90,10 @@
 
     $("#user_choose").bind('input propertychange', function() {
         var tel = $("#user_choose").val();
-        toastr.info(tel);
         sendPost('${ctx}/admin/listTels',{'tel':tel},true,function (res) {
             if(res.status) {
                 $('#itemList').html('');
+
                 for (var i= 0;i<res.list.length;i++) {
                     $('#itemList').append('<option>'+res.list[i]+'</option>')
                 }
@@ -216,42 +216,42 @@
                         },
                         {
                             field: 'type',
-                            title: 'type',
+                            title: '类型',
                             align: 'center',
                             valign: 'center',
                             sortable: true
                         },
                         {
                             field: 'sendUserType',
-                            title: 'sendUserType',
+                            title: '发送者权限',
                             align: 'center',
                             valign: 'center',
                             sortable: true
                         },
                         {
                             field: 'sendUser',
-                            title: 'sendUser',
+                            title: '发送者',
                             align: 'center',
                             valign: 'center',
                             sortable: true
                         },
                         {
                             field: 'recvUser',
-                            title: 'recvUser',
+                            title: '接收者',
                             align: 'center',
                             valign: 'center',
                             sortable: true
                         },
                         {
                             field: 'title',
-                            title: 'title',
+                            title: '标题',
                             align: 'center',
                             valign: 'center',
                             sortable: true
                         },
                         {
                             field: 'content',
-                            title: 'content',
+                            title: '内容',
                             width: 200,
                             align: 'center',
                             valign: 'center',
@@ -259,14 +259,14 @@
                         },
                         {
                             field: 'createDate',
-                            title: 'createDate',
+                            title: '创建时间',
                             align: 'center',
                             valign: 'center',
                             sortable: true
                         },
                         {
                             field: 'statusName',
-                            title: 'statusName',
+                            title: '状态',
                             align: 'center',
                             valign: 'center',
                             sortable: true

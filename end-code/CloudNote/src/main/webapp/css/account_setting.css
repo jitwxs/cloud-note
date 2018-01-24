@@ -263,6 +263,7 @@
 /* 账户通知CSS */
 
 /*消息推送主体区域*/
+
 #message_nav {
     width: 700px;
     height: 30px;
@@ -277,49 +278,14 @@
     color: #333333;
     text-decoration: none;
     cursor: pointer;
-    background: white;
+    /*background: white;*/
 }
 
 #message_nav a:hover {
-    background: #bdbdbd;
-}
-
-#message_main_nav .msg {
-    float: left;
-    line-height: 40px;
-    font-weight: 700;
-    position:relative;left: 5%;
-
-}
-#message_main_nav .time{
-    float: right;
-    line-height: 40px;
-    font-weight: 700;
-    position:relative;right: 38%;
-}
-#message_main_nav .msgtype{
-    float: right;
-    line-height: 40px;
-    font-weight: 700;
-    position:relative;right: 23%;
-}
-#message_main_nav .operation{
-    float: right;
-    line-height: 40px;
-    font-weight: 700;
-    position:relative;
-    right: 18%;
-}
-@media screen and  (min-width:1360px){
-    .operation{
-        position: relative;
-        right: 20%;
-    }
+    /*background: #bdbdbd;*/
 }
 
 #message_main {
-    height: 750px;
-    /*width: 1340px;*/
     width: 100%;
     margin: 0 auto;
     margin-top: 10px;
@@ -336,16 +302,9 @@
 }
 
 #message_container {
-    height: 405px;
     width: 100%;
     background: white;
     overflow: auto
-}
-
-.message {
-    width: 100%;
-    height: 45px;
-    border-bottom: 1px solid #eeeeee
 }
 
 .message_title {
@@ -353,7 +312,8 @@
     color: gray;
     line-height: 40px;
     font-size: 15px;
-    margin-left: 2%;
+    left: 2%;
+    position: relative;
     text-decoration: none
 }
 
@@ -365,35 +325,26 @@
 
 .remove_btn {
     cursor: pointer;
-    float: right;
     margin-top: 10px;
-    margin-right: 5%;
 }
 
 .message_type {
-    float: right;
     line-height: 45px;
     font-size: 15px;
-    margin-right:5%;
 }
 
 .message_time {
-    float: right;
     line-height: 45px;
     font-size: 15px;
-    margin-right: 10%;
 }
 
 .already_read {
     color: gray;
     font-size: 15px;
     line-height: 45px;
-    text-decoration: none
+    text-decoration: none;
 }
-.read_container{
-    float: right;
-    margin-right: 6.9%;
-}
+
 /*消息推送主体区域结束*/
 
 /*消息展示主体区域*/

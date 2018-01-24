@@ -6,6 +6,7 @@ import cn.edu.jit.entry.PanDirExample;
 import cn.edu.jit.global.GlobalConstant;
 import cn.edu.jit.mapper.NotifyMapper;
 import cn.edu.jit.service.NotifyService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,32 +63,17 @@ public class NotifyServiceImpl implements NotifyService {
     }
 
     @Override
-    public List<Notify> listBySendId(String sendId) {
-        NotifyExample notifyExample = new NotifyExample();
-
-        NotifyExample.Criteria criteria = notifyExample.createCriteria();
-        criteria.andSendIdEqualTo(sendId);
-
-        return notifyMapper.selectByExample(notifyExample);
-    }
-
-    @Override
-    public List<Notify> listByRecvId(String recvId, String orderBy) {
+    public List<Notify> listByRecvId(String recvId, String type, Integer status, String orderBy) {
         NotifyExample notifyExample = new NotifyExample();
         notifyExample.setOrderByClause(orderBy);
         NotifyExample.Criteria criteria = notifyExample.createCriteria();
         criteria.andRecvIdEqualTo(recvId);
-
-        return notifyMapper.selectByExample(notifyExample);
-    }
-
-    @Override
-    public List<Notify> listByRecvIdAndType(String recvId, String type, String orderBy) {
-        NotifyExample notifyExample = new NotifyExample();
-        notifyExample.setOrderByClause(orderBy);
-        NotifyExample.Criteria criteria = notifyExample.createCriteria();
-        criteria.andRecvIdEqualTo(recvId);
-        criteria.andTypeEqualTo(type);
+        if(!StringUtils.isBlank(type)) {
+            criteria.andTypeEqualTo(type);
+        }
+        if(status != null) {
+            criteria.andStatusEqualTo(status);
+        }
 
         return notifyMapper.selectByExample(notifyExample);
     }

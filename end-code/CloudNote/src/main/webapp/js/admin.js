@@ -26,3 +26,24 @@ $(function () {
         }
     });
 });
+
+$(window).resize(function() {
+    var Width = $(window).width();
+    if (Width < 1300) {
+        if (!$('.nav').hasClass('nav-mini')) {     //略图
+            $('.nav-item.nav-show').removeClass('nav-show');
+            $('.nav-item').children('ul').removeAttr('style');
+            $('.nav').addClass('nav-mini');
+
+        }
+    }
+    else {
+        if(!$('.nav').hasClass('nav-show')) {
+            $('.nav').removeClass('nav-mini');
+
+        }
+    }
+    if (Width<1000) {
+
+    }
+});

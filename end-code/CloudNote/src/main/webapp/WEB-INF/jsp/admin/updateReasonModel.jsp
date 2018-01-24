@@ -13,7 +13,7 @@
                 <form class="form-horizontal" id="updateReasonForm" role="form" action="${ctx}/admin/updateReason"
                       method="post">
                     <div class="form-group ">
-                        <input type="hidden" class="form-control" id="reasonId" name="id">
+                        <input type="hidden" id="reasonId" name="id">
                         <label for="reasonName" class="col-sm-2 control-label">原因</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="reasonName" name="name"
@@ -32,6 +32,16 @@
 
 <script>
     function submitUpdateReason() {
-        $("#updateReasonForm").submit();
+        var id = $('#reasonId').val();
+        var name = $('#reasonName').val();
+        sendPost('${ctx}/admin/editReasonCheck', {'id': id, 'name': name}, false, function (msg) {
+            if (msg.status) {
+                $("#updateReasonForm").submit();
+            } else {
+                toastr.warning("原因名重复！");
+            }
+        },function (error) {
+            toastr.error("系统错误");
+        });
     }
 </script>

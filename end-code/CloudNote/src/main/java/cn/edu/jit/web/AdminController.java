@@ -1,6 +1,5 @@
 package cn.edu.jit.web;
 
-
 import cn.edu.jit.dto.*;
 import cn.edu.jit.entry.*;
 import cn.edu.jit.global.GlobalConstant;
@@ -11,7 +10,6 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.regexp.RE;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -380,53 +378,24 @@ public class AdminController {
     }
 
     /**
-     * 取消分享
+     * 分享审核控制
      */
-    @RequestMapping(value = "cancelShare", method = {RequestMethod.GET})
-    public String cancelShare(String id, HttpServletRequest request) {
-        Article article = articleService.getById(id);
-        article.setIsOpen(GlobalConstant.NOTE_STATUS.NOT_SHARE.getIndex());
-        if(!StringUtils.isBlank(article.getShareUrl())) {
-            GlobalFunction.deleteSignalFile(article.getShareUrl());
-            article.setShareUrl(null);
-        }
-        articleService.update(article);
-
-        // 保存日志
-        logService.saveLog(request, GlobalConstant.LOG_SYSTEM.type, GlobalConstant.LOG_SYSTEM.SHARE_CANCEL.getName(), getSelfId());
-
-        // 发送消息
-        String sendId = getSelfId();
-        Notify notify = new Notify();
-        notify.setId(GlobalFunction.getUUID());
-        notify.setType(GlobalConstant.NOTIFY.NOTIFY_NOTE.getName());
-        notify.setSendId(sendId);
-        notify.setRecvId(article.getUserId());
-        notify.setStatus(GlobalConstant.NOTIFY_STATUS.UNREAD.getIndex());
-        notify.setTitle("分享笔记被取消");
-        notify.setContent("您的笔记文章《" + article.getTitle() +"》已被系统取消分享");
-        notify.setCreateDate(new Date());
-        notifyService.save(notify);
-
-        // 保存日志
-        logService.saveLog(request, GlobalConstant.NOTIFY.type, GlobalConstant.NOTIFY.NOTIFY_NOTE.getName(), sendId);
-
-        return "redirect:/admin/shareAudit";
-    }
-
-    /**
-     * 删除文章，管理员删除的文章，不进入回收站
-     */
-    @RequestMapping(value = "deleteArticle", method = {RequestMethod.GET})
-    public String deleteArticle(String[] ids, HttpServletRequest request) {
-        for(String id : ids) {
-            if(!StringUtils.isBlank(id)) {
-                articleService.removeById(id);
-                // 保存日志
-                logService.saveLog(request, GlobalConstant.LOG_SYSTEM.type, GlobalConstant.LOG_SYSTEM.SHARE_DEL.getName(), getSelfId());
+    @RequestMapping(value = "shareControl", method = {RequestMethod.POST})
+    public String shareControl(String[] ids, Integer controlType, String reasonName, HttpServletRequest request) {
+        // controlType 1：取消分享， 2：删除分享
+        if(controlType == 1) {
+            for(String id : ids) {
+                // 更新笔记数据库
+                Article article = articleService.getById(id);
+                article.setIsOpen(GlobalConstant.NOTE_STATUS.NOT_SHARE.getIndex());
+                if(!StringUtils.isBlank(article.getShareUrl())) {
+                    GlobalFunction.deleteSignalFile(article.getShareUrl());
+                    article.setShareUrl(null);
+                }
+                articleService.update(article);
+                logService.saveLog(request, GlobalConstant.LOG_SYSTEM.type, GlobalConstant.LOG_SYSTEM.SHARE_CANCEL.getName(), getSelfId());
 
                 // 发送消息
-                Article article = articleService.getById(id);
                 String sendId = getSelfId();
                 Notify notify = new Notify();
                 notify.setId(GlobalFunction.getUUID());
@@ -434,18 +403,46 @@ public class AdminController {
                 notify.setSendId(sendId);
                 notify.setRecvId(article.getUserId());
                 notify.setStatus(GlobalConstant.NOTIFY_STATUS.UNREAD.getIndex());
-                notify.setTitle("分享笔记被删除");
-                notify.setContent("您的笔记文章《" + article.getTitle() +"》已被系统删除");
+                notify.setTitle("分享笔记被取消");
+                notify.setContent("您的笔记文章《" + article.getTitle() +"》已被系统取消分享，取消原因："+ reasonName);
                 notify.setCreateDate(new Date());
                 notifyService.save(notify);
-
-                // 保存日志
                 logService.saveLog(request, GlobalConstant.NOTIFY.type, GlobalConstant.NOTIFY.NOTIFY_NOTE.getName(), sendId);
+            }
+        } else if(controlType == 2) {
+            for (String id : ids) {
+                if (!StringUtils.isBlank(id)) {
+                    // 发送消息
+                    Article article = articleService.getById(id);
+                    String sendId = getSelfId();
+                    Notify notify = new Notify();
+                    notify.setId(GlobalFunction.getUUID());
+                    notify.setType(GlobalConstant.NOTIFY.NOTIFY_NOTE.getName());
+                    notify.setSendId(sendId);
+                    notify.setRecvId(article.getUserId());
+                    notify.setStatus(GlobalConstant.NOTIFY_STATUS.UNREAD.getIndex());
+                    notify.setTitle("分享笔记被删除");
+                    notify.setContent("您的笔记文章《" + article.getTitle() + "》已被系统删除，删除原因：" + reasonName);
+                    notify.setCreateDate(new Date());
+                    notifyService.save(notify);
+                    logService.saveLog(request, GlobalConstant.NOTIFY.type, GlobalConstant.NOTIFY.NOTIFY_NOTE.getName(), sendId);
+
+                    // 删除笔记文件
+                    if(!StringUtils.isBlank(article.getShareUrl())) {
+                        GlobalFunction.deleteSignalFile(article.getShareUrl());
+                    }
+                    String userTel = userService.getById(article.getUserId()).getTel();
+                    String path = GlobalConstant.UPLOAD_PATH + "/" + userTel + "/article/" + id;
+                    FileUtils.deleteQuietly(new File(path));
+
+                    // 从数据库中移除
+                    articleService.removeById(id);
+                    logService.saveLog(request, GlobalConstant.LOG_SYSTEM.type, GlobalConstant.LOG_SYSTEM.SHARE_DEL.getName(), getSelfId());
+                }
             }
         }
         return "redirect:/admin/shareAudit";
     }
-
     /*---------   笔记管理区域（End）   ----------*/
 
     /*---------   用户管理区域（Start）   ----------*/
@@ -850,6 +847,53 @@ public class AdminController {
     }
 
     /**
+     * 获取日志
+     */
+    @RequestMapping(value = "addReasonCheck", method = {RequestMethod.POST})
+    public void addReasonCheck(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String type = request.getParameter("type");
+            String name = request.getParameter("name");
+            response.setContentType("text/html;charset=utf-8");
+            Message message = new Message();
+            boolean status = true;
+            List<Reason> reasons = reasonService.getByTypeAndName(Integer.parseInt(type),name);
+            if (reasons.size() != 0) {
+                status = false;
+            }
+            message.setStatus(status);
+            String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 获取日志
+     */
+    @RequestMapping(value = "editReasonCheck", method = {RequestMethod.POST})
+    public void editReasonCheck(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String id = request.getParameter("id");
+            String name = request.getParameter("name");
+            response.setContentType("text/html;charset=utf-8");
+            Message message = new Message();
+            boolean status = true;
+            Reason reason = reasonService.getById(id);
+            List<Reason> reasons = reasonService.getByTypeAndName(reason.getType(),name);
+            if (reasons.size() != 0 && reasons.get(0).getId() != reason.getId()) {
+                status = false;
+            }
+            message.setStatus(status);
+            String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * 删除封禁原因
      */
     @RequestMapping(value = "deleteReason", method = {RequestMethod.GET})
@@ -890,6 +934,21 @@ public class AdminController {
         response.setContentType("text/html;charset=utf-8");
         try {
             List<Reason> list = reasonService.listAllByType(GlobalConstant.REASON.ILLEGAL.getIndex());
+            String data = JSON.toJSONString(list, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 获取所有取消分享原因
+     */
+    @RequestMapping(value = "listShareReason", method = {RequestMethod.GET})
+    public void listShareReason(HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        try {
+            List<Reason> list = reasonService.listAllByType(GlobalConstant.REASON.SHARE.getIndex());
             String data = JSON.toJSONString(list, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
         } catch (IOException e) {

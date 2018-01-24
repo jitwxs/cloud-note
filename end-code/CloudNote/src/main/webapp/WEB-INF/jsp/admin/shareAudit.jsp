@@ -6,8 +6,10 @@
 
 <jsp:include page="left.jsp"/>
 
-<body class="admin_body">
+<!-- 引入模态框 -->
+<jsp:include page="shareModel.jsp"/>
 
+<body class="admin_body">
 <!--主体-->
 <div class="admin_container">
     <h2 class="admin_table_title">分享审核</h2>
@@ -30,16 +32,15 @@
             window.open(url);
         },
         'click .cancel': function (e, value, row, index) {
-            var msg = "确定要取消该分享吗？";
-            if (confirm(msg)) {
-                var id = row.id;
-                window.location.href = '${ctx}/admin/cancelShare?id=' + id;
-            } else {
-                return false;
-            }
+            $("#shareNoteId").val(row.id);
+            $("#shareNoteTitle").val(row.title);
+            $("#controlType").val(1);
+            $("#shareModalLabel").text("取消分享");
+            openShareModel();
         },
         'click .del': function (e, value, row, index) {
             var id = row.id;
+            $("#shareNoteTitle").val(row.title);
             deleteArticle(id);
         }
     };
@@ -89,28 +90,28 @@
                         },
                         {
                             field: 'authorTel',
-                            title: '手机号',
+                            title: '账户',
                             align: 'center',
                             valign: 'center',
                             sortable: false
                         },
                         {
                             field: 'authorName',
-                            title: '用户名称',
+                            title: '用户名',
                             align: 'center',
                             valign: 'center',
                             sortable: true
                         },
                         {
                             field: 'title',
-                            title: '笔记标题',
+                            title: '标题',
                             align: 'center',
                             valign: 'center',
                             sortable: true
                         },
                         {
                             field: 'star',
-                            title: 'Star数',
+                            title: 'Star',
                             align: 'center',
                             valign: 'center',
                             sortable: true
@@ -144,20 +145,36 @@
     }
 
     function deleteArticle(obj) {
-        var msg = "删除后将不进入用户回收站，确定删除吗？";
-        if (confirm(msg)) {
-            var ids = new Array();
-            if (typeof (obj) == "string") {
-                ids.push(obj);
-            } else if (typeof (obj) == "object") {
-                for (var i = 0; i < obj.length; i++) {
-                    ids.push(obj[i].id);
-                }
+        var ids = new Array();
+        if (typeof (obj) == "string") {
+            ids.push(obj);
+        } else if (typeof (obj) == "object") {
+            var titles = "";
+            for (var i = 0; i < obj.length; i++) {
+                ids.push(obj[i].id);
+                titles += obj[i].title + "、";
             }
-            window.location.href = '${ctx}/admin/deleteArticle?ids=' + ids;
-        } else {
-            return false;
+            titles = titles.substr(0, titles.length-1);
+            $("#shareNoteTitle").val(titles);
         }
+        $("#shareNoteId").val(ids);
+        $("#controlType").val(2);
+        $("#shareModalLabel").text("删除分享");
+        openShareModel();
+    }
+    
+    function openShareModel () {
+        sendGet('${ctx}/admin/listShareReason', {}, false, function (res) {
+            $("#reasonName").html("");
+            // 动态添加原因下拉框
+            $("#reasonName").append("<option value=-1>请选择原因</option>");
+            for (var i = 0; i < res.length; i++) {
+                $("#reasonName").append("<option value='" + res[i].name + "'>" + res[i].name + "</option>");
+            }
+            $('#shareModal').modal('show');
+        }, function (error) {
+            toastr.error("系统错误");
+        });
     }
 
 </script>

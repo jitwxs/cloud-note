@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/jsp/global/taglib.jsp" %>
 
 <!DOCTYPE html>
-<html lang="en" style="background: white;">
+<html lang="en">
 
 <jsp:include page="left.jsp"/>
 
@@ -30,7 +30,7 @@
     window.operateEvents = {
         'click .cancelBlacklist': function (e, value, row, index) {
             var id = row.id;
-            var msg = "确定要提前解除吗？";
+            var msg = "确定要解禁该用户吗？";
             if (confirm(msg)) {
                 window.location.href = '${ctx}/admin/cancelBlacklist?id=' + id;
             } else {
@@ -88,49 +88,49 @@
                         },
                         {
                             field: 'tel',
-                            title: 'tel',
+                            title: '账户',
                             align: 'center',
                             valign: 'center',
                             sortable: true
                         },
                         {
                             field: 'userName',
-                            title: 'userName',
+                            title: '用户名',
                             align: 'center',
                             valign: 'center',
                             sortable: true
                         },
                         {
                             field: 'illegalName',
-                            title: 'illegalName',
+                            title: '封禁原因',
                             align: 'center',
                             valign: 'center',
                             sortable: true
                         },
                         {
                             field: 'createDate',
-                            title: 'createDate',
+                            title: '开始时间',
                             align: 'center',
                             valign: 'center',
                             sortable: true
                         },
                         {
                             field: 'endDate',
-                            title: 'endDate',
+                            title: '结束时间',
                             align: 'center',
                             valign: 'center',
                             sortable: true
                         },
                         {
                             field: 'status',
-                            title: 'status',
+                            title: '状态',
                             align: 'center',
                             valign: 'center',
                             sortable: true
                         },
                         {
                             field: "button",
-                            title: "operate",
+                            title: "操作",
                             align: 'center',
                             formatter: AddFunctionAlty,
                             events: operateEvents

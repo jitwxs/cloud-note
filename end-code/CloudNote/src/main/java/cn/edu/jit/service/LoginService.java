@@ -11,6 +11,8 @@ public interface LoginService {
 
     Login getByTel(String tel);
 
+    Login getByThirdIdAndThirdType(String thirdId, String thirdType);
+
     int save(Login login);
 
     int update(Login login);

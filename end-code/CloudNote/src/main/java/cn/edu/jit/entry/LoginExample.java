@@ -245,6 +245,206 @@ public class LoginExample {
             return (Criteria) this;
         }
 
+        public Criteria andHasThirdIsNull() {
+            addCriterion("has_third is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHasThirdIsNotNull() {
+            addCriterion("has_third is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHasThirdEqualTo(Integer value) {
+            addCriterion("has_third =", value, "hasThird");
+            return (Criteria) this;
+        }
+
+        public Criteria andHasThirdNotEqualTo(Integer value) {
+            addCriterion("has_third <>", value, "hasThird");
+            return (Criteria) this;
+        }
+
+        public Criteria andHasThirdGreaterThan(Integer value) {
+            addCriterion("has_third >", value, "hasThird");
+            return (Criteria) this;
+        }
+
+        public Criteria andHasThirdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("has_third >=", value, "hasThird");
+            return (Criteria) this;
+        }
+
+        public Criteria andHasThirdLessThan(Integer value) {
+            addCriterion("has_third <", value, "hasThird");
+            return (Criteria) this;
+        }
+
+        public Criteria andHasThirdLessThanOrEqualTo(Integer value) {
+            addCriterion("has_third <=", value, "hasThird");
+            return (Criteria) this;
+        }
+
+        public Criteria andHasThirdIn(List<Integer> values) {
+            addCriterion("has_third in", values, "hasThird");
+            return (Criteria) this;
+        }
+
+        public Criteria andHasThirdNotIn(List<Integer> values) {
+            addCriterion("has_third not in", values, "hasThird");
+            return (Criteria) this;
+        }
+
+        public Criteria andHasThirdBetween(Integer value1, Integer value2) {
+            addCriterion("has_third between", value1, value2, "hasThird");
+            return (Criteria) this;
+        }
+
+        public Criteria andHasThirdNotBetween(Integer value1, Integer value2) {
+            addCriterion("has_third not between", value1, value2, "hasThird");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdIdIsNull() {
+            addCriterion("third_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdIdIsNotNull() {
+            addCriterion("third_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdIdEqualTo(String value) {
+            addCriterion("third_id =", value, "thirdId");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdIdNotEqualTo(String value) {
+            addCriterion("third_id <>", value, "thirdId");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdIdGreaterThan(String value) {
+            addCriterion("third_id >", value, "thirdId");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdIdGreaterThanOrEqualTo(String value) {
+            addCriterion("third_id >=", value, "thirdId");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdIdLessThan(String value) {
+            addCriterion("third_id <", value, "thirdId");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdIdLessThanOrEqualTo(String value) {
+            addCriterion("third_id <=", value, "thirdId");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdIdLike(String value) {
+            addCriterion("third_id like", value, "thirdId");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdIdNotLike(String value) {
+            addCriterion("third_id not like", value, "thirdId");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdIdIn(List<String> values) {
+            addCriterion("third_id in", values, "thirdId");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdIdNotIn(List<String> values) {
+            addCriterion("third_id not in", values, "thirdId");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdIdBetween(String value1, String value2) {
+            addCriterion("third_id between", value1, value2, "thirdId");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdIdNotBetween(String value1, String value2) {
+            addCriterion("third_id not between", value1, value2, "thirdId");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdTypeIsNull() {
+            addCriterion("third_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdTypeIsNotNull() {
+            addCriterion("third_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdTypeEqualTo(String value) {
+            addCriterion("third_type =", value, "thirdType");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdTypeNotEqualTo(String value) {
+            addCriterion("third_type <>", value, "thirdType");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdTypeGreaterThan(String value) {
+            addCriterion("third_type >", value, "thirdType");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdTypeGreaterThanOrEqualTo(String value) {
+            addCriterion("third_type >=", value, "thirdType");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdTypeLessThan(String value) {
+            addCriterion("third_type <", value, "thirdType");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdTypeLessThanOrEqualTo(String value) {
+            addCriterion("third_type <=", value, "thirdType");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdTypeLike(String value) {
+            addCriterion("third_type like", value, "thirdType");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdTypeNotLike(String value) {
+            addCriterion("third_type not like", value, "thirdType");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdTypeIn(List<String> values) {
+            addCriterion("third_type in", values, "thirdType");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdTypeNotIn(List<String> values) {
+            addCriterion("third_type not in", values, "thirdType");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdTypeBetween(String value1, String value2) {
+            addCriterion("third_type between", value1, value2, "thirdType");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdTypeNotBetween(String value1, String value2) {
+            addCriterion("third_type not between", value1, value2, "thirdType");
+            return (Criteria) this;
+        }
+
         public Criteria andRoleIdIsNull() {
             addCriterion("role_id is null");
             return (Criteria) this;

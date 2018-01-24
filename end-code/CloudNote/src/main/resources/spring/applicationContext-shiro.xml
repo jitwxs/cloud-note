@@ -36,6 +36,7 @@
                 /afterQQLogin= anon
                 /githubLogin = anon
                 /githubCallback = anon
+                /thirdLogin = anon
                 # 注册请求
                 /checkTelRegistered = anon
                 /registerCheck = anon
@@ -53,15 +54,17 @@
                 # 注销请求
                 /logout = logout
 
-                # 配置静态资源可以匿名访问
+                # 静态资源
                 /css/** = anon
                 /js/** = anon
                 /images/** = anon
                 /fonts/** = anon
+                # 用户分享文章
                 /upload/**/article/share/** = anon
+                # 用户图片
+                /upload/**/images/** = anon
 
                 # 配置为 anon 可以匿名访问，否则都需要登录访问，如果没登录会跳转到 /login 登录
-
                 /** = authc
             </value>
         </property>

@@ -6,8 +6,11 @@
 
 <jsp:include page="left.jsp"/>
 
-<body class="admin_body">
+<!-- 引入模态框 -->
+<jsp:include page="userInfoModel.jsp"/>
+<jsp:include page="blackHomeModel.jsp"/>
 
+<body class="admin_body">
 <!--主体-->
 <div class="admin_container">
     <h2 class="admin_table_title">用户列表</h2>
@@ -51,6 +54,7 @@
             sendGet('${ctx}/admin/listIllegal',{},false,function(res) {
                 $("#blacklistReason").html("");
                 // 动态添加原因下拉框
+                $("#blacklistReason").append("<option value=-1>请选择原因</option>");
                 for(var i=0; i<res.length; i++) {
                     $("#blacklistReason").append("<option value='"+res[i].id+"'>"+res[i].name+"</option>");
                 }
@@ -126,7 +130,7 @@
                         },
                         {
                             field: 'tel',
-                            title: '手机号',
+                            title: '账户',
                             align: 'center',
                             valign: 'center',
                             sortable: true

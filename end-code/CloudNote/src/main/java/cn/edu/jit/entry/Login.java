@@ -1,17 +1,17 @@
 package cn.edu.jit.entry;
 
-import java.io.Serializable;
 import java.util.Date;
 
-/**
- * 登陆实体类
- * @author jitwxs
- * @date 2018/1/3 14:13
- */
-public class Login implements Serializable {
+public class Login {
     private String tel;
 
     private String password;
+
+    private Integer hasThird;
+
+    private String thirdId;
+
+    private String thirdType;
 
     private Integer roleId;
 
@@ -33,6 +33,30 @@ public class Login implements Serializable {
 
     public void setPassword(String password) {
         this.password = password == null ? null : password.trim();
+    }
+
+    public Integer getHasThird() {
+        return hasThird;
+    }
+
+    public void setHasThird(Integer hasThird) {
+        this.hasThird = hasThird;
+    }
+
+    public String getThirdId() {
+        return thirdId;
+    }
+
+    public void setThirdId(String thirdId) {
+        this.thirdId = thirdId == null ? null : thirdId.trim();
+    }
+
+    public String getThirdType() {
+        return thirdType;
+    }
+
+    public void setThirdType(String thirdType) {
+        this.thirdType = thirdType == null ? null : thirdType.trim();
     }
 
     public Integer getRoleId() {

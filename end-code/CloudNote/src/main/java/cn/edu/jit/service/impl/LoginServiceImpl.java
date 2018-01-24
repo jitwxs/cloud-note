@@ -1,6 +1,8 @@
 package cn.edu.jit.service.impl;
 
 import cn.edu.jit.entry.Login;
+import cn.edu.jit.entry.LoginExample;
+import cn.edu.jit.entry.NotifyExample;
 import cn.edu.jit.global.GlobalConstant;
 import cn.edu.jit.util.Sha1Utils;
 import cn.edu.jit.mapper.LoginMapper;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author jitwxs
@@ -23,6 +26,23 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public Login getByTel(String tel) {
         return loginMapper.selectByPrimaryKey(tel);
+    }
+
+    @Override
+    public Login getByThirdIdAndThirdType(String thirdId, String thirdType) {
+        LoginExample loginExample = new LoginExample();
+
+        LoginExample.Criteria criteria = loginExample.createCriteria();
+        criteria.andHasThirdEqualTo(1);
+        criteria.andThirdIdEqualTo(thirdId);
+        criteria.andThirdTypeEqualTo(thirdType);
+
+        List<Login> list = loginMapper.selectByExample(loginExample);
+        if(list.size() == 0) {
+            return null;
+        } else {
+            return list.get(0);
+        }
     }
 
     @Override

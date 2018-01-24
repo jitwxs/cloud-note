@@ -22,6 +22,8 @@
     <script src="${ctx}/js/toastr.js"></script>
     <%-- 封装ajax --%>
     <script src="${ctx}/js/http.js"></script>
+    <%--引入cookie--%>
+    <script src="${ctx}/js/jquery.cookie.js"></script>
 </head>
 
 <div style="width: 100%;">

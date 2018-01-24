@@ -26,11 +26,9 @@
 
 <!-- 引入模态框 -->
 <jsp:include page="logModel.jsp"/>
-<jsp:include page="userInfoModel.jsp"/>
-<jsp:include page="blackHomeModel.jsp"/>
 
 <!--侧边栏-->
-<div class="nav">
+<div class="nav nav-mini">
     <!-- 汉堡图标 -->
     <div class="nav-top">
         <div id="mini" style="border-bottom:1px solid rgba(255,255,255,.1)"><img src="${ctx}/images/admin_mini.png">
@@ -126,7 +124,7 @@
     function showLog(logId) {
         sendPost('${ctx}/admin/getLogInfo', {'id': logId}, false, function (res) {
             $("#logUserName").val(res.userName);
-            $("#logType").val(res.title);
+            $("#logTitle").val(res.title);
             $("#logIp").val(res.ip);
             $("#logUserAgent").val(res.userAgent);
             $("#logRequestUrl").val(res.requestUrl);

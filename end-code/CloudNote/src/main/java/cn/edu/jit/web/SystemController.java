@@ -55,9 +55,6 @@ public class SystemController {
     @Resource(name = "loginServiceImpl")
     private LoginService loginService;
 
-    @Resource(name = "loginByThirdServiceImpl")
-    private LoginByThirdService loginByThirdService;
-
     @Resource(name = "userServiceImpl")
     private UserService userService;
 
@@ -139,6 +136,7 @@ public class SystemController {
         User user = new User();
         user.setId(GlobalFunction.getUUID());
         user.setName(gitHubUser.getLogin());
+        user.setSex("男");
         user.setEmail(gitHubUser.getEmail());
         user.setCreateDate(new Date());
         return user;
@@ -252,21 +250,26 @@ public class SystemController {
         GitHubUser github = JSON.parseObject(resultObj.toJSONString(), new TypeReference<GitHubUser>() {});
 
         // 保存数据库
-        LoginByThird loginByThird = loginByThirdService.getByThirdTypeAndThirdId("github",github.getId());
-        if(loginByThird == null) {
+        Login login = loginService.getByThirdIdAndThirdType(github.getId(), "github");
+        if(login == null) {
+            login = new Login();
+            // 第三方用户手机号初始值为UUID，密码为123（仅用于登陆验证，该密码没有实际用途）
+            login.setTel(GlobalFunction.getUUID());
+            login.setPassword(Sha1Utils.entryptPassword("123"));
+            login.setHasThird(1);
+            login.setThirdType("github");
+            login.setThirdId(github.getId());
+            login.setRoleId(GlobalConstant.ROLE.USER.getIndex());
+            login.setCreateDate(new Date());
+            loginService.save(login);
+
             User user = gitHub2User(github);
+            user.setTel(login.getTel());
             userService.save(user);
-            loginByThird = new LoginByThird();
-            loginByThird.setId(GlobalFunction.getUUID());
-            loginByThird.setUserId(user.getId());
-            loginByThird.setThirdType("github");
-            loginByThird.setThirdId(github.getId());
-            loginByThird.setCreateDate(new Date());
-            loginByThirdService.save(loginByThird);
         }
 
-        model.addFlashAttribute("loginByThird", loginByThird);
-        return "redirect:/loginByThird";
+        model.addFlashAttribute("tel", login.getTel());
+        return "redirect:/thirdLogin";
     }
 
     @RequestMapping(value = "login", method = {RequestMethod.GET})
@@ -357,21 +360,37 @@ public class SystemController {
         }
     }
 
-    @RequestMapping(value = "loginByThird", method = {RequestMethod.GET})
-    public String loginByThird(@ModelAttribute("loginByThird") LoginByThird loginByThird, HttpServletRequest request) {
-        // Shiro验证，第三方登陆密码均为123，没有实际作用
-        UsernamePasswordToken token = new UsernamePasswordToken(loginByThird.getId(), "123");
+    @RequestMapping(value = "thirdLogin", method = {RequestMethod.GET})
+    public String thirdLogin(@ModelAttribute("tel") String tel, HttpServletRequest request) {
+        // Shiro验证,三方登陆密码为123
+        UsernamePasswordToken token = new UsernamePasswordToken(tel, "123");
         Subject subject = SecurityUtils.getSubject();
 
         // 如果获取不到用户名就是登录失败，登录失败会直接抛出异常
         subject.login(token);
 
+        // 初始化项目路径
+        initPath(request);
+
+        // 初始化用户头像
+        User user = userService.getByTel(tel);
+        if (user.getIcon() == null) {
+            String imagesPath = request.getSession().getServletContext().getRealPath("images");
+            user.setIcon(GlobalConstant.UPLOAD_PATH + "/" + tel + "/images/icon.png");
+            copyIcon(user,imagesPath);
+            userService.update(user);
+        }
+
         // 保存日志
         logService.saveLog(request, GlobalConstant.LOG_USER.type, GlobalConstant.LOG_USER.USER_LOGIN.getName(), getSelfId());
 
-        // 第三方登陆只允许是普通用户身份
-        GlobalConstant.HAS_SHOW_LOGIN_INFO = true;
-        return "redirect:/user/index";
+        // 所有用户均重定向对应首页
+        if (subject.hasRole(GlobalConstant.ROLE.USER.getName())) {
+            GlobalConstant.HAS_SHOW_LOGIN_INFO = true;
+            return "redirect:/user/index";
+        } else {
+            return "/login";
+        }
     }
 
     @RequestMapping(value = "logout")

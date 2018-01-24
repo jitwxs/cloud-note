@@ -19,4 +19,6 @@ public interface ReasonService {
     int removeById(String id);
 
     int save(Reason reason);
+
+    List<Reason> getByTypeAndName(int type, String name);
 }

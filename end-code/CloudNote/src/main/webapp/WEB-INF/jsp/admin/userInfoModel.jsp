@@ -12,7 +12,7 @@
             <div class="modal-body">
                 <form class="form-horizontal" role="form">
                     <div class="form-group">
-                        <label for="userInfoTel" class="col-sm-2 control-label">手机号码</label>
+                        <label for="userInfoTel" class="col-sm-2 control-label">账户</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="userInfoTel" name="tel" disabled>
                         </div>

@@ -47,4 +47,13 @@ public class ReasonServiceImpl implements ReasonService {
     public int save(Reason reason) {
         return reasonMapper.insertSelective(reason);
     }
+
+    @Override
+    public List<Reason> getByTypeAndName(int type, String name) {
+        ReasonExample reasonExample = new ReasonExample();
+        ReasonExample.Criteria criteria = reasonExample.createCriteria();
+        criteria.andTypeEqualTo(type);
+        criteria.andNameEqualTo(name);
+        return reasonMapper.selectByExample(reasonExample);
+    }
 }

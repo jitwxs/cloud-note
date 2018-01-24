@@ -29,7 +29,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="userTel" class="col-sm-2 control-label">手机号码</label>
+                        <label for="userTel" class="col-sm-2 control-label">账号</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="userTel" name="tel" disabled>
                         </div>

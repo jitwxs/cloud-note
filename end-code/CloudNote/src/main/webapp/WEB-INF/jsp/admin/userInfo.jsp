@@ -6,7 +6,7 @@
 
 <jsp:include page="left.jsp"/>
 
-<body class="admin_body">
+<body class="admin_body" style="margin-left: 120px;">
 
 <div class="admin_container">
     <h2 class="admin_table_title">用户量统计</h2>
@@ -196,6 +196,7 @@
     $(window).on('resize', function () {
         userNum.resize();
     });
+
 </script>
 
 </body>

@@ -5,7 +5,19 @@
 <html lang="en">
 
 <jsp:include page="settingHead.jsp"/>
-
+<style>
+    td{
+        text-align: center;
+    }
+    .checked{
+        background: grey;
+        color: white;
+    }
+    .default{
+        background: #eeeeee;
+        color:#333333;
+    }
+</style>
 <body>
 
 <!--消息推送主体区域-->
@@ -13,23 +25,29 @@
 
     <!--消息导航栏-->
     <div id="message_nav" >
-        <a class="message_all">全部</a>
-        <a class="message_safe">系统消息</a>
-        <a class="message_note">笔记消息</a>
-        <a class="message_other">其他消息</a>
+        <a class="btn" id="all_read" style="background: lightskyblue;color: white;">全部标记为已读</a>
+        <a class="message_all checked" style="margin-left: 30px;">全部</a>
+        <a class="message_safe default">系统消息</a>
+        <a class="message_note default">笔记消息</a>
+        <a class="message_other default">其他消息</a>
     </div>
 
     <!--消息区域-->
     <div id="message_main" >
-        <div id="message_main_nav" >
-            <p class="msg" >消息</p>
-            <p class="operation" >操作</p>
-            <p class="msgtype" >消息类型</p>
-            <p class="time" >时间</p>
-        </div>
-        <!--消息列表-->
-        <div id="message_container">
-        </div>
+        <table class="table" id="message_table" style="left:2%;">
+            <thead>
+            <tr>
+                <th style="text-align: center"><input type="checkbox">消息</th>
+                <th style="text-align: center">时间</th>
+                <th style="text-align: center">消息类型</th>
+                <th style="text-align: center">删除</th>
+                <th style="text-align: center">操作</th>
+            </tr>
+            </thead>
+            <tbody id="message_container">
+
+            </tbody>
+        </table>
     </div>
 </div>
 
@@ -69,35 +87,35 @@
             var t;
             // data[i].status : 1已读，2未读
             if(data[i].status == 1) {
-                t = '<div class="message">\n' +
-                    '                        <a class="message_title" index-type="1" index-id="'+id+'" >\n' +
-                    '                        <img src="${ctx}/images/alreadread.png">'+title+'</a>\n' +
-                    '                        <div class="read_container" style="width:100px;line-height="45px"><a class="already_read" >已读</a></div>\n' +
-                    '                        <img class="remove_btn" src="${ctx}/images/delete.png">\n' +
-                    '                        <span class="message_type" >'+type+'</span>\n' +
-                    '                        <span class="message_time" >'+date+'</span>\n' +
-                    '                        </div>';
+                t = t = '<tr>\n' +
+                    '        <td><input type="checkbox"><a class="message_title" index-type="1" index-id="'+id+'">' +
+                    '        <img src="${ctx}/images/alreadread.png">'+title+'</a></td>\n' +
+                    '        <td><span class="message_time" >'+date+'</span></td>\n' +
+                    '        <td><span class="message_type" >'+type+'</span></td>\n' +
+                    '        <td><img class="remove_btn" src="${ctx}/images/delete.png" ></td>\n' +
+                    '        <td><a class="already_read" >已读</a></td>\n' +
+                    '    </tr>';
 
 
             } else if(data[i].status == 2) {
-                t = '<div class="message" >\n' +
-                    '                <a class="message_title" index-type="2" index-id="'+id+'" >\n' +
-                    '                    <img class="new_message" src="${ctx}/images/message.png">'+title+'</a>\n' +
-                    '                <div class="read_container" style="width:100px;line-height="45px"><a class="read" >标记为已读</a></div>\n' +
-                    '                <img class="remove_btn" src="${ctx}/images/delete.png" >\n' +
-                    '                <span class="message_type" >'+type+'</span>\n' +
-                    '                <span class="message_time" >'+date+'</span>\n' +
-                    '            </div>';
+                t = '<tr>\n' +
+                    '        <td><input type="checkbox"><a class="message_title" index-type="1" index-id="'+id+'">' +
+                    '<img class="new_message" src="${ctx}/images/message.png">'+title+'</a></td>\n' +
+                    '        <td><span class="message_time" >'+date+'</span></td>\n' +
+                    '        <td><span class="message_type" >'+type+'</span></td>\n' +
+                    '        <td><img class="remove_btn" src="${ctx}/images/delete.png" ></td>\n' +
+                    '        <td><a class="read" >标记为已读</a></td>\n' +
+                    '    </tr>';
             }
             $item.append(t);
         }
     }
 
     function getNotifyByType(type) {
-        sendGet('${ctx}/user/prepareNotifyByType',{"dataType":type},false,function (data) {
+        sendGet('${ctx}/user/prepareNotify',{"type":type},false,function (res) {
             //删除原来message_container里的内容
             $('#message_container').children().remove();
-            showMessage($('#message_container'),data);
+            showMessage($('#message_container'),res.notifies);
             initmessageUI();
         },function (error) {
             toastr.error("获取笔记消息出错！");
@@ -117,21 +135,37 @@
 
     //笔记消息点击事件
     $('.message_note').off('click').on('click',function () {
+        $('.message_all').removeClass('checked').addClass("default");
+        $('.message_safe').removeClass('checked').addClass("default");
+        $('.message_other').removeClass('checked').addClass("default");
+        $(this).removeClass("default").addClass("checked");
         getNotifyByType("笔记消息");
     });
 
     //系统消息点击事件
     $('.message_safe').off('click').on('click',function () {
+        $('.message_all').removeClass('checked').addClass("default");
+        $('.message_other').removeClass('checked').addClass("default");
+        $('.message_note').removeClass('checked').addClass("default");
+        $(this).removeClass("default").addClass("checked");
         getNotifyByType("系统消息");
     });
 
     //其他消息点击事件
     $('.message_other').off('click').on('click',function () {
+        $('.message_all').removeClass('checked').addClass("default");
+        $('.message_note').removeClass('checked').addClass("default");
+        $('.message_safe').removeClass('checked').addClass("default");
+        $(this).removeClass("default").addClass("checked");
         getNotifyByType("其他消息");
     });
 
     //全部消息点击事件
     $('.message_all').off('click').on('click',function () {
+        $('.message_other').removeClass('checked').addClass("default");
+        $('.message_note').removeClass('checked').addClass("default");
+        $('.message_safe').removeClass('checked').addClass("default");
+        $(this).removeClass("default").addClass("checked");
         sendGet('${ctx}/user/prepareNotify',{},false,function (res) {
             //删除原来message_container里的内容
             $('#message_container').children().remove();
@@ -156,6 +190,23 @@
         });
         $('#message_list_show').removeClass('hidden');
     });
+
+
+    //全部标记为已读事件
+    $('#all_read').off('click').on('click',function () {
+        //获取当前消息类型
+        var type = $('.checked').text();
+        sendPost('${ctx}/user/readNotifyByType',{'type':type},false,function (res) {
+            if(res.status) {
+                toastr.success("标记成功");
+            } else {
+                toastr.error("标记失败");
+            }
+        },function (error) {
+            toastr.error("系统错误");
+        })
+    });
+
 
     // 初始化事件
     function initmessageUI() {
@@ -184,7 +235,7 @@
 
         //标记为已读事件
         $('.read').off('click').on('click',function () {
-            var $prev = $(this).parent().prev();
+            var $prev = $(this).parent().parent().find('.message_title');
             //把id发送给服务器
             var id = $prev.attr('index-id');
             var flag = false;
@@ -203,18 +254,21 @@
             if(flag) {
                 $(this).css({"color":"gray"});
                 $(this).text("已读");
+                initmessageUI();
             }
         });
 
         //列表页删除事件
         $('.remove_btn').off('click').on('click',function () {
-            var $prev = $(this).prev().prev();
-            var $parent = $(this).parent();
+            var $prev = $(this).parent().parent().find('.message_title');
+            var $parent = $(this).parent().parent();
             //发送id给服务器
             var id = $prev.attr('index-id');
+            console.log(id);
             sendPost('${ctx}/user/removeNotify',{'id': id},false,function (res) {
                 if(res.status) {
                     toastr.success("删除成功");
+                    initmessageUI();
                     $parent.remove();
                 } else {
                     toastr.error("删除失败");
@@ -233,6 +287,7 @@
                     //返回列表页 重新从服务器获取信息
                     $('#message_content_show').addClass('hidden');
                     $('#message_list_show').removeClass('hidden');
+                    $('#message_container').children().remove();
                     sendGet('${ctx}/user/prepareNotify',{},false,function (res) {
                         var data = res.notifies;
                         for(var i=0; i<data.length; i++) {
@@ -243,27 +298,28 @@
                             var t;
                             // data[i].status : 1已读，2未读
                             if(data[i].status == 1) {
-                                t = '<div class="message">\n' +
-                                    '                        <a class="message_title" index-type="1" index-id="'+id+'" >\n' +
-                                    '                        <img src="${ctx}/images/alreadread.png">'+title+'</a>\n' +
-                                    '                        <div class="read_container" style="width:100px;line-height="45px"><a class="already_read" >已读</a></div>\n' +
-                                    '                        <img class="remove_btn" src="${ctx}/images/delete.png">\n' +
-                                    '                        <span class="message_type" >'+type+'</span>\n' +
-                                    '                        <span class="message_time" >'+date+'</span>\n' +
-                                    '                        </div>';
+                                t = '<tr>\n' +
+                                    '        <td><input type="checkbox"><a class="message_title" index-type="1" index-id="'+id+'">' +
+                                    '        <img src="${ctx}/images/alreadread.png">'+title+'</a></td>\n' +
+                                    '        <td><span class="message_time" >'+date+'</span></td>\n' +
+                                    '        <td><span class="message_type" >'+type+'</span></td>\n' +
+                                    '        <td><img class="remove_btn" src="${ctx}/images/delete.png" ></td>\n' +
+                                    '        <td><a class="already_read" >已读</a></td>\n' +
+                                    '    </tr>';
 
 
                             } else if(data[i].status == 2) {
-                                t = '<div class="message" >\n' +
-                                    '                <a class="message_title" index-type="2" index-id="'+id+'" >\n' +
-                                    '                    <img class="new_message" src="${ctx}/images/message.png">'+title+'</a>\n' +
-                                    '                <div class="read_container" style="width:100px;height="45px"><a class="read" >标记为已读</a><div>\n' +
-                                    '                <img class="remove_btn" src="${ctx}/images/delete.png" >\n' +
-                                    '                <span class="message_type" >'+type+'</span>\n' +
-                                    '                <span class="message_time" >'+date+'</span>\n' +
-                                    '            </div>';
+                                t = '<tr>\n' +
+                                    '        <td><input type="checkbox"><a class="message_title" index-type="1" index-id="'+id+'">' +
+                                    '<img class="new_message" src="${ctx}/images/message.png">'+title+'</a></td>\n' +
+                                    '        <td><span class="message_time" >'+date+'</span></td>\n' +
+                                    '        <td><span class="message_type" >'+type+'</span></td>\n' +
+                                    '        <td><img class="remove_btn" src="${ctx}/images/delete.png" ></td>\n' +
+                                    '        <td><a class="read" >标记为已读</a></td>\n' +
+                                    '    </tr>';
                             }
                             $("#message_container").append(t);
+                            initmessageUI();
                         }
                     },function (error) {
                         toastr.error("系统错误");

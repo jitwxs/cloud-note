@@ -7,7 +7,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="myModalLabel">加入小黑屋</h4>
+                <h4 class="modal-title" id="myModalLabel">封禁用户</h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal" id="blackHomeForm" role="form" action="${ctx}/admin/addToBlackHome"
@@ -24,7 +24,6 @@
                         <label for="blacklistReason" class="col-sm-2 control-label">封禁原因</label>
                         <div class="col-sm-7">
                             <select data-live-search="true" id="blacklistReason" name="reasonId" class="form-control">
-                                <option value=-1>请选择原因</option>
                             </select>
                         </div>
                     </div>
@@ -62,6 +61,11 @@
     // 提交表单
     function checkToBlacklist() {
         var tel = $("#userBlacklistTel").val();
+
+        if($("#blacklistReason").val() == -1) {
+            toastr.warning("请选择封禁原因");
+            return false;
+        }
 
         sendPost('${ctx}/admin/addBlacklistCheck', {'tel': tel}, false, function (res) {
             if (res.status) {

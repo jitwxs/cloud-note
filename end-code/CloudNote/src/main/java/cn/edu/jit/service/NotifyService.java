@@ -21,9 +21,5 @@ public interface NotifyService {
 
     List<Notify> listAll(String orderBy);
 
-    List<Notify> listBySendId(String sendId);
-
-    List<Notify> listByRecvId(String recvId, String orderBy);
-
-    List<Notify> listByRecvIdAndType(String recvId, String type, String orderBy);
+    List<Notify> listByRecvId(String recvId, String type, Integer status, String orderBy);
 }

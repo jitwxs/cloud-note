@@ -14,9 +14,9 @@
                       method="post">
                     <input type="hidden" id="reasonType" name="type">
                     <div class="form-group ">
-                        <label for="illegalReasonName" class="col-sm-2 control-label">原因</label>
+                        <label for="addReasonName" class="col-sm-2 control-label">原因</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="illegalReasonName" name="name"
+                            <input type="text" class="form-control" id="addReasonName" name="name"
                                    required="required">
                         </div>
                     </div>
@@ -32,6 +32,16 @@
 
 <script>
     function submitAddReason() {
-        $("#addReasonForm").submit();
+        var type = $('#reasonType').val();
+        var name = $('#addReasonName').val();
+        sendPost('${ctx}/admin/addReasonCheck', {'type': type, 'name': name}, false, function (msg) {
+            if (msg.status) {
+                $("#addReasonForm").submit();
+            } else {
+                toastr.warning("原因名重复！");
+            }
+        },function (error) {
+            toastr.error("系统错误");
+        });
     }
 </script>

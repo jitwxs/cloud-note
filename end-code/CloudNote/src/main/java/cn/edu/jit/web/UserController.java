@@ -13,6 +13,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -1953,29 +1954,14 @@ public class  UserController {
      * 准备消息数据
      */
     @RequestMapping(value = "prepareNotify", method = {RequestMethod.GET})
-    public void prepareNotify(HttpServletResponse response) {
+    public void prepareNotify(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
         try {
-            List<Notify> list = notifyService.listByRecvId(getSelfId(), "create_date desc");
+            String type = request.getParameter("type");
+            List<Notify> list = notifyService.listByRecvId(getSelfId(), type,null,"create_date desc");
             Message message = new Message();
             message.setNotifies(list);
             String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
-            response.getWriter().write(data);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 准备消息数据
-     */
-    @RequestMapping(value = "prepareNotifyByType", method = {RequestMethod.GET})
-    public void prepareNotifyByType(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
-        try {
-            String type = request.getParameter("dataType");
-            List<Notify> list = notifyService.listByRecvIdAndType(getSelfId(), type, "create_date desc");
-            String data = JSON.toJSONString(list, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
         } catch (IOException e) {
             e.printStackTrace();
@@ -2030,6 +2016,40 @@ public class  UserController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 标记消息为已读
+     */
+    @RequestMapping(value = "readNotifyByType", method = {RequestMethod.POST})
+    public void readNotifyByType(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        try {
+            String type = request.getParameter("type");
+            Message message = new Message();
+            List<Notify> list = null;
+            if(!StringUtils.isBlank(type)) {
+                if("全部".equals(type)) {
+                    list = notifyService.listByRecvId(getSelfId(),"",GlobalConstant.NOTIFY_STATUS.UNREAD.getIndex(),null);
+                } else {
+                    list = notifyService.listByRecvId(getSelfId(),type,GlobalConstant.NOTIFY_STATUS.UNREAD.getIndex(),null);
+                }
+            }
+            if(list != null) {
+                for(Notify notify : list) {
+                    notify.setStatus(GlobalConstant.NOTIFY_STATUS.READ.getIndex());
+                    notifyService.update(notify);
+                }
+                message.setStatus(true);
+            } else {
+                message.setStatus(false);
+            }
+            String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**

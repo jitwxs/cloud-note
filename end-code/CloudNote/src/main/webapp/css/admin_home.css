@@ -203,7 +203,8 @@ a {
 
 .admin_body {
     margin-top: 0;
-    margin-left: 230px;
+    margin-left: 140px;
+    padding: 0;
 }
 
 .admin_container {
@@ -224,7 +225,7 @@ a {
 }
 
 .admin_table_div2 {
-    width: 90%;
+    width: 84%;
     float: right;
     margin-right: 40px;
 }
