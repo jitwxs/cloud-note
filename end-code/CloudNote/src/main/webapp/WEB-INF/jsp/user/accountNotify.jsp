@@ -18,6 +18,7 @@
         color:#333333;
     }
 </style>
+
 <body>
 
 <!--消息推送主体区域-->
@@ -25,7 +26,8 @@
 
     <!--消息导航栏-->
     <div id="message_nav" >
-        <a class="btn" id="all_read" style="background: lightskyblue;color: white;">全部标记为已读</a>
+        <a id="remove_all" class="btn" style="background: lightskyblue;color: white;">删除</a>
+        <a class="btn" id="all_read" style="background: lightskyblue;color: white; margin-left: 10px">全部标记为已读</a>
         <a class="message_all checked" style="margin-left: 30px;">全部</a>
         <a class="message_safe default">系统消息</a>
         <a class="message_note default">笔记消息</a>
@@ -37,7 +39,8 @@
         <table class="table" id="message_table" style="left:2%;">
             <thead>
             <tr>
-                <th style="text-align: center"><input type="checkbox">消息</th>
+                <th style="text-align: center"><input type="checkbox" id="main_checkbox"></th>
+                <th style="text-align: center">消息</th>
                 <th style="text-align: center">时间</th>
                 <th style="text-align: center">消息类型</th>
                 <th style="text-align: center">删除</th>
@@ -88,8 +91,9 @@
             // data[i].status : 1已读，2未读
             if(data[i].status == 1) {
                 t = t = '<tr>\n' +
-                    '        <td><input type="checkbox"><a class="message_title" index-type="1" index-id="'+id+'">' +
-                    '        <img src="${ctx}/images/alreadread.png">'+title+'</a></td>\n' +
+                    '        <td><input type="checkbox" class="checkbox_message"></td>\n' +
+                    '        <td><a class="message_title" index-type="1" index-id="'+id+'">' +
+                    '        <img src="${ctx}/images/read_notify.png">'+title+'</a></td>\n' +
                     '        <td><span class="message_time" >'+date+'</span></td>\n' +
                     '        <td><span class="message_type" >'+type+'</span></td>\n' +
                     '        <td><img class="remove_btn" src="${ctx}/images/delete.png" ></td>\n' +
@@ -99,7 +103,8 @@
 
             } else if(data[i].status == 2) {
                 t = '<tr>\n' +
-                    '        <td><input type="checkbox"><a class="message_title" index-type="1" index-id="'+id+'">' +
+                    '        <td><input type="checkbox" class="checkbox_message"></td>\n' +
+                    '        <td><a class="message_title" index-type="1" index-id="'+id+'">' +
                     '<img class="new_message" src="${ctx}/images/message.png">'+title+'</a></td>\n' +
                     '        <td><span class="message_time" >'+date+'</span></td>\n' +
                     '        <td><span class="message_type" >'+type+'</span></td>\n' +
@@ -116,7 +121,7 @@
             //删除原来message_container里的内容
             $('#message_container').children().remove();
             showMessage($('#message_container'),res.notifies);
-            initmessageUI();
+            initMessageUI();
         },function (error) {
             toastr.error("获取笔记消息出错！");
         })
@@ -131,7 +136,7 @@
         return false;
     });
 
-    initmessageUI();
+    initMessageUI();
 
     //笔记消息点击事件
     $('.message_note').off('click').on('click',function () {
@@ -170,7 +175,7 @@
             //删除原来message_container里的内容
             $('#message_container').children().remove();
             showMessage($('#message_container'),res.notifies);
-            initmessageUI();
+            initMessageUI();
         },function (error) {
             toastr.error("获取全部消息出错！");
         })
@@ -184,7 +189,7 @@
             //删除原来message_container里的内容
             $('#message_container').children().remove();
             showMessage($('#message_container'),res.notifies);
-            initmessageUI();
+            initMessageUI();
         },function (error) {
             toastr.error("获取全部消息出错！");
         });
@@ -199,6 +204,8 @@
         sendPost('${ctx}/user/readNotifyByType',{'type':type},false,function (res) {
             if(res.status) {
                 toastr.success("标记成功");
+                $('.read').css({"color":"gray"}).text("已读");
+                $('.new_message').attr("src","${ctx}/images/read_notify.png");
             } else {
                 toastr.error("标记失败");
             }
@@ -209,7 +216,7 @@
 
 
     // 初始化事件
-    function initmessageUI() {
+    function initMessageUI() {
         // 消息的点击事件
         $('.message_title').off('click').on('click',function () {
             //获取消息的id发送给服务器
@@ -243,7 +250,7 @@
                 if(res.status) {
                     //改变css样式s
                     $prev.find('.message_title').css("color","gray");
-                    $prev.find('.new_message').attr("src","${ctx}/images/alreadread.png");
+                    $prev.find('.new_message').attr("src","${ctx}/images/read_notify.png");
                     flag = true;
                 } else {
                     toastr.error("标记错误");
@@ -254,7 +261,7 @@
             if(flag) {
                 $(this).css({"color":"gray"});
                 $(this).text("已读");
-                initmessageUI();
+                initMessageUI();
             }
         });
 
@@ -264,11 +271,10 @@
             var $parent = $(this).parent().parent();
             //发送id给服务器
             var id = $prev.attr('index-id');
-            console.log(id);
             sendPost('${ctx}/user/removeNotify',{'id': id},false,function (res) {
                 if(res.status) {
                     toastr.success("删除成功");
-                    initmessageUI();
+                    initMessageUI();
                     $parent.remove();
                 } else {
                     toastr.error("删除失败");
@@ -299,8 +305,9 @@
                             // data[i].status : 1已读，2未读
                             if(data[i].status == 1) {
                                 t = '<tr>\n' +
-                                    '        <td><input type="checkbox"><a class="message_title" index-type="1" index-id="'+id+'">' +
-                                    '        <img src="${ctx}/images/alreadread.png">'+title+'</a></td>\n' +
+                                    '        <td><input type="checkbox" class="checkbox_message"></td>\n' +
+                                    '        <td><a class="message_title" index-type="1" index-id="'+id+'">' +
+                                    '        <img src="${ctx}/images/read_notify.png">'+title+'</a></td>\n' +
                                     '        <td><span class="message_time" >'+date+'</span></td>\n' +
                                     '        <td><span class="message_type" >'+type+'</span></td>\n' +
                                     '        <td><img class="remove_btn" src="${ctx}/images/delete.png" ></td>\n' +
@@ -310,7 +317,8 @@
 
                             } else if(data[i].status == 2) {
                                 t = '<tr>\n' +
-                                    '        <td><input type="checkbox"><a class="message_title" index-type="1" index-id="'+id+'">' +
+                                    '        <td><input type="checkbox" class="checkbox_message"></td>\n' +
+                                    '        <td><a class="message_title" index-type="1" index-id="'+id+'">' +
                                     '<img class="new_message" src="${ctx}/images/message.png">'+title+'</a></td>\n' +
                                     '        <td><span class="message_time" >'+date+'</span></td>\n' +
                                     '        <td><span class="message_type" >'+type+'</span></td>\n' +
@@ -319,7 +327,7 @@
                                     '    </tr>';
                             }
                             $("#message_container").append(t);
-                            initmessageUI();
+                            initMessageUI();
                         }
                     },function (error) {
                         toastr.error("系统错误");
@@ -333,6 +341,37 @@
             });
         });
     }
+
+    //checkbox 全选/取消全选
+    var isCheckAll = false;
+    $('#main_checkbox').off('click').on('click',function () {
+        if (isCheckAll) {
+            $("input[type='checkbox']").each(function() {
+                this.checked = false;
+            });
+            isCheckAll = false;
+        } else {
+            $("input[type='checkbox']").each(function() {
+                this.checked = true;
+            });
+            isCheckAll = true;
+        }
+    });
+
+
+    //对选中的复选框所在的行删除
+    $('#remove_all').off('click').on('click',function () {
+        var id_array=new Array();
+        $('input[class="checkbox_message"]:checked').each(function(){
+            id_array.push($(this).parent().parent().find('.message_title').attr('index-id'));//向数组中添加元素
+        });
+        if(id_array.length > 0) {
+            var msg = "确定要删除选中消息吗？";
+            if(confirm(msg)) {
+                window.location.href = '${ctx}/user/removeChoose?ids=' + id_array;
+            }
+        }
+    })
 </script>
 </body>
 </html>

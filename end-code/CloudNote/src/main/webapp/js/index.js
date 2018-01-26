@@ -10,7 +10,7 @@ var S = {
         if (i !== -1) {
             S.UI.simulate(decodeURI(action).substring(i + 3));
         } else {
-            S.UI.simulate('Hello|Welcome to|WuDao|CloudNote|designed by|Team Four|Hello|Welcome to|WuDao|CloudNote|designed by|Team Four|Hello|Welcome to|WuDao|CloudNote|designed by|Team Four'); //模拟屏幕显示
+            S.UI.simulate('Hello|Welcome to|WuDao|CloudNote|Designed by|Team Four'); //模拟屏幕显示
         }
 
         S.Drawing.loop(function () {
@@ -23,7 +23,7 @@ var S = {
 S.Drawing = (function () {
     var canvas,
         context,
-        renderFn
+        renderFn;
     requestFrame = window.requestAnimationFrame ||
         window.webkitRequestAnimationFrame ||
         window.mozRequestAnimationFrame ||

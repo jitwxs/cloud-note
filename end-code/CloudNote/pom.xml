@@ -130,13 +130,6 @@
             <version>3.6</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>1.7.2</version>
-        </dependency>
-
-
         <!-- log4j -->
         <dependency>
             <groupId>log4j</groupId>
@@ -178,6 +171,13 @@
             <version>4.5.2</version>
         </dependency>
 
+        <!-- JSoup -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.7.2</version>
+        </dependency>
+
         <!-- Aspose word->Pdf -->
         <dependency>
             <groupId>com.aspose</groupId>
@@ -209,17 +209,43 @@
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-analyzers-common</artifactId>
-            <version>4.0.0</version>
+            <version>5.5.4</version>
         </dependency>
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-core</artifactId>
-            <version>4.0.0</version>
+            <version>5.5.4</version>
         </dependency>
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-queryparser</artifactId>
-            <version>4.0.0</version>
+            <version>5.5.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-highlighter</artifactId>
+            <version>5.5.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-memory</artifactId>
+            <version>5.5.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-queries</artifactId>
+            <version>5.5.4</version>
+        </dependency>
+
+
+
+        <!-- Lucene分词器 -->
+        <dependency>
+            <groupId>IKAnalyzer2012_FF</groupId>
+            <artifactId>IKAnalyzer2012</artifactId>
+            <version>2012</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/IKAnalyzer2012_FF.jar</systemPath>
         </dependency>
 
         <dependency>

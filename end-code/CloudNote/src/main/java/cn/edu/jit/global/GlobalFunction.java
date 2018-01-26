@@ -22,6 +22,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -35,6 +36,7 @@ import java.util.regex.Pattern;
 
 /**
  * 全局方法
+ *
  * @author jitwxs
  * @date 2018/1/2 22:33
  */
@@ -42,6 +44,7 @@ public class GlobalFunction {
 
     /**
      * 获取UUID
+     *
      * @return 返回UUID
      */
     public static String getUUID() {
@@ -51,7 +54,7 @@ public class GlobalFunction {
 
     public static String getDate2Second(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        if(date == null) {
+        if (date == null) {
             date = new Date();
         }
         return sdf.format(date);
@@ -59,7 +62,7 @@ public class GlobalFunction {
 
     public static String getDate2Day(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        if(date == null) {
+        if (date == null) {
             date = new Date();
         }
         return sdf.format(date);
@@ -79,7 +82,7 @@ public class GlobalFunction {
      */
     public static String getRealUrl(String url) {
         int i = url.indexOf("upload");
-        if(i == 0) {
+        if (i == 0) {
             return "";
         } else {
             return GlobalConstant.SER_URL + "/" + url.substring(i);
@@ -110,7 +113,7 @@ public class GlobalFunction {
         }
     }
 
-    public static boolean renameFile(String path,String oldName,String newName) {
+    public static boolean renameFile(String path, String oldName, String newName) {
         //新的文件名和以前文件名不同时,才有必要进行重命名
         if (!oldName.equals(newName)) {
             File oldfile = new File(path + "/" + oldName);
@@ -135,11 +138,12 @@ public class GlobalFunction {
 
     /**
      * 上传文件
-     * @param item FileItem对象
+     *
+     * @param item           FileItem对象
      * @param targetFilePath 要存放的文件路径
      * @throws IOException 流异常
      */
-    public static void uploadFile(FileItem item, String targetFilePath) throws IOException{
+    public static void uploadFile(FileItem item, String targetFilePath) throws IOException {
         // 拷贝数据
         InputStream in = item.getInputStream();
         OutputStream out = new FileOutputStream(targetFilePath);
@@ -153,11 +157,12 @@ public class GlobalFunction {
 
     /**
      * 下载文件
+     *
      * @param path 文件真实路径
-     * @param out response.getOutputStream()
+     * @param out  response.getOutputStream()
      * @throws IOException
      */
-    public static void downloadFile(String path, ServletOutputStream out) throws IOException{
+    public static void downloadFile(String path, ServletOutputStream out) throws IOException {
         InputStream in = new FileInputStream(path);
         int len = 0;
         byte[] buf = new byte[1024];
@@ -199,7 +204,8 @@ public class GlobalFunction {
 
     /**
      * 缩略字符串（不区分中英文字符）
-     * @param str 目标字符串
+     *
+     * @param str    目标字符串
      * @param length 截取长度
      * @return
      */
@@ -230,7 +236,7 @@ public class GlobalFunction {
      * 替换掉HTML标签方法
      */
     public static String replaceHtml(String html) {
-        if (StringUtils.isBlank(html)){
+        if (StringUtils.isBlank(html)) {
             return "";
         }
         String regEx = "<.+?>";
@@ -240,34 +246,25 @@ public class GlobalFunction {
     }
 
     /**
-     * 从Html中提取汉字
+     * 获取html内容
      */
-    public static String getChineseFromHtml(String htmlStr){
-        Document doc = Jsoup.parse(htmlStr);
-        //将输入的HTML解析为一个新的文档
-        String htmlText=doc.text();
-        StringBuilder finalText = new StringBuilder();
-        //正则匹配中文及中文标点符号
-        String regEx="[\u4E00-\u9FA5|\\！|\\，|\\。|\\（|\\）|\\《|\\》|\\“|\\”|\\？|\\：|\\；|\\【|\\】]";
-        Pattern p = Pattern.compile(regEx);
-
-        Matcher m = p.matcher(htmlText);
-        while (m.find()) {
-            finalText.append(m.group());
-        }
-        return finalText.toString();
+    public static String getHtmlText(String html) {
+        //解析HTML字符串返回一个Document实现
+        Document doc = Jsoup.parse(html);
+        //取得字符串中的文本
+        return doc.body().text();
     }
 
     /**
      * 获得用户远程地址
      */
-    public static String getRemoteAddr(HttpServletRequest request){
+    public static String getRemoteAddr(HttpServletRequest request) {
         String remoteAddr = request.getHeader("X-Real-IP");
         if (!StringUtils.isBlank(remoteAddr)) {
             remoteAddr = request.getHeader("X-Forwarded-For");
-        }else if (!StringUtils.isBlank(remoteAddr)) {
+        } else if (!StringUtils.isBlank(remoteAddr)) {
             remoteAddr = request.getHeader("Proxy-Client-IP");
-        }else if (!StringUtils.isBlank(remoteAddr)) {
+        } else if (!StringUtils.isBlank(remoteAddr)) {
             remoteAddr = request.getHeader("WL-Proxy-Client-IP");
         }
         return remoteAddr != null ? remoteAddr : request.getRemoteAddr();
@@ -277,7 +274,7 @@ public class GlobalFunction {
      * 将ErrorStack转化为String.
      */
     public static String getStackTraceAsString(Throwable e) {
-        if (e == null){
+        if (e == null) {
             return "";
         }
         StringWriter stringWriter = new StringWriter();
@@ -286,7 +283,7 @@ public class GlobalFunction {
     }
 
 
-    public static String getGitHubToken(String url,JSONObject jsonParam){
+    public static String getGitHubToken(String url, JSONObject jsonParam) {
         String token = "";
         DefaultHttpClient httpClient = new DefaultHttpClient();
         HttpPost method = new HttpPost(url);

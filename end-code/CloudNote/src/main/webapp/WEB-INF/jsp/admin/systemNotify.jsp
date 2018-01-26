@@ -6,9 +6,9 @@
 
 <jsp:include page="left.jsp"/>
 
-<body class="admin_body" style="height: 900px;">
-    <div class="container">
-        <div class="row">
+<body class="admin_body">
+<div class="admin_container">
+    <div class="row" style="margin-bottom: 50px;">
             <form class="form-horizontal" id="notify_form">
                 <div class="form-group">
                     <label class="col-sm-2 control-label">消息类型</label>
@@ -62,9 +62,8 @@
                     </div>
             </form>
         </div>
-    </div>
     <hr />
-    <div class="admin_container" style="margin-top: 10px;height: 700px;">
+    <div  style="margin-top: 0px;height: 500px;">
         <div id="toolbar" style="margin-right: 20px;">
             <button id="btn_delete" type="button" class="btn btn-default" onclick="delete_more()">
                 <span class="glyphicon glyphicon-remove" aria-hidden="true">删除</span>
@@ -75,6 +74,7 @@
             </table>
         </div>
     </div>
+</div>
 </body>
 
 <script type="text/javascript">
@@ -190,12 +190,12 @@
                     data: value,   //最终的JSON数据放在这里
                     striped: true,
                     cache: false,
-                    height: 600,
+                    height: 400,
                     toolbar: '#toolbar',
                     pagination: true,
                     sidePagination: "client",
                     pageNumber: 1,
-                    pageSize: 10,
+                    pageSize: 5,
                     pageList: [5, 10, 20],
                     showColumns: true,
                     minimunCountColumns: 2,

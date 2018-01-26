@@ -5,11 +5,11 @@ package cn.edu.jit.exception;
  * @author jitwxs
  * @date 2018/1/2 19:07
  */
-public class UserException extends Exception {
+public class CustomException extends Exception {
 
     private String message;
 
-    public UserException(String msg) {
+    public CustomException(String msg) {
         super(msg);
         this.message = msg;
     }

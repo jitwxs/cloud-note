@@ -6,7 +6,7 @@
     <div id="container_share">
     </div>
     <div>
-        <a id="changeshare" style="width: 230px;height: 50px;line-height: 50px;margin-left: 70px;cursor: pointer;text-decoration: none"><img src="${ctx}/images/changeshare.png"> 换一批</a>
+        <a id="changeshare" style="width: 230px;height: 50px;line-height: 50px;margin-left: 70px;cursor: pointer;text-decoration: none"><img src="${ctx}/images/refresh.png"> 换一批</a>
     </div>
 </nav>
 

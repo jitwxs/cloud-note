@@ -112,14 +112,14 @@
     <div class="right " style="width: 420px;height: 420px;">
         <p style="font-size: 18px;text-align: center;margin-top: 30px;font-family: Serif;">其他账号登录</p>
         <a class="btn" style="padding-left: 33px" onclick="window.location.href='${ctx}/qqLogin'"><img src="${ctx}/images/qq.png">  使用QQ登录</a>
-        <a style="margin-top: 40px;padding-left: 40px" class="btn"   onclick="loginWchat()"><img src="${ctx}/images/weixin.png">  使用微信登录</a>
         <a style="margin-top: 40px;padding-left: 55px"class="btn"   onclick="window.location.href='${ctx}/githubLogin'"><img src="${ctx}/images/github.png">  使用Github登录</a>
+        <a style="margin-top: 40px;padding-left: 40px" class="btn"   onclick="(function(){toastr.info('正在开发中...')})()"><img src="${ctx}/images/weixin.png">  使用微信登录</a>
     </div>
 </div>
 
 <script>
     function httpPost() {
-        var flag;
+        var flag = false;
         var tel = $("#tel").val();
         var password = $("#password").val();
         var re=/^1\d{10}$/;
@@ -141,7 +141,6 @@
         return flag;
     }
 
-
     //背景特效
     $(document).ready(function() {
         var canvas = document.getElementById("c");
@@ -161,7 +160,7 @@
             opacity_prev_min:.003,            // 透明度递减值最小值
             opacity_prev_max:.005,            // 透明度递减值最大值
             light_min:20,                 // 颜色亮度最小值
-            light_max:50,                 // 颜色亮度最大值
+            light_max:50                 // 颜色亮度最大值
         };
         var style_color = find_random(0,360);
         var all_element =[];

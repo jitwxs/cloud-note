@@ -26,10 +26,10 @@
         <div id="head">
             <a class="upload">
                 <input type="file" id="uploadFile">
-                <img src="${ctx}/images/uploadfile.png">
+                <img src="${ctx}/images/upload_file.png">
                 上传文件
             </a>
-            <a class="btn" id="xj-wjj-btn"><img src="${ctx}/images/newfile.png"> 新建文件夹</a>
+            <a class="btn" id="xj-wjj-btn"><img src="${ctx}/images/new_file.png"> 新建文件夹</a>
             <span class="input-group-btn" style="float: right">
                <button class="btn btn-info btn-search"
                        style="float:right;margin-right: 15px;margin-top:7px;">查找</button>

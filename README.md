@@ -1,8 +1,8 @@
-## 云笔记系统
+## 无道云笔记
 
 ### 使用技术
 
-- 前端：Bootstrap + Amaze UI
+- 前端：Bootstrap
 
 - 开发工具；IDEA
 
@@ -21,6 +21,10 @@
 - 全局搜索：Lucene
 
 - 短信服务：阿里云
+
+- 评论：Valine
+
+- 社会化分享：Jiathis
 
 ### 任务要求
 

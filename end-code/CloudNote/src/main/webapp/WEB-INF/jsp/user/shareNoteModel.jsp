@@ -10,7 +10,8 @@
                 <h4 class="modal-title" id="myModalLabel">分享笔记</h4>
             </div>
             <div class="modal-body">
-                <input type="hidden" id="noteId">
+                <input type="hidden" id="shareId">
+                <input type="hidden" id="shareName">
                 <label>链接生成成功, 复制链接分享给好友吧</label>
                 <div class="form-group ">
                     <div class="col-sm-10">
@@ -19,7 +20,15 @@
                     <button class="col-sm-2 btn btn-primary" onclick="copyUrl()">复制链接</button>
                 </div>
             </div>
-            <div class="modal-footer" style="margin-top: 40px">
+            <div class="modal-footer" style="margin-top: 40px" onmouseover="setShare()">
+                <div class="jiathis_style_32x32">
+                    <a class="jiathis_button_tsina"></a>
+                    <a class="jiathis_button_renren"></a>
+                    <a class="jiathis_button_qzone"></a>
+                    <a class="jiathis_button_weixin"></a>
+                    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+                    <a class="jiathis_counter_style"></a>
+                </div>
                 <button type="button" class="btn btn-default" data-dismiss="modal" onclick="cancelShare()">取消分享</button>
                 <button type="button" class="btn btn-primary" onclick="goShare()">查看分享</button>
             </div>
@@ -27,7 +36,28 @@
     </div>
 </div>
 
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
 <script>
+    var jiathis_config = {};
+
+    function getHostPath() {
+        var curWwwPath = window.document.location.href;
+        var pathName = window.document.location.pathname;
+        var pos = curWwwPath.indexOf(pathName);
+        var hostPath = curWwwPath.substring(0, pos);
+        return hostPath;
+    }
+
+    function setShare() {
+        var url = $("#shareUrl").val();
+        var shareName = $("#shareName").val();
+        jiathis_config.title = "我在无道云笔记发现一篇好文章：《" + shareName + "》,现在分享给你，和我一起欣赏吧！";
+        jiathis_config.url = url;
+        jiathis_config.pic = getHostPath() + "/images/logo_big.png";
+
+        // jiathis_config.summary = summary;
+    }
+    
     function copyUrl() {
         $("#shareUrl").select();
         document.execCommand("Copy");

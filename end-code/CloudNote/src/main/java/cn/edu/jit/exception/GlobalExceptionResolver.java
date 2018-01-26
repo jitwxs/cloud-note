@@ -1,6 +1,5 @@
 package cn.edu.jit.exception;
 
-import cn.edu.jit.global.GlobalConstant;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.springframework.web.servlet.HandlerExceptionResolver;
@@ -20,20 +19,20 @@ public class GlobalExceptionResolver implements HandlerExceptionResolver {
     public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object o, Exception e) {
         ModelAndView modelAndView = new ModelAndView();
 
-        UserException userException;
-        if (e instanceof UserException) {
-            userException = (UserException)e;
+        CustomException customException;
+        if (e instanceof CustomException) {
+            customException = (CustomException)e;
         } else if (e instanceof UnknownAccountException || e instanceof IncorrectCredentialsException) {
             // 用户名错误异常
             modelAndView.addObject("message", "用户名或密码错误");
             modelAndView.setViewName("global/error");
             return modelAndView;
         } else {
-            userException = new UserException("内部错误");
+            customException = new CustomException("内部错误");
         }
 
         // 错误信息
-        String message = userException.getMessage();
+        String message = customException.getMessage();
 
         // 错误信息传递和错误页面跳转
         modelAndView.addObject("message", message);

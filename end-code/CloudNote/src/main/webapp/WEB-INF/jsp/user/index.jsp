@@ -42,9 +42,11 @@
 <jsp:include page="noteMoveToModel.jsp"/>
 
 <input type="hidden" id="lastLoginTime" value="${lastLoginTime}">
+<input type="hidden" id="searchResId" value="${searchResId}">
+<input type="hidden" id="searchResName" value="${searchResName}">
 
-<%-- 头部 --%>
-<jsp:include page="indexHead.jsp"/>
+<%-- 导航栏 --%>
+<jsp:include page="nav.jsp"/>
 
 <%-- 分享区域 --%>
 <jsp:include page="share.jsp"/>
@@ -62,9 +64,9 @@
         </div>
 
         <%-- 广告位 --%>
-        <%--<div class="col-md-2 visible-lg" style="height: 700px;z-index:999">--%>
-            <%--<img src="${ctx}/images/advertise.png" style="width:100%;height: 100%"/>--%>
-        <%--</div>--%>
+        <div class="col-md-2 visible-lg" style="height: 700px;z-index:999">
+            <img src="${ctx}/images/advertise.png" style="width:100%;height: 100%"/>
+        </div>
     </div>
 </div>
 
@@ -92,6 +94,15 @@
         if (lastTime != null && lastTime != "") {
             toastr.info(lastTime);
             $("#text1").val(null);
+        }
+
+        // 获取最后选择笔记信息
+        var searchResId = $("#searchResId").val();
+        var searchResName = $("#searchResName").val();
+        if (searchResId != null && searchResId != "") {
+            flushNote(searchResId, searchResName);
+            $("#affixNoteId").val(searchResId);
+            $("#editorTitle").val(searchResName);
         }
     });
 

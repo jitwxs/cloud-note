@@ -28,6 +28,7 @@ import java.util.*;
 
 /**
  * 管理员web层
+ *
  * @author jitwxs
  * @date 2018/1/6 9:16
  */
@@ -75,22 +76,22 @@ public class AdminController {
     private List<UserDto> user2Dto(List<User> users) {
         List<UserDto> result = new ArrayList<>();
 
-        for(User user : users) {
+        for (User user : users) {
             // 对于未填写手机号的第三方用户，不做转换
-            if(StringUtils.isBlank(user.getTel())) {
+            if (StringUtils.isBlank(user.getTel())) {
                 continue;
             }
             UserDto userDto = new UserDto();
             BeanUtils.copyProperties(user, userDto);
-            if(userDto.getArea() != null) {
+            if (userDto.getArea() != null) {
                 Area area = areaService.getById(user.getArea());
                 userDto.setAreaName(area.getName());
             }
 
             int roleId = loginService.getByTel(user.getTel()).getRoleId();
-            if(roleId == GlobalConstant.ROLE.ADMIN.getIndex()) {
+            if (roleId == GlobalConstant.ROLE.ADMIN.getIndex()) {
                 userDto.setRoleName(GlobalConstant.ROLE.ADMIN.getName());
-            } else if(roleId == GlobalConstant.ROLE.USER.getIndex()) {
+            } else if (roleId == GlobalConstant.ROLE.USER.getIndex()) {
                 userDto.setRoleName(GlobalConstant.ROLE.USER.getName());
             }
             result.add(userDto);
@@ -101,41 +102,41 @@ public class AdminController {
     private List<ArticleDto> article2Dto(List<Article> articles) {
         List<ArticleDto> lists = new ArrayList<>();
 
-        for (Article article: articles) {
+        for (Article article : articles) {
             ArticleDto articleDto = new ArticleDto();
             BeanUtils.copyProperties(article, articleDto);
             User user = userService.getById(article.getUserId());
             articleDto.setAuthorTel(user.getTel());
             articleDto.setAuthorName(user.getName());
-            if(!StringUtils.isBlank(article.getShareUrl())) {
+            if (!StringUtils.isBlank(article.getShareUrl())) {
                 articleDto.setShareUrl(GlobalFunction.getRealUrl(article.getShareUrl()));
             }
             lists.add(articleDto);
         }
-        return  lists;
+        return lists;
     }
 
     private List<UserBlacklistDto> userBlacklist2Dto(List<UserBlacklist> userBlacklists) {
         List<UserBlacklistDto> result = new ArrayList<>();
 
-        for(UserBlacklist userBlacklist : userBlacklists) {
+        for (UserBlacklist userBlacklist : userBlacklists) {
             UserBlacklistDto userBlacklistDto = new UserBlacklistDto();
             BeanUtils.copyProperties(userBlacklist, userBlacklistDto);
 
             String userId = userBlacklist.getUserId();
-            if(userId != null) {
+            if (userId != null) {
                 User user = userService.getById(userId);
                 Reason reason = reasonService.getById(userBlacklist.getReasonId());
 
-                if(user != null) {
+                if (user != null) {
                     userBlacklistDto.setUserName(user.getName());
                     userBlacklistDto.setTel(user.getTel());
                 }
-                if(reason != null) {
+                if (reason != null) {
                     userBlacklistDto.setIllegalName(reason.getName());
                 }
 
-                if(userBlacklistDto.getEndDate().compareTo(new Date()) <= 0) {
+                if (userBlacklistDto.getEndDate().compareTo(new Date()) <= 0) {
                     userBlacklistDto.setStatus("失效");
                 } else {
                     userBlacklistDto.setStatus("有效");
@@ -150,7 +151,7 @@ public class AdminController {
         LogDto logDto = new LogDto();
         BeanUtils.copyProperties(log, logDto);
         User user = userService.getById(log.getUserId());
-        if(user != null) {
+        if (user != null) {
             logDto.setUserName(user.getName());
         }
 
@@ -159,11 +160,11 @@ public class AdminController {
 
     private List<LogDto> log2LogDto(List<Log> list) {
         List<LogDto> result = new ArrayList<>();
-        for(Log log : list) {
+        for (Log log : list) {
             LogDto logDto = new LogDto();
             BeanUtils.copyProperties(log, logDto);
             User user = userService.getById(log.getUserId());
-            if(user != null) {
+            if (user != null) {
                 logDto.setUserName(user.getName());
             }
             result.add(logDto);
@@ -173,7 +174,7 @@ public class AdminController {
 
     private List<NotifyDto> notify2Dto(List<Notify> list) {
         List<NotifyDto> result = new ArrayList<>();
-        for(Notify notify : list) {
+        for (Notify notify : list) {
             NotifyDto notifyDto = new NotifyDto();
             BeanUtils.copyProperties(notify, notifyDto);
 
@@ -187,9 +188,9 @@ public class AdminController {
             notifyDto.setRecvUser(recvUser.getTel());
 
             Integer status = notify.getStatus();
-            if(status == GlobalConstant.NOTIFY_STATUS.READ.getIndex()) {
+            if (status == GlobalConstant.NOTIFY_STATUS.READ.getIndex()) {
                 notifyDto.setStatusName(GlobalConstant.NOTIFY_STATUS.READ.getName());
-            } else if(status == GlobalConstant.NOTIFY_STATUS.UNREAD.getIndex()) {
+            } else if (status == GlobalConstant.NOTIFY_STATUS.UNREAD.getIndex()) {
                 notifyDto.setStatusName(GlobalConstant.NOTIFY_STATUS.UNREAD.getName());
             }
             result.add(notifyDto);
@@ -203,7 +204,7 @@ public class AdminController {
 
     @RequestMapping(value = "index")
     public String index() {
-        return "admin/userInfo";
+        return "admin/index";
     }
 
     /**
@@ -234,20 +235,20 @@ public class AdminController {
             userInfo.setDate(GlobalFunction.getDate2Day(endDate));
             userInfo.setTempTotal(users.size());
             String sex = endUser.getSex();
-            if("男".equals(sex)) {
+            if ("男".equals(sex)) {
                 userInfo.setMaleNum(userInfo.getMaleNum() + 1);
-            } else if("女".equals(sex)) {
+            } else if ("女".equals(sex)) {
                 userInfo.setFemaleNum(userInfo.getFemaleNum() + 1);
             }
 
-            for(int i=users.size()-2; i>=0; i--) {
+            for (int i = users.size() - 2; i >= 0; i--) {
                 User nowUser = users.get(i);
                 User prevUser = users.get(i + 1);
 
                 Date nowDate = nowUser.getCreateDate();
                 Date prevDate = prevUser.getCreateDate();
 
-                if(!DateUtils.isSameDay(nowDate, prevDate)) {
+                if (!DateUtils.isSameDay(nowDate, prevDate)) {
                     userInfo.setNum(userInfo.getMaleNum() + userInfo.getFemaleNum());
                     regInfo.add(userInfo);
                     userInfo = new UserInfo();
@@ -255,9 +256,9 @@ public class AdminController {
                     userInfo.setTempTotal(i + 1);
                 }
                 String nowSex = nowUser.getSex();
-                if("男".equals(nowSex)) {
+                if ("男".equals(nowSex)) {
                     userInfo.setMaleNum(userInfo.getMaleNum() + 1);
-                } else if("女".equals(nowSex)) {
+                } else if ("女".equals(nowSex)) {
                     userInfo.setFemaleNum(userInfo.getFemaleNum() + 1);
                 }
             }
@@ -273,7 +274,7 @@ public class AdminController {
 
             String data = JSON.toJSONString(objects, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -327,6 +328,7 @@ public class AdminController {
     /*---------   网站信息区域（End）   ----------*/
 
     /*---------   笔记管理区域（Start）   ----------*/
+
     /**
      * 笔记日志UI
      */
@@ -383,12 +385,12 @@ public class AdminController {
     @RequestMapping(value = "shareControl", method = {RequestMethod.POST})
     public String shareControl(String[] ids, Integer controlType, String reasonName, HttpServletRequest request) {
         // controlType 1：取消分享， 2：删除分享
-        if(controlType == 1) {
-            for(String id : ids) {
+        if (controlType == 1) {
+            for (String id : ids) {
                 // 更新笔记数据库
                 Article article = articleService.getById(id);
                 article.setIsOpen(GlobalConstant.NOTE_STATUS.NOT_SHARE.getIndex());
-                if(!StringUtils.isBlank(article.getShareUrl())) {
+                if (!StringUtils.isBlank(article.getShareUrl())) {
                     GlobalFunction.deleteSignalFile(article.getShareUrl());
                     article.setShareUrl(null);
                 }
@@ -404,12 +406,12 @@ public class AdminController {
                 notify.setRecvId(article.getUserId());
                 notify.setStatus(GlobalConstant.NOTIFY_STATUS.UNREAD.getIndex());
                 notify.setTitle("分享笔记被取消");
-                notify.setContent("您的笔记文章《" + article.getTitle() +"》已被系统取消分享，取消原因："+ reasonName);
+                notify.setContent("您的笔记文章《" + article.getTitle() + "》已被系统取消分享，取消原因：" + reasonName);
                 notify.setCreateDate(new Date());
                 notifyService.save(notify);
                 logService.saveLog(request, GlobalConstant.NOTIFY.type, GlobalConstant.NOTIFY.NOTIFY_NOTE.getName(), sendId);
             }
-        } else if(controlType == 2) {
+        } else if (controlType == 2) {
             for (String id : ids) {
                 if (!StringUtils.isBlank(id)) {
                     // 发送消息
@@ -428,7 +430,7 @@ public class AdminController {
                     logService.saveLog(request, GlobalConstant.NOTIFY.type, GlobalConstant.NOTIFY.NOTIFY_NOTE.getName(), sendId);
 
                     // 删除笔记文件
-                    if(!StringUtils.isBlank(article.getShareUrl())) {
+                    if (!StringUtils.isBlank(article.getShareUrl())) {
                         GlobalFunction.deleteSignalFile(article.getShareUrl());
                     }
                     String userTel = userService.getById(article.getUserId()).getTel();
@@ -446,8 +448,9 @@ public class AdminController {
     /*---------   笔记管理区域（End）   ----------*/
 
     /*---------   用户管理区域（Start）   ----------*/
+
     /**
-     *  用户列表UI
+     * 用户列表UI
      */
     @RequestMapping(value = "userList", method = {RequestMethod.GET})
     public String userListUI() {
@@ -501,7 +504,7 @@ public class AdminController {
      */
     @RequestMapping(value = "deleteUser", method = {RequestMethod.GET})
     public String deleteUser(String[] tels, HttpServletRequest request) {
-        for(String tel : tels) {
+        for (String tel : tels) {
             // 无需删除User表，级联于Login表
             loginService.removeByTel(tel);
 
@@ -527,7 +530,7 @@ public class AdminController {
             UserDto userDto = new UserDto();
             BeanUtils.copyProperties(user, userDto);
 
-            if(userDto.getArea() != null) {
+            if (userDto.getArea() != null) {
                 Area area = areaService.getById(user.getArea());
                 userDto.setAreaName(area.getName());
             }
@@ -550,19 +553,19 @@ public class AdminController {
         String tel = request.getParameter("tel");
         try {
             User user = userService.getByTel(tel);
-            if(!StringUtils.isBlank(tel)) {
+            if (!StringUtils.isBlank(tel)) {
                 List<UserBlacklist> list = userBlacklistService.listValid(user.getId());
-                if(list.size() > 0) {
+                if (list.size() > 0) {
                     Date maxDate = new Date();
-                    for(UserBlacklist userBlacklist : list) {
+                    for (UserBlacklist userBlacklist : list) {
                         Date tempDate = userBlacklist.getEndDate();
-                        if(tempDate.compareTo(maxDate) >= 0) {
+                        if (tempDate.compareTo(maxDate) >= 0) {
                             maxDate = tempDate;
                         }
                     }
                     message.setStatus(true);
                     String info = "共计查到" + list.size() + "条有效记录，最后解封时间为："
-                            + GlobalFunction.getDate2Second(maxDate) +"，是否继续添加封禁记录？";
+                            + GlobalFunction.getDate2Second(maxDate) + "，是否继续添加封禁记录？";
                     message.setInfo(info);
                 } else {
                     message.setStatus(false);
@@ -584,7 +587,7 @@ public class AdminController {
             userBlacklist.setId(GlobalFunction.getUUID());
             Date d = new Date();
             userBlacklist.setCreateDate(d);
-            if(duration == 9999) {
+            if (duration == 9999) {
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                 userBlacklist.setEndDate(df.parse("9999-12-31 00:00"));
             } else {
@@ -596,7 +599,7 @@ public class AdminController {
             logService.saveLog(request, GlobalConstant.LOG_SYSTEM.type, GlobalConstant.LOG_SYSTEM.USER_BLOCK.getName(), getSelfId());
 
             // 发送消息
-            Reason reason =  reasonService.getById(userBlacklist.getReasonId());
+            Reason reason = reasonService.getById(userBlacklist.getReasonId());
             String reasonName = reason.getName();
             String sendId = getSelfId();
             Notify notify = new Notify();
@@ -606,7 +609,7 @@ public class AdminController {
             notify.setRecvId(userBlacklist.getUserId());
             notify.setStatus(GlobalConstant.NOTIFY_STATUS.UNREAD.getIndex());
             notify.setTitle("账户被封禁");
-            notify.setContent("您的账户已被封禁，封禁原因：“" + reasonName +"”，解封时间为：" + GlobalFunction.getDate2Second(userBlacklist.getEndDate()));
+            notify.setContent("您的账户已被封禁，封禁原因：“" + reasonName + "”，解封时间为：" + GlobalFunction.getDate2Second(userBlacklist.getEndDate()));
             notify.setCreateDate(new Date());
             notifyService.save(notify);
             // 保存日志
@@ -620,7 +623,7 @@ public class AdminController {
     }
 
     /**
-     *  小黑屋UI
+     * 小黑屋UI
      */
     @RequestMapping(value = "blackHome", method = {RequestMethod.GET})
     public String blackHomeUI() {
@@ -679,8 +682,8 @@ public class AdminController {
      */
     @RequestMapping(value = "removeBlacklistRecord", method = {RequestMethod.GET})
     public String removeBlacklistRecord(String[] ids) {
-        for(String id : ids) {
-            if(!StringUtils.isBlank(id)) {
+        for (String id : ids) {
+            if (!StringUtils.isBlank(id)) {
                 userBlacklistService.removeById(id);
             }
         }
@@ -690,6 +693,7 @@ public class AdminController {
     /*---------   用户管理区域（End）   ----------*/
 
     /*---------   网盘管理区域（Start）   ----------*/
+
     /**
      * 网盘信息UI
      */
@@ -706,24 +710,27 @@ public class AdminController {
         try {
             response.setContentType("text/html;charset=utf-8");
             Map<String, Object> maps = new HashMap<>(16);
+            String usedSize;
             double perfect;
             int[] countUser = new int[10];
 
             // 获取网盘容量百分比
             List<User> users = userService.listAllUser(null);
             Integer totalUsed = userPanService.countTotalUsedSize();
-            if(totalUsed == null) {
+            if (totalUsed == null) {
                 perfect = 0;
+                usedSize = "0MB";
             } else {
                 String temp = String.format("%.2f", (double) totalUsed / (users.size() * GlobalConstant.DEFAULT_PAN_SIZE));
                 perfect = Double.parseDouble(temp) * 100;
+                usedSize = String.format("%.2f", (double) totalUsed / 1024 / 1024) + "MB";
             }
 
             // 获取使用容量每10%的人数
-            for(User user : users) {
+            for (User user : users) {
                 Integer used = userPanService.countUsedSize(user.getId());
-                if(used != null) {
-                    int per = (int)((double)used / GlobalConstant.DEFAULT_PAN_SIZE * 10);
+                if (used != null) {
+                    int per = (int) ((double) used / GlobalConstant.DEFAULT_PAN_SIZE * 10);
                     countUser[per]++;
                 } else {
                     countUser[0]++;
@@ -732,13 +739,14 @@ public class AdminController {
 
             List<Object> lists = new ArrayList<>();
 
-            for(int i=0; i<countUser.length; i++) {
+            for (int i = 0; i < countUser.length; i++) {
                 Data data = new Data();
-                data.setK(i*10 +"% - " + (i+1)*10 + "%");
+                data.setK(i * 10 + "% - " + (i + 1) * 10 + "%");
                 data.setV(countUser[i]);
                 lists.add(data);
             }
 
+            maps.put("usedSize", usedSize);
             maps.put("perfect", perfect);
             maps.put("lists", lists);
             String data = JSON.toJSONString(maps, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
@@ -779,6 +787,7 @@ public class AdminController {
 
 
     /*---------   系统管理区域（Start）   ----------*/
+
     /**
      * 系统设置UI
      */
@@ -824,7 +833,7 @@ public class AdminController {
         String id = request.getParameter("id");
         response.setContentType("text/html;charset=utf-8");
         try {
-            if(!StringUtils.isBlank(id)) {
+            if (!StringUtils.isBlank(id)) {
                 Log log = logService.getById(id);
                 LogDto logDto = log2LogDto(log);
                 String data = JSON.toJSONString(logDto, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
@@ -840,7 +849,7 @@ public class AdminController {
      */
     @RequestMapping(value = "deleteLog", method = {RequestMethod.GET})
     public String deleteLog(String[] logIds, String url) {
-        for(String id : logIds) {
+        for (String id : logIds) {
             logService.removeById(id);
         }
         return "redirect:/admin/" + url;
@@ -857,7 +866,7 @@ public class AdminController {
             response.setContentType("text/html;charset=utf-8");
             Message message = new Message();
             boolean status = true;
-            List<Reason> reasons = reasonService.getByTypeAndName(Integer.parseInt(type),name);
+            List<Reason> reasons = reasonService.getByTypeAndName(Integer.parseInt(type), name);
             if (reasons.size() != 0) {
                 status = false;
             }
@@ -881,7 +890,7 @@ public class AdminController {
             Message message = new Message();
             boolean status = true;
             Reason reason = reasonService.getById(id);
-            List<Reason> reasons = reasonService.getByTypeAndName(reason.getType(),name);
+            List<Reason> reasons = reasonService.getByTypeAndName(reason.getType(), name);
             if (reasons.size() != 0 && reasons.get(0).getId() != reason.getId()) {
                 status = false;
             }
@@ -898,7 +907,7 @@ public class AdminController {
      */
     @RequestMapping(value = "deleteReason", method = {RequestMethod.GET})
     public String deleteReason(String id) {
-        if(!StringUtils.isBlank(id)) {
+        if (!StringUtils.isBlank(id)) {
             reasonService.removeById(id);
         }
         return "redirect:/admin/systemSetting";
@@ -906,7 +915,7 @@ public class AdminController {
 
     /**
      * 修改封禁原因
-     * */
+     */
     @RequestMapping(value = "updateReason", method = {RequestMethod.POST})
     public String updateReason(Reason reason) {
         Reason r = reasonService.getById(reason.getId());
@@ -917,7 +926,7 @@ public class AdminController {
 
     /**
      * 添加原因
-     * */
+     */
     @RequestMapping(value = "addReason", method = {RequestMethod.POST})
     public String addReason(Reason reason) {
         reason.setId(GlobalFunction.getUUID());
@@ -959,6 +968,7 @@ public class AdminController {
     /*---------   系统管理区域（End）   ----------*/
 
     /*---------   消息管理区域（Start）   ----------*/
+
     /**
      * 消息日志UI
      */
@@ -1012,7 +1022,7 @@ public class AdminController {
 
     @RequestMapping(value = "deleteNotify", method = {RequestMethod.GET})
     public String deleteNotify(String[] ids) {
-        for(String id : ids) {
+        for (String id : ids) {
             notifyService.removeById(id);
         }
         return "redirect:/admin/systemNotify";
@@ -1028,12 +1038,12 @@ public class AdminController {
             Message message = new Message();
             String tel = request.getParameter("tel");
 
-            if(StringUtils.isEmpty(tel)) {
+            if (StringUtils.isEmpty(tel)) {
                 List<String> tels = userService.listTelByTel("");
                 message.setStatus(true);
                 message.setList(tels);
             } else {
-                if(!StringUtils.isNumeric(tel)) {
+                if (!StringUtils.isNumeric(tel)) {
                     message.setStatus(false);
                 } else {
                     List<String> tels = userService.listTelByTel(tel);
@@ -1053,7 +1063,7 @@ public class AdminController {
      * 发送消息
      */
     @RequestMapping(value = "sendNotify", method = {RequestMethod.POST})
-    public void sendNotify(HttpServletRequest request,  HttpServletResponse response) {
+    public void sendNotify(HttpServletRequest request, HttpServletResponse response) {
         try {
             Message message = new Message();
             String type = request.getParameter("type");
@@ -1069,9 +1079,9 @@ public class AdminController {
             notify.setSendId(getSelfId());
 
             // 接收者为所有人，循环发送
-            if("EveryBody".equals(tel)) {
+            if ("EveryBody".equals(tel)) {
                 List<User> users = userService.listAllUser(null);
-                for(User user : users) {
+                for (User user : users) {
                     notify.setId(GlobalFunction.getUUID());
                     notify.setRecvId(user.getId());
                     notify.setCreateDate(new Date());
@@ -1090,11 +1100,11 @@ public class AdminController {
             response.getWriter().write(data);
 
             // 保存日志
-            if( type.equals(GlobalConstant.NOTIFY.NOTIFY_SYSTEM.getName())) {
+            if (type.equals(GlobalConstant.NOTIFY.NOTIFY_SYSTEM.getName())) {
                 logService.saveLog(request, GlobalConstant.NOTIFY.type, GlobalConstant.NOTIFY.NOTIFY_SYSTEM.getName(), getSelfId());
-            } else if( type.equals(GlobalConstant.NOTIFY.NOTIFY_NOTE.getName())) {
+            } else if (type.equals(GlobalConstant.NOTIFY.NOTIFY_NOTE.getName())) {
                 logService.saveLog(request, GlobalConstant.NOTIFY.type, GlobalConstant.NOTIFY.NOTIFY_NOTE.getName(), getSelfId());
-            } else if( type.equals(GlobalConstant.NOTIFY.NOTIFY_OTHER.getName())) {
+            } else if (type.equals(GlobalConstant.NOTIFY.NOTIFY_OTHER.getName())) {
                 logService.saveLog(request, GlobalConstant.NOTIFY.type, GlobalConstant.NOTIFY.NOTIFY_OTHER.getName(), getSelfId());
             }
         } catch (IOException e) {

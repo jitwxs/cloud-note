@@ -100,13 +100,15 @@
             var noteId = $("#noteId").val();
             var noteName = $("#noteName").val();
             var editorTags = $("#editorTags").val();
-            sendPost('${ctx}/user/saveNote',{'noteId':noteId, 'noteName':noteName, 'data':html,'tag':editorTags},true,function (msg) {
-                if(!msg.status) {
-                    toastr.error(msg.info);
-                }
-            },function (error) {
-                return false;
-            });
+            if(noteId != null && noteId != "" && noteName != null && noteName != "") {
+                sendPost('${ctx}/user/saveNote',{'noteId':noteId, 'noteName':noteName, 'data':html,'tag':editorTags},true,function (msg) {
+                    if(!msg.status) {
+                        toastr.error(msg.info);
+                    }
+                },function (error) {
+                    return false;
+                });
+            }
         };
 
         // 使用 base64 保存图片

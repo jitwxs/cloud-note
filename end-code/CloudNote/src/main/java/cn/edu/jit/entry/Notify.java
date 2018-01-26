@@ -2,6 +2,10 @@ package cn.edu.jit.entry;
 
 import java.util.Date;
 
+/**
+ * 消息实体类
+ * @author jitwxs
+ */
 public class Notify {
     private String id;
 

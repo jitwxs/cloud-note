@@ -11,17 +11,17 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <img src="${ctx}/images/pencil.png" style="width: 35px;height: 35px;margin-left: 10px;margin-top: 10px">
+            <img src="${ctx}/images/logo_small.png" style="width: 35px;height: 35px;margin-left: 10px;margin-top: 10px">
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
             <ul class="nav navbar-nav" style="margin-top: 5px;cursor: pointer;margin-left: 50px">
                 <li><span id="showLeftPush" ><img src="${ctx}/images/look.png"></span></li>
             </ul>
-            <form class="navbar-form navbar-left" style="margin-left: 57px">
+            <form class="navbar-form navbar-left" id="searchForm" method="post" action="${ctx}/user/nbSearch" onsubmit="return nbSearch()" style="margin-left: 57px" >
                 <div class="form-group">
-                    <input type="text" class="form-control" id="searchContent" placeholder="标题、标签、内容">
+                    <input type="text" class="form-control" id="keywords" name="keywords" placeholder="标题、标签、内容">
                 </div>
-                <button type="button" class="btn btn-default" onclick="nbSearch()">Search</button>
+                <button type="submit" class="btn btn-default">Search</button>
             </form>
             <ul class="nav navbar-nav navbar-right" >
                 <li role="presentation">
@@ -80,26 +80,12 @@
     }
 
     function nbSearch() {
-        var content = $("#searchContent").val();
-        if(content == null || content == "") {
+        var keywords = $("#keywords").val();
+        if(keywords == null || keywords == "") {
             toastr.info("想搜啥请告诉我呀");
             return false;
         } else {
-            $('.js_note_btn').css("color","#337AB7");
-            sendPost('${ctx}/user/nbSearch', {'content': content}, true, function (msg) {
-                if(msg.status) {
-                    for(var i=0; i<msg.articles.length; i++) {
-                        var id = msg.articles[i].id;
-                        // var $cur = $('div').find('a[index-id="'+id+'"]');
-                        var $cur = $(".js_note_btn[index-id="+id+"]");
-                        $cur.css("color","red");
-
-                    }
-                }
-            }, function (error) {
-                toastr.error("系统错误");
-                return false;
-            });
+           return true;
         }
     }
 </script>

@@ -1,7 +1,8 @@
 package cn.edu.jit.web;
 
-import cn.edu.jit.entry.*;
 import cn.edu.jit.dto.UserDto;
+import cn.edu.jit.entry.*;
+import cn.edu.jit.exception.CustomException;
 import cn.edu.jit.global.GlobalConstant;
 import cn.edu.jit.global.GlobalFunction;
 import cn.edu.jit.service.*;
@@ -12,7 +13,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
-import com.aliyuncs.exceptions.ClientException;
 import com.qq.connect.api.OpenID;
 import com.qq.connect.api.qzone.UserInfo;
 import com.qq.connect.javabeans.AccessToken;
@@ -27,7 +27,6 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -73,22 +72,28 @@ public class SystemController {
     @Resource(name = "notifyServiceImpl")
     private NotifyService notifyService;
 
+    /**
+     * 获取个人id
+     */
     private String getSelfId() {
         User user = userService.getByTel(GlobalFunction.getSelfTel());
         return user.getId();
     }
 
+    /**
+     * 初始化项目路径
+     */
     private void initPath(HttpServletRequest request) {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        GlobalConstant.SHARE_TEMPLATE  = loader.getResource("shareTemplate.html").getPath();
+        GlobalConstant.SHARE_TEMPLATE = loader.getResource("shareTemplate.html").getPath();
         GlobalConstant.TEMP_PATH = request.getSession().getServletContext().getRealPath("temp");
-        GlobalConstant.UPLOAD_PATH  = request.getSession().getServletContext().getRealPath("upload");
-        GlobalConstant.USER_HOME_PATH = GlobalConstant.UPLOAD_PATH  + "/"  + GlobalFunction.getSelfTel();
-        GlobalConstant.USER_ARTICLE_PATH  = GlobalConstant.USER_HOME_PATH  + "/" + "article";
-        GlobalConstant.USER_ARTICLE_INDEX_PATH  = GlobalConstant.USER_HOME_PATH  + "/" + "article_index";
+        GlobalConstant.UPLOAD_PATH = request.getSession().getServletContext().getRealPath("upload");
+        GlobalConstant.USER_HOME_PATH = GlobalConstant.UPLOAD_PATH + "/" + GlobalFunction.getSelfTel();
+        GlobalConstant.USER_ARTICLE_PATH = GlobalConstant.USER_HOME_PATH + "/" + "article";
+        GlobalConstant.USER_ARTICLE_INDEX_PATH = GlobalConstant.USER_HOME_PATH + "/" + "article_index";
         GlobalConstant.USER_SHARE_PATH = GlobalConstant.USER_ARTICLE_PATH + "/" + "share";
-        GlobalConstant.USER_IMG_PATH = GlobalConstant.USER_HOME_PATH  + "/" + "images";
-        GlobalConstant.USER_PAN_PATH = GlobalConstant.USER_HOME_PATH  + "/"  + "pan" ;
+        GlobalConstant.USER_IMG_PATH = GlobalConstant.USER_HOME_PATH + "/" + "images";
+        GlobalConstant.USER_PAN_PATH = GlobalConstant.USER_HOME_PATH + "/" + "pan";
 
         GlobalFunction.createDir(GlobalConstant.TEMP_PATH);
         GlobalFunction.createDir(GlobalConstant.USER_ARTICLE_PATH);
@@ -110,7 +115,7 @@ public class SystemController {
                 break;
             case "area":
                 int v = Integer.parseInt(value);
-                if(v != -1) {
+                if (v != -1) {
                     user.setArea(v);
                 }
                 break;
@@ -130,7 +135,6 @@ public class SystemController {
 
     /**
      * GitHub用户转普通用户
-     * @return
      */
     private User gitHub2User(GitHubUser gitHubUser) {
         User user = new User();
@@ -145,31 +149,27 @@ public class SystemController {
     /**
      * 拷贝头像
      */
-    private void copyIcon(User user, String imagesPath) {
-        try {
-            if (user.getSex().equals("男")) {
-                FileInputStream fis = new FileInputStream(imagesPath + "/default_man.png");
-                FileOutputStream fos = new FileOutputStream(GlobalConstant.UPLOAD_PATH + "/" + user.getTel() + "/images/icon.png");
-                byte[] buff = new byte[1024];
-                int readed = -1;
-                while ((readed = fis.read(buff)) > 0) {
-                    fos.write(buff, 0, readed);
-                }
-                fis.close();
-                fos.close();
-            } else {
-                FileInputStream fis = new FileInputStream(imagesPath + "/default_woman.png");
-                FileOutputStream fos = new FileOutputStream(GlobalConstant.UPLOAD_PATH + "/" + user.getTel() + "/images/icon.png");
-                byte[] buff = new byte[1024];
-                int len;
-                while ((len = fis.read(buff)) > 0) {
-                    fos.write(buff, 0, len);
-                }
-                fis.close();
-                fos.close();
+    private void copyIcon(User user, String imagesPath) throws IOException {
+        if ("男".equals(user.getSex())) {
+            FileInputStream fis = new FileInputStream(imagesPath + "/default_man.png");
+            FileOutputStream fos = new FileOutputStream(GlobalConstant.UPLOAD_PATH + "/" + user.getTel() + "/images/icon.png");
+            byte[] buff = new byte[1024];
+            int readed = -1;
+            while ((readed = fis.read(buff)) > 0) {
+                fos.write(buff, 0, readed);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            fis.close();
+            fos.close();
+        } else {
+            FileInputStream fis = new FileInputStream(imagesPath + "/default_woman.png");
+            FileOutputStream fos = new FileOutputStream(GlobalConstant.UPLOAD_PATH + "/" + user.getTel() + "/images/icon.png");
+            byte[] buff = new byte[1024];
+            int len;
+            while ((len = fis.read(buff)) > 0) {
+                fos.write(buff, 0, len);
+            }
+            fis.close();
+            fos.close();
         }
     }
 
@@ -183,40 +183,92 @@ public class SystemController {
         }
     }
 
-    @RequestMapping(value = "afterQQLogin", method = {RequestMethod.GET})
+    @RequestMapping(value = "qqCallback", method = {RequestMethod.GET})
     public void afterQQLoginGet(HttpServletRequest request, HttpServletResponse response) {
-        afterQQLoginPost(request,response);
+        afterQQLoginPost(request, response);
     }
 
-    @RequestMapping(value = "afterQQLogin", method = {RequestMethod.POST})
+    /**
+     * qq登陆回掉方法
+     */
+    @RequestMapping(value = "qqCallback", method = {RequestMethod.POST})
     public void afterQQLoginPost(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html; charset=utf-8");
         try {
             PrintWriter out = response.getWriter();
             AccessToken accessTokenObj = (new Oauth()).getAccessTokenByRequest(request);
-            String accessToken = null, openID = null;
-            long tokenExpireIn = 0L;
-            if ("".equals(accessTokenObj.getAccessToken())) {
-                System.out.print("没有获取到响应参数");
-            } else {
+            String accessToken, openID;
+            if (!StringUtils.isBlank(accessTokenObj.getAccessToken())) {
                 accessToken = accessTokenObj.getAccessToken();
-                tokenExpireIn = accessTokenObj.getExpireIn();
-                request.getSession().setAttribute("demo_access_token", accessToken);
-                request.getSession().setAttribute("demo_token_expirein", String.valueOf(tokenExpireIn));
-                // 利用获取到的accessToken 去获取当前用的openid
+                request.getSession().setAttribute("qq_access_token", accessToken);
                 OpenID openIDObj = new OpenID(accessToken);
                 openID = openIDObj.getUserOpenID();
-                request.getSession().setAttribute("demo_openid", openID);
-                UserInfo qzoneUserInfo = new UserInfo(accessToken, openID);
-                UserInfoBean userInfoBean = qzoneUserInfo.getUserInfo();
-                out.println("<br/>");
-                if (userInfoBean.getRet() == 0) {
-                    out.println(userInfoBean.getNickname() + "<br/>");
-                    out.println(userInfoBean.getGender() + "<br/>");
+                request.getSession().setAttribute("qq_openid", openID);
+
+                // 保存数据库
+                Login login = loginService.getByThirdIdAndThirdType(openID, "qq");
+                String tel;
+                if (login == null) {
+                    login = new Login();
+                    // 第三方用户手机号初始值为UUID，密码为123（仅用于登陆验证，该密码没有实际用途）
+                    tel = GlobalFunction.getUUID();
+                    login.setTel(tel);
+                    login.setPassword(Sha1Utils.entryptPassword("123"));
+                    login.setHasThird(1);
+                    login.setThirdType("qq");
+                    login.setThirdId(openID);
+                    login.setRoleId(GlobalConstant.ROLE.USER.getIndex());
+                    login.setCreateDate(new Date());
+                    loginService.save(login);
+
+                    User user = new User();
+                    user.setId(GlobalFunction.getUUID());
+                    user.setCreateDate(new Date());
+
+                    UserInfo qzoneUserInfo = new UserInfo(accessToken, openID);
+                    UserInfoBean userInfoBean = qzoneUserInfo.getUserInfo();
+                    if (userInfoBean.getRet() == 0) {
+                        user.setName(userInfoBean.getNickname());
+                        user.setSex(userInfoBean.getGender());
+                    } else {
+                        user.setName("来自系统乱给的昵称");
+                        user.setSex("男");
+                    }
+                    user.setTel(tel);
+                    userService.save(user);
                 } else {
-                    out.println("很抱歉，我们没能正确获取到您的信息，原因是： " + userInfoBean.getMsg());
+                    tel = login.getTel();
                 }
+                String url = GlobalConstant.SER_URL + "/thirdLogin?tel=" + tel;
+                out.write("<!DOCTYPE HTML>\n" +
+                        "<html lang=\"en\">\n" +
+                        "\n" +
+                        "<head>\n" +
+                        "    <meta charset=\"UTF-8\">\n" +
+                        "\t<title>验证成功</title>\n" +
+                        "</head>");
+                out.write("<body>\n" +
+                        "\t<p>验证成功！<span id='time'>5</span>秒钟后前往首页</p>\n" +
+                        "\t<a href='" + url + "'>立即前往</a>\n" +
+                        "</body>");
+                out.write("<script>\n" +
+                        "\tdelayURL();   \n" +
+                        "    function delayURL() {\n" +
+                        "        var delay = document.getElementById(\"time\").innerHTML;\n" +
+                        " \t\tvar t = setTimeout(\"delayURL()\", 1000);\n" +
+                        "        if (delay > 0) {\n" +
+                        "            delay--;\n" +
+                        "            document.getElementById(\"time\").innerHTML = delay;\n" +
+                        "        } else {\n" +
+                        "     \t\tclearTimeout(t); \n" +
+                        "            window.location.href = '" + url + "';\n" +
+                        "        }       \n" +
+                        "    }\n" +
+                        "</script>");
+            } else {
+                out.write("<p>验证失败，请重试！</p>");
             }
+            out.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -235,6 +287,9 @@ public class SystemController {
         }
     }
 
+    /**
+     * github登陆回掉方法
+     */
     @RequestMapping(value = "githubCallback", method = {RequestMethod.GET})
     public String githubCallback(HttpServletRequest request, RedirectAttributes model) {
         String url = "https://github.com/login/oauth/access_token";
@@ -247,11 +302,12 @@ public class SystemController {
         String token = GlobalFunction.getGitHubToken(url, jsonObject);
         JSONObject resultObj = HttpUtils.httpGet("https://api.github.com/user?access_token=" + token);
 
-        GitHubUser github = JSON.parseObject(resultObj.toJSONString(), new TypeReference<GitHubUser>() {});
+        GitHubUser github = JSON.parseObject(resultObj.toJSONString(), new TypeReference<GitHubUser>() {
+        });
 
         // 保存数据库
         Login login = loginService.getByThirdIdAndThirdType(github.getId(), "github");
-        if(login == null) {
+        if (login == null) {
             login = new Login();
             // 第三方用户手机号初始值为UUID，密码为123（仅用于登陆验证，该密码没有实际用途）
             login.setTel(GlobalFunction.getUUID());
@@ -287,25 +343,24 @@ public class SystemController {
 
         try {
             Login login = loginService.getByTel(tel);
-
             // 账户不存在或密码错误
             if (login == null) {
                 status = false;
                 info = "账户不存在";
-            } else if(!Sha1Utils.validatePassword(password, login.getPassword())) {
+            } else if (!Sha1Utils.validatePassword(password, login.getPassword())) {
                 status = false;
                 info = "密码错误";
             }
 
             // 判断账户是否被封禁
-            if(status) {
+            if (status) {
                 User user = userService.getByTel(tel);
                 List<UserBlacklist> list = userBlacklistService.listValid(user.getId());
-                if(list.size() > 0) {
+                if (list.size() > 0) {
                     Date maxDate = new Date();
-                    for(UserBlacklist userBlacklist : list) {
+                    for (UserBlacklist userBlacklist : list) {
                         Date tempDate = userBlacklist.getEndDate();
-                        if(tempDate.compareTo(maxDate) >= 0) {
+                        if (tempDate.compareTo(maxDate) >= 0) {
                             maxDate = tempDate;
                         }
                     }
@@ -319,7 +374,7 @@ public class SystemController {
             message.setInfo(info);
             String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -336,13 +391,17 @@ public class SystemController {
         // 初始化项目路径
         initPath(request);
 
-        // 初始化用户头像
-        User user = userService.getByTel(login.getTel());
-        if (user.getIcon() == null) {
-            String imagesPath = request.getSession().getServletContext().getRealPath("images");
-            user.setIcon(GlobalConstant.UPLOAD_PATH + "/" + user.getTel() + "/images/icon.png");
-            copyIcon(user,imagesPath);
-            userService.update(user);
+        try {
+            // 初始化用户头像
+            User user = userService.getByTel(login.getTel());
+            if (user.getIcon() == null) {
+                String imagesPath = request.getSession().getServletContext().getRealPath("images");
+                user.setIcon(GlobalConstant.UPLOAD_PATH + "/" + user.getTel() + "/images/icon.png");
+                copyIcon(user, imagesPath);
+                userService.update(user);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         // 保存日志
@@ -361,7 +420,7 @@ public class SystemController {
     }
 
     @RequestMapping(value = "thirdLogin", method = {RequestMethod.GET})
-    public String thirdLogin(@ModelAttribute("tel") String tel, HttpServletRequest request) {
+    public String thirdLogin(@ModelAttribute("tel") String tel, HttpServletRequest request) throws Exception {
         // Shiro验证,三方登陆密码为123
         UsernamePasswordToken token = new UsernamePasswordToken(tel, "123");
         Subject subject = SecurityUtils.getSubject();
@@ -369,16 +428,34 @@ public class SystemController {
         // 如果获取不到用户名就是登录失败，登录失败会直接抛出异常
         subject.login(token);
 
+        User user = userService.getByTel(tel);
+
+        // 判断账户是否被封禁
+        List<UserBlacklist> list = userBlacklistService.listValid(user.getId());
+        if (list.size() > 0) {
+            Date maxDate = new Date();
+            for (UserBlacklist userBlacklist : list) {
+                Date tempDate = userBlacklist.getEndDate();
+                if (tempDate.compareTo(maxDate) >= 0) {
+                    maxDate = tempDate;
+                }
+            }
+            throw new CustomException("账户被封禁，解封时间为：" + GlobalFunction.getDate2Second(maxDate));
+        }
+
         // 初始化项目路径
         initPath(request);
 
-        // 初始化用户头像
-        User user = userService.getByTel(tel);
-        if (user.getIcon() == null) {
-            String imagesPath = request.getSession().getServletContext().getRealPath("images");
-            user.setIcon(GlobalConstant.UPLOAD_PATH + "/" + tel + "/images/icon.png");
-            copyIcon(user,imagesPath);
-            userService.update(user);
+        try {
+            // 初始化用户头像
+            if (user.getIcon() == null) {
+                String imagesPath = request.getSession().getServletContext().getRealPath("images");
+                user.setIcon(GlobalConstant.UPLOAD_PATH + "/" + tel + "/images/icon.png");
+                copyIcon(user, imagesPath);
+                userService.update(user);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         // 保存日志
@@ -394,7 +471,7 @@ public class SystemController {
     }
 
     @RequestMapping(value = "logout")
-    public String logout(){
+    public String logout() {
         return "redirect:/logout";
     }
 
@@ -404,12 +481,12 @@ public class SystemController {
     }
 
     @RequestMapping(value = "checkTelRegistered", method = {RequestMethod.POST})
-    public void checkTelRegistered (HttpServletRequest request, HttpServletResponse response) {
+    public void checkTelRegistered(HttpServletRequest request, HttpServletResponse response) {
         try {
             String tel = request.getParameter("tel");
             Message message = new Message();
             Login login = loginService.getByTel(tel);
-            if(login != null) {
+            if (login != null) {
                 message.setStatus(false);
             } else {
                 message.setStatus(true);
@@ -422,18 +499,17 @@ public class SystemController {
     }
 
     @RequestMapping(value = "registerCheck", method = {RequestMethod.POST})
-    public void registerCheck(HttpServletRequest request, HttpServletResponse response){
+    public void registerCheck(HttpServletRequest request, HttpServletResponse response) {
         Boolean status = true;
         String info = null;
         Message message = new Message();
         response.setContentType("text/html;charset=utf-8");
         String tel = request.getParameter("tel");
         String verityCode = request.getParameter("code");
-        // 手机号已经被注册
 
         HttpSession session = request.getSession();
-        String sendTel = (String)session.getAttribute("tel");
-        String sendCode = (String)session.getAttribute("code");
+        String sendTel = (String) session.getAttribute("tel");
+        String sendCode = (String) session.getAttribute("code");
 
         try {
             if (tel == null) {
@@ -452,7 +528,7 @@ public class SystemController {
                             status = false;
                             info = "注册号码与验证号码不一致";
                         } else {
-                            if (!verityCode.equals(sendCode)){
+                            if (!verityCode.equals(sendCode)) {
                                 status = false;
                                 info = "验证码输入错误";
                             }
@@ -475,18 +551,18 @@ public class SystemController {
         User user = new User();
 
         String inputArea = register.getArea();
-        if(!StringUtils.isBlank(inputArea)) {
+        if (!StringUtils.isBlank(inputArea)) {
             Area area = areaService.getByName(register.getArea());
             if (area != null) {
                 user.setArea(area.getId());
             }
         }
-        if(!StringUtils.isBlank(register.getEmail())) {
+        if (!StringUtils.isBlank(register.getEmail())) {
             user.setEmail(register.getEmail());
         }
 
         // 性别默认为男
-        if(!StringUtils.isBlank(register.getSex())) {
+        if (!StringUtils.isBlank(register.getSex())) {
             user.setSex(register.getSex());
         } else {
             user.setSex("男");
@@ -523,11 +599,11 @@ public class SystemController {
         boolean status = true;
         String tel = request.getParameter("tel");
         // 生成6位验证码
-        String verifyCode = (int)((Math.random()*9+1)*100000) + "";
+        String verifyCode = (int) ((Math.random() * 9 + 1) * 100000) + "";
         System.out.println(verifyCode);
         HttpSession session = request.getSession();
-        session.setAttribute("code",verifyCode);
-        session.setAttribute("tel",tel);
+        session.setAttribute("code", verifyCode);
+        session.setAttribute("tel", tel);
 
         String sessionId = session.getId();
 
@@ -540,13 +616,8 @@ public class SystemController {
             if (!"OK".equals(res.getCode())) {
                 status = false;
             }
-        } catch (ClientException e) {
-            status = false;
-            e.printStackTrace();
-        }
-        try {
             response.getWriter().write("{\"status\": " + status + "}");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -555,25 +626,25 @@ public class SystemController {
     public void codeCheck(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
         Boolean status = false;
-        String info = null;
+        String info;
         try {
             String tel = request.getParameter("tel");
             String verityCode = request.getParameter("verityCode");
 
             HttpSession session = request.getSession();
-            String sendTel = (String)session.getAttribute("tel");
-            String sendCode = (String)session.getAttribute("code");
+            String sendTel = (String) session.getAttribute("tel");
+            String sendCode = (String) session.getAttribute("code");
 
-            if(StringUtils.isBlank(tel)) {
+            if (StringUtils.isBlank(tel)) {
                 info = "手机号为空";
             } else {
-                if(loginService.getByTel(tel) == null) {
+                if (loginService.getByTel(tel) == null) {
                     info = "手机号未注册";
                 } else {
                     if (StringUtils.isBlank(sendTel) && !StringUtils.equals(tel, sendTel)) {
                         info = "验证码未发送";
                     } else {
-                        if(StringUtils.equals(sendCode,verityCode)) {
+                        if (StringUtils.equals(sendCode, verityCode)) {
                             info = "验证成功";
                             status = true;
                         } else {
@@ -607,7 +678,7 @@ public class SystemController {
             String tel = request.getParameter("tel");
 
             Login login = loginService.getByTel(tel);
-            if(login != null) {
+            if (login != null) {
                 String encryptedPassword = Sha1Utils.entryptPassword(newPassword);
                 login.setPassword(encryptedPassword);
                 if (loginService.update(login) != 1) {
@@ -636,27 +707,27 @@ public class SystemController {
     public void showUserCity(HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
         List<User> lists = userService.listAllUser("null");
-        Map<String,Integer> map = new HashMap<>(16);
+        Map<String, Integer> map = new HashMap<>(16);
         try {
-            if(lists.size() > 0) {
-                for(User user : lists) {
-                    if(user.getArea() != null) {
+            if (lists.size() > 0) {
+                for (User user : lists) {
+                    if (user.getArea() != null) {
                         Area area = areaService.getById(user.getArea());
                         String temp = area.getName();
                         String name = "";
-                        if(temp.endsWith("市")) {
-                            name = temp.substring(0, temp.length() -1 );
-                        } else if(temp.endsWith("区") || temp.endsWith("县")) {
+                        if (temp.endsWith("市")) {
+                            name = temp.substring(0, temp.length() - 1);
+                        } else if (temp.endsWith("区") || temp.endsWith("县")) {
                             Area area1 = areaService.getById(area.getPid());
-                            name = area1.getName().substring(0, temp.length() -1 );
+                            name = area1.getName().substring(0, temp.length() - 1);
                         }
 
-                        if(map.containsKey(name)) {
+                        if (map.containsKey(name)) {
                             map.put(name, map.get(name) + 1);
                         } else {
                             // 只显示可预览的城市
                             SupportArea supportArea = supportAreaService.getByName(name);
-                            if(supportArea != null) {
+                            if (supportArea != null) {
                                 map.put(name, 1);
                             }
                         }
@@ -713,13 +784,13 @@ public class SystemController {
 
             // 设置所在地区
             Integer areaId = user.getArea();
-            if(areaId != null) {
+            if (areaId != null) {
                 Area area = areaService.getById(user.getArea());
                 userDto.setAreaName(area.getName());
             }
             // 设置头像真实路径
             String iconUrl = user.getIcon();
-            if(!StringUtils.isBlank(iconUrl)) {
+            if (!StringUtils.isBlank(iconUrl)) {
                 String iconRealUrl = GlobalFunction.getRealUrl(iconUrl);
                 userDto.setIcon(iconRealUrl);
             }
@@ -809,9 +880,9 @@ public class SystemController {
         Boolean status = false;
         String noteId = request.getParameter("noteId").trim();
         try {
-            if(!StringUtils.isBlank(noteId)) {
+            if (!StringUtils.isBlank(noteId)) {
                 Article article = articleService.getById(noteId);
-                if(article != null) {
+                if (article != null) {
                     String star = String.valueOf(article.getStar());
                     status = true;
                     message.setInfo(star);
@@ -836,8 +907,8 @@ public class SystemController {
         String star = request.getParameter("like_num");
         String noteId = request.getParameter("noteId").trim();
         try {
-            if(!StringUtils.isBlank(noteId)) {
-                if(!StringUtils.isBlank(star)) {
+            if (!StringUtils.isBlank(noteId)) {
+                if (!StringUtils.isBlank(star)) {
                     Integer starNum = Integer.parseInt(star);
 
                     Article article = articleService.getById(noteId);
@@ -859,7 +930,7 @@ public class SystemController {
                     notify.setRecvId(article.getUserId());
                     notify.setStatus(GlobalConstant.NOTIFY_STATUS.UNREAD.getIndex());
                     notify.setTitle("分享笔记收到一个赞");
-                    notify.setContent("用户：“" + userName + "”刚刚给您的分享笔记《" + article.getTitle() +"》点了一个赞");
+                    notify.setContent("用户：“" + userName + "”刚刚给您的分享笔记《" + article.getTitle() + "》点了一个赞");
                     notify.setCreateDate(new Date());
                     notifyService.save(notify);
 
@@ -873,5 +944,10 @@ public class SystemController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @RequestMapping(value = "404", method = {RequestMethod.GET})
+    public String go404() {
+        return "/global/404";
     }
 }

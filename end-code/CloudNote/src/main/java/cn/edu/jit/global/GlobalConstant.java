@@ -2,6 +2,7 @@ package cn.edu.jit.global;
 
 /**
  * 全局常量
+ *
  * @author jitwxs
  * @date 2018/1/2 20:32
  */
@@ -222,8 +223,17 @@ public class GlobalConstant {
      * 消息类型
      */
     public enum NOTIFY {
+        /**
+         * 系统消息
+         */
         NOTIFY_SYSTEM("系统消息", 1),
+        /**
+         * 笔记消息
+         */
         NOTIFY_NOTE("笔记消息", 2),
+        /**
+         * 其他消息
+         */
         NOTIFY_OTHER("其他消息", 3);
 
         private String name;
@@ -261,7 +271,13 @@ public class GlobalConstant {
      * 消息状态
      */
     public enum NOTIFY_STATUS {
+        /**
+         * 已读
+         */
         READ("已读", 1),
+        /**
+         * 未读
+         */
         UNREAD("未读", 2);
 
         private String name;
@@ -341,10 +357,25 @@ public class GlobalConstant {
      * 系统日志
      */
     public enum LOG_SYSTEM {
+        /**
+         * 取消分享
+         */
         SHARE_CANCEL("取消分享", 1),
+        /**
+         * 删除分享
+         */
         SHARE_DEL("删除分享", 2),
+        /**
+         * 删除用户
+         */
         USER_DEL("删除用户", 3),
+        /**
+         * 封禁用户
+         */
         USER_BLOCK("封禁用户", 4),
+        /**
+         * 取消封禁
+         */
         CANCEL_BLOCK("取消封禁", 5);
 
 
@@ -383,10 +414,25 @@ public class GlobalConstant {
      * 用户日志
      */
     public enum LOG_USER {
+        /**
+         * 用户登陆
+         */
         USER_LOGIN("用户登陆", 1),
+        /**
+         * 用户注册
+         */
         USER_REG("用户注册", 2),
+        /**
+         * 找回密码
+         */
         FIND_PASSWORD("找回密码", 3),
+        /**
+         * 重置密码
+         */
         RESET_PASSWORD("重置密码", 4),
+        /**
+         * 修改信息
+         */
         MODIFY_INFO("修改信息", 5);
 
         private String name;
@@ -424,11 +470,29 @@ public class GlobalConstant {
      * 笔记日志
      */
     public enum LOG_NOTE {
+        /**
+         * 创建笔记
+         */
         CREATE_NOTE("创建笔记", 1),
+        /**
+         * 永久删除
+         */
         FOREVER_REMOVE_NOTE("永久删除", 2),
+        /**
+         * 分享笔记
+         */
         SHARE_NOTE("分享笔记", 3),
+        /**
+         * 取消分享
+         */
         CANCEL_SHARE_NOTE("取消分享", 4),
+        /**
+         * 上传笔记
+         */
         UPLOAD_NOTE("上传笔记", 5),
+        /**
+         * 上传附件
+         */
         UPLOAD_AFFIX("上传附件", 6);
 
         private String name;
@@ -466,8 +530,17 @@ public class GlobalConstant {
      * 网盘日志
      */
     public enum LOG_PAN {
+        /**
+         * 上传文件
+         */
         FILE_UPLOAD("上传文件", 1),
+        /**
+         * 下载文件
+         */
         FILE_DOWNLOAD("下载文件", 2),
+        /**
+         * 删除文件
+         */
         FILE_DEL("删除文件", 3);
 
         private String name;

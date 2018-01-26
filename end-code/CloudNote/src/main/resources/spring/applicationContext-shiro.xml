@@ -33,7 +33,7 @@
                 # 第三方登录请求
                 /loginByThird = anon
                 /qqLogin = anon
-                /afterQQLogin= anon
+                /qqCallback= anon
                 /githubLogin = anon
                 /githubCallback = anon
                 /thirdLogin = anon
@@ -50,7 +50,6 @@
                 # 笔记Star
                 /getStar = anon
                 /star = anon
-
                 # 注销请求
                 /logout = logout
 

@@ -144,7 +144,7 @@
     });
 
     function delete_more() {
-        var row = $(panLogTable).bootstrapTable('getSelections');
+        var row = $(notifyLogTable).bootstrapTable('getSelections');
         var url = 'notifyLog';
         deleteLog(row, url);
     }

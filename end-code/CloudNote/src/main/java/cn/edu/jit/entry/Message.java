@@ -163,52 +163,12 @@ public class Message implements Serializable {
         this.list = list;
     }
 
-    public List<ArticleRecycle> getArticleRecycles() {
-        return articleRecycles;
-    }
-
-    public void setArticleRecycles(List<ArticleRecycle> articleRecycles) {
-        this.articleRecycles = articleRecycles;
-    }
-
     public List<Notify> getNotifies() {
         return notifies;
     }
 
     public void setNotifies(List<Notify> notifies) {
         this.notifies = notifies;
-    }
-
-    public List<LogDto> getLogDtos() {
-        return logDtos;
-    }
-
-    public void setLogDtos(List<LogDto> logDtos) {
-        this.logDtos = logDtos;
-    }
-
-    public List<UserDto> getUserDtos() {
-        return userDtos;
-    }
-
-    public void setUserDtos(List<UserDto> userDtos) {
-        this.userDtos = userDtos;
-    }
-
-    public List<UserBlacklistDto> getUserBlacklistDtos() {
-        return userBlacklistDtos;
-    }
-
-    public void setUserBlacklistDtos(List<UserBlacklistDto> userBlacklistDtos) {
-        this.userBlacklistDtos = userBlacklistDtos;
-    }
-
-    public List<NotifyDto> getNotifyDtos() {
-        return notifyDtos;
-    }
-
-    public void setNotifyDtos(List<NotifyDto> notifyDtos) {
-        this.notifyDtos = notifyDtos;
     }
 
     private Boolean status;
@@ -235,8 +195,6 @@ public class Message implements Serializable {
 
     private List<ArticleDto> articleDtos;
 
-    private List<ArticleRecycle> articleRecycles;
-
     private List<Tag> noteTag;
 
     private List<ArticleAffix> affixes;
@@ -252,12 +210,4 @@ public class Message implements Serializable {
     private List<String> list;
 
     private List<Notify> notifies;
-
-    private List<NotifyDto> notifyDtos;
-
-    private List<LogDto> logDtos;
-
-    private List<UserDto> userDtos;
-
-    private List<UserBlacklistDto> userBlacklistDtos;
 }

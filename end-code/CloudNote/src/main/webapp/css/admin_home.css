@@ -24,7 +24,7 @@ a {
 /* nav */
 .nav {
     width: 220px;
-    height: 1100px;
+    height: 1000px;
     background: #263238;
     transition: all .3s;
     position: absolute;
@@ -103,6 +103,9 @@ a {
 
 .icon_6::after {
     content: "\e65c";
+}
+.icon_7::after {
+    content: "\e68f";
 }
 
 /*---------------------*/
@@ -203,12 +206,12 @@ a {
 
 .admin_body {
     margin-top: 0;
-    margin-left: 140px;
+    margin-left: 80px;
     padding: 0;
 }
 
 .admin_container {
-    height: 1000px;
+    height: 800px;
     width: 100%;
     margin-top: 0;
 }
@@ -219,13 +222,36 @@ a {
 }
 
 .admin_table_div {
-    width: 90%;
+    width: 95%;
     float: right;
     margin-right: 40px;
 }
 
 .admin_table_div2 {
-    width: 84%;
+    width: 95%;
     float: right;
     margin-right: 40px;
+}
+
+
+.card_col{
+    padding: 5px;
+}
+.card_img{
+    border-radius:10px;
+    height: 150px;
+    padding: 0;
+    margin-left: 10px;
+}
+
+.card_statistics{
+    margin-top: 35px;
+    margin-bottom: 10px;
+    width: 100px;
+    height: 60px;
+    float: right;
+    text-align: right;
+    color: white;
+    font-size: 20px;
+    padding-right: 10px;
 }

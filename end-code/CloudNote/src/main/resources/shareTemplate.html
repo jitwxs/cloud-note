@@ -9,6 +9,10 @@
     <script src="../../../../js/jquery-3.2.1.min.js"></script>
     <script src="../../../../js/bootstrap.js"></script>
     <script src="../../../../js/http.js"></script>
+    <!--Leancloud 操作库:-->
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <!--Valine 的核心代码库:-->
+    <script src="../../../../js/Valine.min.js"></script>
     <style type="text/css">
         #articlescrap {
             position: relative;
@@ -166,9 +170,17 @@
         <div class="right">
         </div>
     </div>
-
+    <div class="comment" style="margin-top: 100px"></div>
 </div>
 <script>
+    new Valine({
+        av: AV,
+        el: '.comment',
+        app_id: 'NF1gXI6dGrwsPX7K1cuS2trq-gzGzoHsz',
+        app_key: '03KM3xsJ7W5vdqqbbCyMd1mg',
+        placeholder: 'Your comment'
+    });
+
     function getHostPath() {
         var curWwwPath = window.document.location.href;
         var pathName = window.document.location.pathname;

@@ -2,6 +2,10 @@ package cn.edu.jit.entry;
 
 import java.util.Date;
 
+/**
+ * 原因实体类
+ * @author jitwxs
+ */
 public class Reason {
     private String id;
 

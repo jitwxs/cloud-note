@@ -2,6 +2,7 @@ package cn.edu.jit.web;
 
 import cn.edu.jit.dto.ArticleDto;
 import cn.edu.jit.entry.*;
+import cn.edu.jit.exception.CustomException;
 import cn.edu.jit.global.GlobalConstant;
 import cn.edu.jit.global.GlobalFunction;
 import cn.edu.jit.service.*;
@@ -16,11 +17,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sun.misc.BASE64Encoder;
 
 import javax.annotation.Resource;
+import javax.jws.WebParam;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,13 +36,14 @@ import java.util.*;
 
 /**
  * 用户控制层
+ *
  * @author jitwxs
  * @date 2018/1/3 13:10
  */
 
 @Controller
 @RequestMapping(value = "/user")
-public class  UserController {
+public class UserController {
 
     @Resource(name = "logServiceImpl")
     private LogService logService;
@@ -60,10 +66,10 @@ public class  UserController {
     @Resource(name = "articleDirServiceImpl")
     private ArticleDirService articleDirService;
 
-    @Resource (name = "articleRecycleServiceImpl")
+    @Resource(name = "articleRecycleServiceImpl")
     private ArticleRecycleService articleRecycleService;
 
-    @Resource (name = "fileConvertServiceImpl")
+    @Resource(name = "fileConvertServiceImpl")
     private FileConvertService fileConvertService;
 
     @Resource(name = "loginServiceImpl")
@@ -115,6 +121,7 @@ public class  UserController {
 
     /**
      * 生成笔记目录树
+     *
      * @param directoryTree 树根
      */
     private void initDirectoryTree(DirectoryTree directoryTree) {
@@ -123,15 +130,15 @@ public class  UserController {
 
         List<ArticleDir> childDirs = articleDirService.listByParentId(uid, dirId, "create_date desc");
         List<Article> articles = articleService.listArticleByDir(uid, dirId, "create_date desc");
-        if(childDirs.size() ==0 && articles.size() == 0) {
+        if (childDirs.size() == 0 && articles.size() == 0) {
             return;
         }
-        for (Article article: articles) {
-            DirectoryTree dt = new DirectoryTree(article.getId(),article.getTitle());
+        for (Article article : articles) {
+            DirectoryTree dt = new DirectoryTree(article.getId(), article.getTitle());
             dt.setData(null);
             directoryTree.addData(dt);
         }
-        for (ArticleDir childDir: childDirs) {
+        for (ArticleDir childDir : childDirs) {
             DirectoryTree dt = new DirectoryTree(childDir.getId(), childDir.getName());
             initDirectoryTree(dt);
             directoryTree.addData(dt);
@@ -140,6 +147,7 @@ public class  UserController {
 
     /**
      * 生成移动笔记目录树
+     *
      * @param directoryTree 树根
      */
     private void moveDirectoryTree(DirectoryTree directoryTree) {
@@ -147,7 +155,7 @@ public class  UserController {
         String dirId = directoryTree.getId();
 
         List<ArticleDir> childDirs = articleDirService.listByParentId(uid, dirId, "create_date desc");
-        for (ArticleDir childDir: childDirs) {
+        for (ArticleDir childDir : childDirs) {
             DirectoryTree dt = new DirectoryTree(childDir.getId(), childDir.getName());
             moveDirectoryTree(dt);
             directoryTree.addData(dt);
@@ -156,6 +164,7 @@ public class  UserController {
 
     /**
      * 生成云盘目录树
+     *
      * @param directoryTree 树根
      */
     private void initPanDirectoryTree(DirectoryTree directoryTree) {
@@ -164,15 +173,15 @@ public class  UserController {
 
         List<PanDir> childDirs = panDirService.listByParentId(uid, dirId);
         List<UserPan> userPans = userPanService.listUserPanByDir(uid, dirId);
-        if(childDirs.size() == 0 && userPans.size() == 0) {
+        if (childDirs.size() == 0 && userPans.size() == 0) {
             return;
         }
-        for (UserPan userPan: userPans) {
-            DirectoryTree dt = new DirectoryTree(userPan.getId(),userPan.getName());
+        for (UserPan userPan : userPans) {
+            DirectoryTree dt = new DirectoryTree(userPan.getId(), userPan.getName());
             dt.setData(null);
             directoryTree.addData(dt);
         }
-        for (PanDir childDir: childDirs) {
+        for (PanDir childDir : childDirs) {
             DirectoryTree dt = new DirectoryTree(childDir.getId(), childDir.getName());
             initPanDirectoryTree(dt);
             directoryTree.addData(dt);
@@ -182,18 +191,18 @@ public class  UserController {
     /**
      * 递归删除云盘目录
      */
-    private boolean deletePanFile(String dirId){
-        List<UserPan> userPans = userPanService.listUserPanByDir(getSelfId(),dirId);
-        List<PanDir> panDirs = panDirService.listByParentId(getSelfId(),dirId);
-        for (UserPan userPan: userPans) {
-            String path = GlobalConstant.USER_PAN_PATH + "/" +userPan.getId();
+    private boolean deletePanFile(String dirId) {
+        List<UserPan> userPans = userPanService.listUserPanByDir(getSelfId(), dirId);
+        List<PanDir> panDirs = panDirService.listByParentId(getSelfId(), dirId);
+        for (UserPan userPan : userPans) {
+            String path = GlobalConstant.USER_PAN_PATH + "/" + userPan.getId();
             if (GlobalFunction.deleteSignalFile(path)) {
                 userPanService.removeById(userPan.getId());
             } else {
                 return false;
             }
         }
-        for (PanDir panDir: panDirs) {
+        for (PanDir panDir : panDirs) {
             deletePanFile(panDir.getId());
         }
         panDirService.remove(dirId);
@@ -201,24 +210,24 @@ public class  UserController {
     }
 
     /**
-     * 初始化笔记摘要
+     * 获取笔记摘要（用于分享页面的摘要）
      */
     private String getAbstractText(ArticleDto articleDto) {
         StringBuilder result = new StringBuilder();
         String indexStr = "<!-- content -->";
-        try{
+        try {
             char[] buf = new char[1024];
             boolean flag = true;
 
             String url = articleDto.getShareUrl();
             InputStreamReader isr = new InputStreamReader(new FileInputStream(url), "UTF-8");
 
-            while(isr.read(buf,0,buf.length) > 0 && result.length() <= GlobalConstant.NOTE_ABSTARCT_LENGTH) {
+            while (isr.read(buf, 0, buf.length) > 0 && result.length() <= GlobalConstant.NOTE_ABSTARCT_LENGTH) {
                 String temp = String.valueOf(buf);
-                if(!flag) {
-                    result.append(GlobalFunction.getChineseFromHtml(temp));
-                } else if(flag && temp.contains(indexStr)) {
-                    result.append(GlobalFunction.getChineseFromHtml(temp.substring(temp.indexOf(indexStr))));
+                if (!flag) {
+                    result.append(GlobalFunction.getHtmlText(temp));
+                } else if (flag && temp.contains(indexStr)) {
+                    result.append(GlobalFunction.getHtmlText(temp.substring(temp.indexOf(indexStr))));
                     flag = false;
                 }
             }
@@ -226,8 +235,32 @@ public class  UserController {
             int len = GlobalConstant.NOTE_ABSTARCT_LENGTH >= result.length() ? result.length() : GlobalConstant.NOTE_ABSTARCT_LENGTH;
             return result.substring(0, len);
         } catch (Exception e) {
-            return GlobalFunction.getStackTraceAsString(e);
+            e.printStackTrace();
         }
+        return "";
+    }
+
+    /**
+     * 获取笔记摘要（用于搜索结果的摘要）
+     */
+    private String getAbstractText(String noteId) throws IOException {
+        Article article = articleService.getById(noteId);
+        String content;
+        String filePath = GlobalConstant.USER_ARTICLE_PATH + "/" + noteId + "/" + article.getTitle() + GlobalConstant.NOTE_SUFFIX;
+
+        InputStreamReader isr = new InputStreamReader(new FileInputStream(filePath), "UTF-8");
+        StringBuilder contentBuilder = new StringBuilder();
+        char[] buf = new char[1024];
+        while (isr.read(buf, 0, buf.length) > 0) {
+            String temp = String.valueOf(buf);
+            contentBuilder.append(temp);
+        }
+        isr.close();
+
+        content = GlobalFunction.getHtmlText(contentBuilder.toString());
+        content = content.substring(0,Math.min(content.length(), GlobalConstant.NOTE_ABSTARCT_LENGTH));
+
+        return content;
     }
 
     /**
@@ -252,14 +285,15 @@ public class  UserController {
         List<Tag> result = new ArrayList<>();
         List<ArticleTagKey> lists = articleTagService.listByArticleId(noteId);
         for (ArticleTagKey articleTag : lists) {
-                result.add(tagService.getById(articleTag.getTagId()));
+            result.add(tagService.getById(articleTag.getTagId()));
         }
         return result;
     }
 
     /**
      * 创建笔记分享页面
-     * @param noteId 笔记id
+     *
+     * @param noteId     笔记id
      * @param outputPath 输出路径（空代表新建，非空代表更新）
      * @return 输出路径
      */
@@ -276,49 +310,49 @@ public class  UserController {
         String createDate = GlobalFunction.getDate2Day(article.getCreateDate());
         String iconUrl = user.getIcon();
         String iconRealUrl = "";
-        if(!StringUtils.isBlank(iconUrl)){
+        if (!StringUtils.isBlank(iconUrl)) {
             iconRealUrl = GlobalFunction.getRealUrl(iconUrl);
         }
 
         String inputPath = GlobalConstant.USER_ARTICLE_PATH + "/" + noteId + "/" + title + GlobalConstant.NOTE_SUFFIX;
 
         // 如果输出路径为空，则新建笔记分享页面，否则更新到输出路径中
-        if(StringUtils.isBlank(outputPath)) {
+        if (StringUtils.isBlank(outputPath)) {
             outputPath = GlobalConstant.USER_SHARE_PATH + "/" + GlobalFunction.getUUID() + ".html";
         }
 
         BufferedReader br = new BufferedReader(new FileReader(GlobalConstant.SHARE_TEMPLATE));
         InputStreamReader isr = new InputStreamReader(new FileInputStream(inputPath), "UTF-8");
-        OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(outputPath),"UTF-8");
+        OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(outputPath), "UTF-8");
 
-        while((temp = br.readLine()) != null) {
+        while ((temp = br.readLine()) != null) {
             osw.write(temp);
             switch (temp) {
                 case "<!-- title -->":
                 case "<title>":
-                        osw.write(title);
-                        break;
+                    osw.write(title);
+                    break;
                 case "<!-- userIcon -->":
-                        if(!StringUtils.isBlank(iconRealUrl)) {
-                            osw.write("<img class='user_icon' style='width: 50px;height: 50px;border-radius:50%' src="+iconRealUrl+">");
-                        }
-                        break;
+                    if (!StringUtils.isBlank(iconRealUrl)) {
+                        osw.write("<img class='user_icon' style='width: 50px;height: 50px;border-radius:50%' src=" + iconRealUrl + ">");
+                    }
+                    break;
                 case "<!-- userName -->":
-                        osw.write(author);
-                        break;
+                    osw.write(author);
+                    break;
                 case "<!-- create_date -->":
-                        osw.write(createDate);
-                        break;
+                    osw.write(createDate);
+                    break;
                 case "<!-- noteId -->":
-                        osw.write(noteId);
-                        break;
+                    osw.write(noteId);
+                    break;
                 case "<!-- content -->":
-                        while((len = isr.read(buf)) > 0) {
-                            osw.write(buf, 0, len);
-                        }
-                        break;
+                    while ((len = isr.read(buf)) > 0) {
+                        osw.write(buf, 0, len);
+                    }
+                    break;
                 default:
-                        break;
+                    break;
             }
             osw.write("\n");
             osw.flush();
@@ -329,56 +363,33 @@ public class  UserController {
         return outputPath;
     }
 
-    private List<Article> getArticleList(List<String> ids) {
-        List<Article> list = new ArrayList<>();
-        for(String id : ids) {
-            Article article = articleService.getById(id);
-            if(article != null) {
-                list.add(article);
-            }
-        }
-        return list;
-    }
-
-    /**
-     * 多个笔记list集合转一个set（去重）
-     */
-    private List<Article> lists2Set(List<Article> list1, List<Article> list2) {
-        Set<Article> set = new HashSet<>();
-        set.addAll(list1);
-        set.addAll(list2);
-        System.out.println(set.size());
-
-        return new ArrayList<>(set);
-    }
-
     /**
      * 随机取num个从0到maxVal的整数。包括零，不包括maxValue
      */
-    public static List<Integer> random(int num,int maxValue){
-        if(num>maxValue ){
-            num=maxValue;
+    public static List<Integer> random(int num, int maxValue) {
+        if (num > maxValue) {
+            num = maxValue;
         }
-        if(num<0 || maxValue<0){
+        if (num < 0 || maxValue < 0) {
             throw new RuntimeException("num or maxValue must be greater than zero");
         }
         List<Integer> result = new ArrayList<Integer>(num);
 
         int[] tmpArray = new int[maxValue];
-        for(int i=0;i<maxValue;i++){
-            tmpArray[i]=i;
+        for (int i = 0; i < maxValue; i++) {
+            tmpArray[i] = i;
         }
 
         Random random = new Random();
-        for(int i=0;i<num;i++){
-            int index =  random.nextInt(maxValue-i);
+        for (int i = 0; i < num; i++) {
+            int index = random.nextInt(maxValue - i);
             int tmpValue = tmpArray[index];
             result.add(tmpValue);
-            int lastIndex = maxValue-i-1;
-            if(index==lastIndex){
+            int lastIndex = maxValue - i - 1;
+            if (index == lastIndex) {
                 continue;
-            }else{
-                tmpArray[index]=tmpArray[lastIndex];
+            } else {
+                tmpArray[index] = tmpArray[lastIndex];
             }
 
         }
@@ -390,7 +401,7 @@ public class  UserController {
     /*---------   普通方法区域（END）   ----------*/
 
     @RequestMapping(value = "index")
-    public String index(HttpServletRequest request, HttpServletResponse response) {
+    public String index(@ModelAttribute("id") String id, HttpServletRequest request, HttpServletResponse response) {
         String data = GlobalFunction.getDate2Second(null);
         data = data.replace(' ', '#');
         Cookie cookie = new Cookie("lastLoginTime", data);
@@ -400,11 +411,11 @@ public class  UserController {
 
         Cookie[] cookies = request.getCookies();
         String result = "";
-        if(cookies.length > 0) {
-            for (Cookie ck: cookies) {
-                if("lastLoginTime".equals(ck.getName())) {
+        if (cookies.length > 0) {
+            for (Cookie ck : cookies) {
+                if ("lastLoginTime".equals(ck.getName())) {
                     String lastLoginTime = ck.getValue();
-                    result = "上次登陆：" + lastLoginTime.replace('#',' ');
+                    result = "上次登陆：" + lastLoginTime.replace('#', ' ');
                 }
             }
         } else {
@@ -412,15 +423,23 @@ public class  UserController {
         }
 
         // 是否显示登陆信息
-        if(GlobalConstant.HAS_SHOW_LOGIN_INFO) {
+        if (GlobalConstant.HAS_SHOW_LOGIN_INFO) {
             request.setAttribute("lastLoginTime", result);
             GlobalConstant.HAS_SHOW_LOGIN_INFO = false;
+        }
+
+        // 搜索结果回显
+        if(!StringUtils.isEmpty(id)) {
+            String name = articleService.getById(id).getTitle();
+            request.setAttribute("searchResId", id);
+            request.setAttribute("searchResName", name);
         }
 
         return "user/index";
     }
 
     /*---------   用户管理区域（START）   ----------*/
+
     /**
      * 账户信息
      */
@@ -483,20 +502,20 @@ public class  UserController {
     /*---------   用户管理区域（END）   ----------*/
 
     /*---------   笔记管理区域（START）   ----------*/
+
     /**
      * 初始化笔记目录树
      */
     @RequestMapping(value = "initArticleDir", method = {RequestMethod.GET})
     public void initArticleDir(HttpServletResponse response) {
         response.setContentType("text/html;charset=utf-8");
-        Message message = new Message();
         try {
             // 顶层目录 id:root name:我的文件夹
-            DirectoryTree directoryTree = new DirectoryTree("root","我的文件夹");
+            DirectoryTree directoryTree = new DirectoryTree("root", "我的文件夹");
             initDirectoryTree(directoryTree);
             String data = JSON.toJSONString(directoryTree, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -509,11 +528,11 @@ public class  UserController {
         response.setContentType("text/html;charset=utf-8");
         try {
             // 顶层目录 id:root name:我的文件夹
-            DirectoryTree directoryTree = new DirectoryTree("root","我的文件夹");
+            DirectoryTree directoryTree = new DirectoryTree("root", "我的文件夹");
             moveDirectoryTree(directoryTree);
             String data = JSON.toJSONString(directoryTree, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -529,7 +548,7 @@ public class  UserController {
             List<ArticleRecycle> lists = articleRecycleService.listSelfRecycle(uid);
             String data = JSON.toJSONString(lists, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -609,7 +628,7 @@ public class  UserController {
                 article.setDirId(dirId);
                 article.setCreateDate(new Date());
                 int i = articleService.save(article);
-                if(i != 1) {
+                if (i != 1) {
                     status = false;
                     info = "数据库更新失败！";
                 }
@@ -628,7 +647,7 @@ public class  UserController {
             msg.setInfo(info);
             String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
-        }catch (IOException e) {
+        } catch (IOException e) {
             // 保存日志
             logService.saveLog(request, e, GlobalConstant.LOG_NOTE.type, GlobalConstant.LOG_NOTE.CREATE_NOTE.getName(), getSelfId());
             e.printStackTrace();
@@ -646,7 +665,7 @@ public class  UserController {
             Article article = articleService.getById(noteId);
             Message message = new Message();
             ArticleDto articleDto = new ArticleDto();
-            if(article == null) {
+            if (article == null) {
                 message.setStatus(false);
             } else {
                 message.setStatus(true);
@@ -656,7 +675,7 @@ public class  UserController {
             }
             String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -677,8 +696,8 @@ public class  UserController {
             if (articles.size() != 0 && !articles.get(0).getId().equals(noteId)) {
                 status = false;
                 info = "笔记重名，请更换笔记名！";
-            } else{
-                if(articles.size() == 0 || !articles.get(0).getId().equals(noteId)) {
+            } else {
+                if (articles.size() == 0 || !articles.get(0).getId().equals(noteId)) {
                     boolean flag = GlobalFunction.renameFile(GlobalConstant.USER_ARTICLE_PATH + "/" + noteId,
                             article.getTitle() + GlobalConstant.NOTE_SUFFIX, noteName + GlobalConstant.NOTE_SUFFIX);
                     if (flag) {
@@ -707,7 +726,7 @@ public class  UserController {
      * 上传笔记
      */
     @RequestMapping(value = "uploadNote", method = {RequestMethod.POST})
-    public String uploadNote(HttpServletRequest request, HttpServletResponse response) {
+    public String uploadNote(HttpServletRequest request) {
         try {
             DiskFileItemFactory factory = new DiskFileItemFactory(1024 * 1024, new File(GlobalConstant.TEMP_PATH));
             ServletFileUpload upload = new ServletFileUpload(factory);
@@ -722,7 +741,7 @@ public class  UserController {
                             continue;
                         }
 
-                        fileName =fileName.split("\\.")[0];
+                        fileName = fileName.split("\\.")[0];
                         String id = GlobalFunction.getUUID();
                         String dirPath = GlobalConstant.USER_ARTICLE_PATH + "/" + id;
                         String filePath = dirPath + "/" + fileName + GlobalConstant.NOTE_SUFFIX;
@@ -759,8 +778,6 @@ public class  UserController {
     @RequestMapping(value = "downloadNote", method = {RequestMethod.GET})
     public void downloadNote(HttpServletRequest request, HttpServletResponse response) {
         String noteId = request.getParameter("noteId");
-        // 设置编码（如果文件名乱码，尝试打开解决问题）
-        // fileName = new String(fileName.getBytes("ISO8859-1"),"UTF-8");
         String fileName = request.getParameter("noteName");
         fileName = fileName + GlobalConstant.NOTE_SUFFIX;
         try {
@@ -807,17 +824,17 @@ public class  UserController {
                 }
             }
 
-            if(status) {
+            if (status) {
                 // 1.更新笔记数据库
                 String content = request.getParameter("data");
-                if(!article.getTitle().equals(noteName)) {
+                if (!article.getTitle().equals(noteName)) {
                     String dirPath = GlobalConstant.USER_ARTICLE_PATH + "/" + noteId;
                     String oldName = article.getTitle() + GlobalConstant.NOTE_SUFFIX;
                     String newName = noteName + GlobalConstant.NOTE_SUFFIX;
                     GlobalFunction.renameFile(dirPath, oldName, newName);
                     article.setTitle(noteName);
+                    articleService.update(article);
                 }
-                articleService.update(article);
 
                 //2. 更新笔记文件
                 String targetFilePath = GlobalConstant.USER_ARTICLE_PATH + "/" + noteId + "/" + noteName + GlobalConstant.NOTE_SUFFIX;
@@ -827,9 +844,9 @@ public class  UserController {
                 writer.close();
 
                 // 3.更新分享页面
-                if(article.getIsOpen() == GlobalConstant.NOTE_STATUS.SHARE.getIndex()) {
+                if (article.getIsOpen() == GlobalConstant.NOTE_STATUS.SHARE.getIndex()) {
                     String url = article.getShareUrl();
-                    if(url != null) {
+                    if (url != null) {
                         createSharePage(noteId, url);
                     }
                 }
@@ -837,7 +854,7 @@ public class  UserController {
                 // 4.更新笔记标签
                 String editorTags = request.getParameter("tag");
                 articleTagService.removeAllByArticleId(noteId);
-                if(!StringUtils.isBlank(editorTags)) {
+                if (!StringUtils.isBlank(editorTags)) {
                     // 获取笔记新标签
                     String[] editorTag = editorTags.trim().split("\\s+");
                     for (String tagName : editorTag) {
@@ -887,14 +904,14 @@ public class  UserController {
             BeanUtils.copyProperties(article, articleRecycle);
 
             // 从笔记表移除并加入笔记回收表
-            if(articleService.removeById(noteId) == 1 && articleRecycleService.save(articleRecycle) == 1) {
+            if (articleService.removeById(noteId) == 1 && articleRecycleService.save(articleRecycle) == 1) {
                 status = true;
             }
             Message msg = new Message();
             msg.setStatus(status);
             String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -910,8 +927,8 @@ public class  UserController {
             String noteId = request.getParameter("noteId");
 
             // 从数据库中移除
-            if(!StringUtils.isBlank(noteId)) {
-                if(articleRecycleService.removeById(noteId) == 1) {
+            if (!StringUtils.isBlank(noteId)) {
+                if (articleRecycleService.removeById(noteId) == 1) {
                     status = true;
                 }
                 // 清除标签
@@ -922,14 +939,14 @@ public class  UserController {
             logService.saveLog(request, GlobalConstant.LOG_NOTE.type, GlobalConstant.LOG_NOTE.FOREVER_REMOVE_NOTE.getName(), getSelfId());
 
             // 删除笔记所在目录
-            String path = GlobalConstant.USER_ARTICLE_PATH  + "/" + noteId;
+            String path = GlobalConstant.USER_ARTICLE_PATH + "/" + noteId;
             FileUtils.deleteQuietly(new File(path));
 
             Message msg = new Message();
             msg.setStatus(status);
             String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
-        }catch (Exception e) {
+        } catch (Exception e) {
             // 保存日志
             logService.saveLog(request, e, GlobalConstant.LOG_NOTE.type, GlobalConstant.LOG_NOTE.FOREVER_REMOVE_NOTE.getName(), getSelfId());
             e.printStackTrace();
@@ -947,12 +964,12 @@ public class  UserController {
             response.setContentType("text/html;charset=utf-8");
             String noteId = request.getParameter("noteId");
 
-            if(!StringUtils.isBlank(noteId)) {
+            if (!StringUtils.isBlank(noteId)) {
                 ArticleRecycle articleRecycle = articleRecycleService.getById(noteId);
                 Article article = new Article();
                 BeanUtils.copyProperties(articleRecycle, article);
                 List<Article> list = articleService.listArticleByName(getSelfId(), articleRecycle.getDirId(), articleRecycle.getTitle());
-                if (list.size() !=0) {
+                if (list.size() != 0) {
                     for (int i = 1; ; i++) {
                         List<Article> lists = articleService.listArticleByName(getSelfId(), articleRecycle.getDirId(), articleRecycle.getTitle() + "(" + i + ")");
                         if (lists.size() == 0) {
@@ -961,8 +978,8 @@ public class  UserController {
                         }
                     }
                 }
-                if(articleRecycleService.removeById(noteId) == 1 && articleService.save(article) == 1) {
-                    if(article.getDirId() != null) {
+                if (articleRecycleService.removeById(noteId) == 1 && articleService.save(article) == 1) {
+                    if (article.getDirId() != null) {
                         msg.setInfo(article.getDirId());
                         msg.setName(article.getTitle());
                     }
@@ -972,7 +989,7 @@ public class  UserController {
                 String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
                 response.getWriter().write(data);
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -981,11 +998,11 @@ public class  UserController {
      * 清空回收站
      */
     @RequestMapping(value = "clearRubbish", method = {RequestMethod.GET})
-    public void clearRubbish( HttpServletResponse response) {
+    public void clearRubbish(HttpServletResponse response) {
         try {
             String uid = getSelfId();
             Message message = new Message();
-            if(!StringUtils.isBlank(uid)) {
+            if (!StringUtils.isBlank(uid)) {
                 response.setContentType("text/html;charset=utf-8");
 
                 List<ArticleRecycle> list = articleRecycleService.listSelfRecycle(uid);
@@ -1019,27 +1036,35 @@ public class  UserController {
         int len;
         response.setContentType("text/html;charset=utf-8");
         try {
-            String noteName = request.getParameter("noteName");
-            String noteId = request.getParameter("noteId");
-            String targetFilePath = GlobalConstant.USER_ARTICLE_PATH + "/" + noteId + "/" + noteName + GlobalConstant.NOTE_SUFFIX;
-
-            // 获取文件内容
-            InputStreamReader in = new InputStreamReader(new FileInputStream(targetFilePath), "UTF-8");
-            StringBuilder sb = new StringBuilder();
-
-            while ((len = in.read(buf, 0, buf.length)) > 0) {
-                sb.append(buf,0,len);
-            }
-            in.close();
-
-            // 获取所有附件
-            List<ArticleAffix> affixes = articleAffixService.listByArticleId(noteId);
-
             Message message = new Message();
-            message.setInfo(sb.toString());
-            message.setName(noteName);
-            message.setNoteTag(getNoteTag(noteId));
-            message.setAffixes(affixes);
+            String noteId = request.getParameter("noteId");
+            if(StringUtils.isBlank(noteId)) {
+                message.setStatus(false);
+            } else {
+                String noteName = request.getParameter("noteName");
+                if(StringUtils.isBlank(noteName)) {
+                    noteName = articleService.getById(noteId).getTitle();
+                }
+                String targetFilePath = GlobalConstant.USER_ARTICLE_PATH + "/" + noteId + "/" + noteName + GlobalConstant.NOTE_SUFFIX;
+
+                // 获取文件内容
+                InputStreamReader in = new InputStreamReader(new FileInputStream(targetFilePath), "UTF-8");
+                StringBuilder sb = new StringBuilder();
+
+                while ((len = in.read(buf, 0, buf.length)) > 0) {
+                    sb.append(buf, 0, len);
+                }
+                in.close();
+
+                // 获取所有附件
+                List<ArticleAffix> affixes = articleAffixService.listByArticleId(noteId);
+
+                message.setInfo(sb.toString());
+                message.setStatus(true);
+                message.setName(noteName);
+                message.setNoteTag(getNoteTag(noteId));
+                message.setAffixes(affixes);
+            }
             String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
         } catch (IOException e) {
@@ -1058,16 +1083,16 @@ public class  UserController {
         Boolean status = false;
         try {
             Article article = articleService.getById(noteId);
-            if(article != null) {
+            if (article != null) {
                 // 如果文章已经分享，无需再次分享
-                if(article.getIsOpen() == GlobalConstant.NOTE_STATUS.SHARE.getIndex()) {
+                if (article.getIsOpen() == GlobalConstant.NOTE_STATUS.SHARE.getIndex()) {
                     status = true;
 
                     String realUrl = GlobalFunction.getRealUrl(article.getShareUrl());
                     message.setInfo(realUrl);
-                } else if(article.getIsOpen() == GlobalConstant.NOTE_STATUS.NOT_SHARE.getIndex()) {
+                } else if (article.getIsOpen() == GlobalConstant.NOTE_STATUS.NOT_SHARE.getIndex()) {
                     String url = createSharePage(noteId, null);
-                    if(!StringUtils.isBlank(url)) {
+                    if (!StringUtils.isBlank(url)) {
                         // 更新数据库
                         article.setIsOpen(GlobalConstant.NOTE_STATUS.SHARE.getIndex());
                         article.setShareUrl(url);
@@ -1103,12 +1128,12 @@ public class  UserController {
         try {
             // 更新数据库
             Article article = articleService.getById(noteId);
-            if(article == null) {
+            if (article == null) {
                 message.setStatus(false);
             } else {
                 article.setIsOpen(GlobalConstant.NOTE_STATUS.NOT_SHARE.getIndex());
                 String url = article.getShareUrl();
-                if(!StringUtils.isBlank(url)) {
+                if (!StringUtils.isBlank(url)) {
                     GlobalFunction.deleteSignalFile(url);
                     article.setShareUrl("");
                 }
@@ -1138,14 +1163,14 @@ public class  UserController {
             List<Article> lists = articleService.listArticleByShare(userId);
 
             // 提取url相对路径
-            for(Article article : lists) {
+            for (Article article : lists) {
                 String url = article.getShareUrl();
                 String realUrl = GlobalFunction.getRealUrl(url);
                 article.setShareUrl(realUrl);
             }
 
             Message message = new Message();
-            if(lists.size() == 0) {
+            if (lists.size() == 0) {
                 message.setStatus(false);
             } else {
                 message.setStatus(true);
@@ -1154,7 +1179,7 @@ public class  UserController {
 
             String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -1169,14 +1194,14 @@ public class  UserController {
             String userId = getSelfId();
             List<Article> lists = articleService.listAnotherShareArticle(userId);
             Message message = new Message();
-            if(lists.size() == 0) {
+            if (lists.size() == 0) {
                 message.setStatus(false);
             } else {
                 List<ArticleDto> articleDtos = new ArrayList<>();
                 // 随机取SHOW_SHARE_NUM个笔记
 
                 List<Integer> shareNOs = random(GlobalConstant.SHOW_SHARE_NUM, lists.size());
-                for(Integer no : shareNOs) {
+                for (Integer no : shareNOs) {
                     Article article = lists.get(no);
                     ArticleDto articleDto = new ArticleDto();
                     BeanUtils.copyProperties(article, articleDto);
@@ -1188,7 +1213,7 @@ public class  UserController {
 
                     User user = userService.getById(articleDto.getUserId());
                     String iconUrl = user.getIcon();
-                    if(!StringUtils.isBlank(iconUrl)) {
+                    if (!StringUtils.isBlank(iconUrl)) {
                         String iconRealUrl = GlobalFunction.getRealUrl(iconUrl);
                         articleDto.setAuthorIcon(iconRealUrl);
                     }
@@ -1218,7 +1243,7 @@ public class  UserController {
         try {
             if (affixId != null) {
                 ArticleAffix articleAffix = articleAffixService.getById(affixId);
-                if(articleAffix != null) {
+                if (articleAffix != null) {
                     // 删除存在服务器上的文件
                     GlobalFunction.deleteSignalFile(articleAffix.getPath());
                     // 删除记录
@@ -1230,7 +1255,7 @@ public class  UserController {
             message.setStatus(status);
             String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -1257,17 +1282,17 @@ public class  UserController {
                             String fieldName = item.getFieldName();
                             String fieldValue = item.getString("UTF-8");
                             // 此处fieldName即为noteId,如果获取失败，就没有上传附件的意义
-                            if(StringUtils.isBlank(fieldName)) {
+                            if (StringUtils.isBlank(fieldName)) {
                                 break;
                             } else {
                                 noteId = fieldValue;
                             }
                         } else {
-                            if(!StringUtils.isBlank(noteId)) {
+                            if (!StringUtils.isBlank(noteId)) {
                                 String fileName = item.getName();
                                 // 出国文件名长度超长，只取最后位数
-                                if(fileName.length() > 64) {
-                                    fileName = fileName.substring(fileName.length()-63);
+                                if (fileName.length() > 64) {
+                                    fileName = fileName.substring(fileName.length() - 63);
                                 }
                                 // 如果文件名为空，就跳过
                                 if (StringUtils.isBlank(fileName)) {
@@ -1312,59 +1337,60 @@ public class  UserController {
         String affixId = request.getParameter("affixId");
         Message message = new Message();
         response.setContentType("text/html;charset=utf-8");
-       try {
-           if(affixId == null) {
-               message.setStatus(false);
-           } else {
-               ArticleAffix articleAffix = articleAffixService.getById(affixId);
-               // 数据库中文件绝对路径
-               String path = articleAffix.getPath();
+        try {
+            if (affixId == null) {
+                message.setStatus(false);
+            } else {
+                ArticleAffix articleAffix = articleAffixService.getById(affixId);
+                // 数据库中文件绝对路径
+                String path = articleAffix.getPath();
 
-               // 用来判断文件后缀的临时变量
-               String temp = path.toLowerCase();
-               Boolean pdfFlag, previewFlag = false;
+                // 用来判断文件后缀的临时变量
+                String temp = path.toLowerCase();
+                Boolean pdfFlag, previewFlag = false;
 
-               // 判断是否是除pdf外的可转换后缀
-               for (String ss : GlobalConstant.PREIVER_SUFFIX) {
-                   if(temp.endsWith(ss)) {
-                       previewFlag = true;
-                       break;
-                   }
-               }
-               // 判断是否是pdf后缀
-               pdfFlag = temp.endsWith(".pdf");
+                // 判断是否是除pdf外的可转换后缀
+                for (String ss : GlobalConstant.PREIVER_SUFFIX) {
+                    if (temp.endsWith(ss)) {
+                        previewFlag = true;
+                        break;
+                    }
+                }
+                // 判断是否是pdf后缀
+                pdfFlag = temp.endsWith(".pdf");
 
-               if(pdfFlag) {
-                   int i = path.indexOf("upload");
-                   String url = GlobalConstant.SER_URL + "/generic/web/viewer.html?file=/" + path.substring(i);
-                   message.setInfo(url);
-                   message.setStatus(true);
-               } else if(previewFlag) {
-                   String realUrl = GlobalFunction.getRealUrl(path);
-                   message.setInfo(realUrl);
-                   message.setStatus(true);
-               } else {
-                   // 如果不是，判断是否已经被转换了
-                   FileConvert fileConvert = fileConvertService.getById(affixId);
-                   if(fileConvert == null) {
-                       // 如果没有被转换，无法预览
-                       message.setStatus(false);
-                   } else {
-                       // 如果转换了，预览转换后的文件
-                       String convertedPath = fileConvert.getPath();
-                       int i = convertedPath.indexOf("upload");
-                       String url = GlobalConstant.SER_URL + "/generic/web/viewer.html?file=/" + convertedPath.substring(i);
-                       message.setInfo(url);
-                       message.setStatus(true);
-                   }
-               }
-           }
-           String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
-           response.getWriter().write(data);
-       }catch (IOException e) {
-           e.printStackTrace();
-       }
+                if (pdfFlag) {
+                    int i = path.indexOf("upload");
+                    String url = GlobalConstant.SER_URL + "/generic/web/viewer.html?file=/" + path.substring(i);
+                    message.setInfo(url);
+                    message.setStatus(true);
+                } else if (previewFlag) {
+                    String realUrl = GlobalFunction.getRealUrl(path);
+                    message.setInfo(realUrl);
+                    message.setStatus(true);
+                } else {
+                    // 如果不是，判断是否已经被转换了
+                    FileConvert fileConvert = fileConvertService.getById(affixId);
+                    if (fileConvert == null) {
+                        // 如果没有被转换，无法预览
+                        message.setStatus(false);
+                    } else {
+                        // 如果转换了，预览转换后的文件
+                        String convertedPath = fileConvert.getPath();
+                        int i = convertedPath.indexOf("upload");
+                        String url = GlobalConstant.SER_URL + "/generic/web/viewer.html?file=/" + convertedPath.substring(i);
+                        message.setInfo(url);
+                        message.setStatus(true);
+                    }
+                }
+            }
+            String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
     /**
      * PDF转换
      * 支持格式：doc、docx、xls、xlsx、ppt、pptx
@@ -1381,7 +1407,7 @@ public class  UserController {
             FileConvert fileConvert = fileConvertService.getById(affixId);
 
             // 如果存在，则直接返回即可
-            if(fileConvert != null) {
+            if (fileConvert != null) {
                 msg.setStatus(true);
                 String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
                 response.getWriter().write(data);
@@ -1393,7 +1419,7 @@ public class  UserController {
                 String fileName = tmp[0];
                 String suffix = tmp[1];
 
-               String articleId = articleAffix.getArticleid();
+                String articleId = articleAffix.getArticleid();
 
                 String inputPath = GlobalConstant.USER_ARTICLE_PATH + "/" + articleId + "/" + name;
                 String outputPath = GlobalConstant.USER_ARTICLE_PATH + "/" + articleId + "/" + fileName + ".pdf";
@@ -1404,7 +1430,7 @@ public class  UserController {
                         i = WordToPdf.run(inputPath, outputPath);
                         break;
                     case "xls":
-                    case"xlsx":
+                    case "xlsx":
                         i = ExcelToPdf.run(inputPath, outputPath);
                         break;
                     case "ppt":
@@ -1432,7 +1458,7 @@ public class  UserController {
                 }
 
                 // 如果转换成功，存入FileConvert表
-                if(status) {
+                if (status) {
                     FileConvert fc = new FileConvert();
                     fc.setAffixId(affixId);
                     fc.setPath(outputPath);
@@ -1446,7 +1472,7 @@ public class  UserController {
                 response.getWriter().write(data);
             }
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -1455,42 +1481,96 @@ public class  UserController {
      * 模糊匹配笔记名、标签名、笔记内容
      */
     @RequestMapping(value = "nbSearch", method = {RequestMethod.POST})
-    public void nbSearch(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
-        String content = request.getParameter("content");
+    public String nbSearch(String keywords, Model model) {
+        List<Map<String, String>> result = new ArrayList<>();
         try {
-            Message message = new Message();
-            if(StringUtils.isBlank(content)) {
-                message.setStatus(false);
-            } else {
-                // 查询笔记名
-                List<Article> listByName = articleService.listArticleByTitle(getSelfId(),content);
-
-                // 查询笔记标签
-                List<Article> listByTitle = articleService.listArticleByTagName(getSelfId(),content);
-
-                // 文件内容搜索
+            if (!StringUtils.isBlank(keywords)) {
+                // 查询笔记名和内容
                 LuceneUtils.prepareIndex(GlobalConstant.USER_ARTICLE_INDEX_PATH);
                 LuceneUtils.createIndex(GlobalConstant.USER_ARTICLE_PATH, GlobalConstant.USER_ARTICLE_INDEX_PATH);
-                List<String> ids = LuceneUtils.searchIndex(content, GlobalConstant.USER_ARTICLE_INDEX_PATH);
-                List<Article> contentList = getArticleList(ids);
+                List<Map<String, String>> listByNameAndContent = LuceneUtils.searchIndex(keywords, GlobalConstant.USER_ARTICLE_INDEX_PATH);
 
-                // 求集合的并集
-                List<Article> tempList = lists2Set(listByName, listByTitle);
-                List<Article> result = lists2Set(tempList, contentList);
-
-                if(result.size() == 0) {
-                    message.setStatus(false);
-                } else {
-                    message.setStatus(true);
-                    message.setArticles(result);
+                // 查询笔记标签
+                List<Article> listByTag = articleService.listArticleByTagName(getSelfId(), keywords);
+                List<String> listIdByTag = new ArrayList<>();
+                for(Article article : listByTag) {
+                    listIdByTag.add(article.getId());
                 }
+
+                List<String> luceneIds = new ArrayList<>();
+                for(Map<String, String> map : listByNameAndContent) {
+                    Map<String, String> tmpMap = new HashMap<>(16);
+                    String noteId = map.get("noteId");
+                    String noteName = map.get("noteName");
+                    String content = map.get("content");
+
+                    tmpMap.put("noteId", noteId);
+                    tmpMap.put("noteName", noteName);
+                    // 如果内容为空，则说明内容中不包含关键字，则直接获取文件内容即可
+                    if(StringUtils.isEmpty(content)) {
+                        content = getAbstractText(noteId);
+                    }
+                    tmpMap.put("content", content);
+
+                    // 如果Lucene搜索结果也在标签搜索结果中，则对于指定标签也加上高亮显示
+                    StringBuilder tagBuilder = new StringBuilder();
+
+                    List<ArticleTagKey> articleTagKeys = articleTagService.listByArticleId(noteId);
+                    for(ArticleTagKey tag : articleTagKeys) {
+                        String tagName = tagService.getByName(tag.getTagId()).getName();
+                        if(tagName.contains(keywords)) {
+                            tagBuilder.append("<span style=\"color:red\">").append(tagName).append("</span>");
+                        } else {
+                            tagBuilder.append(tagName);
+                        }
+                        tagBuilder.append("\t");
+                    }
+                    tmpMap.put("tag", tagBuilder.toString());
+
+                    // 将所有由Lucene搜到的笔记加入集合，用于后面判断
+                    luceneIds.add(noteId);
+                    // 将结果放入result
+                    result.add(tmpMap);
+                }
+
+                // 将仅标签匹配的笔记加入集合
+                for(String id : listIdByTag) {
+                    // 如果不包含，则说明只有标签匹配，因此直接
+                    if(!luceneIds.contains(id)) {
+                        Map<String, String> tmpMap = new HashMap<>(16);
+                        tmpMap.put("noteId", id);
+                        tmpMap.put("noteName", articleService.getById(id).getTitle());
+                        tmpMap.put("content", getAbstractText(id));
+
+                        StringBuilder tagBuilder = new StringBuilder();
+                        List<ArticleTagKey> articleTagKeys = articleTagService.listByArticleId(id);
+                        for(ArticleTagKey tag : articleTagKeys) {
+                            String tagName = tagService.getById(tag.getTagId()).getName();
+                            if(tagName.contains(keywords)) {
+                                tagBuilder.append("<span style=\"color:red\">").append(tagName).append("</span>");
+                            } else {
+                                tagBuilder.append(tagName);
+                            }
+                            tagBuilder.append("\t");
+                        }
+                        tmpMap.put("tag", tagBuilder.toString());
+                        // 将结果放入result
+                        result.add(tmpMap);
+                    }
+                }
+
             }
-            String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
-            response.getWriter().write(data);
-        }catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
+        model.addAttribute("result",result);
+        return "/user/searchResult";
+    }
+
+    @RequestMapping(value = "searchResult", method = {RequestMethod.GET})
+    public String searchResult(String id, RedirectAttributes model) {
+        model.addFlashAttribute("id", id);
+        return "redirect:/user/index";
     }
     /*---------   笔记管理区域（END）   ----------*/
 
@@ -1510,8 +1590,8 @@ public class  UserController {
             String dirName = request.getParameter("dirName");
 
             ArticleDir directory = new ArticleDir();
-            List<ArticleDir> articleDir = articleDirService.getByName(getSelfId(),parentId,dirName);
-            if ( articleDir.size()!= 0) {
+            List<ArticleDir> articleDir = articleDirService.getByName(getSelfId(), parentId, dirName);
+            if (articleDir.size() != 0) {
                 status = false;
                 info = "目录名重复，请更换目录名！";
             } else {
@@ -1522,7 +1602,7 @@ public class  UserController {
                 directory.setParentId(parentId);
                 directory.setCreateDate(new Date());
                 int i = articleDirService.save(directory);
-                if(i != 1) {
+                if (i != 1) {
                     status = false;
                     info = "数据库更新失败";
                 }
@@ -1532,7 +1612,7 @@ public class  UserController {
             msg.setInfo(info);
             String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -1554,7 +1634,7 @@ public class  UserController {
 
             // 2.删除目录及其子目录
             int i = articleDirService.remove(dirId);
-            if(i != 1) {
+            if (i != 1) {
                 status = false;
             }
 
@@ -1580,14 +1660,14 @@ public class  UserController {
             String dirId = request.getParameter("dirId");
             String dirName = request.getParameter("dirName");
             ArticleDir directory = articleDirService.getById(dirId);
-            List<ArticleDir> articleDirs = articleDirService.getByName(getSelfId(),directory.getParentId(),dirName);
+            List<ArticleDir> articleDirs = articleDirService.getByName(getSelfId(), directory.getParentId(), dirName);
             if (articleDirs.size() != 0 && !articleDirs.get(0).getId().equals(dirId)) {
                 status = false;
                 info = "目录重名，请更换目录名！";
             } else {
                 directory.setName(dirName);
                 int i = articleDirService.update(directory);
-                if(i != 1) {
+                if (i != 1) {
                     status = false;
                     info = "数据库更新失败！";
                 }
@@ -1604,6 +1684,7 @@ public class  UserController {
     /*---------   目录管理区域（END）   ----------*/
 
     /*---------   网盘管理区域（Start）   ----------*/
+
     /**
      * 初始化云盘目录树
      */
@@ -1613,11 +1694,11 @@ public class  UserController {
         String id = request.getParameter("dirId");
         try {
             // 顶层目录 id:root name:我的网盘
-            DirectoryTree directoryTree = new DirectoryTree(id,"我的网盘");
+            DirectoryTree directoryTree = new DirectoryTree(id, "我的网盘");
             initPanDirectoryTree(directoryTree);
             String data = JSON.toJSONString(directoryTree, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -1632,11 +1713,11 @@ public class  UserController {
             String uid = getSelfId();
             String perfect;
             Integer size = userPanService.countUsedSize(uid);
-            if(size == null) {
+            if (size == null) {
                 perfect = "0";
             } else {
-                DecimalFormat df=new DecimalFormat("0.00");
-                perfect = df.format((float)size / GlobalConstant.DEFAULT_PAN_SIZE * 100);
+                DecimalFormat df = new DecimalFormat("0.00");
+                perfect = df.format((float) size / GlobalConstant.DEFAULT_PAN_SIZE * 100);
             }
 
             Map<String, Object> map = new HashMap<>(16);
@@ -1645,7 +1726,7 @@ public class  UserController {
 
             String data = JSON.toJSONString(map, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -1678,13 +1759,13 @@ public class  UserController {
                                 continue;
                             }
                             //处理重名
-                            List<UserPan> list = userPanService.getByName(dirId, fileName,getSelfId());
-                            String name = fileName .substring(0,fileName .lastIndexOf("."));
-                            String prefix=fileName.substring(fileName.lastIndexOf("."));
+                            List<UserPan> list = userPanService.getByName(dirId, fileName, getSelfId());
+                            String name = fileName.substring(0, fileName.lastIndexOf("."));
+                            String prefix = fileName.substring(fileName.lastIndexOf("."));
                             if (!list.isEmpty()) {
                                 for (int i = 1; ; i++) {
                                     String tempName = name + "(" + Integer.toString(i) + ")" + prefix;
-                                    List<UserPan> list1 = userPanService.getByName(dirId, tempName,getSelfId());
+                                    List<UserPan> list1 = userPanService.getByName(dirId, tempName, getSelfId());
                                     if (list1.isEmpty()) {
                                         fileName = name + "(" + Integer.toString(i) + ")" + prefix;
                                         break;
@@ -1732,8 +1813,6 @@ public class  UserController {
      */
     @RequestMapping(value = "downloadUserPan", method = {RequestMethod.GET})
     public void downloadUserPan(HttpServletRequest request, HttpServletResponse response) {
-        // 设置编码（如果文件名乱码，尝试打开解决问题）
-        // fileName = new String(fileName.getBytes("ISO8859-1"),"UTF-8");
         String fileName = request.getParameter("panName");
         String userPanId = request.getParameter("panId");
         try {
@@ -1767,20 +1846,20 @@ public class  UserController {
         String searchKey = request.getParameter("searchKey");
         try {
             Message message = new Message();
-            if(StringUtils.isBlank(searchKey)) {
+            if (StringUtils.isBlank(searchKey)) {
                 message.setStatus(false);
             } else {
                 // 查询文件
-                List<UserPan> userPans = userPanService.listUserPanByTitle(getSelfId(),searchKey);
+                List<UserPan> userPans = userPanService.listUserPanByTitle(getSelfId(), searchKey);
                 // 查询文件夹
-                ArrayList<DirectoryTree> list = new  ArrayList<>();
-                List<PanDir> panDirs = panDirService.listPanDirByTitle(getSelfId(),searchKey);
-                for (PanDir panDir :panDirs) {
-                    DirectoryTree directoryTree = new DirectoryTree(panDir.getId(),panDir.getName());
+                ArrayList<DirectoryTree> list = new ArrayList<>();
+                List<PanDir> panDirs = panDirService.listPanDirByTitle(getSelfId(), searchKey);
+                for (PanDir panDir : panDirs) {
+                    DirectoryTree directoryTree = new DirectoryTree(panDir.getId(), panDir.getName());
                     list.add(directoryTree);
                 }
 
-                if(userPans.size() == 0 && panDirs.size() == 0) {
+                if (userPans.size() == 0 && panDirs.size() == 0) {
                     message.setStatus(false);
                 } else {
                     message.setStatus(true);
@@ -1790,7 +1869,7 @@ public class  UserController {
             }
             String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -1811,7 +1890,7 @@ public class  UserController {
             if (list.size() != 0) {
                 status = false;
                 info = "文件夹重名!请更换文件夹名";
-            } else{
+            } else {
                 PanDir directory = new PanDir();
                 String dirId = GlobalFunction.getUUID();
                 directory.setId(dirId);
@@ -1820,7 +1899,7 @@ public class  UserController {
                 directory.setParentId(parentId);
                 directory.setCreateDate(new Date());
                 int i = panDirService.save(directory);
-                if(i != 1) {
+                if (i != 1) {
                     status = false;
                     info = "保存数据库失败!";
                 }
@@ -1832,7 +1911,7 @@ public class  UserController {
 
             String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -1887,10 +1966,10 @@ public class  UserController {
             if (list.size() > 0 && !list.get(0).getId().equals(dirId)) {
                 status = false;
                 info = "文件夹重名!请更换文件夹名";
-            } else{
+            } else {
                 directory.setName(dirName);
                 int i = panDirService.update(directory);
-                if(i != 1) {
+                if (i != 1) {
                     status = false;
                     info = "更新数据库失败";
                 }
@@ -1916,12 +1995,13 @@ public class  UserController {
         //判断删除文件还是目录
         if (panDirService.getById(deleteId) != null) {
             //删除目录
-            if(!deletePanFile(deleteId)) {
+            if (!deletePanFile(deleteId)) {
                 status = false;
             }
         } else {
             //删除文件
-            if (!GlobalFunction.deleteSignalFile(GlobalConstant.USER_PAN_PATH + "/" + deleteId)) {
+            String filePath = GlobalConstant.USER_PAN_PATH + "/" + deleteId;
+            if (!GlobalFunction.deleteSignalFile(filePath)) {
                 status = false;
             }
             userPanService.removeById(deleteId);
@@ -1942,6 +2022,7 @@ public class  UserController {
     /*---------   网盘管理区域（END）   ----------*/
 
     /*---------   消息管理区域（Start）   ----------*/
+
     /**
      * 通知UI
      */
@@ -1958,7 +2039,7 @@ public class  UserController {
         response.setContentType("text/html;charset=utf-8");
         try {
             String type = request.getParameter("type");
-            List<Notify> list = notifyService.listByRecvId(getSelfId(), type,null,"create_date desc");
+            List<Notify> list = notifyService.listByRecvId(getSelfId(), type, null, "create_date desc");
             Message message = new Message();
             message.setNotifies(list);
             String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
@@ -1977,7 +2058,7 @@ public class  UserController {
         Message message = new Message();
         try {
             String id = request.getParameter("id");
-            if(!StringUtils.isBlank(id)) {
+            if (!StringUtils.isBlank(id)) {
                 Notify notify = notifyService.getById(id);
                 notify.setStatus(1);
                 notifyService.update(notify);
@@ -2002,7 +2083,7 @@ public class  UserController {
         try {
             Message message = new Message();
             String id = request.getParameter("id");
-            if(!StringUtils.isBlank(id)) {
+            if (!StringUtils.isBlank(id)) {
                 Notify notify = notifyService.getById(id);
                 notify.setStatus(GlobalConstant.NOTIFY_STATUS.READ.getIndex());
                 notifyService.update(notify);
@@ -2019,7 +2100,7 @@ public class  UserController {
     }
 
     /**
-     * 标记消息为已读
+     * 将指定类型消息全部标记为已读
      */
     @RequestMapping(value = "readNotifyByType", method = {RequestMethod.POST})
     public void readNotifyByType(HttpServletRequest request, HttpServletResponse response) {
@@ -2028,15 +2109,15 @@ public class  UserController {
             String type = request.getParameter("type");
             Message message = new Message();
             List<Notify> list = null;
-            if(!StringUtils.isBlank(type)) {
-                if("全部".equals(type)) {
-                    list = notifyService.listByRecvId(getSelfId(),"",GlobalConstant.NOTIFY_STATUS.UNREAD.getIndex(),null);
+            if (!StringUtils.isBlank(type)) {
+                if ("全部".equals(type)) {
+                    list = notifyService.listByRecvId(getSelfId(), "", GlobalConstant.NOTIFY_STATUS.UNREAD.getIndex(), null);
                 } else {
-                    list = notifyService.listByRecvId(getSelfId(),type,GlobalConstant.NOTIFY_STATUS.UNREAD.getIndex(),null);
+                    list = notifyService.listByRecvId(getSelfId(), type, GlobalConstant.NOTIFY_STATUS.UNREAD.getIndex(), null);
                 }
             }
-            if(list != null) {
-                for(Notify notify : list) {
+            if (list != null) {
+                for (Notify notify : list) {
                     notify.setStatus(GlobalConstant.NOTIFY_STATUS.READ.getIndex());
                     notifyService.update(notify);
                 }
@@ -2046,7 +2127,7 @@ public class  UserController {
             }
             String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -2061,7 +2142,7 @@ public class  UserController {
         try {
             Message message = new Message();
             String id = request.getParameter("id");
-            if(!StringUtils.isBlank(id)) {
+            if (!StringUtils.isBlank(id)) {
                 notifyService.removeById(id);
                 message.setStatus(true);
             } else {
@@ -2074,5 +2155,17 @@ public class  UserController {
             e.printStackTrace();
         }
     }
+
+    /**
+     * 删除选中消息
+     */
+    @RequestMapping(value = "removeChoose", method = {RequestMethod.GET})
+    public String removeChoose(String[] ids) {
+        for(String id : ids) {
+            notifyService.removeById(id);
+        }
+        return "redirect:/user/notify";
+    }
+
     /*---------   消息管理区域（END）   ----------*/
 }

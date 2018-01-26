@@ -155,7 +155,6 @@ noteId、noteName即使页面刷新也不会置空，
                 tempTPL = tempTPL.replace(/_id/, _id);
                 $item.prepend(tempTPL);
                 var data = dir[i].data;
-                console.log(name);
                 if (data != []) {
                     var $div = $("a[index-id="+_id+"]").next();
                     showDir($div, data);
@@ -164,8 +163,6 @@ noteId、noteName即使页面刷新也不会置空，
                 var tempTPL = dirTPL3.replace(/_replace/, name);
                 tempTPL = tempTPL.replace(/_id/, _id);
                 $item.append(tempTPL);
-                console.log(name);
-
             }
         }
     }
@@ -213,9 +210,7 @@ noteId、noteName即使页面刷新也不会置空，
                 //删除这个笔记在回收站的位置
                 $parent.remove();
                 var dirId = msg.info;
-                // console.log(dirId);
                 //寻找他的父目录所在的div
-                // console.log(dirId);
                 var $initparent = $("a[index-id$="+dirId+"]").next();
                 //在原父目录尾追加文件
                 $initparent.append('<div><a class="btn js_note_btn" index-id="'+id+'" style="margin-left:20px">'+msg.name+'</a><div>');
@@ -418,16 +413,18 @@ noteId、noteName即使页面刷新也不会置空，
     //笔记的右击分享功能
     function shareNote() {
         var $choosenId = $chooseDir;
-        var id = $choosenId.attr('index-id');
+        var noteId = $choosenId.attr('index-id');
+        var noteName = $choosenId.text();
         //发送要分享的笔记的id
-        sendPost('${ctx}/user/shareNote', {'noteId': id}, true, function (msg) {
+        sendPost('${ctx}/user/shareNote', {'noteId': noteId}, true, function (msg) {
             if (!msg.status) {
                 toastr.error("分享笔记失败");
                 return false;
             } else {
                 var url = msg.info;
                 $("#shareUrl").val(url);
-                $("#noteId").val(id);
+                $("#shareId").val(noteId);
+                $("#shareName").val(noteName);
                 $('#shareNoteModal').modal('show');
                 return true;
             }
@@ -439,27 +436,31 @@ noteId、noteName即使页面刷新也不会置空，
 
     function flushNote(noteId, noteName) {
         sendPost('${ctx}/user/recoverNote', {'noteId': noteId, "noteName": noteName}, true, function (msg) {
-            $("#noteId").val(noteId);
-            $("#noteName").val(noteName);
-            // 添加标签内容
-            $("#editorTags").val("");
-            for(var i=0; i < msg.noteTag.length; i++) {
-                $("#editorTags").val($("#editorTags").val() + msg.noteTag[i].name + " ");
-            }
+            if(msg.status) {
+                $("#noteId").val(noteId);
+                $("#noteName").val(noteName);
+                // 添加标签内容
+                $("#editorTags").val("");
+                for(var i=0; i < msg.noteTag.length; i++) {
+                    $("#editorTags").val($("#editorTags").val() + msg.noteTag[i].name + " ");
+                }
 
-            // 添加附件信息
-            var affixInfo = "";
-            for(var i=0; i< msg.affixes.length; i++) {
-                affixInfo += '<tr id="'+msg.affixes[i].id+'">\n' +
-                    '            <td>'+msg.affixes[i].name+'</td>\n' +
-                    '            <td><button class="btn btn-info btn-sm" onclick="previewAffix(this)" value="'+msg.affixes[i].name+'">预览</button></td>\n' +
-                    '            <td><button class="btn btn-danger btn-sm" onclick="deleteAffix(this)">删除</button></td>\n' +
-                    '            </tr>';
-            }
-            $("#affixContentTBody").html(affixInfo);
+                // 添加附件信息
+                var affixInfo = "";
+                for(var i=0; i< msg.affixes.length; i++) {
+                    affixInfo += '<tr id="'+msg.affixes[i].id+'">\n' +
+                        '            <td>'+msg.affixes[i].name+'</td>\n' +
+                        '            <td><button class="btn btn-info btn-sm" onclick="previewAffix(this)" value="'+msg.affixes[i].name+'">预览</button></td>\n' +
+                        '            <td><button class="btn btn-danger btn-sm" onclick="deleteAffix(this)">删除</button></td>\n' +
+                        '            </tr>';
+                }
+                $("#affixContentTBody").html(affixInfo);
 
-            // 恢复笔记内容
-            editor.txt.html(msg.info);
+                // 恢复笔记内容
+                editor.txt.html(msg.info);
+            } else {
+                toastr.error("获取笔记内容是失败");
+            }
         }, function (error) {
             toastr.error("内部错误");
             return false;
@@ -488,7 +489,6 @@ noteId、noteName即使页面刷新也不会置空，
 
     //模态框出现函数
     function moveNote() {
-
         $('.wjj_div_move').children().remove();
         sendGet('${ctx}/user/initMoveArticleDir', {}, false, function (msg) {
             dir = msg.data;
@@ -503,7 +503,6 @@ noteId、noteName即使页面刷新也不会置空，
     }
 
     function initUI() {
-
         // 模态框文件夹的焦点事件
         $('.js_wjj_move').off('click').on('click',function () {
             $chooseMove = $(this);
@@ -517,7 +516,7 @@ noteId、noteName即使页面刷新也不会置空，
         $('.js_zwjj_move').off('click').on('click',function () {
             $chooseMove = $(this);
             var dirid = $chooseMove.attr('index-id');
-            console.log(dirid);
+            $('#dirId').val(dirid);
             $('.js_wjj_move').addClass("default").removeClass("checked");
             $(this).addClass("checked").removeClass("default");
         })

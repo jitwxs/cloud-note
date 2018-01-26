@@ -2,6 +2,10 @@ package cn.edu.jit.entry;
 
 import java.util.Date;
 
+/**
+ * 登陆实体类
+ * @author jitwxs
+ */
 public class Login {
     private String tel;
 

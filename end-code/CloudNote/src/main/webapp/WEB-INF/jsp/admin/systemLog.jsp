@@ -9,14 +9,14 @@
 <body class="admin_body">
 <!--主体-->
 <div class="admin_container">
-    <h2 class="admin_table_div">系统日志</h2>
+    <h2 class="admin_table_title">系统日志</h2>
     <div id="toolbar" style="margin-right: 20px;">
         <button id="btn_delete" type="button" class="btn btn-default" onclick="delete_more()">
             <span class="glyphicon glyphicon-remove" aria-hidden="true">删除</span>
         </button>
     </div>
     <div class="admin_table_div2">
-        <table id="systemLogTable" class="table table-responsive table-bordered tab-content" style="margin-right: 10%;">
+        <table id="systemLogTable" class="table table-responsive table-bordered tab-content" style="margin-right: 10%;word-break: break-all">
         </table>
     </div>
 </div>

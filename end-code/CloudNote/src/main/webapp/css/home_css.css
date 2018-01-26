@@ -189,3 +189,12 @@
     right: -5px;
     top: -5px;
 }
+
+
+/*搜索栏*/
+#result_container .box1{
+    width:100%;height: 100%;margin-top: 10px;cursor: pointer
+}
+#result_container .title{
+    color: #0000EE;text-decoration: underline;font-size: 18px;cursor: pointer
+}

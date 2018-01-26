@@ -36,6 +36,15 @@
     </div>
     <!--列表-->
     <ul>
+        <%--首页--%>
+        <li class="nav-item">
+            <a href="${ctx}/admin/index">
+                <!--网站配置的图标和文字-->
+                <i class="my-icon nav-icon icon_7"></i>
+                <span>首页</span>
+                <i class="my-icon nav-more"></i>
+            </a>
+        </li>
         <!--网站管理-->
         <li class="nav-item">
             <a href="javascript:;">
