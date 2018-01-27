@@ -18,6 +18,11 @@ public class GlobalConstant {
     public static Integer DEFAULT_PAN_SIZE = 100 * 1024 * 1024;
 
     /**
+     * 后台分页的页面容量
+     */
+    public static Integer PAGE_SIZE = 10;
+
+    /**
      * 是否显示登陆信息
      */
     public static boolean HAS_SHOW_LOGIN_INFO = false;

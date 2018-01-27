@@ -272,4 +272,21 @@
       modifed_date = #{modifedDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+
+  <select id="listByRecvId" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from notify
+    where recv_id = #{recvId}
+    <if test="type != null" >
+      and type = #{type}
+    </if>
+    <if test="status != null" >
+      and status = #{status}
+    </if>
+    <if test="orderBy != null" >
+      order by #{orderBy}
+    </if>
+    limit #{page.startRow}, #{page.pageSize}
+  </select>
 </mapper>

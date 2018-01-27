@@ -21,7 +21,6 @@
     <script src="${ctx}/js/toastr.js"></script>
     <%-- 封装ajax --%>
     <script src="${ctx}/js/http.js"></script>
-
     <style>
         * {
             margin: 0;
@@ -43,7 +42,7 @@
 
         #search_btn {
             float: left;
-            width: 40px;
+            width: 70px;
             height: 33px;
             background: lightskyblue;
             margin-top: 8px;
@@ -91,9 +90,8 @@
     <form method="post" action="${ctx}/user/nbSearch" onsubmit="return nbSearch()">
         <input id="search_key" type="text"
                class="form-control" name="keywords" placeholder="标题、标签、内容" style="width: 40%;float:left;margin-top: 8px;margin-left: 3%" >
-        <button id="search_btn" type="submit">搜索</button>
+        <a id="search_btn" type="submit" class="btn">Search</a>
     </form>
-
 </nav>
 
 <div id="result_num">

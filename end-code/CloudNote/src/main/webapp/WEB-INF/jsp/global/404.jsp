@@ -32,8 +32,7 @@
         <h3>SORRY</h3>
         <h2>4<img src="${ctx}/images/404_confused.gif" alt="image">4</h2>
         <p>An error Occurred in the Application And Your Page could not be Served.</p>
-
-        <a href="${ctx}/">go back</a>
+        <a href="javascript:void(0)" onclick="javascript:history.back(-1);">go back</a>
     </div>
 </div>
 <div class="footer-w3l">

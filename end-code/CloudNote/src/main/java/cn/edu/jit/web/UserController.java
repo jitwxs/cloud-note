@@ -2039,9 +2039,23 @@ public class UserController {
         response.setContentType("text/html;charset=utf-8");
         try {
             String type = request.getParameter("type");
-            List<Notify> list = notifyService.listByRecvId(getSelfId(), type, null, "create_date desc");
+            String pageStr = request.getParameter("pageNo");
+
+            Page page = new Page();
+            page.setTotalCount(notifyService.countByRecvId(getSelfId(),type));
+            if(StringUtils.isBlank(pageStr)) {
+                page.setCurrentPageNo(1);
+            } else {
+                page.setCurrentPageNo(Integer.parseInt(pageStr));
+            }
+            if(StringUtils.isBlank(type) || "全部".equals(type)) {
+                type = null;
+            }
+
+            List<Notify> list = notifyService.listByRecvId(getSelfId(), type, null, "create_date desc", page);
             Message message = new Message();
             message.setNotifies(list);
+            message.setPage(page);
             String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
             response.getWriter().write(data);
         } catch (IOException e) {
@@ -2075,7 +2089,7 @@ public class UserController {
     }
 
     /**
-     * 标记消息为已读
+     * 标记单条消息为已读
      */
     @RequestMapping(value = "readNotify", method = {RequestMethod.POST})
     public void readNotify(HttpServletRequest request, HttpServletResponse response) {
@@ -2107,15 +2121,11 @@ public class UserController {
         response.setContentType("text/html;charset=utf-8");
         try {
             String type = request.getParameter("type");
-            Message message = new Message();
-            List<Notify> list = null;
-            if (!StringUtils.isBlank(type)) {
-                if ("全部".equals(type)) {
-                    list = notifyService.listByRecvId(getSelfId(), "", GlobalConstant.NOTIFY_STATUS.UNREAD.getIndex(), null);
-                } else {
-                    list = notifyService.listByRecvId(getSelfId(), type, GlobalConstant.NOTIFY_STATUS.UNREAD.getIndex(), null);
-                }
+            if("全部".equals(type)) {
+                type = null;
             }
+            Message message = new Message();
+            List<Notify> list = notifyService.listByRecvId(getSelfId(), type, GlobalConstant.NOTIFY_STATUS.UNREAD.getIndex(), null);
             if (list != null) {
                 for (Notify notify : list) {
                     notify.setStatus(GlobalConstant.NOTIFY_STATUS.READ.getIndex());

@@ -76,42 +76,42 @@
                         },
                         {
                             field: 'title',
-                            title: 'title',
+                            title: '标题',
                             align: 'center',
                             valign: 'center',
                             sortable: true
                         },
                         {
                             field: 'ip',
-                            title: 'ip',
+                            title: 'IP',
                             align: 'center',
                             valign: 'center',
                             sortable: true
                         },
                         {
                             field: 'userName',
-                            title: 'userName',
+                            title: '用户名',
                             align: 'center',
                             valign: 'center',
                             sortable: true
                         },
                         {
                             field: 'requestUrl',
-                            title: 'requestUrl',
+                            title: '请求路径',
                             align: 'center',
                             valign: 'center',
                             sortable: true
                         },
                         {
                             field: 'createDate',
-                            title: 'createDate',
+                            title: '创建时间',
                             align: 'center',
                             valign: 'center',
                             sortable: true
                         },
                         {
                             field: 'params',
-                            title: 'params',
+                            title: '参数',
                             width: 200,
                             align: 'center',
                             valign: 'center',
@@ -119,14 +119,14 @@
                         },
                         {
                             field: 'method',
-                            title: 'method',
+                            title: '方法',
                             align: 'center',
                             valign: 'center',
                             sortable: true
                         },
                         {
                             field: "button",
-                            title: "operate",
+                            title: "操作",
                             align: 'center',
                             formatter: AddFunctionAlty,
                             events: operateEvents

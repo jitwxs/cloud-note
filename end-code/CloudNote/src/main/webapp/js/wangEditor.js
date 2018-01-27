@@ -668,41 +668,620 @@ var config = {
         type: 'image',
         // content -> 数组
         content: [{
-            src: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/7a/shenshou_thumb.gif',
-            alt: '[草泥马]'
-        }, {
-            src: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/60/horse2_thumb.gif',
-            alt: '[神马]'
-        }, {
-            src: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/bc/fuyun_thumb.gif',
-            alt: '[浮云]'
-        }, {
-            src: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/c9/geili_thumb.gif',
-            alt: '[给力]'
-        }, {
-            src: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/f2/wg_thumb.gif',
-            alt: '[围观]'
-        }, {
-            src: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/70/vw_thumb.gif',
-            alt: '[威武]'
-        }, {
-            src: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/6e/panda_thumb.gif',
-            alt: '[熊猫]'
-        }, {
-            src: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/81/rabbit_thumb.gif',
-            alt: '[兔子]'
-        }, {
-            src: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/bc/otm_thumb.gif',
-            alt: '[奥特曼]'
-        }, {
-            src: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/15/j_thumb.gif',
-            alt: '[囧]'
-        }, {
-            src: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/89/hufen_thumb.gif',
-            alt: '[互粉]'
-        }, {
-            src: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/c4/liwu_thumb.gif',
-            alt: '[礼物]'
+            "alt": "[坏笑]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/50/pcmoren_huaixiao_org.png"
+        },{
+            "alt": "[舔屏]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/40/pcmoren_tian_org.png"
+        },{
+            "alt": "[污]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/3c/pcmoren_wu_org.png"
+        },{
+            "alt": "[允悲]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/2c/moren_yunbei_org.png"
+        },{
+            "alt": "[笑而不语]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/3a/moren_xiaoerbuyu_org.png"
+        },{
+            "alt": "[费解]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/3c/moren_feijie_org.png"
+        },{
+            "alt": "[憧憬]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/37/moren_chongjing_org.png"
+        },{
+            "alt": "[并不简单]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/fc/moren_bbjdnew_org.png"
+        },{
+            "alt": "[微笑]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/5c/huanglianwx_org.gif"
+        },{
+            "alt": "[酷]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/8a/pcmoren_cool2017_org.png"
+        },{
+            "alt": "[嘻嘻]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/0b/tootha_org.gif"
+        },{
+            "alt": "[哈哈]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/6a/laugh.gif"
+        },{
+            "alt": "[可爱]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/14/tza_org.gif"
+        },{
+            "alt": "[可怜]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/af/kl_org.gif"
+        },{
+            "alt": "[挖鼻]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/0b/wabi_org.gif"
+        },{
+            "alt": "[吃惊]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/f4/cj_org.gif"
+        },{
+            "alt": "[害羞]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/6e/shamea_org.gif"
+        },{
+            "alt": "[挤眼]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/c3/zy_org.gif"
+        },{
+            "alt": "[闭嘴]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/29/bz_org.gif"
+        },{
+            "alt": "[鄙视]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/71/bs2_org.gif"
+        },{
+            "alt": "[爱你]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/6d/lovea_org.gif"
+        },{
+            "alt": "[泪]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/9d/sada_org.gif"
+        },{
+            "alt": "[偷笑]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/19/heia_org.gif"
+        },{
+            "alt": "[亲亲]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/8f/qq_org.gif"
+        },{
+            "alt": "[生病]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/b6/sb_org.gif"
+        },{
+            "alt": "[太开心]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/58/mb_org.gif"
+        },{
+            "alt": "[白眼]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/d9/landeln_org.gif"
+        },{
+            "alt": "[右哼哼]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/98/yhh_org.gif"
+        },{
+            "alt": "[左哼哼]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/6d/zhh_org.gif"
+        },{
+            "alt": "[嘘]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/a6/x_org.gif"
+        },{
+            "alt": "[衰]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/af/cry.gif"
+        },{
+            "alt": "[委屈]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/73/wq_org.gif"
+        },{
+            "alt": "[吐]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/9e/t_org.gif"
+        },{
+            "alt": "[哈欠]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/cc/haqianv2_org.gif"
+        },{
+            "alt": "[抱抱_旧]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/27/bba_org.gif"
+        },{
+            "alt": "[怒]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/7c/angrya_org.gif"
+        },{
+            "alt": "[疑问]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/5c/yw_org.gif"
+        },{
+            "alt": "[馋嘴]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/a5/cza_org.gif"
+        },{
+            "alt": "[拜拜]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/70/88_org.gif"
+        },{
+            "alt": "[思考]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/e9/sk_org.gif"
+        },{
+            "alt": "[汗]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/24/sweata_org.gif"
+        },{
+            "alt": "[困]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/40/kunv2_org.gif"
+        },{
+            "alt": "[睡]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/96/huangliansj_org.gif"
+        },{
+            "alt": "[钱]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/90/money_org.gif"
+        },{
+            "alt": "[失望]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/0c/sw_org.gif"
+        },{
+            "alt": "[色]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/20/huanglianse_org.gif"
+        },{
+            "alt": "[哼]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/49/hatea_org.gif"
+        },{
+            "alt": "[鼓掌]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/36/gza_org.gif"
+        },{
+            "alt": "[晕]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/d9/dizzya_org.gif"
+        },{
+            "alt": "[悲伤]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/1a/bs_org.gif"
+        },{
+            "alt": "[抓狂]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/62/crazya_org.gif"
+        },{
+            "alt": "[黑线]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/91/h_org.gif"
+        },{
+            "alt": "[阴险]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/6d/yx_org.gif"
+        },{
+            "alt": "[怒骂]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/60/numav2_org.gif"
+        },{
+            "alt": "[互粉]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/89/hufen_org.gif"
+        },{
+            "alt": "[打脸]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/32/dalian_org.gif"
+        },{
+            "alt": "[傻眼]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/2b/shayan_org.gif"
+        },{
+            "alt": "[感冒]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/a0/gm_org.gif"
+        },{
+            "alt": "[顶]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/91/d_org.gif"
+        },{
+            "alt": "[ok]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/d6/ok_org.gif"
+        },{
+            "alt": "[耶]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/d9/ye_org.gif"
+        },{
+            "alt": "[good]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/d8/good_org.gif"
+        },{
+            "alt": "[NO]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/ae/buyao_org.gif"
+        },{
+            "alt": "[赞]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/d0/z2_org.gif"
+        },{
+            "alt": "[来]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/40/come_org.gif"
+        },{
+            "alt": "[弱]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/d8/sad_org.gif"
+        },{
+            "alt": "[握手]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/0c/ws_org.gif"
+        },{
+            "alt": "[拳头]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/cc/o_org.gif"
+        },{
+            "alt": "[haha]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/13/ha_org.gif"
+        },{
+            "alt": "[加油]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/e7/pcmoren_jiayou_org.png"
+        },{
+            "alt": "[心]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/40/hearta_org.gif"
+        },{
+            "alt": "[伤心]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/ea/unheart.gif"
+        },{
+            "alt": "[广告]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/60/ad_new0902_org.gif"
+        },{
+            "alt": "[doge]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/b6/doge_org.gif"
+        },{
+            "alt": "[喵喵]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/4a/mm_org.gif"
+        },{
+            "alt": "[二哈]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/74/moren_hashiqi_org.png"
+        },{
+            "alt": "[神奇女侠]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/5a/yunying_zylmshenqi_org.png"
+        },{
+            "alt": "[蝙蝠侠]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/5b/yunying_zylmbianfuxia_org.png"
+        },{
+            "alt": "[笑cry]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/34/xiaoku_org.gif"
+        },{
+            "alt": "[摊手]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/09/pcmoren_tanshou_org.png"
+        },{
+            "alt": "[抱抱]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/70/pcmoren_baobao_org.png"
+        },{
+            "alt": "[跪了]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/6c/pcmoren_guile_org.png"
+        },{
+            "alt": "[吃瓜]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/8a/moren_chiguaqunzhong_org.png"
+        },{
+            "alt": "[哆啦A梦吃惊]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/f0/dorachijing_org.gif"
+        },{
+            "alt": "[小黄人高兴]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/8d/xiaohuangren_gaoxing_org.png"
+        },{
+            "alt": "[小黄人剪刀手]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/ed/xiaohuangren_jiandaoshou_org.png"
+        },{
+            "alt": "[小黄人坏笑]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/d6/xiaohuangren_huaixiao_org.png"
+        },{
+            "alt": "[冰川时代希德奶奶]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/35/bhsj5_nainai_org.gif"
+        },{
+            "alt": "[快银]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/7e/xman_kuaiyin_org.gif"
+        },{
+            "alt": "[暴风女]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/7b/xman_baofengnv_org.gif"
+        },{
+            "alt": "[芒果流口水]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/64/mango_07_org.gif"
+        },{
+            "alt": "[芒果点赞]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/5c/mango_12_org.gif"
+        },{
+            "alt": "[芒果大笑]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/9f/mango_02_org.gif"
+        },{
+            "alt": "[芒果得意]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/ee/mango_03_org.gif"
+        },{
+            "alt": "[芒果萌萌哒]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/49/mango_11_org.gif"
+        },{
+            "alt": "[羊年大吉]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/cc/yangniandj_org.gif"
+        },{
+            "alt": "[西瓜]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/6b/watermelon.gif"
+        },{
+            "alt": "[足球]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/c0/football.gif"
+        },{
+            "alt": "[老妈我爱你]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/46/mothersday_org.gif"
+        },{
+            "alt": "[母亲节]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/36/carnation_org.gif"
+        },{
+            "alt": "[肥皂]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/e5/soap_org.gif"
+        },{
+            "alt": "[有钱]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/e6/youqian_org.gif"
+        },{
+            "alt": "[地球一小时]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/dc/earth1r_org.gif"
+        },{
+            "alt": "[国旗]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/dc/flag_org.gif"
+        },{
+            "alt": "[许愿]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/87/lxhxuyuan_org.gif"
+        },{
+            "alt": "[风扇]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/92/fan.gif"
+        },{
+            "alt": "[炸鸡和啤酒]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/f4/zhaji_org.gif"
+        },{
+            "alt": "[雪]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/00/snow_org.gif"
+        },{
+            "alt": "[马上有对象]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/ee/mashangyouduixiang_org.gif"
+        },{
+            "alt": "[马到成功旧]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/30/madaochenggong_org.gif"
+        },{
+            "alt": "[青啤鸿运当头]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/f8/hongyun_org.gif"
+        },{
+            "alt": "[让红包飞]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/0b/hongbaofei2014_org.gif"
+        },{
+            "alt": "[ali做鬼脸]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/20/alizuoguiliannew_org.gif"
+        },{
+            "alt": "[ali哇]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/de/aliwanew_org.gif"
+        },{
+            "alt": "[xkl转圈]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/f4/xklzhuanquan_org.gif"
+        },{
+            "alt": "[酷库熊顽皮]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/46/kxwanpi_org.gif"
+        },{
+            "alt": "[bm可爱]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/95/bmkeai_org.gif"
+        },{
+            "alt": "[BOBO爱你]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/74/boaini_org.gif"
+        },{
+            "alt": "[转发]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/02/lxhzhuanfa_org.gif"
+        },{
+            "alt": "[得意地笑]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/d4/lxhdeyidixiao_org.gif"
+        },{
+            "alt": "[ppb鼓掌]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/7e/ppbguzhang_org.gif"
+        },{
+            "alt": "[din推撞]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/dd/dintuizhuang_org.gif"
+        },{
+            "alt": "[moc转发]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/cb/moczhuanfa_org.gif"
+        },{
+            "alt": "[lt切克闹]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/73/ltqiekenao_org.gif"
+        },{
+            "alt": "[江南style]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/67/gangnamstyle_org.gif"
+        },{
+            "alt": "[笑哈哈]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/32/lxhwahaha_org.gif"
+        },{
+            "alt": "[星星]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/76/hot_star171109_org.png"
+        },{
+            "alt": "[半星]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/f9/hot_halfstar_org.png"
+        },{
+            "alt": "[空星]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/ff/hot_blankstar_org.png"
+        },{
+            "alt": "[看涨]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/fe/kanzhangv2_org.gif"
+        },{
+            "alt": "[看跌]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/c5/kandiev2_org.gif"
+        },{
+            "alt": "[蛋糕]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/3a/cakev2_thumb.gif"
+        },{
+            "alt": "[话筒]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/9f/huatongv2_org.gif"
+        },{
+            "alt": "[蜡烛]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/d9/lazhuv2_org.gif"
+        },{
+            "alt": "[给力]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/1e/geiliv2_org.gif"
+        },{
+            "alt": "[带着微博去旅行]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/ec/eventtravel_org.gif"
+        },{
+            "alt": "[作揖]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/06/zuoyi_org.gif"
+        },{
+            "alt": "[浪]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/c6/lang_org.gif"
+        },{
+            "alt": "[草泥马]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/7a/shenshou_org.gif"
+        },{
+            "alt": "[偷乐]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/fa/lxhtouxiao_org.gif"
+        },{
+            "alt": "[笑哈哈]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/32/lxhwahaha_org.gif"
+        },{
+            "alt": "[羞嗒嗒]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/df/lxhxiudada_org.gif"
+        },{
+            "alt": "[好爱哦]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/74/lxhainio_org.gif"
+        },{
+            "alt": "[赞啊]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/00/lxhzan_org.gif"
+        },{
+            "alt": "[求关注]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/ac/lxhqiuguanzhu_org.gif"
+        },{
+            "alt": "[好喜欢]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/d6/lxhlike_org.gif"
+        },{
+            "alt": "[绿丝带]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/9b/green_band_org.gif"
+        },{
+            "alt": "[女孩儿]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/1b/kissgirl_org.gif"
+        },{
+            "alt": "[男孩儿]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/4e/kissboy_org.gif"
+        },{
+            "alt": "[浮云]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/bc/fuyun_org.gif"
+        },{
+            "alt": "[兔子]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/81/rabbit_org.gif"
+        },{
+            "alt": "[熊猫]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/6e/panda_org.gif"
+        },{
+            "alt": "[神马]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/60/horse2_org.gif"
+        },{
+            "alt": "[礼物]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/c4/liwu_org.gif"
+        },{
+            "alt": "[喜]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/bf/xi_org.gif"
+        },{
+            "alt": "[围脖]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/3f/weijin_org.gif"
+        },{
+            "alt": "[飞机]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/6d/travel_org.gif"
+        },{
+            "alt": "[围观]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/f2/wg_org.gif"
+        },{
+            "alt": "[威武]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/70/vw_org.gif"
+        },{
+            "alt": "[沙尘暴]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/69/sc_org.gif"
+        },{
+            "alt": "[奥特曼]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/bc/otm_org.gif"
+        },{
+            "alt": "[骷髅]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/bd/kl2_org.gif"
+        },{
+            "alt": "[囧]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/15/j_org.gif"
+        },{
+            "alt": "[钟]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/d3/clock_org.gif"
+        },{
+            "alt": "[照相机]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/33/camera_org.gif"
+        },{
+            "alt": "[微风]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/a5/wind_org.gif"
+        },{
+            "alt": "[太阳]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/e5/sun.gif"
+        },{
+            "alt": "[下雨]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/50/rain.gif"
+        },{
+            "alt": "[猪头]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/58/pig.gif"
+        },{
+            "alt": "[音乐]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/d0/music_org.gif"
+        },{
+            "alt": "[月亮]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/b9/moon.gif"
+        },{
+            "alt": "[鲜花]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/6c/flower_org.gif"
+        },{
+            "alt": "[干杯]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/bd/cheer.gif"
+        },{
+            "alt": "[哆啦A梦花心]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/08/dorahaose_org.gif"
+        },{
+            "alt": "[哆啦A梦害怕]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/c7/dorahaipa_org.gif"
+        },{
+            "alt": "[哆啦A梦吃惊]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/f0/dorachijing_org.gif"
+        },{
+            "alt": "[哆啦A梦汗]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/61/dorahan_org.gif"
+        },{
+            "alt": "[哆啦A梦微笑]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/9e/jqmweixiao_org.gif"
+        },{
+            "alt": "[伴我同行]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/ef/jqmbwtxing_org.gif"
+        },{
+            "alt": "[静香微笑]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/29/jiqimaojingxiang_org.gif"
+        },{
+            "alt": "[大雄微笑]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/8e/jiqimaodaxiong_org.gif"
+        },{
+            "alt": "[胖虎微笑]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/2f/jiqimaopanghu_org.gif"
+        },{
+            "alt": "[小夫微笑]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/21/jiqimaoxiaofu_org.gif"
+        },{
+            "alt": "[哆啦A梦笑]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/54/dora_xiao_org.png"
+        },{
+            "alt": "[哆啦A梦无奈]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/96/dora_wunai_org.png"
+        },{
+            "alt": "[哆啦A梦美味]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/21/dora_meiwei_org.png"
+        },{
+            "alt": "[哆啦A梦开心]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/df/dora_kaixin_org.png"
+        },{
+            "alt": "[哆啦A梦亲亲]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/e0/dora_qinqin_org.png"
+        },{
+            "alt": "[小黄人微笑]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/b3/xiaohuangren_weixiao_org.png"
+        },{
+            "alt": "[小黄人不屑]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/50/xiaohuangren_buxie_org.png"
+        },{
+            "alt": "[小黄人不屑]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/50/xiaohuangren_buxie_org.png"
+        },{
+            "alt": "[小黄人白眼]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/80/xiaohuangren_baiyan_org.png"
+        },{
+            "alt": "[小黄人高兴]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/8d/xiaohuangren_gaoxing_org.png"
+        },{
+            "alt": "[小黄人无奈]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/4e/xiaohuangren_wunai_org.png"
+        },{
+            "alt": "[小黄人惊讶]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/82/xiaohuangren_jingya_org.png"
+        },{
+            "alt": "[小黄人委屈]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/13/xiaohuangren_weiqu_org.png"
+        },{
+            "alt": "[小黄人剪刀手]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/ed/xiaohuangren_jiandaoshou_org.png"
+        },{
+            "alt": "[小黄人得意]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/bb/xiaohuangren_deyi_org.png"
+        },{
+            "alt": "[小黄人坏笑]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/d6/xiaohuangren_huaixiao_org.png"
+        },{
+            "alt": "[蝙蝠侠]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/5b/yunying_zylmbianfuxia_org.png"
+        },{
+            "alt": "[神奇女侠]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/5a/yunying_zylmshenqi_org.png"
+        },{
+            "alt": "[闪电侠]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/62/yunying_zylmshandianxia_org.png"
+        },{
+            "alt": "[钢骨]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/1a/yunying_zylmganggu_org.png"
+        },{
+            "alt": "[海王]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/ae/yunying_zylmhaiwang_org.png"
+        },{
+            "alt": "[正义联盟logo]",
+            "src": "http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/c1/yunying_zylmlogo_org.png"
         }]
     }, {
         // tab 的标题

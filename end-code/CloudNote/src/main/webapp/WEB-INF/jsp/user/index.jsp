@@ -176,7 +176,7 @@
                 ctx.fill();
                 ctx.globalAlpha = 1;
             }
-        }
+        };
 
         function window_resize() {
             w = window.innerWidth;

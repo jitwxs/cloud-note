@@ -17,11 +17,9 @@
             <ul class="nav navbar-nav" style="margin-top: 5px;cursor: pointer;margin-left: 50px">
                 <li><span id="showLeftPush" ><img src="${ctx}/images/look.png"></span></li>
             </ul>
-            <form class="navbar-form navbar-left" id="searchForm" method="post" action="${ctx}/user/nbSearch" onsubmit="return nbSearch()" style="margin-left: 57px" >
-                <div class="form-group">
-                    <input type="text" class="form-control" id="keywords" name="keywords" placeholder="标题、标签、内容">
-                </div>
-                <button type="submit" class="btn btn-default">Search</button>
+            <form class="navbar-form navbar-left" id="searchForm" method="post" action="${ctx}/user/nbSearch" onsubmit="return nbSearch()" style="margin-left: 7.5%;width: 60%;">
+                <input type="text" class="form-control" id="keywords" name="keywords" placeholder="标题、标签、内容" style="width: 80%;">
+                <button type="submit" class="btn btn-default" style="background: lightskyblue;color: white;border-radius: 5px">Search</button>
             </form>
             <ul class="nav navbar-nav navbar-right" >
                 <li role="presentation">

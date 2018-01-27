@@ -3,6 +3,8 @@ package cn.edu.jit.mapper;
 import cn.edu.jit.entry.Notify;
 import cn.edu.jit.entry.NotifyExample;
 import java.util.List;
+
+import cn.edu.jit.entry.Page;
 import org.apache.ibatis.annotations.Param;
 
 public interface NotifyMapper {
@@ -27,4 +29,7 @@ public interface NotifyMapper {
     int updateByPrimaryKeySelective(Notify record);
 
     int updateByPrimaryKey(Notify record);
+
+    List<Notify> listByRecvId(@Param("recvId")String recvId,@Param("type")String type,
+                              @Param("status")Integer status,@Param("orderBy")String orderBy,@Param("page")Page page);
 }

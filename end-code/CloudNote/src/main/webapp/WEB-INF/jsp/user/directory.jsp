@@ -38,7 +38,7 @@ noteId、noteName即使页面刷新也不会置空，
 
     <div id="div_rubbish" style="margin-top: 20px;">
         <a id="rubbish" style="cursor: pointer;height: 20px;font-size: 15px;color: #337ab7;display:block;margin-left:14px;text-decoration: none">
-            <img src="${ctx}/images/rubbish.png" >回收站</a>
+            <img src="${ctx}/images/rubbish.png" style="width: 20px;height: 20px;">回收站</a>
         <div id="rubbish_container" class="hidden">
         </div>
     </div>

@@ -237,8 +237,6 @@
             <version>5.5.4</version>
         </dependency>
 
-
-
         <!-- Lucene分词器 -->
         <dependency>
             <groupId>IKAnalyzer2012_FF</groupId>

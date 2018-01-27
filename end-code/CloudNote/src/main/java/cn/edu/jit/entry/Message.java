@@ -123,6 +123,14 @@ public class Message implements Serializable {
         this.users = users;
     }
 
+    public Page getPage() {
+        return page;
+    }
+
+    public void setPage(Page page) {
+        this.page = page;
+    }
+
     public UserDto getUserDto() {
         return userDto;
     }
@@ -186,6 +194,8 @@ public class Message implements Serializable {
     private String tel;
 
     private User user;
+
+    private Page page;
 
     private UserDto userDto;
 

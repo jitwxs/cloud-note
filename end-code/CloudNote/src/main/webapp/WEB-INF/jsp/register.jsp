@@ -338,11 +338,12 @@
 
     $('.container1').find('input').eq(1).change(function() {
         password = $(this).val();
-        if ($(this).val().length < 8) {
-            fail($(this), 1, '密码太短，不能少于8个字符');
-        } else {
-            success($(this), 1);
-        }
+        // if ($(this).val().length < 8) {
+        //     fail($(this), 1, '密码太短，不能少于8个字符');
+        // } else {
+        //     success($(this), 1);
+        // }
+        success($(this), 1);
     });
 
 

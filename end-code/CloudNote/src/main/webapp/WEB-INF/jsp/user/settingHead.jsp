@@ -30,11 +30,11 @@
     <div class="row" style="background: #7c6aa6;">
         <div >
             <ul class="nav nav-tabs" style="margin-top: 30px;width: 100%;">
-                <li style="margin-left:15%;" ><a style="color: white;" href="${ctx}/user/index">返回笔记</a></li>
-                <li style="margin-left: 5%;"><a style="color: white;" href="${ctx}/user/accountInfo">账号信息</a></li>
-                <li style="margin-left: 5%;"><a style="color: white;" href="${ctx}/user/accountShare">我的分享</a></li>
-                <li style="margin-left: 5%;"><a style="color: white;" href="${ctx}/user/disk">我的网盘</a></li>
-                <li style="margin-left: 5%;"><a style="color: white;" href="${ctx}/user/notify">站内信</a></li>
+                <li style="margin-left:15%;" ><a style="color: black;" href="${ctx}/user/index">返回笔记</a></li>
+                <li style="margin-left: 5%;"><a style="color: black;" href="${ctx}/user/accountInfo">账号信息</a></li>
+                <li style="margin-left: 5%;"><a style="color: black;" href="${ctx}/user/accountShare">我的分享</a></li>
+                <li style="margin-left: 5%;"><a style="color: black;" href="${ctx}/user/disk">我的网盘</a></li>
+                <li style="margin-left: 5%;"><a style="color: black;" href="${ctx}/user/notify">站内信</a></li>
             </ul>
         </div>
     </div>

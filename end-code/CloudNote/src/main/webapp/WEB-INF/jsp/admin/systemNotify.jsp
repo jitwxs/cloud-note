@@ -273,7 +273,7 @@
                         },
                         {
                             field: "button",
-                            title: "operate",
+                            title: "操作",
                             align: 'center',
                             formatter: AddFunctionAlty,
                             events: operateEvents

@@ -1,26 +1,26 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/global/taglib.jsp" %>
 
-<div class="col-md-10" style="float: right;">
-    <form class="form-inline">
-        <div class="form-group">
+<div class="col-md-10" style="float: right; ">
+    <form class="form-inline" style="margin-bottom: 20px;">
+        <div class="form-group" style="margin-right: 30px;">
             <div class="input-group">
                 <div class="input-group-addon">标题</div>
                 <input type="text" class="form-control" id="editorTitle">
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group" style="margin-right: 30px;">
             <div class="input-group">
                 <div class="input-group-addon">标签</div>
                 <input type="text" class="form-control" id="editorTags">
             </div>
         </div>
         <label>Tip:每当你点到别的地方我们都会为您自动保存，别担心内容丢失哦！</label>
-        <button type="button" class="btn btn-primary" onclick="saveNoteContent()" style="float:right;">立即保存</button>
+        <button type="button" class="btn btn-primary" onclick="saveNoteContent()" style="float:right; margin-right: 10px;">立即保存</button>
         <%--文件信息图标--%>
         <a tabindex="0" class="btn btn-default" role="button" data-toggle="popover"
            data-trigger="focus" title="" data-content="" data-placement="bottom"
-           href="javascript:void(0)" onclick="getNoteInfo()" style="float:right;">文件信息</a>
+           href="javascript:void(0)" onclick="getNoteInfo()" style="float:right; margin-right: 20PX;">文件信息</a>
     </form>
 
     <input type="hidden" id="noteId">

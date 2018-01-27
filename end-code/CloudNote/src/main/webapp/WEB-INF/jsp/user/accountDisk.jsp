@@ -11,7 +11,7 @@
 <div class="container">
     <div class="row" style="margin-top: 20px">
         <div class="col-md-offset-3 col-md-6">
-            <h5 class="progressbar-title" style="text-align: center">网盘总大小：<span id="totalSize"></span>MB</h5>
+            <h5 class="progressbar-title" style="text-align: center;margin-bottom: 70px;">网盘总大小：<span id="totalSize"></span>MB</h5>
             <div class="progress">
                 <div id="process" class="progress-bar" style="width: 80%; background:#005394;">
                     <span id="spans"></span>
@@ -400,7 +400,13 @@
         }
     });
 
-    //查找事件
+    // 绑定回车事件
+    $('#search_key').bind('keypress', function (event) {
+        if (event.keyCode == "13") {
+            $(".btn-search").click();
+        }
+    });
+
     $('.btn-search').on('click', function () {
         //删除最大的面包屑后面所有的面包屑
         $('#mainbread').parent().nextAll().remove();

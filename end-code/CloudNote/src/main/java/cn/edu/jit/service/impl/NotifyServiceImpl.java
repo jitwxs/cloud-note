@@ -2,6 +2,7 @@ package cn.edu.jit.service.impl;
 
 import cn.edu.jit.entry.Notify;
 import cn.edu.jit.entry.NotifyExample;
+import cn.edu.jit.entry.Page;
 import cn.edu.jit.entry.PanDirExample;
 import cn.edu.jit.global.GlobalConstant;
 import cn.edu.jit.mapper.NotifyMapper;
@@ -76,5 +77,23 @@ public class NotifyServiceImpl implements NotifyService {
         }
 
         return notifyMapper.selectByExample(notifyExample);
+    }
+
+    @Override
+    public List<Notify> listByRecvId(String recvId, String type, Integer status, String orderBy, Page page) {
+        return notifyMapper.listByRecvId(recvId, type, status, orderBy, page);
+    }
+
+    @Override
+    public int countByRecvId(String recvId, String type) {
+        NotifyExample notifyExample = new NotifyExample();
+
+        NotifyExample.Criteria criteria = notifyExample.createCriteria();
+        criteria.andRecvIdEqualTo(recvId);
+        if(!StringUtils.isBlank(type)) {
+            criteria.andTypeEqualTo(type);
+        }
+
+        return notifyMapper.countByExample(notifyExample);
     }
 }

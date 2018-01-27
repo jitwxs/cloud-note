@@ -10,11 +10,10 @@
 <div class="admin_container">
     <%--卡片--%>
     <div class="row" style="margin-bottom: 20px;width: 100%;">
-
         <%--1111--%>
         <div class="col-md-3" style="padding: 5px;">
             <div style="border-radius:10px;
-                         height: 150px;
+                         height: 170px;
                          background:rgba(0,0,0,0.5) url(../../../images/card1.jpg);
                          padding: 0;
                          margin-left: 10px;">
@@ -37,7 +36,7 @@
         <%--2222--%>
         <div class="col-md-3" style="padding: 5px;">
             <div style="border-radius:10px;
-                                                height: 150px;
+                                                height: 170px;
                                                 background:rgba(0,0,0,0.5) url(../../../images/card2.jpg);
                                                 padding: 0;
                                                 margin-left: 10px;">
@@ -57,11 +56,10 @@
                 </div>
             </div>
         </div>
-
         <%--3333--%>
         <div class="col-md-3" style="padding: 5px;">
             <div style="border-radius:10px;
-                                                height: 150px;
+                                                height: 170px;
                                                 background:rgba(0,0,0,0.5) url(../../../images/card3.jpg);
                                                 padding: 0;
                                                 margin-left: 10px;">
@@ -85,7 +83,7 @@
         <%--4444--%>
         <div class="col-md-3" style="padding: 5px;">
             <div style="border-radius:10px;
-                                                height: 150px;
+                                                height: 170px;
                                                 background:rgba(0,0,0,0.5) url(../../../images/card4.jpg);
                                                 padding: 0;
                                                 margin-left: 10px;">
@@ -94,7 +92,7 @@
                                 margin-bottom: 10px; width: 100px;
                                 height: 60px;float: right;text-align: right;
                                 color: white;font-size: 20px;padding-right: 10px;">
-                        网盘容量<br/>
+                        网盘使用<br/>
                         <span id="span4">1512</span>
                     </div>
                 </div>
@@ -218,7 +216,9 @@
         ]
     };
     userNum.setOption(useroption);
-    window.onresize = userNum.resize;
+    $(window).on('resize', function () {
+        userNum.resize();
+    });
 
     sendGet('${ctx}/admin/preparerUserInfo', {}, false, function (data) {
         pies.push(data.maleCount);
@@ -317,7 +317,7 @@
                 {
                     name: '每日分享量',
                     type: 'bar',
-                    barWidth: 10,
+                    barWidth: 20,
                     itemStyle: {
                         normal: {
                             barBorderRadius: 5,
