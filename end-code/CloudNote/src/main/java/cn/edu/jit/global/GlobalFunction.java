@@ -1,6 +1,5 @@
 package cn.edu.jit.global;
 
-import cn.edu.jit.util.HttpUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
@@ -22,7 +21,6 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -75,7 +73,6 @@ public class GlobalFunction {
         Subject subject = SecurityUtils.getSubject();
         return (String) subject.getPrincipal();
     }
-
 
     /**
      * 获取资源在服务器上的真实url
@@ -164,7 +161,7 @@ public class GlobalFunction {
      */
     public static void downloadFile(String path, ServletOutputStream out) throws IOException {
         InputStream in = new FileInputStream(path);
-        int len = 0;
+        int len;
         byte[] buf = new byte[1024];
         while ((len = in.read(buf)) > 0) {
             out.write(buf, 0, len);

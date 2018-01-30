@@ -198,6 +198,18 @@ public class AdminController {
         return result;
     }
 
+    private long getFileSize(File f) {
+        long size = 0;
+        File files[] = f.listFiles();
+        for (int i = 0; i < files.length; i++) {
+            if (files[i].isDirectory()) {
+                size = size + getFileSize(files[i]);
+            } else {
+                size = size + files[i].length();
+            }
+        }
+        return size;
+    }
     /*---------   普通方法区域（END）   ----------*/
 
     /*---------   网站信息区域（Start）   ----------*/
@@ -637,7 +649,7 @@ public class AdminController {
     public void prepareBlackHome(HttpServletResponse response) {
         try {
             response.setContentType("text/html;charset=utf-8");
-            List<UserBlacklist> tempList = userBlacklistService.listAll("create_date");
+            List<UserBlacklist> tempList = userBlacklistService.listAll("create_date desc");
 
             List<UserBlacklistDto> list = userBlacklist2Dto(tempList);
 
@@ -965,6 +977,42 @@ public class AdminController {
         }
     }
 
+    /**
+     * 获取临时文件夹大小
+     */
+    @RequestMapping(value = "getTempSize", method = {RequestMethod.GET})
+    public void getTempSize(HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        Message message = new Message();
+        try {
+            File file = new File(GlobalConstant.TEMP_PATH);
+            String size = String.valueOf(getFileSize(file)/1024/1024);
+            message.setInfo(size);
+            String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 清空临时文件夹
+     */
+    @RequestMapping(value = "removeTempDir", method = {RequestMethod.GET})
+    public void removeTempDir(HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        Message message = new Message();
+        try {
+            File tempDir = new File(GlobalConstant.TEMP_PATH);
+            FileUtils.deleteQuietly(tempDir);
+            GlobalFunction.createDir(GlobalConstant.TEMP_PATH);
+            message.setStatus(true);
+            String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     /*---------   系统管理区域（End）   ----------*/
 
     /*---------   消息管理区域（Start）   ----------*/

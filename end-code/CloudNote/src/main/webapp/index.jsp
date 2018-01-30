@@ -19,12 +19,14 @@
 <body>
 <div class="navbar navbar-fixed-top " style="background-color: #7c6aa6">
     <div class="navbar-header">
-        <img src="${ctx}/images/logo_word.png" style="width: 240px;height: 30px;margin-top: 10%;">
         <button type="button" class="navbar-toggle navbar-toggle-collapse">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
+        <a class="navbar-brand" style="padding-top: 0px">
+            <img src="${ctx}/images/logo_word.png" style="width: 240px;height: 30px;margin-top: 8%;">
+        </a>
         <a class="navbar-toggle navbar-toggle-collapse navbar-login" href="${ctx}/login">登录</a>
     </div>
     <div class="navbar-nav-collapse" id="navbar-link">
@@ -32,7 +34,6 @@
             <li><a class="navbar-nav-link active" href="${ctx}/" style="font-size: 20px;">首页</a></li>
             <li><a class="navbar-nav-link" href="${ctx}/login" style="font-size: 20px;">登录</a></li>
             <li><a class="navbar-nav-link" href="${ctx}/register" style="font-size: 20px;">注册</a></li>
-
         </ul>
     </div>
 </div>

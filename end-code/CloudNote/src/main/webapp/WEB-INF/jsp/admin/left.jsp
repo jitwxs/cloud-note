@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="${ctx}/css/bootstrap-theme.css">
     <link rel="stylesheet" href="${ctx}/css/admin_iconfont.css">
     <link rel="stylesheet" href="${ctx}/css/toastr.css">
+    <link rel="stylesheet" href="${ctx}/css/simple-alert.css">
 
     <script src="${ctx}/js/jquery-3.2.1.min.js"></script>
     <script src="${ctx}/js/bootstrap.js"></script>
@@ -20,6 +21,7 @@
     <script src="${ctx}/js/bootstrap-table-toolbar.js"></script>
     <script src="${ctx}/js/admin.js"></script>
     <script src="${ctx}/js/toastr.js"></script>
+    <script src="${ctx}/js/simple-alert.js"></script>
     <script src="${ctx}/js/echarts.js"></script>
     <script src="${ctx}/js/http.js"></script>
 </head>
@@ -148,19 +150,25 @@
     }
 
     function deleteLog(logId, url) {
-        var msg = "确定要删除选中日志吗？";
-        if (confirm(msg)) {
-            var logIds = new Array();
-            if (typeof (logId) == "string") {
-                logIds.push(logId);
-            } else if (typeof (logId) == "object") {
-                for (var i = 0; i < logId.length; i++) {
-                    logIds.push(logId[i].id);
+        var dblChoseAlert = simpleAlert({
+            "content": "确定要删除选中日志吗？",
+            "buttons": {
+                "确定": function () {
+                    var logIds = new Array();
+                    if (typeof (logId) == "string") {
+                        logIds.push(logId);
+                    } else if (typeof (logId) == "object") {
+                        for (var i = 0; i < logId.length; i++) {
+                            logIds.push(logId[i].id);
+                        }
+                    }
+                    window.location.href = "${ctx}/admin/deleteLog?logIds=" + logIds + "&url=" + url;
+                    dblChoseAlert.close();
+                },
+                "取消": function () {
+                    dblChoseAlert.close();
                 }
             }
-            window.location.href = "${ctx}/admin/deleteLog?logIds=" + logIds + "&url=" + url;
-        } else {
-            return false;
-        }
+        })
     }
 </script>

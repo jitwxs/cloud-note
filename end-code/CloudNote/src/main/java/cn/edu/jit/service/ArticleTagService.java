@@ -10,6 +10,8 @@ import java.util.List;
  * @date 2018/1/3 13:39
  */
 public interface ArticleTagService {
+    ArticleTagKey getByArticleIdAndTagId(String articleId, String tagId);
+
     int save(ArticleTagKey articleTagKey);
 
     int remove(ArticleTagKey articleTagKey);

@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="${ctx}/css/bootstrap.css">
     <%-- 弹窗CSS --%>
     <link rel="stylesheet" href="${ctx}/css/toastr.css">
+    <link rel="stylesheet" href="${ctx}/css/simple-alert.css">
     <link rel="stylesheet" href="${ctx}/css/account_setting.css">
     <%-- 进度条CSS --%>
     <link rel="stylesheet" href="${ctx}/css/font-awesome.css">
@@ -20,6 +21,7 @@
     <script src="${ctx}/js/jquery.contextify.js"></script>
     <%-- 弹窗依赖 --%>
     <script src="${ctx}/js/toastr.js"></script>
+    <script src="${ctx}/js/simple-alert.js"></script>
     <%-- 封装ajax --%>
     <script src="${ctx}/js/http.js"></script>
     <%--引入cookie--%>

@@ -1,5 +1,6 @@
 package cn.edu.jit.service.impl;
 
+import cn.edu.jit.entry.Article;
 import cn.edu.jit.entry.ArticleTagExample;
 import cn.edu.jit.entry.ArticleTagKey;
 import cn.edu.jit.entry.TagExample;
@@ -19,6 +20,22 @@ public class ArticleTagServiceImpl implements ArticleTagService {
 
     @Autowired
     ArticleTagMapper articleTagMapper;
+
+    @Override
+    public ArticleTagKey getByArticleIdAndTagId(String articleId, String tagId) {
+        ArticleTagExample articleTagExample = new ArticleTagExample();
+
+        ArticleTagExample.Criteria criteria = articleTagExample.createCriteria();
+        criteria.andArticleIdEqualTo(articleId);
+        criteria.andTagIdEqualTo(tagId);
+
+        List<ArticleTagKey> lists = articleTagMapper.selectByExample(articleTagExample);
+        if(lists.size() == 0) {
+            return null;
+        } else {
+            return lists.get(0);
+        }
+    }
 
     @Override
     public int save(ArticleTagKey articleTagKey) {

@@ -1,3 +1,7 @@
+/**
+ 用户HOME页CSS
+ */
+
 /* General styles for all menus */
 .cbp-spmenu {
     background: #cfd3c7;
@@ -100,7 +104,7 @@
     margin: 0 auto;
 }
 .share{
-    width: 300px;height:145px;position: relative;border-bottom: 1px solid #EEEEEE;cursor: pointer;
+    width: 300px;height:145px;position: relative;border-bottom: 1px solid #EEEEEE;cursor: pointer;overflow: hidden;
 }
 .share .title{
     font-size: 18px;width: 200px;float: left;font-weight: 500;margin:0;padding:0;margin-left: 15px;margin-top: 10px;
@@ -190,11 +194,89 @@
     top: -5px;
 }
 
-
-/*搜索栏*/
+/* 搜索栏 */
 #result_container .box1{
     width:100%;height: 100%;margin-top: 10px;cursor: pointer
 }
 #result_container .title{
     color: #0000EE;text-decoration: underline;font-size: 18px;cursor: pointer
+}
+
+/* 进度条动画 */
+ .spinner {
+     margin: 100px auto;
+     width: 50px;
+     height: 60px;
+     text-align: center;
+     font-size: 10px;
+ }
+
+.spinner>div {
+    background-color: #67CF22;
+    height: 100%;
+    width: 6px;
+    display: inline-block;
+    -webkit-animation: stretchdelay 1.2s infinite ease-in-out;
+    animation: stretchdelay 1.2s infinite ease-in-out;
+}
+
+.spinner .rect2 {
+    -webkit-animation-delay: -1.1s;
+    animation-delay: -1.1s;
+}
+
+.spinner .rect3 {
+    -webkit-animation-delay: -1.0s;
+    animation-delay: -1.0s;
+}
+
+.spinner .rect4 {
+    -webkit-animation-delay: -0.9s;
+    animation-delay: -0.9s;
+}
+
+.spinner .rect5 {
+    -webkit-animation-delay: -0.8s;
+    animation-delay: -0.8s;
+}
+
+@-webkit-keyframes stretchdelay {
+    0%,
+    40%,
+    100% {
+        -webkit-transform: scaleY(0.4)
+    }
+    20% {
+        -webkit-transform: scaleY(1.0)
+    }
+}
+
+@keyframes stretchdelay {
+    0%,
+    40%,
+    100% {
+        transform: scaleY(0.4);
+        -webkit-transform: scaleY(0.4);
+    }
+    20% {
+        transform: scaleY(1.0);
+        -webkit-transform: scaleY(1.0);
+    }
+}
+
+/* 笔记标签 */
+#tag_container a{
+    border:1px solid grey;border-radius: 50px;font-size: 15px;background: #b3dbf5;padding: 2px;cursor: pointer;text-decoration: none;
+}
+#tag_container a:hover{
+    color: #487AB7;
+}
+#tag_container img{
+    width: 10px;height: 10px;cursor: pointer
+}
+#tag{
+    margin-left: 20px;width: 500px;margin-top: 10px;
+}
+#tag_container{
+
 }

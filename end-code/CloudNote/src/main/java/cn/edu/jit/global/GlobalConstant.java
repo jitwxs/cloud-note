@@ -10,7 +10,7 @@ public class GlobalConstant {
     /**
      * 服务器路径
      */
-    public static String SER_URL = "http://localhost:8080";
+    public static String SER_URL = "http://127.0.0.1:8080";
 
     /**
      * 用户网盘默认大小：100MB
@@ -66,6 +66,11 @@ public class GlobalConstant {
      * 用户笔记分享文件夹
      */
     public static String USER_SHARE_PATH;
+
+    /**
+     * 用户笔记附件文件夹
+     */
+    public static String USER_AFFIX_PATH;
 
     /**
      * 用户网盘文件夹

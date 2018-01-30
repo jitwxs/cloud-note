@@ -48,6 +48,15 @@
             </div>
         </div>
     </div>
+
+    <!-- 过度动画区域 -->
+    <div class="spinner hidden">
+        <div class="rect1"></div>
+        <div class="rect2"></div>
+        <div class="rect3"></div>
+        <div class="rect4"></div>
+        <div class="rect5"></div>
+    </div>
 </div>
 
 <script>
@@ -64,6 +73,7 @@
         '                        <a  class="delete"><img src="${ctx}/images/delete.png"></a>\n' +
         '                        <a  class="rename_note"><img src="${ctx}/images/rename.png"></a>\n' +
         '                        <a class="download"><img src="${ctx}/images/download.png"></a>\n' +
+        '                        <a class="yulan"><img src="${ctx}/images/preview.png"></a>\n' +
         '                    </div>';
 
     // 页面初始化时，从服务器接收数据
@@ -284,25 +294,113 @@
             var $parent = $(this).parent();
             //当前元素的id
             var id = $(this).prev().attr('index-id');
-            var msg = "确定要删除吗？";
-            if (confirm(msg)) {
-                //id发送给服务器
-                sendPost('${ctx}/user/removePan', {'deleteId': id}, false, function (msg) {
-                    if (msg.status) {
-                        //删除父亲
-                        $parent.remove();
-                        initUI();
-                        toastr.success("删除成功");
-                    } else {
-                        toastr.error("删除失败");
+            var dblChoseAlert = simpleAlert({
+                "content": "确定要删除吗？",
+                "buttons": {
+                    "确定": function () {
+                        //id发送给服务器
+                        sendPost('${ctx}/user/removePan', {'deleteId': id}, false, function (msg) {
+                            if (msg.status) {
+                                //删除父亲
+                                $parent.remove();
+                                initUI();
+                                toastr.success("删除成功");
+                            } else {
+                                toastr.error("删除失败");
+                            }
+                        }, function (error) {
+                            toastr.error("系统错误");
+                        });
+                        dblChoseAlert.close();
+                    },
+                    "取消": function () {
+                        dblChoseAlert.close();
                     }
-                }, function (error) {
-                    toastr.error("系统错误");
-                });
-            } else {
-                return false;
-            }
+                }
+            })
         });
+
+        //预览事件
+        $('.yulan').off('click').on('click',function () {
+            var noteId = $(this).prev().prev().prev().prev().attr('index-id');
+            var previewArray = new Array("pdf","bmp", "png", "jpg", "jpeg", "gif", "htm", "html");
+            var convertArray=new Array("doc","docx","xls","xlsx","ppt","pptx");
+
+            if(noteId == null || noteId == "") {
+                toastr.error("系统错误");
+            } else {
+                var tmpName =$(this).prev().prev().prev().prev().text();
+                var point = tmpName.lastIndexOf(".");
+                var type = tmpName.substr(point).toLowerCase();
+                type = type.substr(1,type.length);
+
+                var previewFlag = false, convertFlag = false;
+
+                // 如果可预览，直接预览即可
+                for(var i=0; i<previewArray.length; i++) {
+                    if(previewArray[i] == type) {
+                        previewFlag = true;
+                        break;
+                    }
+                }
+                // 如果不可预览，判断是否是可转换的数据类型
+                if(!previewFlag) {
+                    for(var i = 0; i < convertArray.length; i++) {
+                        if(convertArray[i] == type) {
+                            convertFlag = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(previewFlag) {
+                    sendPost('${ctx}/user/previewDisk',{'panId':noteId},true,function (res) {
+                        if(res.status) {
+                            var url = res.info;
+                            window.open(url);
+                        } else {
+                            toastr.error(res.info);
+                        }
+                    },function (error) {
+                        toastr.error("系统错误");
+                        return false;
+                    });
+                } else if(convertFlag) {
+                    if($(".spinner").hasClass("hidden")) {
+                        $(".spinner").removeClass("hidden");
+                    }
+                    sendPost('${ctx}/user/convertDiskFile',{'panId':noteId},true,function (res) {
+                        if(!$(".spinner").hasClass("hidden")) {
+                            $(".spinner").addClass("hidden");
+                        }
+                        if(!res.status) {
+                            toastr.error(res.info);
+                        } else {
+                            // 转换成功后。预览文件
+                            sendPost('${ctx}/user/previewDisk',{'panId':noteId},true,function (res) {
+                                if(res.status) {
+                                    var url = res.info;
+                                    window.open(url);
+                                } else {
+                                    toastr.error(res.info);
+                                }
+                            },function (error) {
+                                toastr.error("系统错误");
+                                return false;
+                            });
+                        }
+                    },function (error) {
+                        if(!$(".spinner").hasClass("hidden")) {
+                            $(".spinner").addClass("hidden");
+                        }
+                        toastr.error("系统错误");
+                        return false;
+                    });
+                } else {
+                    toastr.warning("该格式不支持预览");
+                }
+            }
+        })
     }
 
     //新建文件夹事件
@@ -386,6 +484,7 @@
                             '                        <a  class="delete"><img src="${ctx}/images/delete.png"></a>\n' +
                             '                        <a  class="rename_note"><img src="${ctx}/images/rename.png"></a>\n' +
                             '                        <a class="download"><img src="${ctx}/images/download.png"></a>\n' +
+                            '                        <a class="yulan"><img src="${ctx}/images/preview.png"></a>\n' +
                             '                    </div>');
                         initUI();
                     } else {

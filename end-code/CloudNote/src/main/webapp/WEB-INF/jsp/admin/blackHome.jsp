@@ -30,12 +30,18 @@
     window.operateEvents = {
         'click .cancelBlacklist': function (e, value, row, index) {
             var id = row.id;
-            var msg = "确定要解禁该用户吗？";
-            if (confirm(msg)) {
-                window.location.href = '${ctx}/admin/cancelBlacklist?id=' + id;
-            } else {
-                return false;
-            }
+            var dblChoseAlert = simpleAlert({
+                "content": "确定要解禁该用户吗？",
+                "buttons": {
+                    "确定": function () {
+                        window.location.href = '${ctx}/admin/cancelBlacklist?id=' + id;
+                        dblChoseAlert.close();
+                    },
+                    "取消": function () {
+                        dblChoseAlert.close();
+                    }
+                }
+            })
         },
         'click .delBlacklist': function (e, value, row, index) {
             var id = row.id;
@@ -149,20 +155,26 @@
     }
 
     function removeBlackList(obj) {
-        var msg = "确定要删除该条记录吗？";
-        if (confirm(msg)) {
-            var ids = new Array();
-            if (typeof (obj) == "string") {
-                ids.push(obj);
-            } else if (typeof (obj) == "object") {
-                for (var i = 0; i < obj.length; i++) {
-                    ids.push(obj[i].id);
+        var dblChoseAlert = simpleAlert({
+            "content": "确定要删除该条记录吗？",
+            "buttons": {
+                "确定": function () {
+                    var ids = new Array();
+                    if (typeof (obj) == "string") {
+                        ids.push(obj);
+                    } else if (typeof (obj) == "object") {
+                        for (var i = 0; i < obj.length; i++) {
+                            ids.push(obj[i].id);
+                        }
+                    }
+                    window.location.href = "${ctx}/admin/removeBlacklistRecord?ids=" + ids;
+                    dblChoseAlert.close();
+                },
+                "取消": function () {
+                    dblChoseAlert.close();
                 }
             }
-            window.location.href = "${ctx}/admin/removeBlacklistRecord?ids=" + ids;
-        } else {
-            return false;
-        }
+        })
     }
 </script>
 </body>

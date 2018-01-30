@@ -203,7 +203,6 @@ noteId、noteName即使页面刷新也不会置空，
 
     function recycle() {
         var id = $chooseDir.attr('index-id');
-        var notename = $chooseDir.text();
         var $parent = $chooseDir.parent();
         sendPost('${ctx}/user/recycleNote',{'noteId':id}, true, function (msg) {
             if (msg.status) {
@@ -226,26 +225,32 @@ noteId、noteName即使页面刷新也不会置空，
     }
 
     function forever_remove() {
-        var msg = "从回收站中删除将无法恢复，确认删除吗";
-        if(confirm(msg)) {
-            var id = $chooseDir.attr('index-id');
-            var $parent = $chooseDir.parent();
-            sendPost('${ctx}/user/foreverRemoveNote',{'noteId':id}, true, function (msg) {
-                if (msg.status) {
-                    //删除这个笔记在回收站的位置
-                    $parent.remove();
-                    toastr.success("笔记已彻底删除");
-                } else {
-                    toastr.error("删除失败");
+        var dblChoseAlert = simpleAlert({
+            "content": "从回收站中删除将无法恢复，确认删除吗",
+            "buttons": {
+                "确定": function () {
+                    var id = $chooseDir.attr('index-id');
+                    var $parent = $chooseDir.parent();
+                    sendPost('${ctx}/user/foreverRemoveNote',{'noteId':id}, true, function (msg) {
+                        if (msg.status) {
+                            //删除这个笔记在回收站的位置
+                            $parent.remove();
+                            toastr.success("笔记已彻底删除");
+                        } else {
+                            toastr.error("删除失败");
+                        }
+                    },function (error) {
+                        toastr.error("系统错误");
+                        return false;
+                    });
+                    initUI();
+                    dblChoseAlert.close();
+                },
+                "取消": function () {
+                    dblChoseAlert.close();
                 }
-            },function (error) {
-                toastr.error("系统错误");
-                return false;
-            });
-            initUI();
-        } else {
-            return false;
-        }
+            }
+        })
     }
 
     function createDir() {
@@ -270,58 +275,69 @@ noteId、noteName即使页面刷新也不会置空，
         $('#uploadNoteModal').modal('show');
     }
 
-
     function removeNote() {
         var $choosenId = $chooseDir;
         var id = $choosenId.attr('index-id');
         var name = $choosenId.text();
-        var msg = "删除笔记后笔记将被丢入垃圾桶，确认删除？";
-        if (confirm(msg)){
-            //发送要删除的笔记的id
-            sendPost('${ctx}/user/removeNote', {'noteId': id}, false, function (msg) {
-                if (!msg.status) {
-                    toastr.error("删除笔记失败");
-                    return false;
-                } else {
-                    $choosenId.remove();
-                    toastr.success("笔记已删除");
-                    $('#rubbish_container').append('<div class="notediv">\n' +
-                        '            <a class="rubbish_file" index-id="'+id+'">'+name+'</a>\n' +
-                        '        </div>\n');
-                    initUI();
+        var dblChoseAlert = simpleAlert({
+            "content": "删除笔记后笔记将被丢入垃圾桶，确认删除？",
+            "buttons": {
+                "确定": function () {
+                    //发送要删除的笔记的id
+                    sendPost('${ctx}/user/removeNote', {'noteId': id}, false, function (msg) {
+                        if (!msg.status) {
+                            toastr.error("删除笔记失败");
+                            return false;
+                        } else {
+                            $choosenId.remove();
+                            toastr.success("笔记已删除");
+                            $('#rubbish_container').append('<div class="notediv">\n' +
+                                '            <a class="rubbish_file" index-id="'+id+'">'+name+'</a>\n' +
+                                '        </div>\n');
+                            initUI();
+                        }
+                    }, function (error) {
+                        toastr.error("系统错误");
+                        return false;
+                    });
+                    dblChoseAlert.close();
+                },
+                "取消": function () {
+                    dblChoseAlert.close();
                 }
-            }, function (error) {
-                toastr.error("系统错误");
-                return false;
-            });
-        }
-
+            }
+        })
     }
 
     function removeDir() {
         var $choosenId = $chooseDir;
         var $parent = $choosenId.parent();
         var id = $choosenId.attr('index-id');
-
-        var msg = "删除目录后笔记将被归入上层文件夹，确认删除？";
-        if (confirm(msg)){
-            //发送要删除的目录的id
-            sendPost('${ctx}/user/removeDir', {'dirId': id}, false, function (msg) {
-                if (!msg.status) {
-                    toastr.error("删除目录失败");
-                    initUI();
-                    return false;
-                } else {
-                    $parent.remove();
+        var dblChoseAlert = simpleAlert({
+            "content": "删除目录后笔记将被归入上层文件夹，确认删除？",
+            "buttons": {
+                "确定": function () {
+                    //发送要删除的目录的id
+                    sendPost('${ctx}/user/removeDir', {'dirId': id}, false, function (msg) {
+                        if (!msg.status) {
+                            toastr.error("删除目录失败");
+                            initUI();
+                            return false;
+                        } else {
+                            $parent.remove();
+                        }
+                    }, function (error) {
+                        toastr.error("内部错误");
+                        return false;
+                    });
+                    location.reload(true);
+                    dblChoseAlert.close();
+                },
+                "取消": function () {
+                    dblChoseAlert.close();
                 }
-            }, function (error) {
-                toastr.error("内部错误");
-                return false;
-            });
-            location.reload(true);
-        }else{
-            return false;
-        }
+            }
+        })
     }
 
     function renameDir() {
@@ -383,13 +399,13 @@ noteId、noteName即使页面刷新也不会置空，
                     if (!msg.status) {
                         toastr.warning(msg.info);
                         return false;
-                    }
-                    else {
+                    } else {
                         //把文本框删掉
                         var $parent = $('input[name=note_name]').parent();
                         $('input[name=note_name]').remove();
                         //生成笔记
                         $parent.prepend('<a style="margin-left: 20px" class="btn js_note_btn" index-id="'+noteId+'">' + name + '</a>');
+                        $('#editorTitle').val(name);
                         initUI();
                         return true;
                     }
@@ -439,10 +455,13 @@ noteId、noteName即使页面刷新也不会置空，
             if(msg.status) {
                 $("#noteId").val(noteId);
                 $("#noteName").val(noteName);
-                // 添加标签内容
-                $("#editorTags").val("");
+
+                //添加标签
+                $("#newTagInput").val("");
+                $('#tag_container').html("");
                 for(var i=0; i < msg.noteTag.length; i++) {
-                    $("#editorTags").val($("#editorTags").val() + msg.noteTag[i].name + " ");
+                    $('#tag_container').append('<a class="tag_content" id="'+msg.noteTag[i].id+'">'+msg.noteTag[i].name+'\n' +
+                        '                            <img src="${ctx}/images/tag_remove.png" onclick="removeTag(this)"></a>')
                 }
 
                 // 添加附件信息
@@ -469,22 +488,28 @@ noteId、noteName即使页面刷新也不会置空，
 
     //清空回收站事件
     function clearRubbish() {
-        var msg = "确定要清空回收站吗？";
-        if(confirm(msg)) {
-            sendGet('${ctx}/user/clearRubbish',{},false,function (res) {
-                if(res.status) {
-                    $('#rubbish_container').children().remove();
-                    toastr.success("清空成功");
-                } else {
-                    toastr.error("清空失败");
+        var dblChoseAlert = simpleAlert({
+            "content": "确定要清空回收站吗？",
+            "buttons": {
+                "确定": function () {
+                    sendGet('${ctx}/user/clearRubbish',{},false,function (res) {
+                        if(res.status) {
+                            $('#rubbish_container').children().remove();
+                            toastr.success("清空成功");
+                        } else {
+                            toastr.error("清空失败");
+                        }
+                    },function (error) {
+                        toastr.error("系统错误");
+                        return false;
+                    });
+                    dblChoseAlert.close();
+                },
+                "取消": function () {
+                    dblChoseAlert.close();
                 }
-            },function (error) {
-                toastr.error("系统错误");
-                return false;
-            });
-        } else {
-            return false;
-        }
+            }
+        })
     }
 
     //模态框出现函数

@@ -1,13 +1,6 @@
-/*动态粒子效果css*/
-/*body {*/
-/*font-family: Helvetica Neue, "Microsoft Yahei", "微软雅黑", Helvetica, SimSun, SimHei;*/
-/*font-size: 16px;*/
-/*color: #666;*/
-/*}*/
 a {
     color: #888;
     text-decoration: none;
-    /*border-bottom: 1px solid #ccc;*/
 }
 
 .body--ready {

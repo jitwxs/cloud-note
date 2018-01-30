@@ -10,10 +10,11 @@
 <div class="admin_container">
     <%--卡片--%>
     <div class="row" style="margin-bottom: 20px;width: 100%;">
+
         <%--1111--%>
         <div class="col-md-3" style="padding: 5px;">
             <div style="border-radius:10px;
-                         height: 170px;
+                         height: 150px;
                          background:rgba(0,0,0,0.5) url(../../../images/card1.jpg);
                          padding: 0;
                          margin-left: 10px;">
@@ -36,7 +37,7 @@
         <%--2222--%>
         <div class="col-md-3" style="padding: 5px;">
             <div style="border-radius:10px;
-                                                height: 170px;
+                                                height: 150px;
                                                 background:rgba(0,0,0,0.5) url(../../../images/card2.jpg);
                                                 padding: 0;
                                                 margin-left: 10px;">
@@ -56,10 +57,11 @@
                 </div>
             </div>
         </div>
+
         <%--3333--%>
         <div class="col-md-3" style="padding: 5px;">
             <div style="border-radius:10px;
-                                                height: 170px;
+                                                height: 150px;
                                                 background:rgba(0,0,0,0.5) url(../../../images/card3.jpg);
                                                 padding: 0;
                                                 margin-left: 10px;">
@@ -83,7 +85,7 @@
         <%--4444--%>
         <div class="col-md-3" style="padding: 5px;">
             <div style="border-radius:10px;
-                                                height: 170px;
+                                                height: 150px;
                                                 background:rgba(0,0,0,0.5) url(../../../images/card4.jpg);
                                                 padding: 0;
                                                 margin-left: 10px;">
@@ -92,7 +94,7 @@
                                 margin-bottom: 10px; width: 100px;
                                 height: 60px;float: right;text-align: right;
                                 color: white;font-size: 20px;padding-right: 10px;">
-                        网盘使用<br/>
+                        网盘容量<br/>
                         <span id="span4">1512</span>
                     </div>
                 </div>
@@ -220,6 +222,7 @@
         userNum.resize();
     });
 
+
     sendGet('${ctx}/admin/preparerUserInfo', {}, false, function (data) {
         pies.push(data.maleCount);
         pies.push(data.femaleCount);
@@ -299,7 +302,6 @@
 
             },
             yAxis: {
-                splitLine: {show: false},
 
             },
             series: [
@@ -311,26 +313,21 @@
                     showAllSymbol: true,
                     symbol: 'emptyCircle',
                     symbolSize: 15,
-                    data: []
+                    data: [],
+
                 },
+
 //              每日分享量
                 {
                     name: '每日分享量',
                     type: 'bar',
-                    barWidth: 20,
+                    barWidth: 30,
+                    data: [],
                     itemStyle: {
                         normal: {
-                            barBorderRadius: 5,
-                            color: new echarts.graphic.LinearGradient(
-                                0, 0, 0, 1,
-                                [
-                                    {offset: 0, color: '#14c8d4'},
-                                    {offset: 1, color: '#43eec6'}
-                                ]
-                            )
+                            color: '#b552f5'
                         }
-                    },
-                    data: []
+                    }
                 }]
         }
     );
@@ -364,6 +361,7 @@
                     name: '总分享量',
                     data: totalnum
                 },
+
                 {
                     // 根据名字对应到相应的系列
                     name: '每日分享量',
@@ -535,6 +533,9 @@
     };
     var radius = [30, 40];
     optionwww = {
+        title: {
+            text: '网盘使用情况',
+        },
         tooltip: {
             show: true,
             trigger: 'item'
@@ -587,7 +588,7 @@
             {
                 name: '比例',
                 type: 'pie',
-                center: ['10%', '15%'],
+                center: ['80%', '25%'],
                 radius: radius,
                 x: '0%', // for funnel
                 itemStyle: labelFromatter,

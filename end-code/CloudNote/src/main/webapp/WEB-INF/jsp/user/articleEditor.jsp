@@ -2,26 +2,54 @@
 <%@ include file="/WEB-INF/jsp/global/taglib.jsp" %>
 
 <div class="col-md-10" style="float: right; ">
-    <form class="form-inline" style="margin-bottom: 20px;">
-        <div class="form-group" style="margin-right: 30px;">
-            <div class="input-group">
-                <div class="input-group-addon">标题</div>
-                <input type="text" class="form-control" id="editorTitle">
+    <%--<form class="form-inline" style="margin-bottom: 20px;">--%>
+        <%--<div class="form-group" style="margin-right: 30px;">--%>
+            <%--<div class="input-group">--%>
+                <%--<div class="input-group-addon">标题</div>--%>
+                <%--<input type="text" class="form-control" id="editorTitle">--%>
+            <%--</div>--%>
+        <%--</div>--%>
+        <%--<div class="form-group" style="margin-right: 30px;">--%>
+            <%--<div class="input-group">--%>
+                <%--<div class="input-group-addon">标签</div>--%>
+                <%--<input type="text" class="form-control" id="editorTags">--%>
+            <%--</div>--%>
+        <%--</div>--%>
+        <%--<label>Tip:每当你点到别的地方我们都会为您自动保存，别担心内容丢失哦！</label>--%>
+        <%--<button type="button" class="btn btn-primary" onclick="saveNoteContent()" style="float:right; margin-right: 10px;">立即保存</button>--%>
+        <%--&lt;%&ndash;文件信息图标&ndash;%&gt;--%>
+        <%--<a tabindex="0" class="btn btn-default" role="button" data-toggle="popover"--%>
+           <%--data-trigger="focus" title="" data-content="" data-placement="bottom"--%>
+           <%--href="javascript:void(0)" onclick="getNoteInfo()" style="float:right; margin-right: 20PX;">文件信息</a>--%>
+    <%--</form>--%>
+        <form class="form-inline" style="margin-bottom: 20px;">
+            <div class="form-group" style="margin-right: 30px;">
+                <div class="input-group">
+                    <div class="input-group-addon">标题</div>
+                    <input type="text" class="form-control" id="editorTitle">
+                </div>
             </div>
-        </div>
-        <div class="form-group" style="margin-right: 30px;">
-            <div class="input-group">
-                <div class="input-group-addon">标签</div>
-                <input type="text" class="form-control" id="editorTags">
+
+            <label>Tip:每当你点到别的地方我们都会为您自动保存，别担心内容丢失哦！</label>
+            <button type="button" class="btn btn-primary" onclick="saveNoteContent()" style="float:right; margin-right: 10px;">立即保存</button>
+            <%--文件信息图标--%>
+            <a tabindex="0" class="btn btn-default" role="button" data-toggle="popover"
+               data-trigger="focus" title="" data-content="" data-placement="bottom"
+               href="javascript:void(0)" onclick="getNoteInfo()" style="float:right; margin-right: 20PX;">文件信息</a>
+
+            <%--标签--%>
+            <div class="form-group" style="margin-right: 30px;margin-top: 10px;position: relative">
+                    <div class="input-group" style="float: left;">
+                        <div class="input-group-addon">标签</div>
+                        <input type="text" class="form-control" id="newTagInput" placeholder="在此新增">
+                        <div class="input-group-addon addTag"><img src="${ctx}/images/add.png" style="height: 18px;width: 18px;cursor: pointer"></div>
+                    </div>
+                    <div id="tag" style="float: left;">
+                        <div id="tag_container">
+                        </div>
+                    </div>
             </div>
-        </div>
-        <label>Tip:每当你点到别的地方我们都会为您自动保存，别担心内容丢失哦！</label>
-        <button type="button" class="btn btn-primary" onclick="saveNoteContent()" style="float:right; margin-right: 10px;">立即保存</button>
-        <%--文件信息图标--%>
-        <a tabindex="0" class="btn btn-default" role="button" data-toggle="popover"
-           data-trigger="focus" title="" data-content="" data-placement="bottom"
-           href="javascript:void(0)" onclick="getNoteInfo()" style="float:right; margin-right: 20PX;">文件信息</a>
-    </form>
+        </form>
 
     <input type="hidden" id="noteId">
     <input type="hidden" id="noteName">
@@ -55,7 +83,7 @@
             </div>
         </form>
         <div id="affixContent" style="margin-top: 10px">
-            <table class="table table-striped table-responsive">
+            <table class="table table-hover table-responsive">
                 <thead>
                 <tr>
                     <th>附件名称</th>
@@ -68,6 +96,15 @@
                 </tbody>
             </table>
         </div>
+    </div>
+
+    <!-- 过度动画区域 -->
+    <div class="spinner hidden">
+        <div class="rect1"></div>
+        <div class="rect2"></div>
+        <div class="rect3"></div>
+        <div class="rect4"></div>
+        <div class="rect5"></div>
     </div>
 
     <script type="text/javascript">
@@ -179,7 +216,6 @@
                     return false;
                 });
             }
-
         }
 
         // 实时更新选中的文件名
@@ -244,20 +280,28 @@
                 toastr.error("系统错误");
                 return false;
             } else {
-                var msg = "确认要删除该附件吗(ｏ ‵-′)ノ";
-                if (confirm(msg)){
-                    sendPost('${ctx}/user/removeAffix',{'affixId':id},true,function (res) {
-                        if(res.status) {
-                            toastr.success("删除成功!");
-                            flushNote(noteId, noteName);
-                        } else {
-                            toastr.error("删除失败!");
+                var dblChoseAlert = simpleAlert({
+                    "content": "确认要删除该附件吗(ｏ ‵-′)ノ",
+                    "buttons": {
+                        "确定": function () {
+                            sendPost('${ctx}/user/removeAffix',{'affixId':id},true,function (res) {
+                                if(res.status) {
+                                    toastr.success("删除成功!");
+                                    flushNote(noteId, noteName);
+                                } else {
+                                    toastr.error("删除失败!");
+                                }
+                            },function (error) {
+                                toastr.error("系统错误");
+                                return false;
+                            });
+                            dblChoseAlert.close();
+                        },
+                        "取消": function () {
+                            dblChoseAlert.close();
                         }
-                    },function (error) {
-                        toastr.error("系统错误");
-                        return false;
-                    });
-                }
+                    }
+                })
             }
         }
 
@@ -307,11 +351,17 @@
                         return false;
                     });
                 } else if(convertFlag) {
+                    if($(".spinner").hasClass("hidden")) {
+                        $(".spinner").removeClass("hidden");
+                    }
                     sendPost('${ctx}/user/convertFile',{'affixId':id},true,function (res) {
+                        if(!$(".spinner").hasClass("hidden")) {
+                            $(".spinner").addClass("hidden");
+                        }
                         if(!res.status) {
                             toastr.error(res.info);
                         } else {
-                            // 转换成功后。预览文件
+                            // 转换成功后，预览文件
                             sendPost('${ctx}/user/previewAffix',{'affixId':id},true,function (res) {
                                 if(res.status) {
                                     var url = res.info;
@@ -326,6 +376,10 @@
                         }
                     },function (error) {
                         toastr.error("系统错误");
+                        // 转换成功后。预览文件
+                        if(!$(".spinner").hasClass("hidden")) {
+                            $(".spinner").addClass("hidden");
+                        }
                         return false;
                     });
                 } else {
@@ -338,5 +392,43 @@
             html: true,
             animation : true
         });
+
+        //添加标签
+        $('.addTag').off('click').on('click', function () {
+            //取输入框的值
+            var tagText = $('#newTagInput').val();
+            var noteId = $("#affixNoteId").val();
+            if (tagText != "" && noteId != "") {
+                sendPost('${ctx}/user/addArticleTag', {'noteId': noteId,'tagText': tagText}, false, function (msg) {
+                    if (msg.status) {
+                        $('#tag_container').append('<a class="tag_content" id="' + msg.info + '">' + tagText + '\n' +
+                            '                            <img src="${ctx}/images/tag_remove.png" onclick="removeTag(this)"></a>')
+                    } else {
+                        toastr.error('标签添加失败，可能已经重复');
+                    }
+                }, function (error) {
+                    toastr.error('系统错误');
+                })
+            } else {
+                toastr.warning("暂未选择笔记或标签内容为空");
+            }
+        });
+
+        function removeTag(obj) {
+            var tagId = obj.parentElement.id;
+            var noteId = $("#affixNoteId").val();
+            var $parent = obj.parentElement;
+            if (tagId != "" && noteId != "") {
+                sendPost('${ctx}/user/removeArticleTag',{'noteId':noteId,'tagId':tagId},false,function (msg) {
+                    if(msg.status){
+                        //删除标签
+                        $parent.remove();
+                    } else
+                        toastr.error('删除标签失败！');
+                },function (error) {
+                    toastr.error('删除标签出错！');
+                })
+            }
+        }
     </script>
 </div>

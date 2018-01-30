@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50719
 File Encoding         : 65001
 
-Date: 2018-01-25 01:03:20
+Date: 2018-01-29 14:59:21
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -3664,7 +3664,7 @@ CREATE TABLE `article_recycle` (
   `user_id` varchar(64) NOT NULL COMMENT '作者id',
   `dir_id` varchar(64) NOT NULL COMMENT '所属文件夹id',
   `is_open` int(11) NOT NULL DEFAULT '0' COMMENT '是否公开（1：公开；0：不公开）',
-  `share_url` varchar(64) DEFAULT NULL COMMENT '分享url',
+  `share_url` varchar(256) DEFAULT NULL COMMENT '分享url',
   `star` int(11) DEFAULT '0',
   `create_date` datetime NOT NULL,
   `modifed_date` datetime DEFAULT NULL,
@@ -3694,9 +3694,6 @@ CREATE TABLE `article_tag` (
 -- ----------------------------
 -- Records of article_tag
 -- ----------------------------
-INSERT INTO `article_tag` VALUES ('32f09f04e4174bf8ab55890309daae44', '0d40ccd6a8344fbdbc06a4e1c728dabb');
-INSERT INTO `article_tag` VALUES ('9df25f98f3934b84a57fe1c403174488', '56c3e409d5264f228e84d22bf97b0c0b');
-INSERT INTO `article_tag` VALUES ('dd61d97bb2954b038edc760a82f425a6', '56c3e409d5264f228e84d22bf97b0c0b');
 
 -- ----------------------------
 -- Table structure for file_convert
@@ -3737,66 +3734,6 @@ CREATE TABLE `log` (
 -- ----------------------------
 -- Records of log
 -- ----------------------------
-INSERT INTO `log` VALUES ('0954bdf6e89c43e0977c4b88c75ccd3e', '2b65113913ed4685ab723c33c1ae5c57', '1', '封禁用户', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/addToBlackHome', '2018-01-23 14:41:27', 'POST', 'userId=bf47e566c52d44a6927d5513bd121719&userTel=13260908700&reasonId=61ec61c6c4ae42148313d9f69c0ffbdf&duration=3', '');
-INSERT INTO `log` VALUES ('0e069da05f0145f7b5e098687758ab57', '2b65113913ed4685ab723c33c1ae5c57', '5', '系统消息', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/cancelBlacklist', '2018-01-23 14:41:38', 'GET', 'id=87c05c5cceed453cba67d4a8f52f0641', '');
-INSERT INTO `log` VALUES ('179d64fd3adf4cabbabbecda808c5a56', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-24 00:35:20', 'POST', 'tel=15996363731&password=', '');
-INSERT INTO `log` VALUES ('1b4fd730ddfb4e9da4acb4eb2bf24c8e', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-23 10:54:59', 'POST', 'tel=15996363731&password=', '');
-INSERT INTO `log` VALUES ('1e6e157ab2724ec1bc51e855d91e149d', '2b65113913ed4685ab723c33c1ae5c57', '5', '笔记消息', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/shareControl', '2018-01-24 00:37:47', 'POST', 'ids=8d261445c5f64d089981975e1a439708,d4433ae5dfbf456190a63d4c9e9e4b17&controlType=2&reasonName=文章抄袭', '');
-INSERT INTO `log` VALUES ('1fa9cc9551ae4fb68b2db951c768bbaa', 'bf47e566c52d44a692123313bd121719', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36', '/login', '2018-01-25 00:26:43', 'POST', 'tel=13260908706&password=', '');
-INSERT INTO `log` VALUES ('238898f35ae943bfa614267715a8136d', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-22 23:33:45', 'POST', 'tel=15996363731&password=', '');
-INSERT INTO `log` VALUES ('259b2d3e43ef4ae7a9dbd4ae3c563764', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-23 14:35:08', 'POST', 'tel=15996363731&password=', '');
-INSERT INTO `log` VALUES ('260d8fca44234dcca4b042153f4df3a7', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-23 10:51:47', 'POST', 'tel=15996363731&password=', '');
-INSERT INTO `log` VALUES ('3b8d18642d014b0dadfd9f395aa85f8b', '2b65113913ed4685ab723c33c1ae5c57', '1', '删除分享', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/deleteArticle', '2018-01-23 10:51:56', 'GET', 'ids=9df25f98f3934b84a57fe1c403174488', '');
-INSERT INTO `log` VALUES ('3cabf5c724f548df96b564ff3c2b9e91', '2b65113913ed4685ab723c33c1ae5c57', '5', '笔记消息', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/shareControl', '2018-01-24 00:17:48', 'POST', 'ids=280b27703940450897bbc5c1b3930794&controlType=1&reasonName=文章抄袭', '');
-INSERT INTO `log` VALUES ('3cbc6fd4c1b9471ea526ac7adf2998f5', '2b65113913ed4685ab723c33c1ae5c57', '5', '笔记消息', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/shareControl', '2018-01-24 00:28:43', 'POST', 'ids=32f09f04e4174bf8ab55890309daae44,6fc27714af8a4946b000f40feb1da8b9&controlType=2&reasonName=文章抄袭', '');
-INSERT INTO `log` VALUES ('44d12f4ee2944e6f950c06284e2d1687', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-24 00:22:50', 'POST', 'tel=15996363731&password=', '');
-INSERT INTO `log` VALUES ('465e296e5d3146e39912487d07054861', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-24 00:37:32', 'POST', 'tel=15996363731&password=', '');
-INSERT INTO `log` VALUES ('46f914ff0b44429ebf4a59d8215556da', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-23 15:30:56', 'POST', 'tel=15996363731&password=', '');
-INSERT INTO `log` VALUES ('4777b2e5dc21496e90f6a10eb10d4c41', '2b65113913ed4685ab723c33c1ae5c57', '1', '删除分享', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/shareControl', '2018-01-24 00:32:01', 'POST', 'ids=025a582db8284a938e34b3c69fc9ef3c,20e4b9400d9d428aa53e4aeb64a9ac45&controlType=2&reasonName=文章抄袭', '');
-INSERT INTO `log` VALUES ('48593ac36d68470a814f8d84bb0f0545', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-23 22:57:06', 'POST', 'tel=15996363731&password=', '');
-INSERT INTO `log` VALUES ('4c7e58f130cd46a39ce6b5866f5bbd5e', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-24 00:24:17', 'POST', 'tel=15996363731&password=', '');
-INSERT INTO `log` VALUES ('4d35e9675ea5420aac326766faa85dad', '2b65113913ed4685ab723c33c1ae5c57', '5', '笔记消息', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/cancelShare', '2018-01-23 15:31:03', 'GET', 'id=32f09f04e4174bf8ab55890309daae44', '');
-INSERT INTO `log` VALUES ('561d84e45bca474480dcc8270a3b538a', '2b65113913ed4685ab723c33c1ae5c57', '1', '取消分享', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/shareControl', '2018-01-24 00:17:48', 'POST', 'ids=280b27703940450897bbc5c1b3930794&controlType=1&reasonName=文章抄袭', '');
-INSERT INTO `log` VALUES ('6289e1435fb64d62974d69fc233b7c76', '2b65113913ed4685ab723c33c1ae5c57', '5', '笔记消息', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/shareControl', '2018-01-24 00:18:47', 'POST', 'ids=dd61d97bb2954b038edc760a82f425a6&controlType=2&reasonName=文章抄袭', '');
-INSERT INTO `log` VALUES ('6a5d93bd43284d8384a9b570c28b34d5', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-24 00:13:09', 'POST', 'tel=15996363731&password=', '');
-INSERT INTO `log` VALUES ('6beb3470b17b43089736d774879af206', '2b65113913ed4685ab723c33c1ae5c57', '1', '删除分享', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/shareControl', '2018-01-24 00:33:38', 'POST', 'ids=02ea01378b6d456ebf92842e31368f97,3ebdc0524f884157a824375b7f603abd&controlType=2&reasonName=文章抄袭', '');
-INSERT INTO `log` VALUES ('71aa23c7e308419db27518a27abfbd2a', '2b65113913ed4685ab723c33c1ae5c57', '5', '笔记消息', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/shareControl', '2018-01-24 00:35:48', 'POST', 'ids=7b86e3550d7a4ab097e1d49787343011,ceb10b4dc6814a7abed335f65ab05d08&controlType=2&reasonName=文章抄袭', '');
-INSERT INTO `log` VALUES ('71e46bb2b6454e13b55abc2e39d6c984', '2b65113913ed4685ab723c33c1ae5c57', '1', '删除分享', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/shareControl', '2018-01-24 00:28:43', 'POST', 'ids=32f09f04e4174bf8ab55890309daae44,6fc27714af8a4946b000f40feb1da8b9&controlType=2&reasonName=文章抄袭', '');
-INSERT INTO `log` VALUES ('75d2a1e3a8494f71a4a5552af6313092', '2b65113913ed4685ab723c33c1ae5c57', '1', '删除分享', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/shareControl', '2018-01-24 00:32:01', 'POST', 'ids=025a582db8284a938e34b3c69fc9ef3c,20e4b9400d9d428aa53e4aeb64a9ac45&controlType=2&reasonName=文章抄袭', '');
-INSERT INTO `log` VALUES ('7b4daa81c3b4410baa48c5ded56d88a9', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-24 00:33:29', 'POST', 'tel=15996363731&password=', '');
-INSERT INTO `log` VALUES ('870bb522d5cf412f9deb30cdde921ad7', '2b65113913ed4685ab723c33c1ae5c57', '1', '删除分享', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/shareControl', '2018-01-24 00:33:38', 'POST', 'ids=02ea01378b6d456ebf92842e31368f97,3ebdc0524f884157a824375b7f603abd&controlType=2&reasonName=文章抄袭', '');
-INSERT INTO `log` VALUES ('8a3082197ac741608b9ccb75d68066d6', '2b65113913ed4685ab723c33c1ae5c57', '1', '删除分享', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/shareControl', '2018-01-24 00:37:47', 'POST', 'ids=8d261445c5f64d089981975e1a439708,d4433ae5dfbf456190a63d4c9e9e4b17&controlType=2&reasonName=文章抄袭', '');
-INSERT INTO `log` VALUES ('8c77b4b59ba84faeb7c52a6782c61163', '2b65113913ed4685ab723c33c1ae5c57', '1', '取消封禁', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/cancelBlacklist', '2018-01-23 14:41:38', 'GET', 'id=87c05c5cceed453cba67d4a8f52f0641', '');
-INSERT INTO `log` VALUES ('8e58083e2fdf4a838ca64dad318596f0', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-23 23:24:43', 'POST', 'tel=15996363731&password=', '');
-INSERT INTO `log` VALUES ('9276c1ce8f764046b350553c71c67f4c', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-22 22:32:26', 'POST', 'tel=15996363731&password=', '');
-INSERT INTO `log` VALUES ('9527b1b8666342a7bf171d67a430cf31', 'bf47e566c52d44a692123313bd121719', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36', '/login', '2018-01-25 00:26:13', 'POST', 'tel=13260908706&password=', '');
-INSERT INTO `log` VALUES ('97056ad1afa642d7a00ae790f3f50fd6', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-22 22:38:21', 'POST', 'tel=15996363731&password=', '');
-INSERT INTO `log` VALUES ('9f531dbc80de47608430f7405e22d740', '2b65113913ed4685ab723c33c1ae5c57', '5', '笔记消息', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/shareControl', '2018-01-24 00:37:38', 'POST', 'ids=8d261445c5f64d089981975e1a439708,d4433ae5dfbf456190a63d4c9e9e4b17&controlType=2&reasonName=文章抄袭', '');
-INSERT INTO `log` VALUES ('a0ed07f13ee5426d90ca63095d5b1240', '2b65113913ed4685ab723c33c1ae5c57', '5', '笔记消息', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/shareControl', '2018-01-24 00:33:38', 'POST', 'ids=02ea01378b6d456ebf92842e31368f97,3ebdc0524f884157a824375b7f603abd&controlType=2&reasonName=文章抄袭', '');
-INSERT INTO `log` VALUES ('a19bdfe59a1e43b486bc2bcb664fac02', '2b65113913ed4685ab723c33c1ae5c57', '1', '封禁用户', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/addToBlackHome', '2018-01-23 23:26:23', 'POST', 'userId=bf47e566c52d44a4227d5513bd121719&userTel=13260908703&reasonId=1d1e07886eb74416a68f4b66d1157a98&duration=3', '');
-INSERT INTO `log` VALUES ('a5c965a9d7124daa95d2a31f49a7429e', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-23 23:16:35', 'POST', 'tel=15996363731&password=', '');
-INSERT INTO `log` VALUES ('a8387d11703946d8ae84ffdebb14cda3', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-23 14:40:55', 'POST', 'tel=15996363731&password=', '');
-INSERT INTO `log` VALUES ('aafad745419f4db086c2b4b153aa6a7f', '2b65113913ed4685ab723c33c1ae5c57', '1', '删除分享', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/shareControl', '2018-01-24 00:35:48', 'POST', 'ids=7b86e3550d7a4ab097e1d49787343011,ceb10b4dc6814a7abed335f65ab05d08&controlType=2&reasonName=文章抄袭', '');
-INSERT INTO `log` VALUES ('ac41122d92fb4767b215f2b5e440054e', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-23 14:19:59', 'POST', 'tel=15996363731&password=', '');
-INSERT INTO `log` VALUES ('ad593ce34b76453fbbb60fd1db036d5e', '2b65113913ed4685ab723c33c1ae5c57', '1', '删除分享', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/shareControl', '2018-01-24 00:18:47', 'POST', 'ids=dd61d97bb2954b038edc760a82f425a6&controlType=2&reasonName=文章抄袭', '');
-INSERT INTO `log` VALUES ('af811a52d4444a889bc494a470902cff', '2b65113913ed4685ab723c33c1ae5c57', '5', '系统消息', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/addToBlackHome', '2018-01-23 23:26:23', 'POST', 'userId=bf47e566c52d44a4227d5513bd121719&userTel=13260908703&reasonId=1d1e07886eb74416a68f4b66d1157a98&duration=3', '');
-INSERT INTO `log` VALUES ('b7edba274ab94484bbdf3503c3d60aab', '2b65113913ed4685ab723c33c1ae5c57', '5', '笔记消息', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/shareControl', '2018-01-24 00:33:38', 'POST', 'ids=02ea01378b6d456ebf92842e31368f97,3ebdc0524f884157a824375b7f603abd&controlType=2&reasonName=文章抄袭', '');
-INSERT INTO `log` VALUES ('bb58bcd6c52b49279c09bd3aced7849e', '2b65113913ed4685ab723c33c1ae5c57', '5', '笔记消息', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/shareControl', '2018-01-24 00:23:02', 'POST', 'ids=280b27703940450897bbc5c1b3930794&controlType=1&reasonName=文章抄袭', '');
-INSERT INTO `log` VALUES ('c2b59986cb774b4bab8b70a3c42b5780', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-23 11:00:53', 'POST', 'tel=15996363731&password=', '');
-INSERT INTO `log` VALUES ('ccab3bc8fcd64497a13f6add7450b9b9', '2b65113913ed4685ab723c33c1ae5c57', '5', '笔记消息', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/shareControl', '2018-01-24 00:28:43', 'POST', 'ids=32f09f04e4174bf8ab55890309daae44,6fc27714af8a4946b000f40feb1da8b9&controlType=2&reasonName=文章抄袭', '');
-INSERT INTO `log` VALUES ('d68af99570a544e0b4af90cce38c473c', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-22 22:37:00', 'POST', 'tel=15996363731&password=', '');
-INSERT INTO `log` VALUES ('d788d98438b345b0901167efdae92eb8', '2b65113913ed4685ab723c33c1ae5c57', '1', '删除分享', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/shareControl', '2018-01-24 00:35:49', 'POST', 'ids=7b86e3550d7a4ab097e1d49787343011,ceb10b4dc6814a7abed335f65ab05d08&controlType=2&reasonName=文章抄袭', '');
-INSERT INTO `log` VALUES ('d9c03a84160441fd95385d6e498da4ca', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-23 12:36:46', 'POST', 'tel=15996363731&password=', '');
-INSERT INTO `log` VALUES ('e1912760511a45fc9eadf8694fb0ae58', '2b65113913ed4685ab723c33c1ae5c57', '1', '取消分享', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/cancelShare', '2018-01-23 15:31:02', 'GET', 'id=32f09f04e4174bf8ab55890309daae44', '');
-INSERT INTO `log` VALUES ('e2366f1526e04a85b76a17691ffcdc83', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-24 00:31:50', 'POST', 'tel=15996363731&password=', '');
-INSERT INTO `log` VALUES ('e35b2fde85fc44ff8f5873a9cc7649a3', '2b65113913ed4685ab723c33c1ae5c57', '5', '系统消息', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/addToBlackHome', '2018-01-23 14:41:27', 'POST', 'userId=bf47e566c52d44a6927d5513bd121719&userTel=13260908700&reasonId=61ec61c6c4ae42148313d9f69c0ffbdf&duration=3', '');
-INSERT INTO `log` VALUES ('e66b4020c2cc415ca946287e9ed624bf', '2b65113913ed4685ab723c33c1ae5c57', '1', '删除分享', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/shareControl', '2018-01-24 00:38:04', 'POST', 'ids=8d261445c5f64d089981975e1a439708,d4433ae5dfbf456190a63d4c9e9e4b17&controlType=2&reasonName=文章抄袭', '');
-INSERT INTO `log` VALUES ('e904b5bb691346688d3ae458f4bf5564', '2b65113913ed4685ab723c33c1ae5c57', '5', '笔记消息', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/shareControl', '2018-01-24 00:32:01', 'POST', 'ids=025a582db8284a938e34b3c69fc9ef3c,20e4b9400d9d428aa53e4aeb64a9ac45&controlType=2&reasonName=文章抄袭', '');
-INSERT INTO `log` VALUES ('f069c68a2794467cbccba45c7104b0a7', '2b65113913ed4685ab723c33c1ae5c57', '5', '笔记消息', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/shareControl', '2018-01-24 00:35:28', 'POST', 'ids=7b86e3550d7a4ab097e1d49787343011,ceb10b4dc6814a7abed335f65ab05d08&controlType=2&reasonName=文章抄袭', '');
-INSERT INTO `log` VALUES ('f09ae70ec1634ced8c97ef9df689014f', '2b65113913ed4685ab723c33c1ae5c57', '2', '用户登陆', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/login', '2018-01-23 17:18:16', 'POST', 'tel=15996363731&password=', '');
-INSERT INTO `log` VALUES ('f531144a9fb445b29e4b6d1a9731fe69', '2b65113913ed4685ab723c33c1ae5c57', '1', '删除分享', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/shareControl', '2018-01-24 00:28:43', 'POST', 'ids=32f09f04e4174bf8ab55890309daae44,6fc27714af8a4946b000f40feb1da8b9&controlType=2&reasonName=文章抄袭', '');
-INSERT INTO `log` VALUES ('face6ee6591846d3983c3e2bd652efa4', '2b65113913ed4685ab723c33c1ae5c57', '5', '笔记消息', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/shareControl', '2018-01-24 00:32:01', 'POST', 'ids=025a582db8284a938e34b3c69fc9ef3c,20e4b9400d9d428aa53e4aeb64a9ac45&controlType=2&reasonName=文章抄袭', '');
-INSERT INTO `log` VALUES ('fae9708fb9964f2394248eb7ee69182e', '2b65113913ed4685ab723c33c1ae5c57', '1', '取消分享', '0:0:0:0:0:0:0:1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0', '/admin/shareControl', '2018-01-24 00:23:02', 'POST', 'ids=280b27703940450897bbc5c1b3930794&controlType=1&reasonName=文章抄袭', '');
 
 -- ----------------------------
 -- Table structure for login
@@ -3819,6 +3756,7 @@ CREATE TABLE `login` (
 -- ----------------------------
 -- Records of login
 -- ----------------------------
+INSERT INTO `login` VALUES ('08bfa7201fb6417e91ee8d82a3e1d033', '5da7543cdbb2abc8cc1d2ffb8feea2346dbffd52adf0f87fbcfbc8ac', '1', '12BE26CB382AAC2809DAFA81E9FF980F', 'qq', '2', '2018-01-25 09:34:27', null);
 INSERT INTO `login` VALUES ('13260908700', '1f33a9e2c6cd60881a1140e0f8016253b0761aa6844bc3a1eb48c9c5', '0', null, null, '2', '2018-01-01 16:28:22', '2018-01-16 16:29:15');
 INSERT INTO `login` VALUES ('13260908701', '1f33a9e2c6cd60881a1140e0f8016253b0761aa6844bc3a1eb48c9c5', '0', null, null, '2', '2018-01-02 16:29:32', null);
 INSERT INTO `login` VALUES ('13260908702', '1f33a9e2c6cd60881a1140e0f8016253b0761aa6844bc3a1eb48c9c5', '0', null, null, '2', '2018-01-03 16:29:49', null);
@@ -3831,7 +3769,8 @@ INSERT INTO `login` VALUES ('13260908708', '1f33a9e2c6cd60881a1140e0f8016253b076
 INSERT INTO `login` VALUES ('13260908709', '1f33a9e2c6cd60881a1140e0f8016253b0761aa6844bc3a1eb48c9c5', '0', null, null, '2', '2018-01-10 16:31:30', null);
 INSERT INTO `login` VALUES ('13260908710', '1f33a9e2c6cd60881a1140e0f8016253b0761aa6844bc3a1eb48c9c5', '0', null, null, '2', '2018-01-11 16:31:44', null);
 INSERT INTO `login` VALUES ('13260909880', '364ca3cc2758a8a690535d2b86cd7eeff9782dbd40342a8adea1c136', '0', null, null, '2', '2018-01-21 14:02:08', null);
-INSERT INTO `login` VALUES ('15996363731', 'fc5754eeea833cf90c6e1e9f361233893029f169b3d71ba3ec258c99', '0', null, null, '1', '2018-01-10 10:44:36', null);
+INSERT INTO `login` VALUES ('15996363731', '1f33a9e2c6cd60881a1140e0f8016253b0761aa6844bc3a1eb48c9c5', '0', null, null, '1', '2018-01-10 10:44:36', null);
+INSERT INTO `login` VALUES ('18168404329', '1f33a9e2c6cd60881a1140e0f8016253b0761aa6844bc3a1eb48c9c5', '0', null, null, '2', '2018-01-25 11:39:08', '2018-01-27 10:22:38');
 
 -- ----------------------------
 -- Table structure for notify
@@ -3857,9 +3796,6 @@ CREATE TABLE `notify` (
 -- ----------------------------
 -- Records of notify
 -- ----------------------------
-INSERT INTO `notify` VALUES ('152ff763c2be4b5d81a00000214d2f70', '系统消息', '账户被解封', '您的账户已被解封，现在可以正常登陆了，以后可不要再干违规的事哦！', '2b65113913ed4685ab723c33c1ae5c57', 'bf47e566c52d44a6927d5513bd121719', '2', '2018-01-23 14:41:38', null);
-INSERT INTO `notify` VALUES ('217673b9b4fb4b25bc551c9e73e2d012', '系统消息', '账户被封禁', '您的账户已被封禁，封禁原因：“发布违法信息”，解封时间为：2018-01-26 23:26:23', '2b65113913ed4685ab723c33c1ae5c57', 'bf47e566c52d44a4227d5513bd121719', '2', '2018-01-23 23:26:23', null);
-INSERT INTO `notify` VALUES ('ef499991561e470c9adfc6b8b0f5fa8d', '系统消息', '账户被封禁', '您的账户已被封禁，封禁原因：“222”，解封时间为：2018-01-26 14:41:27', '2b65113913ed4685ab723c33c1ae5c57', 'bf47e566c52d44a6927d5513bd121719', '2', '2018-01-23 14:41:27', null);
 
 -- ----------------------------
 -- Table structure for pan_dir
@@ -3901,7 +3837,6 @@ CREATE TABLE `reason` (
 -- ----------------------------
 -- Records of reason
 -- ----------------------------
-INSERT INTO `reason` VALUES ('b8070c97a2f744cc872760263c4d2fd6', '文章抄袭', '2', '2018-01-24 00:15:55', null);
 
 -- ----------------------------
 -- Table structure for role
@@ -4063,8 +3998,6 @@ CREATE TABLE `tag` (
 -- ----------------------------
 -- Records of tag
 -- ----------------------------
-INSERT INTO `tag` VALUES ('0d40ccd6a8344fbdbc06a4e1c728dabb', '美食', '2018-01-22 11:22:10', null);
-INSERT INTO `tag` VALUES ('56c3e409d5264f228e84d22bf97b0c0b', '程序设计', '2018-01-22 22:50:15', null);
 
 -- ----------------------------
 -- Table structure for user
@@ -4092,18 +4025,20 @@ CREATE TABLE `user` (
 -- Records of user
 -- ----------------------------
 INSERT INTO `user` VALUES ('27d7410ccb414187b50d56426981f61f', '13260909880', '悦悦悦悦悦', null, null, '男', null, null, '2018-01-21 14:02:08', '2018-01-21 14:02:24');
-INSERT INTO `user` VALUES ('2b65113913ed4685ab723c33c1ae5c57', '15996363731', '刘畅是头猪猪', 'lc@foxmail.com', '540100', '女', null, null, '2018-01-10 10:44:36', '2018-01-22 22:32:26');
+INSERT INTO `user` VALUES ('2b65113913ed4685ab723c33c1ae5c57', '15996363731', '刘畅', 'lc@foxmail.com', '540100', '女', null, null, '2018-01-10 10:44:36', '2018-01-25 09:06:20');
+INSERT INTO `user` VALUES ('669f93e9261640f88518464e0205ec55', '08bfa7201fb6417e91ee8d82a3e1d033', '柠檬不萌。', null, null, '男', null, null, '2018-01-25 09:34:27', '2018-01-25 09:34:32');
 INSERT INTO `user` VALUES ('bf47e566c52d44a4227d5513bd121719', '13260908703', '004', '004', '630100', '男', null, null, '2018-01-04 16:37:11', '2018-01-21 11:37:30');
 INSERT INTO `user` VALUES ('bf47e566c52d44a6227d5513bd121719', '13260908701', '002', '002', '140100', '男', null, null, '2018-01-02 16:35:23', null);
 INSERT INTO `user` VALUES ('bf47e566c52d44a692123313bd121719', '13260908706', '007', '007', '371100', '女', null, null, '2018-01-07 16:40:10', '2018-01-25 00:26:13');
 INSERT INTO `user` VALUES ('bf47e566c52d44a692235513bd121719', '13260908702', '003', '003', '500000', '男', null, null, '2018-01-03 16:36:25', null);
 INSERT INTO `user` VALUES ('bf47e566c52d44a692453313bd121719', '13260908707', '008', '008', '421000', '女', null, null, '2018-01-08 16:40:57', '2018-01-21 11:42:54');
 INSERT INTO `user` VALUES ('bf47e566c52d44a69266331228821719', '13260908710', '011', '011', '460200', '男', null, null, '2018-01-11 16:43:09', null);
-INSERT INTO `user` VALUES ('bf47e566c52d44a692663313b8821719', '13260908709', '010', '010', '230100', '女', null, null, '2018-01-10 16:42:29', null);
+INSERT INTO `user` VALUES ('bf47e566c52d44a692663313b8821719', '13260908709', '010', '010', '230100', '女', null, null, '2018-01-10 16:42:29', '2018-01-28 23:45:48');
 INSERT INTO `user` VALUES ('bf47e566c52d44a692663313bd121719', '13260908708', '009', '009', '440400', '女', null, null, '2018-01-09 16:41:33', null);
 INSERT INTO `user` VALUES ('bf47e566c52d44a692721313bd121719', '13260908705', '006', '006', '320600', '女', null, null, '2018-01-06 16:38:37', null);
 INSERT INTO `user` VALUES ('bf47e566c52d44a6927d551352121719', '13260908704', '005', '005', '530100', '女', null, null, '2018-01-05 16:37:45', null);
-INSERT INTO `user` VALUES ('bf47e566c52d44a6927d5513bd121719', '13260908700', '001', '001', '130100', '男', null, null, '2018-01-01 16:34:31', null);
+INSERT INTO `user` VALUES ('bf47e566c52d44a6927d5513bd121719', '13260908700', '001', '001', '130100', '男', null, null, '2018-01-01 16:34:31', '2018-01-25 10:29:26');
+INSERT INTO `user` VALUES ('d9382ceb03da4a809468ac07747ae7d9', '18168404329', 'jitwxs', 'jitwxs@foxmail.com', '320100', '男', null, '', '2018-01-25 11:39:08', '2018-01-27 10:32:59');
 
 -- ----------------------------
 -- Table structure for user_blacklist

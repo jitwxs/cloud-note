@@ -92,7 +92,7 @@
 <div id="main" style="height:490px;z-index: 2" >
     <p style="font-size: 30px;text-align: center;padding-top: 15px;font-family: Serif;">欢迎使用无道云笔记</p>
     <div class="left " style="width: 420px;height: 420px;">
-        <p style="font-size: 18px;text-align: center;margin-top: 30px;font-family: Serif;">手机号登录</p>
+        <p style="font-size: 18px;text-align: center;margin-top: 30px;font-family: Serif;">账号登录</p>
         <form method="post" action="${ctx}/login" onsubmit="return httpPost()">
             <div class="form-group" style="width: 307px;height: 50px;margin: 0 auto;margin-top: 45px;margin-left: 70px">
                 <input style="width: 307px;height: 45px;" id="tel" class="form-control" type="text" name="tel" maxlength="11"  placeholder="手机号" >
@@ -110,10 +110,9 @@
     </div>
     <div class="center" style="height: 340px;margin-left:20px;margin-top: 20px;background: #f4e6ff;width: 1px;float: left;"></div>
     <div class="right " style="width: 420px;height: 420px;">
-        <p style="font-size: 18px;text-align: center;margin-top: 30px;font-family: Serif;">其他账号登录</p>
+        <p style="font-size: 18px;text-align: center;margin-top: 30px;font-family: Serif;">快速登录</p>
         <a class="btn" style="padding-left: 33px" onclick="window.location.href='${ctx}/qqLogin'"><img src="${ctx}/images/qq.png">  使用QQ登录</a>
-        <a style="margin-top: 40px;padding-left: 55px"class="btn"   onclick="window.location.href='${ctx}/githubLogin'"><img src="${ctx}/images/github.png">  使用Github登录</a>
-        <a style="margin-top: 40px;padding-left: 40px" class="btn"   onclick="(function(){toastr.info('正在开发中...')})()"><img src="${ctx}/images/weixin.png">  使用微信登录</a>
+        <a style="margin-top: 50px;padding-left: 55px" class="btn" onclick="window.location.href='${ctx}/githubLogin'"><img src="${ctx}/images/github.png">  使用Github登录</a>
     </div>
 </div>
 

@@ -16,8 +16,9 @@
     <link rel="stylesheet" href="${ctx}/css/wangEditor-fullscreen-plugin.css">
     <%-- 弹窗CSS --%>
     <link rel="stylesheet" href="${ctx}/css/toastr.css">
+    <link rel="stylesheet" href="${ctx}/css/simple-alert.css">
     <%-- home页CSS --%>
-    <link rel="stylesheet" href="${ctx}/css/home_css.css">
+    <link rel="stylesheet" href="${ctx}/css/home.css">
     <%-- jQuery first, then Bootstrap JS. --%>
     <script src="${ctx}/js/jquery-3.2.1.min.js"></script>
     <script src="${ctx}/js/bootstrap.js"></script>
@@ -31,7 +32,9 @@
     <%-- 封装ajax --%>
     <script src="${ctx}/js/http.js"></script>
     <%-- home页JS --%>
-    <script src="${ctx}/js/home_js.js"></script>
+    <script src="${ctx}/js/home.js"></script>
+    <%--弹出框js--%>
+    <script src="${ctx}/js/simple-alert.js"></script>
 </head>
 
 <body style="margin-top: 60px;position: absolute;width: 100%;height: auto;" id="home_body">

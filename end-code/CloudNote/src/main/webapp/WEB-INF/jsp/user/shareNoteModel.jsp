@@ -21,14 +21,15 @@
                 </div>
             </div>
             <div class="modal-footer" style="margin-top: 40px" onmouseover="setShare()">
+                <!-- JiaThis Button BEGIN -->
                 <div class="jiathis_style_32x32">
                     <a class="jiathis_button_tsina"></a>
-                    <a class="jiathis_button_renren"></a>
                     <a class="jiathis_button_qzone"></a>
                     <a class="jiathis_button_weixin"></a>
-                    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-                    <a class="jiathis_counter_style"></a>
+                    <a class="jiathis_button_renren"></a>
+                    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
                 </div>
+                <!-- JiaThis Button END -->
                 <button type="button" class="btn btn-default" data-dismiss="modal" onclick="cancelShare()">取消分享</button>
                 <button type="button" class="btn btn-primary" onclick="goShare()">查看分享</button>
             </div>
@@ -36,6 +37,7 @@
     </div>
 </div>
 
+<%-- 社会化分享 --%>
 <script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
 <script>
     var jiathis_config = {};
@@ -54,8 +56,6 @@
         jiathis_config.title = "我在无道云笔记发现一篇好文章：《" + shareName + "》,现在分享给你，和我一起欣赏吧！";
         jiathis_config.url = url;
         jiathis_config.pic = getHostPath() + "/images/logo_big.png";
-
-        // jiathis_config.summary = summary;
     }
     
     function copyUrl() {

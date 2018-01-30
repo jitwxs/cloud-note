@@ -92,12 +92,14 @@ public class SystemController {
         GlobalConstant.USER_ARTICLE_PATH = GlobalConstant.USER_HOME_PATH + "/" + "article";
         GlobalConstant.USER_ARTICLE_INDEX_PATH = GlobalConstant.USER_HOME_PATH + "/" + "article_index";
         GlobalConstant.USER_SHARE_PATH = GlobalConstant.USER_ARTICLE_PATH + "/" + "share";
+        GlobalConstant.USER_AFFIX_PATH = GlobalConstant.USER_ARTICLE_PATH + "/" + "affix";
         GlobalConstant.USER_IMG_PATH = GlobalConstant.USER_HOME_PATH + "/" + "images";
         GlobalConstant.USER_PAN_PATH = GlobalConstant.USER_HOME_PATH + "/" + "pan";
 
         GlobalFunction.createDir(GlobalConstant.TEMP_PATH);
         GlobalFunction.createDir(GlobalConstant.USER_ARTICLE_PATH);
         GlobalFunction.createDir(GlobalConstant.USER_SHARE_PATH);
+        GlobalFunction.createDir(GlobalConstant.USER_AFFIX_PATH);
         GlobalFunction.createDir(GlobalConstant.USER_IMG_PATH);
         GlobalFunction.createDir(GlobalConstant.USER_PAN_PATH);
     }
@@ -248,7 +250,7 @@ public class SystemController {
                         "\t<title>验证成功</title>\n" +
                         "</head>");
                 out.write("<body>\n" +
-                        "\t<p>验证成功！<span id='time'>5</span>秒钟后前往首页</p>\n" +
+                        "\t<p>登陆成功，<span id='time'>3</span>秒钟后前往应用页面</p>\n" +
                         "\t<a href='" + url + "'>立即前往</a>\n" +
                         "</body>");
                 out.write("<script>\n" +

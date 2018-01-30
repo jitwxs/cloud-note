@@ -187,19 +187,26 @@
 
     function deleteUser(obj) {
         var msg = "确定要删除选中用户吗？";
-        if (confirm(msg)){
-            var tels = new Array();
-            if(typeof (obj) == "string") {
-                tels.push(obj);
-            } else if (typeof (obj) == "object") {
-                for(var i=0; i< obj.length; i++) {
-                    tels.push(obj[i].tel);
+        var dblChoseAlert = simpleAlert({
+            "content": "确定要删除选中用户吗？",
+            "buttons": {
+                "确定": function () {
+                    var tels = new Array();
+                    if(typeof (obj) == "string") {
+                        tels.push(obj);
+                    } else if (typeof (obj) == "object") {
+                        for(var i=0; i< obj.length; i++) {
+                            tels.push(obj[i].tel);
+                        }
+                    }
+                    window.location.href='${ctx}/admin/deleteUser?tels=' + tels;
+                    dblChoseAlert.close();
+                },
+                "取消": function () {
+                    dblChoseAlert.close();
                 }
             }
-            window.location.href='${ctx}/admin/deleteUser?tels=' + tels;
-        }else {
-            return false;
-        }
+        })
     }
 </script>
 </body>

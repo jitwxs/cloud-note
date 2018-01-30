@@ -159,20 +159,26 @@
     }
 
     function deleteNotify (obj) {
-        var msg = "确定要删除选中信息吗？";
-        if (confirm(msg)) {
-            var ids = new Array();
-            if (typeof (obj) == "string") {
-                ids.push(obj);
-            } else if (typeof (obj) == "object") {
-                for (var i = 0; i < obj.length; i++) {
-                    ids.push(obj[i].id);
+        var dblChoseAlert = simpleAlert({
+            "content": "确定要删除选中信息吗？",
+            "buttons": {
+                "确定": function () {
+                    var ids = new Array();
+                    if (typeof (obj) == "string") {
+                        ids.push(obj);
+                    } else if (typeof (obj) == "object") {
+                        for (var i = 0; i < obj.length; i++) {
+                            ids.push(obj[i].id);
+                        }
+                    }
+                    window.location.href = "${ctx}/admin/deleteNotify?ids=" + ids;
+                    dblChoseAlert.close();
+                },
+                "取消": function () {
+                    dblChoseAlert.close();
                 }
             }
-            window.location.href = "${ctx}/admin/deleteNotify?ids=" + ids;
-        } else {
-            return false;
-        }
+        })
     }
 
     $(function () {

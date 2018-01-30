@@ -76,9 +76,52 @@
         </table>
     </div>
 
+    <div class="panel panel-success" style="width:80%; margin-left: 10%;">
+        <div class="panel-heading">临时文件</div>
+        <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th><span>已用大小：</span><label id="tempSize"></label></th>
+                <th><button class="btn btn-danger btn-xs disabled" id="cleanTempBtn" onclick="removeTempDir()">清空</button></th>
+            </tr>
+            </thead>
+        </table>
+    </div>
 </div>
 
 <script>
+    $(function () {
+       updateTempSize();
+    });
+
+    function updateTempSize() {
+        sendGet("${ctx}/admin/getTempSize", {}, false, function (msg) {
+            $('#tempSize').text(msg.info + "MB");
+            var size = parseInt(msg.info);
+            if(size > 0) {
+                if($('#cleanTempBtn').hasClass("disabled")) {
+                    $('#cleanTempBtn').removeClass("disabled")
+                }
+            } else {
+                if(!$('#cleanTempBtn').hasClass("disabled")) {
+                    $('#cleanTempBtn').addClass("disabled")
+                }
+            }
+        }, function (error) {
+            toastr.error("系统错误");
+        });
+    }
+
+    function removeTempDir() {
+        sendGet("${ctx}/admin/removeTempDir", {}, false, function (msg) {
+            if(msg.status) {
+                updateTempSize();
+            }
+        }, function (error) {
+            toastr.error("系统错误");
+        });
+    }
+
     function updateReason(id, name) {
         $("#reasonName").val(name);
         $("#reasonId").val(id);
@@ -91,12 +134,18 @@
     }
 
     function deleteReason(id) {
-        var msg = "您真的确定要删除该原因吗？";
-        if (confirm(msg)) {
-            window.location.href = '${ctx}/admin/deleteReason?id=' + id;
-        } else {
-            return false;
-        }
+        var dblChoseAlert = simpleAlert({
+            "content": "您真的确定要删除该原因吗？",
+            "buttons": {
+                "确定": function () {
+                    window.location.href = '${ctx}/admin/deleteReason?id=' + id;
+                    dblChoseAlert.close();
+                },
+                "取消": function () {
+                    dblChoseAlert.close();
+                }
+            }
+        })
     }
 </script>
 

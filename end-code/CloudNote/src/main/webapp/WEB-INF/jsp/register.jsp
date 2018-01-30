@@ -149,7 +149,7 @@
 
                 </div>
                 <div class="col-lg-6" style="height: 500px;">
-                    <h3>下面为可选填信息</h3>
+                    <h3>下面为选填信息</h3>
                     <!--邮箱-->
                     <div class="form-group has-feedback">
                         <div class="input-group">
@@ -338,14 +338,12 @@
 
     $('.container1').find('input').eq(1).change(function() {
         password = $(this).val();
-        // if ($(this).val().length < 8) {
-        //     fail($(this), 1, '密码太短，不能少于8个字符');
-        // } else {
-        //     success($(this), 1);
-        // }
-        success($(this), 1);
+        if (password.length < 6) {
+            fail($(this), 1, '密码太短，不能少于6个字符');
+        } else {
+            success($(this), 1);
+        }
     });
-
 
     // 再次输入密码校验
     $('.container1').find('input').eq(2).change(function() {
@@ -461,7 +459,7 @@
             opacity_prev_min:.003,            // 透明度递减值最小值
             opacity_prev_max:.005,            // 透明度递减值最大值
             light_min:20,                 // 颜色亮度最小值
-            light_max:50,                 // 颜色亮度最大值
+            light_max:50                  // 颜色亮度最大值
         };
         var style_color = find_random(0,360);
         var all_element =[];

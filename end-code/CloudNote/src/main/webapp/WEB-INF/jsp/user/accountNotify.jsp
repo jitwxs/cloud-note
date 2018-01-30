@@ -357,10 +357,18 @@
             id_array.push($(this).parent().parent().find('.message_title').attr('index-id'));//向数组中添加元素
         });
         if(id_array.length > 0) {
-            var msg = "确定要删除选中消息吗？";
-            if(confirm(msg)) {
-                window.location.href = '${ctx}/user/removeChoose?ids=' + id_array;
-            }
+            var dblChoseAlert = simpleAlert({
+                "content": "确定要删除选中消息吗？",
+                "buttons": {
+                    "确定": function () {
+                        window.location.href = '${ctx}/user/removeChoose?ids=' + id_array;
+                        dblChoseAlert.close();
+                    },
+                    "取消": function () {
+                        dblChoseAlert.close();
+                    }
+                }
+            })
         }
     })
 </script>
