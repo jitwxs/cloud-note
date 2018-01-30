@@ -75,12 +75,18 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> listArticleByShare(String uid) {
+    public List<Article> listArticleByUid(String uid, Boolean hasShare) {
         ArticleExample articleExample = new ArticleExample();
 
         ArticleExample.Criteria criteria = articleExample.createCriteria();
         criteria.andUserIdEqualTo(uid);
-        criteria.andIsOpenEqualTo(GlobalConstant.NOTE_STATUS.SHARE.getIndex());
+        if(hasShare != null) {
+            if(hasShare) {
+                criteria.andIsOpenEqualTo(GlobalConstant.NOTE_STATUS.SHARE.getIndex());
+            } else {
+                criteria.andIsOpenEqualTo(GlobalConstant.NOTE_STATUS.NOT_SHARE.getIndex());
+            }
+        }
 
         return articleMapper.selectByExample(articleExample);
     }

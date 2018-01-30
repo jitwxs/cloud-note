@@ -2,26 +2,6 @@
 <%@ include file="/WEB-INF/jsp/global/taglib.jsp" %>
 
 <div class="col-md-10" style="float: right; ">
-    <%--<form class="form-inline" style="margin-bottom: 20px;">--%>
-        <%--<div class="form-group" style="margin-right: 30px;">--%>
-            <%--<div class="input-group">--%>
-                <%--<div class="input-group-addon">标题</div>--%>
-                <%--<input type="text" class="form-control" id="editorTitle">--%>
-            <%--</div>--%>
-        <%--</div>--%>
-        <%--<div class="form-group" style="margin-right: 30px;">--%>
-            <%--<div class="input-group">--%>
-                <%--<div class="input-group-addon">标签</div>--%>
-                <%--<input type="text" class="form-control" id="editorTags">--%>
-            <%--</div>--%>
-        <%--</div>--%>
-        <%--<label>Tip:每当你点到别的地方我们都会为您自动保存，别担心内容丢失哦！</label>--%>
-        <%--<button type="button" class="btn btn-primary" onclick="saveNoteContent()" style="float:right; margin-right: 10px;">立即保存</button>--%>
-        <%--&lt;%&ndash;文件信息图标&ndash;%&gt;--%>
-        <%--<a tabindex="0" class="btn btn-default" role="button" data-toggle="popover"--%>
-           <%--data-trigger="focus" title="" data-content="" data-placement="bottom"--%>
-           <%--href="javascript:void(0)" onclick="getNoteInfo()" style="float:right; margin-right: 20PX;">文件信息</a>--%>
-    <%--</form>--%>
         <form class="form-inline" style="margin-bottom: 20px;">
             <div class="form-group" style="margin-right: 30px;">
                 <div class="input-group">
@@ -136,9 +116,8 @@
         editor.customConfig.onblur = function (html) {
             var noteId = $("#noteId").val();
             var noteName = $("#noteName").val();
-            var editorTags = $("#editorTags").val();
             if(noteId != null && noteId != "" && noteName != null && noteName != "") {
-                sendPost('${ctx}/user/saveNote',{'noteId':noteId, 'noteName':noteName, 'data':html,'tag':editorTags},true,function (msg) {
+                sendPost('${ctx}/user/saveNote',{'noteId':noteId, 'noteName':noteName, 'data':html},true,function (msg) {
                     if(!msg.status) {
                         toastr.error(msg.info);
                     }
@@ -188,7 +167,6 @@
         // 保存笔记
         function saveNoteContent() {
             var content = editor.txt.html();
-            var editorTags = $("#editorTags").val();
             var noteId = $("#affixNoteId").val();
             var noteName = $("#editorTitle").val();
             if(noteId == null || noteId == "") {
@@ -198,7 +176,7 @@
                 toastr.warning("笔记标题不能为空");
                 return false;
             } else {
-                sendPost('${ctx}/user/saveNote',{'noteId':noteId, 'noteName':noteName, 'data':content,'tag':editorTags},true,function (msg) {
+                sendPost('${ctx}/user/saveNote',{'noteId':noteId, 'noteName':noteName, 'data':content},true,function (msg) {
                     if(msg.status) {
                         toastr.success("笔记已保存");
                         var $jsNoteBtns = $('.js_note_btn');
@@ -403,6 +381,7 @@
                     if (msg.status) {
                         $('#tag_container').append('<a class="tag_content" id="' + msg.info + '">' + tagText + '\n' +
                             '                            <img src="${ctx}/images/tag_remove.png" onclick="removeTag(this)"></a>')
+                        $('#newTagInput').val("");
                     } else {
                         toastr.error('标签添加失败，可能已经重复');
                     }

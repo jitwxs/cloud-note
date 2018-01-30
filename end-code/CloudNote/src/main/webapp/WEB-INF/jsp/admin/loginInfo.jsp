@@ -84,7 +84,7 @@
         var date = [];
         var loginNum = [];
         // 只显示最近十日记录
-        for (var i = 0; i < res.length && i < 10; i++) {
+        for (var i = res.length -1 ; i >= 0  && i >= res.length - 10; i--) {
             date.push(res[i].k);
             loginNum.push(res[i].v);
         }

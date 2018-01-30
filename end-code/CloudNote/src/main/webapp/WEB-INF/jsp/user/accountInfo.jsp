@@ -13,7 +13,7 @@
     <h4> 账号信息</h4>
     <hr>
     <ol >账号：<label id="accountTel"/></ol>
-    <ol >绑定邮箱：<label id="emailAddr"/></ol>
+    <ol >邮箱：<label id="emailAddr"/></ol>
     <ol >注册日期：<label id="registerDate"/></ol>
 </div>
 <br>

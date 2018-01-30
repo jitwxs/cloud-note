@@ -42,12 +42,14 @@ public interface ArticleService {
      */
     List<Article> listArticleByDir(String uid, String dirId, String orderBy);
 
+
+
     /**
-     * 查询指定用户所有分享的笔记
+     * 查询指定用户笔记
      * @param uid 用户id
      * @return
      */
-    List<Article> listArticleByShare(String uid);
+    List<Article> listArticleByUid(String uid, Boolean hasShare);
 
     /**
      * 查询非指定用户以外的其他用户的分享笔记

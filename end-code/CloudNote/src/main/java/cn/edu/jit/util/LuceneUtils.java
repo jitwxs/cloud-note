@@ -4,8 +4,10 @@ import java.io.*;
 import java.nio.file.FileSystems;
 import java.util.*;
 
+import cn.edu.jit.entry.Article;
 import cn.edu.jit.global.GlobalConstant;
 import cn.edu.jit.global.GlobalFunction;
+import cn.edu.jit.service.ArticleService;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.FileFilterUtils;
@@ -25,7 +27,11 @@ import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
 import org.apache.lucene.search.highlight.SimpleSpanFragmenter;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.wltea.analyzer.lucene.IKAnalyzer;
+
+import javax.annotation.Resource;
 
 /**
  * Lucene工具类
@@ -51,7 +57,7 @@ public class LuceneUtils {
      * @param dirPath   要创建索引的路径
      * @param indexPath 索引路径
      */
-    public static void createIndex(String dirPath, String indexPath) throws IOException {
+    public static void createIndex(String dirPath, String indexPath, List<Article> articles) throws IOException {
         String content;
         // 定义词法分析器
         Analyzer analyzer = new IKAnalyzer(true);
@@ -66,19 +72,21 @@ public class LuceneUtils {
         indexWriter.deleteAll();
 
         // 递归遍历笔记文件
-        Collection<File> listFiles = FileUtils.listFiles(new File(dirPath),
-                FileFilterUtils.suffixFileFilter(GlobalConstant.NOTE_SUFFIX), DirectoryFileFilter.INSTANCE);
-        for (File file : listFiles) {
+        for (Article article : articles) {
             // 获取文件内容
+            String path = dirPath + "/" + article.getId();
+            File file = new File(path);
             content = note2String(file);
             // 申请了一个document对象，这个类似于数据库中的表中的一行
             Document document = new Document();
+
             // 存储索引数据
-            String fileName = file.getName();
-            fileName = fileName.substring(0,fileName.indexOf(GlobalConstant.NOTE_SUFFIX));
-            document.add(new Field("fileName", fileName, TextField.TYPE_STORED));
+            String noteId = article.getId();
+            String noteName = article.getTitle();
+
+            document.add(new Field("noteName", noteName, TextField.TYPE_STORED));
             document.add(new Field("content", content, TextField.TYPE_STORED));
-            document.add(new Field("parentName", file.getParent(), TextField.TYPE_STORED));
+            document.add(new Field("noteId", noteId, TextField.TYPE_STORED));
             // doc对象加入IndexWriter，并提交
             indexWriter.addDocument(document);
         }
@@ -127,16 +135,12 @@ public class LuceneUtils {
             // 根据searcher和ScoreDoc对象获取具体的Document对象
             Document document = indexSearcher.doc(scoreDoc.doc);
 
-            // 获取搜索结果父目录名称，即笔记id，非空
-            String parentName = document.get("parentName");
-            String noteId = parentName.substring(parentName.lastIndexOf("article") + 8);
-
+            String noteId = document.get("noteId");
             // 如果笔记名包含关键字，则高亮显示，否则不高亮显示，非空
-            String noteName = highlighter.getBestFragment(analyzer, "fileName", document.get("fileName"));
+            String noteName = highlighter.getBestFragment(analyzer, "noteName", document.get("noteName"));
             if(StringUtils.isEmpty(noteName)) {
-                noteName = document.get("fileName");
+                noteName = document.get("noteName");
             }
-
             // 高亮显示内容，有可能为空
             String content = highlighter.getBestFragment(analyzer, "content", document.get("content"));
 

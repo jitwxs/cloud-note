@@ -465,7 +465,6 @@
             var formData = new FormData();
             formData.append("dirId", parent);
             formData.append("file", file);
-
             $.ajax({
                 url: "${ctx}/user/uploadPan",
                 type: 'post',
@@ -489,6 +488,9 @@
                         initUI();
                     } else {
                         toastr.error("上传文件失败");
+                    }
+                    if(!$(".spinner").hasClass("hidden")) {
+                        $(".spinner").addClass("hidden");
                     }
                 },
                 error: function (msg) {

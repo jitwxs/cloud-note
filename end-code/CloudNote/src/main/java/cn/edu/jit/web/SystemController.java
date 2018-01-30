@@ -76,8 +76,13 @@ public class SystemController {
      * 获取个人id
      */
     private String getSelfId() {
-        User user = userService.getByTel(GlobalFunction.getSelfTel());
-        return user.getId();
+        String tel = GlobalFunction.getSelfTel();
+        if(!StringUtils.isBlank(tel)) {
+            User user = userService.getByTel(tel);
+            return user.getId();
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -554,7 +559,7 @@ public class SystemController {
 
         String inputArea = register.getArea();
         if (!StringUtils.isBlank(inputArea)) {
-            Area area = areaService.getByName(register.getArea());
+            Area area = areaService.getByName(inputArea);
             if (area != null) {
                 user.setArea(area.getId());
             }
@@ -921,21 +926,26 @@ public class SystemController {
                     status = true;
 
                     // 发送消息
-                    String sendId = getSelfId();
-                    User user = userService.getById(sendId);
-                    String userName = user.getName();
-
                     Notify notify = new Notify();
                     notify.setId(GlobalFunction.getUUID());
                     notify.setType(GlobalConstant.NOTIFY.NOTIFY_NOTE.getName());
-                    notify.setSendId(sendId);
                     notify.setRecvId(article.getUserId());
                     notify.setStatus(GlobalConstant.NOTIFY_STATUS.UNREAD.getIndex());
                     notify.setTitle("分享笔记收到一个赞");
-                    notify.setContent("用户：“" + userName + "”刚刚给您的分享笔记《" + article.getTitle() + "》点了一个赞");
                     notify.setCreateDate(new Date());
-                    notifyService.save(notify);
 
+                    String sendId = getSelfId();
+                    if(!StringUtils.isBlank(sendId)) {
+                        User user = userService.getById(sendId);
+                        String userName = user.getName();
+                        notify.setContent("用户：“" + userName + "”刚刚给您的分享笔记《" + article.getTitle() + "》点了一个赞");
+                        notify.setSendId(sendId);
+                    } else {
+                        notify.setContent("用户：“游客”刚刚给您的分享笔记《" + article.getTitle() + "》点了一个赞");
+                        notify.setSendId(null);
+                    }
+
+                    notifyService.save(notify);
                     // 保存日志
                     logService.saveLog(request, GlobalConstant.NOTIFY.type, GlobalConstant.NOTIFY.NOTIFY_NOTE.getName(), sendId);
                 }

@@ -453,9 +453,9 @@
         var loginNum = [];
         var count = 0;
         // 只显示最近十日记录
-        for (var i = 0; i < res.length; i++) {
+        for (var i = res.length -1 ; i >= 0; i--) {
             count += parseInt(res[i].v);
-            if(i <10) {
+            if(i >= res.length - 10) {
                 date.push(res[i].k);
                 loginNum.push(res[i].v);
             }

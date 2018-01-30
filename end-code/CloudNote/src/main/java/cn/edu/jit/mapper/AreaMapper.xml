@@ -184,5 +184,6 @@
     <include refid="Base_Column_List" />
     from area
     where Name like #{name}"%"
+    limit 1
   </select>
 </mapper>

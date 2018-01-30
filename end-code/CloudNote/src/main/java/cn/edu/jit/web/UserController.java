@@ -9,6 +9,7 @@ import cn.edu.jit.service.*;
 import cn.edu.jit.util.*;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import jdk.nashorn.internal.objects.Global;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -195,7 +196,7 @@ public class UserController {
         List<UserPan> userPans = userPanService.listUserPanByDir(getSelfId(), dirId);
         List<PanDir> panDirs = panDirService.listByParentId(getSelfId(), dirId);
         for (UserPan userPan : userPans) {
-            String path = GlobalConstant.USER_PAN_PATH + "/" + userPan.getId();
+            String path = GlobalConstant.USER_PAN_PATH + "/" + userPan.getName();
             if (GlobalFunction.deleteSignalFile(path)) {
                 userPanService.removeById(userPan.getId());
             } else {
@@ -244,9 +245,8 @@ public class UserController {
      * 获取笔记摘要（用于搜索结果的摘要）
      */
     private String getAbstractText(String noteId) throws IOException {
-        Article article = articleService.getById(noteId);
         String content;
-        String filePath = GlobalConstant.USER_ARTICLE_PATH + "/" + noteId + "/" + article.getTitle() + GlobalConstant.NOTE_SUFFIX;
+        String filePath = GlobalConstant.USER_ARTICLE_PATH + "/" + noteId;
 
         InputStreamReader isr = new InputStreamReader(new FileInputStream(filePath), "UTF-8");
         StringBuilder contentBuilder = new StringBuilder();
@@ -361,7 +361,7 @@ public class UserController {
                             String url = GlobalFunction.getRealUrl(articleAffix.getPath());
                             osw.write("<tr>\n");
                             osw.write("<td>"+name+"</td>\n");
-                            osw.write("<td style=\"text-align:right\"><a class=\"btn btn-info btn-sm\" href=\""+url+"\" target=\"_blank\">下载</a></td>\n");
+                            osw.write("<td style=\"text-align:right\"><a class=\"btn btn-info btn-sm\" href=\""+url+"\" target=\"_blank\">查看</a></td>\n");
                         }
                         osw.write("</tbody>\n</table>\n</div>\n");
                     }
@@ -851,35 +851,6 @@ public class UserController {
                         createSharePage(noteId, url);
                     }
                 }
-
-                // 4.更新笔记标签
-                String editorTags = request.getParameter("tag");
-                articleTagService.removeAllByArticleId(noteId);
-                if (!StringUtils.isBlank(editorTags)) {
-                    // 获取笔记新标签
-                    String[] editorTag = editorTags.trim().split("\\s+");
-                    for (String tagName : editorTag) {
-                        String tagId;
-
-                        Tag tmpTag = tagService.getByName(tagName);
-                        //查询是否已存在此标签，不存在则保存新标签
-                        if (tmpTag == null) {
-                            Tag tag = new Tag();
-                            tag.setName(tagName);
-                            tagId = GlobalFunction.getUUID();
-                            tag.setId(tagId);
-                            tag.setCreateDate(new Date());
-                            tagService.save(tag);
-                        } else {
-                            tagId = tmpTag.getId();
-                        }
-
-                        ArticleTagKey articleTagKey = new ArticleTagKey();
-                        articleTagKey.setArticleId(noteId);
-                        articleTagKey.setTagId(tagId);
-                        articleTagService.save(articleTagKey);
-                    }
-                }
             }
 
             message.setStatus(status);
@@ -1238,7 +1209,7 @@ public class UserController {
         response.setContentType("text/html;charset=utf-8");
         try {
             String userId = getSelfId();
-            List<Article> lists = articleService.listArticleByShare(userId);
+            List<Article> lists = articleService.listArticleByUid(userId, true);
 
             // 提取url相对路径
             for (Article article : lists) {
@@ -1320,6 +1291,12 @@ public class UserController {
         String affixId = request.getParameter("affixId");
         try {
             if (affixId != null) {
+                // 删除转换后文件
+                FileConvert fileConvert = fileConvertService.getById(affixId);
+                if(fileConvert != null) {
+                    FileUtils.deleteQuietly(new File(fileConvert.getPath()));
+                }
+
                 ArticleAffix articleAffix = articleAffixService.getById(affixId);
                 if (articleAffix != null) {
                     // 删除存在服务器上的文件
@@ -1377,7 +1354,7 @@ public class UserController {
                                 }
                                 // 上传文件
                                 String affixId = GlobalFunction.getUUID();
-                                String path = GlobalConstant.USER_AFFIX_PATH + "/" + affixId;
+                                String path = GlobalConstant.USER_AFFIX_PATH + "/" + fileName;
                                 GlobalFunction.uploadFile(item, path);
 
                                 //存入数据库
@@ -1491,12 +1468,13 @@ public class UserController {
             } else {
                 // 如果不存在，转换
                 ArticleAffix articleAffix = articleAffixService.getById(affixId);
-                String name = articleAffix.getName();
-                String[] tmp = name.split("\\.");
+                String fileName = articleAffix.getName();
+                String[] tmp = fileName.split("\\.");
+                String name = tmp[0];
                 String suffix = tmp[1];
 
-                String inputPath = GlobalConstant.USER_AFFIX_PATH + "/" + affixId;
-                String outputPath = inputPath + ".pdf";
+                String inputPath = GlobalConstant.USER_AFFIX_PATH + "/" + fileName;
+                String outputPath = GlobalConstant.USER_AFFIX_PATH + "/" + name + ".pdf";
                 int i;
                 switch (suffix) {
                     case "doc":
@@ -1560,7 +1538,8 @@ public class UserController {
             if (!StringUtils.isBlank(keywords)) {
                 // 查询笔记名和内容
                 LuceneUtils.prepareIndex(GlobalConstant.USER_ARTICLE_INDEX_PATH);
-                LuceneUtils.createIndex(GlobalConstant.USER_ARTICLE_PATH, GlobalConstant.USER_ARTICLE_INDEX_PATH);
+                List<Article> articles = articleService.listArticleByUid(getSelfId(), null);
+                LuceneUtils.createIndex(GlobalConstant.USER_ARTICLE_PATH, GlobalConstant.USER_ARTICLE_INDEX_PATH, articles);
                 List<Map<String, String>> listByNameAndContent = LuceneUtils.searchIndex(keywords, GlobalConstant.USER_ARTICLE_INDEX_PATH);
 
                 // 查询笔记标签
@@ -1648,144 +1627,6 @@ public class UserController {
     /*---------   笔记管理区域（END）   ----------*/
 
     /*---------   目录管理区域（START）   ----------*/
-    /**
-     * 预览网盘
-     */
-    @RequestMapping(value = "previewDisk", method = {RequestMethod.POST})
-    public void previewDisk(HttpServletRequest request, HttpServletResponse response) {
-        String panId = request.getParameter("panId");
-        Message message = new Message();
-        response.setContentType("text/html;charset=utf-8");
-        try {
-            if (panId == null) {
-                message.setStatus(false);
-            } else {
-                UserPan userPan = userPanService.getById(panId);
-                // 数据库中文件绝对路径
-                String path = GlobalConstant.USER_PAN_PATH + "/" + panId;
-
-                // 用来判断文件后缀的临时变量
-                String temp = userPan.getName().toLowerCase();
-                Boolean pdfFlag, previewFlag = false;
-
-                // 判断是否是除pdf外的可转换后缀
-                for (String ss : GlobalConstant.PREIVER_SUFFIX) {
-                    if (temp.endsWith(ss)) {
-                        previewFlag = true;
-                        break;
-                    }
-                }
-                // 判断是否是pdf后缀
-                pdfFlag = temp.endsWith(".pdf");
-
-                if (pdfFlag) {
-                    int i = path.indexOf("upload");
-                    String url = GlobalConstant.SER_URL + "/generic/web/viewer.html?file=/" + path.substring(i);
-                    message.setInfo(url);
-                    message.setStatus(true);
-                } else if (previewFlag) {
-                    String realUrl = GlobalFunction.getRealUrl(path);
-                    message.setInfo(realUrl);
-                    message.setStatus(true);
-                } else {
-                    // 如果不是，判断是否已经被转换了
-                    String tempPath = GlobalConstant.TEMP_PATH + "/" + panId + ".pdf";
-                    File file = new File(path);
-                    if (!file.exists()) {
-                        // 如果没有被转换，无法预览
-                        message.setStatus(false);
-                    } else {
-                        // 如果转换了，预览转换后的文件
-                        int i = tempPath.indexOf("temp");
-                        String url = GlobalConstant.SER_URL + "/generic/web/viewer.html?file=/" + tempPath.substring(i);
-                        message.setInfo(url);
-                        message.setStatus(true);
-                    }
-                }
-            }
-            String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
-            response.getWriter().write(data);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * PDF转换
-     * 支持格式：doc、docx、xls、xlsx、ppt、pptx
-     */
-    @RequestMapping(value = "convertDiskFile", method = {RequestMethod.POST})
-    public void convertDiskFile(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
-        Message msg = new Message();
-        Boolean status;
-        String info = null;
-        try {
-            // 转换前判断是否已经被转换过了
-            String panId = request.getParameter("panId");
-            String path = GlobalConstant.TEMP_PATH + "/" + panId + ".pdf";
-            File file = new File(path);
-
-            // 如果存在，则直接返回即可
-            if (file.exists()) {
-                msg.setStatus(true);
-                String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
-                response.getWriter().write(data);
-            } else {
-                // 如果不存在，转换
-                UserPan userPan = userPanService.getById(panId);
-                String name = userPan.getName();
-                String[] tmp = name.split("\\.");
-                String suffix = tmp[1];
-
-                String inputPath = GlobalConstant.USER_PAN_PATH + "/" + panId;
-                String outputPath = GlobalConstant.TEMP_PATH + "/" + panId + ".pdf";
-                int i;
-                switch (suffix) {
-                    case "doc":
-                    case "docx":
-                        i = WordToPdf.run(inputPath, outputPath);
-                        break;
-                    case "xls":
-                    case "xlsx":
-                        i = ExcelToPdf.run(inputPath, outputPath);
-                        break;
-                    case "ppt":
-                    case "pptx":
-                        i = PptToPdf.run(inputPath, outputPath);
-                        break;
-                    default:
-                        i = -2;
-                        break;
-                }
-
-                switch (i) {
-                    case -1:
-                        info = "转换失败";
-                        status = false;
-                        break;
-                    case -2:
-                        info = "格式不支持";
-                        status = false;
-                        break;
-                    default:
-                        info = String.valueOf(i);
-                        status = true;
-                        break;
-                }
-
-                // status：是否成功；info：成功返回执行秒数，失败返回错误原因
-                msg.setStatus(status);
-                msg.setInfo(info);
-                String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
-                response.getWriter().write(data);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     /**
      * 新建目录
      */
@@ -1941,6 +1782,147 @@ public class UserController {
         }
     }
 
+    /**
+     * 预览网盘
+     */
+    @RequestMapping(value = "previewDisk", method = {RequestMethod.POST})
+    public void previewDisk(HttpServletRequest request, HttpServletResponse response) {
+        String panId = request.getParameter("panId");
+        Message message = new Message();
+        response.setContentType("text/html;charset=utf-8");
+        try {
+            if (panId == null) {
+                message.setStatus(false);
+            } else {
+                UserPan userPan = userPanService.getById(panId);
+                String fileName = userPan.getName();
+                String[] tmp = fileName.split("\\.");
+                String name = tmp[0];
+
+                // 数据库中文件绝对路径
+                String path = GlobalConstant.USER_PAN_PATH + "/" + fileName;
+
+                // 用来判断文件后缀的临时变量
+                String temp = userPan.getName().toLowerCase();
+                Boolean pdfFlag, previewFlag = false;
+
+                // 判断是否是除pdf外的可转换后缀
+                for (String ss : GlobalConstant.PREIVER_SUFFIX) {
+                    if (temp.endsWith(ss)) {
+                        previewFlag = true;
+                        break;
+                    }
+                }
+                // 判断是否是pdf后缀
+                pdfFlag = temp.endsWith(".pdf");
+
+                if (pdfFlag) {
+                    int i = path.indexOf("upload");
+                    String url = GlobalConstant.SER_URL + "/generic/web/viewer.html?file=/" + path.substring(i);
+                    message.setInfo(url);
+                    message.setStatus(true);
+                } else if (previewFlag) {
+                    String realUrl = GlobalFunction.getRealUrl(path);
+                    message.setInfo(realUrl);
+                    message.setStatus(true);
+                } else {
+                    // 如果不是，判断是否已经被转换了
+                    String tempPath = GlobalConstant.TEMP_PATH + "/" + name + ".pdf";
+                    File file = new File(path);
+                    if (!file.exists()) {
+                        // 如果没有被转换，无法预览
+                        message.setStatus(false);
+                    } else {
+                        // 如果转换了，预览转换后的文件
+                        int i = tempPath.indexOf("temp");
+                        String url = GlobalConstant.SER_URL + "/generic/web/viewer.html?file=/" + tempPath.substring(i);
+                        message.setInfo(url);
+                        message.setStatus(true);
+                    }
+                }
+            }
+            String data = JSON.toJSONString(message, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+            response.getWriter().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * PDF转换
+     * 支持格式：doc、docx、xls、xlsx、ppt、pptx
+     */
+    @RequestMapping(value = "convertDiskFile", method = {RequestMethod.POST})
+    public void convertDiskFile(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        Message msg = new Message();
+        Boolean status;
+        String info;
+        try {
+            // 转换前判断是否已经被转换过了
+            String panId = request.getParameter("panId");
+            UserPan userPan = userPanService.getById(panId);
+            String fileName = userPan.getName();
+            String[] tmp = fileName.split("\\.");
+            String name = tmp[0];
+            String suffix = tmp[1];
+
+            String path = GlobalConstant.TEMP_PATH + "/" + name + ".pdf";
+            File file = new File(path);
+            // 如果存在，则直接返回即可
+            if (file.exists()) {
+                msg.setStatus(true);
+                String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+                response.getWriter().write(data);
+            } else {
+                // 如果不存在，转换
+                String inputPath = GlobalConstant.USER_PAN_PATH + "/" + fileName;
+                String outputPath = GlobalConstant.TEMP_PATH + "/" + tmp[0] + ".pdf";
+                int i;
+                switch (suffix) {
+                    case "doc":
+                    case "docx":
+                        i = WordToPdf.run(inputPath, outputPath);
+                        break;
+                    case "xls":
+                    case "xlsx":
+                        i = ExcelToPdf.run(inputPath, outputPath);
+                        break;
+                    case "ppt":
+                    case "pptx":
+                        i = PptToPdf.run(inputPath, outputPath);
+                        break;
+                    default:
+                        i = -2;
+                        break;
+                }
+
+                switch (i) {
+                    case -1:
+                        info = "转换失败";
+                        status = false;
+                        break;
+                    case -2:
+                        info = "格式不支持";
+                        status = false;
+                        break;
+                    default:
+                        info = String.valueOf(i);
+                        status = true;
+                        break;
+                }
+
+                // status：是否成功；info：成功返回执行秒数，失败返回错误原因
+                msg.setStatus(status);
+                msg.setInfo(info);
+                String data = JSON.toJSONString(msg, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
+                response.getWriter().write(data);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 上传云盘文件
@@ -1983,7 +1965,7 @@ public class UserController {
                                 }
                             }
                             String userPanId = GlobalFunction.getUUID();
-                            String filePath = GlobalConstant.USER_PAN_PATH + "/" + userPanId;
+                            String filePath = GlobalConstant.USER_PAN_PATH + "/" +fileName;
 
                             // 存入服务器
                             GlobalFunction.uploadFile(item, filePath);
@@ -2034,7 +2016,8 @@ public class UserController {
             // 关闭客户端的默认解析
             response.setHeader("Content-Disposition", "attachment;filename=" + fileNameEncode);
             // 获得文件真实下载路径
-            String path = GlobalConstant.USER_PAN_PATH + "/" + userPanId;
+            String name = userPanService.getById(userPanId).getName();
+            String path = GlobalConstant.USER_PAN_PATH + "/" + name;
             // 下载文件
             GlobalFunction.downloadFile(path, response.getOutputStream());
 
@@ -2143,11 +2126,9 @@ public class UserController {
                 status = false;
                 info = "文件重名!请更换文件名";
             } else {
+                GlobalFunction.renameFile(GlobalConstant.USER_PAN_PATH, userPan.getName(), panName);
                 userPan.setName(panName);
-                if (userPanService.updateById(userPan) != 1) {
-                    status = false;
-                    info = "数据库重命名失败";
-                }
+                userPanService.updateById(userPan);
             }
             Message msg = new Message();
             msg.setStatus(status);
@@ -2210,7 +2191,8 @@ public class UserController {
             }
         } else {
             //删除文件
-            String filePath = GlobalConstant.USER_PAN_PATH + "/" + deleteId;
+            String fileName = userPanService.getById(deleteId).getName();
+            String filePath = GlobalConstant.USER_PAN_PATH + "/" + fileName;
             if (!GlobalFunction.deleteSignalFile(filePath)) {
                 status = false;
             }

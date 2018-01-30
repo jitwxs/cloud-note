@@ -100,7 +100,7 @@ public class GlobalConstant {
     /**
      * 每次显示分享的数目
      */
-    public static Integer SHOW_SHARE_NUM = 7;
+    public static Integer SHOW_SHARE_NUM = 5;
 
     /**
      * 笔记摘要长度
