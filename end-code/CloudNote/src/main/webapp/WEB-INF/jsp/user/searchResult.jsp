@@ -26,20 +26,17 @@
             margin: 0;
             padding: 0;
         }
-
         nav {
             width: 100%;
             height: 50px;
             background: #7e6aa7;
             position: relative;
         }
-
         nav img {
             width: 150px;
             height: 50px;
             float: left;
         }
-
         #search_btn {
             float: left;
             width: 70px;
@@ -52,7 +49,6 @@
             line-height: 20px;
             border-radius: 5px;
         }
-
         #result_num .number {
             font-size: 12px;
             color: #999999;
@@ -60,37 +56,32 @@
             margin-top: 10px;
             margin-left: 15%;
         }
-
         #result_container .box1 {
             width: 100%;
             height: 100%;
             margin-top: 10px;
             cursor: pointer
         }
-
         #result_container .title {
             color: #0000EE;
             text-decoration: underline;
             font-size: 18px;
             cursor: pointer
         }
-
     </style>
 </head>
 
 <body>
-<%-- 头部 --%>
 <!--头部-->
 <nav style="">
-
     <!--logo-->
     <a href="${ctx}/user/index"><img id="goback_btn" src="${ctx}/images/logo_word.png" style="cursor: pointer;width: 12%;height: 30px;margin-top: 0.5%"></a>
 
     <!--搜索框-->
-    <form method="post" action="${ctx}/user/nbSearch" onsubmit="return nbSearch()">
+    <form method="post" id="searchForm" action="${ctx}/user/nbSearch">
         <input id="search_key" type="text"
                class="form-control" name="keywords" placeholder="标题、标签、内容" style="width: 40%;float:left;margin-top: 8px;margin-left: 3%" >
-        <a id="search_btn" type="submit" class="btn">Search</a>
+        <a id="search_btn" class="btn" onclick="nbSearch()">Search</a>
     </form>
 </nav>
 
@@ -125,7 +116,7 @@
             toastr.info("想搜啥请告诉我呀");
             return false;
         } else {
-            return true;
+            $("#searchForm").submit();
         }
     }
 </script>

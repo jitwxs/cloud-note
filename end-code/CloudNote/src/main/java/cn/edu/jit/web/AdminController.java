@@ -734,7 +734,7 @@ public class AdminController {
                 usedSize = "0MB";
             } else {
                 String temp = String.format("%.2f", (double) totalUsed / (users.size() * GlobalConstant.DEFAULT_PAN_SIZE));
-                perfect = Double.parseDouble(temp) * 100;
+                perfect = Math.abs(Double.parseDouble(temp) * 100);
                 usedSize = String.format("%.2f", (double) totalUsed / 1024 / 1024) + "MB";
             }
 
