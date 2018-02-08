@@ -35,7 +35,7 @@ import javax.annotation.Resource;
 
 /**
  * Lucene工具类
- *
+ * 使用IK分词器
  * @author jitwxs
  * @date 2018/1/18 19:52
  */

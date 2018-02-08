@@ -44,14 +44,6 @@
             $("#accountTel").html(res.userDto.tel);
             $("#emailAddr").html(res.userDto.email);
             $("#registerDate").html(res.userDto.createDate);
-
-            var str = $('#accountTel').text();
-            //如果是第三方登陆
-            if(str.match(/\D/)!=null){
-                $('#change_password').hide();
-                $('#input_phoneNumber').removeClass('hidden');
-                $('#choose_options').text("绑定手机号");
-            }
         },function (error) {
             toastr.error("系统错误");
             return false;

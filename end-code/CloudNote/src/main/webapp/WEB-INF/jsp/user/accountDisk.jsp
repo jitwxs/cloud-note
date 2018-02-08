@@ -469,7 +469,7 @@
                 url: "${ctx}/user/uploadPan",
                 type: 'post',
                 data: formData,
-                async: false,
+                async: true,
                 dataType: 'json',
                 // 告诉jQuery不要去处理发送的数据
                 processData: false,

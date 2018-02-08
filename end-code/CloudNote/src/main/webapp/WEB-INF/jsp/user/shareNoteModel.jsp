@@ -12,6 +12,7 @@
             <div class="modal-body">
                 <input type="hidden" id="shareId">
                 <input type="hidden" id="shareName">
+                <input type="hidden" id="sharePic">
                 <label>链接生成成功, 复制链接分享给好友吧</label>
                 <div class="form-group ">
                     <div class="col-sm-10">
@@ -42,20 +43,13 @@
 <script>
     var jiathis_config = {};
 
-    function getHostPath() {
-        var curWwwPath = window.document.location.href;
-        var pathName = window.document.location.pathname;
-        var pos = curWwwPath.indexOf(pathName);
-        var hostPath = curWwwPath.substring(0, pos);
-        return hostPath;
-    }
-
     function setShare() {
         var url = $("#shareUrl").val();
+        var pic = $("#sharePic").val();
         var shareName = $("#shareName").val();
         jiathis_config.title = "我在无道云笔记发现一篇好文章：《" + shareName + "》,现在分享给你，和我一起欣赏吧！";
         jiathis_config.url = url;
-        jiathis_config.pic = getHostPath() + "/images/logo_big.png";
+        jiathis_config.pic = pic;
     }
     
     function copyUrl() {
@@ -65,7 +59,7 @@
     }
 
     function goShare() {
-        var url = $("#shareUrl").val();
+        var url = $("#shareUrl").val`();
         $('#shareNoteModal').modal('hide');
         window.open(url);
     }

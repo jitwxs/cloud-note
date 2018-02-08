@@ -66,7 +66,9 @@ public class NotifyServiceImpl implements NotifyService {
     @Override
     public List<Notify> listByRecvId(String recvId, String type, Integer status, String orderBy) {
         NotifyExample notifyExample = new NotifyExample();
-        notifyExample.setOrderByClause(orderBy);
+        if(!StringUtils.isBlank(orderBy)) {
+            notifyExample.setOrderByClause(orderBy);
+        }
         NotifyExample.Criteria criteria = notifyExample.createCriteria();
         criteria.andRecvIdEqualTo(recvId);
         if(!StringUtils.isBlank(type)) {
@@ -80,8 +82,8 @@ public class NotifyServiceImpl implements NotifyService {
     }
 
     @Override
-    public List<Notify> listByRecvId(String recvId, String type, Integer status, String orderBy, Page page) {
-        return notifyMapper.listByRecvId(recvId, type, status, orderBy, page);
+    public List<Notify> listByRecvId(String recvId, String type, Integer status, Page page) {
+        return notifyMapper.listByRecvId(recvId, type, status, page);
     }
 
     @Override

@@ -28,12 +28,11 @@ public interface NotifyService {
      * @param recvId 接收者id
      * @param type 消息类型，为null时返回所有
      * @param status 消息状态，为null时返回所有
-     * @param orderBy 排序规则，可为null
      * @return
      */
     List<Notify> listByRecvId(String recvId, String type, Integer status, String orderBy);
 
-    List<Notify> listByRecvId(String recvId, String type, Integer status, String orderBy, Page page);
+    List<Notify> listByRecvId(String recvId, String type, Integer status, Page page);
 
     /**
      * 统计消息条数

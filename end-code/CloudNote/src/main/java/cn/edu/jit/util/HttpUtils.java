@@ -1,6 +1,7 @@
 package cn.edu.jit.util;
 
 /**
+ * 模拟Get和Post请求
  * @author jitwxs
  * @date 2018/1/22 15:21
  */

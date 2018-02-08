@@ -437,8 +437,8 @@ noteId、noteName即使页面刷新也不会置空，
                 toastr.error("分享笔记失败");
                 return false;
             } else {
-                var url = msg.info;
-                $("#shareUrl").val(url);
+                $("#shareUrl").val(msg.info);
+                $("#sharePic").val(msg.name);
                 $("#shareId").val(noteId);
                 $("#shareName").val(noteName);
                 $('#shareNoteModal').modal('show');

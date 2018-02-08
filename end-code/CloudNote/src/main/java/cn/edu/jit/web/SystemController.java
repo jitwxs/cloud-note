@@ -182,7 +182,6 @@ public class SystemController {
 
     @RequestMapping(value = "qqLogin", method = {RequestMethod.GET})
     public void qqLogin(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         try {
             response.sendRedirect(new Oauth().getAuthorizeURL(request));
         } catch (Exception e) {
@@ -200,7 +199,6 @@ public class SystemController {
      */
     @RequestMapping(value = "qqCallback", method = {RequestMethod.POST})
     public void afterQQLoginPost(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html; charset=utf-8");
         try {
             PrintWriter out = response.getWriter();
             AccessToken accessTokenObj = (new Oauth()).getAccessTokenByRequest(request);
@@ -284,7 +282,6 @@ public class SystemController {
     @RequestMapping(value = "githubLogin", method = {RequestMethod.GET})
     public void githubLogin(HttpServletResponse response) {
         try {
-            response.setContentType("text/html;charset=utf-8");
             String url = "https://github.com/login/oauth/authorize";
             String param = "client_id=" + GlobalConstant.GITHUB_CLIENT_ID + "&state=" + GlobalFunction.getUUID()
                     + "&redirect_uri=" + GlobalConstant.GITHUB_REDIRECT_URL;
@@ -342,7 +339,6 @@ public class SystemController {
 
     @RequestMapping(value = "loginCheck", method = {RequestMethod.POST})
     public void loginCheck(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         Boolean status = true;
         String info = "";
         String tel = request.getParameter("tel");
@@ -510,7 +506,6 @@ public class SystemController {
         Boolean status = true;
         String info = null;
         Message message = new Message();
-        response.setContentType("text/html;charset=utf-8");
         String tel = request.getParameter("tel");
         String verityCode = request.getParameter("code");
 
@@ -602,7 +597,6 @@ public class SystemController {
      */
     @RequestMapping(value = "smsVerification", method = {RequestMethod.POST})
     public void smsVerification(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         boolean status = true;
         String tel = request.getParameter("tel");
         // 生成6位验证码
@@ -631,7 +625,6 @@ public class SystemController {
 
     @RequestMapping(value = "codeCheck", method = {RequestMethod.POST})
     public void codeCheck(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         Boolean status = false;
         String info;
         try {
@@ -677,7 +670,6 @@ public class SystemController {
 
     @RequestMapping(value = "foundPassword", method = {RequestMethod.POST})
     public void resetPassword(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         Boolean status = true;
         String info = null;
         try {
@@ -712,7 +704,6 @@ public class SystemController {
 
     @RequestMapping(value = "showUserCity", method = {RequestMethod.GET})
     public void showUserCity(HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         List<User> lists = userService.listAllUser("null");
         Map<String, Integer> map = new HashMap<>(16);
         try {
@@ -762,7 +753,6 @@ public class SystemController {
      */
     @RequestMapping(value = "getSecondArea", method = {RequestMethod.POST})
     public void getSecondArea(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         Message message = new Message();
         try {
             String areaId = request.getParameter("areaId");
@@ -781,7 +771,6 @@ public class SystemController {
 
     @RequestMapping(value = "showSelfInfo", method = {RequestMethod.GET})
     public void showUserInfo(HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         Message message = new Message();
         try {
             String id = getSelfId();
@@ -882,7 +871,6 @@ public class SystemController {
 
     @RequestMapping(value = "getStar", method = {RequestMethod.GET})
     public void getStar(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         Message message = new Message();
         Boolean status = false;
         String noteId = request.getParameter("noteId").trim();
@@ -908,7 +896,6 @@ public class SystemController {
      */
     @RequestMapping(value = "star", method = {RequestMethod.POST})
     public void star(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         Boolean status = false;
         Message message = new Message();
         String star = request.getParameter("like_num");

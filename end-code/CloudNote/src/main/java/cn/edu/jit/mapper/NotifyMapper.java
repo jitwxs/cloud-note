@@ -30,6 +30,6 @@ public interface NotifyMapper {
 
     int updateByPrimaryKey(Notify record);
 
-    List<Notify> listByRecvId(@Param("recvId")String recvId,@Param("type")String type,
-                              @Param("status")Integer status,@Param("orderBy")String orderBy,@Param("page")Page page);
+    List<Notify> listByRecvId(@Param("recvId")String recvId, @Param("type")String type,
+                              @Param("status")Integer status, @Param("page")Page page);
 }

@@ -68,6 +68,7 @@
 
             // 动态添加省级下拉框
             $("#areaSelect1").html('');
+            $("#areaSelect1").append("<option value=-1>请选择省/市</option>");
             for(var i=0; i<res.areas.length; i++) {
                 $("#areaSelect1").append("<option value='"+res.areas[i].id+"'>"+res.areas[i].name+"</option>");
             }

@@ -284,9 +284,7 @@
     <if test="status != null" >
       and status = #{status}
     </if>
-    <if test="orderBy != null" >
-      order by #{orderBy}
-    </if>
+      order by create_date desc
     limit #{page.startRow}, #{page.pageSize}
   </select>
 </mapper>

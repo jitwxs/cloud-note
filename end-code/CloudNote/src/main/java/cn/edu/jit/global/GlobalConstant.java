@@ -116,7 +116,7 @@ public class GlobalConstant {
 
     public static String GITHUB_CLIENT_SECRET = "09678e9c634fc777183ab4df930b858f83c0d1f1";
 
-    public static String GITHUB_REDIRECT_URL = "http://127.0.0.1:8080/githubCallback";
+    public static String GITHUB_REDIRECT_URL = GlobalConstant.SER_URL + "/githubCallback";
 
     /**
      * 短信模板

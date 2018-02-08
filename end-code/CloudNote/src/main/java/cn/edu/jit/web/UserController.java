@@ -331,6 +331,7 @@ public class UserController {
                 case "<!-- title -->":
                 case "<title>":
                     osw.write(title);
+                    osw.write("\n<input type=\"hidden\" id=\"ctx\" value=\""+GlobalConstant.SER_URL+"\">");
                     break;
                 case "<!-- userIcon -->":
                     if (!StringUtils.isBlank(iconRealUrl)) {
@@ -501,7 +502,6 @@ public class UserController {
      */
     @RequestMapping(value = "verifyPassword", method = {RequestMethod.POST})
     public void resetPassword(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         Boolean status = true;
         try {
             String passWord = request.getParameter("password");
@@ -528,7 +528,6 @@ public class UserController {
      */
     @RequestMapping(value = "initArticleDir", method = {RequestMethod.GET})
     public void initArticleDir(HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         try {
             // 顶层目录 id:root name:我的文件夹
             DirectoryTree directoryTree = new DirectoryTree("root", "我的文件夹");
@@ -545,7 +544,6 @@ public class UserController {
      */
     @RequestMapping(value = "initMoveArticleDir", method = {RequestMethod.GET})
     public void initMoveArticleDir(HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         try {
             // 顶层目录 id:root name:我的文件夹
             DirectoryTree directoryTree = new DirectoryTree("root", "我的文件夹");
@@ -562,7 +560,6 @@ public class UserController {
      */
     @RequestMapping(value = "initRecycleFile", method = {RequestMethod.GET})
     public void initRecycleFile(HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         try {
             String uid = getSelfId();
             List<ArticleRecycle> lists = articleRecycleService.listSelfRecycle(uid);
@@ -581,7 +578,6 @@ public class UserController {
         Message message = new Message();
         boolean status = true;
         String info = null;
-        response.setContentType("text/html;charset=utf-8");
         String dirId = request.getParameter("dirId");
         String noteId = request.getParameter("noteId");
         Article article = articleService.getById(noteId);
@@ -622,7 +618,6 @@ public class UserController {
      */
     @RequestMapping(value = "createNote", method = {RequestMethod.POST})
     public void createNote(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         Message msg = new Message();
         Boolean status = true;
         String info = null;
@@ -675,7 +670,6 @@ public class UserController {
      */
     @RequestMapping(value = "getNoteInfo", method = {RequestMethod.POST})
     public void getNoteInfo(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         String noteId = request.getParameter("noteId");
         try {
             Article article = articleService.getById(noteId);
@@ -701,7 +695,6 @@ public class UserController {
      */
     @RequestMapping(value = "renameNote", method = {RequestMethod.POST})
     public void renameNote(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         Boolean status = true;
         String info = null;
         try {
@@ -813,7 +806,6 @@ public class UserController {
         Boolean status = true;
         String info = "";
         Article article = null;
-        response.setContentType("text/html;charset=utf-8");
         try {
             // 排除笔记信息错误
             if (StringUtils.isBlank(noteId) || StringUtils.isBlank(noteName)) {
@@ -869,7 +861,6 @@ public class UserController {
     public void removeNote(HttpServletRequest request, HttpServletResponse response) {
         try {
             Boolean status = false;
-            response.setContentType("text/html;charset=utf-8");
             String noteId = request.getParameter("noteId");
             ArticleRecycle articleRecycle = new ArticleRecycle();
             Article article = articleService.getById(noteId);
@@ -895,7 +886,6 @@ public class UserController {
     public void foreverRemoveNote(HttpServletRequest request, HttpServletResponse response) {
         try {
             Boolean status = false;
-            response.setContentType("text/html;charset=utf-8");
             String noteId = request.getParameter("noteId");
 
             // 从数据库中移除
@@ -933,7 +923,6 @@ public class UserController {
         try {
             Boolean status = false;
             Message msg = new Message();
-            response.setContentType("text/html;charset=utf-8");
             String noteId = request.getParameter("noteId");
 
             if (!StringUtils.isBlank(noteId)) {
@@ -975,8 +964,6 @@ public class UserController {
             String uid = getSelfId();
             Message message = new Message();
             if (!StringUtils.isBlank(uid)) {
-                response.setContentType("text/html;charset=utf-8");
-
                 List<ArticleRecycle> list = articleRecycleService.listSelfRecycle(uid);
                 for (ArticleRecycle articleRecycle : list) {
                     String articleId = articleRecycle.getId();
@@ -1006,7 +993,6 @@ public class UserController {
     public void recoverNote(HttpServletRequest request, HttpServletResponse response) {
         char[] buf = new char[1024];
         int len;
-        response.setContentType("text/html;charset=utf-8");
         try {
             Message message = new Message();
             String noteId = request.getParameter("noteId");
@@ -1049,7 +1035,6 @@ public class UserController {
      */
     @RequestMapping(value = "addArticleTag", method = {RequestMethod.POST})
     public void addArticleTag(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         Message message = new Message();
         Boolean status = false;
         String info = "";
@@ -1101,7 +1086,6 @@ public class UserController {
      */
     @RequestMapping(value = "removeArticleTag", method = {RequestMethod.POST})
     public void removeArticleTag(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         Message message = new Message();
         String noteId = request.getParameter("noteId");
         String tagId = request.getParameter("tagId");
@@ -1127,7 +1111,6 @@ public class UserController {
      */
     @RequestMapping(value = "shareNote", method = {RequestMethod.POST})
     public void shareNote(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         String noteId = request.getParameter("noteId");
         Message message = new Message();
         Boolean status = false;
@@ -1139,6 +1122,7 @@ public class UserController {
                     status = true;
                     String realUrl = GlobalFunction.getRealUrl(article.getShareUrl());
                     message.setInfo(realUrl);
+                    message.setName(GlobalConstant.SER_URL + "/images/logo_big.png");
                 } else if (article.getIsOpen() == GlobalConstant.NOTE_STATUS.NOT_SHARE.getIndex()) {
                     String url = createSharePage(noteId, null);
                     if (!StringUtils.isBlank(url)) {
@@ -1152,6 +1136,7 @@ public class UserController {
 
                         String realUrl = GlobalFunction.getRealUrl(url);
                         message.setInfo(realUrl);
+                        message.setName(GlobalConstant.SER_URL + "/images/logo_big.png");
                         status = true;
                     }
                 }
@@ -1171,7 +1156,6 @@ public class UserController {
      */
     @RequestMapping(value = "cancelShare", method = {RequestMethod.POST})
     public void cancelShare(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         String noteId = request.getParameter("noteId");
         Message message = new Message();
         try {
@@ -1206,7 +1190,6 @@ public class UserController {
      */
     @RequestMapping(value = "showShareNote", method = {RequestMethod.GET})
     public void showShareNote(HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         try {
             String userId = getSelfId();
             List<Article> lists = articleService.listArticleByUid(userId, true);
@@ -1238,7 +1221,6 @@ public class UserController {
      */
     @RequestMapping(value = "showOtherShareNote", method = {RequestMethod.GET})
     public void showOtherShareNote(HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         try {
             String userId = getSelfId();
             List<Article> lists = articleService.listAnotherShareArticle(userId);
@@ -1286,7 +1268,6 @@ public class UserController {
      */
     @RequestMapping(value = "removeAffix", method = {RequestMethod.POST})
     public void removeAffix(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         Boolean status = false;
         String affixId = request.getParameter("affixId");
         try {
@@ -1321,7 +1302,6 @@ public class UserController {
     @RequestMapping(value = "uploadAffix", method = {RequestMethod.POST})
     public void uploadAffix(HttpServletRequest request, HttpServletResponse response) {
         String noteId = null;
-        response.setContentType("text/html;charset=utf-8");
         try {
             DiskFileItemFactory factory = new DiskFileItemFactory(1024 * 1024, new File(GlobalConstant.TEMP_PATH));
 
@@ -1391,7 +1371,6 @@ public class UserController {
     public void previewAffix(HttpServletRequest request, HttpServletResponse response) {
         String affixId = request.getParameter("affixId");
         Message message = new Message();
-        response.setContentType("text/html;charset=utf-8");
         try {
             if (affixId == null) {
                 message.setStatus(false);
@@ -1415,7 +1394,7 @@ public class UserController {
                 pdfFlag = temp.endsWith(".pdf");
                 if (pdfFlag) {
                     int i = path.indexOf("upload");
-                    String url = GlobalConstant.SER_URL + "/generic/web/viewer.html?file=/" + path.substring(i);
+                    String url = GlobalConstant.SER_URL + "/generic/web/viewer.html?file=" + GlobalConstant.SER_URL + "/" + path.substring(i);
                     message.setInfo(url);
                     message.setStatus(true);
                 } else if (previewFlag) {
@@ -1432,7 +1411,7 @@ public class UserController {
                         // 如果转换了，预览转换后的文件
                         String convertedPath = fileConvert.getPath();
                         int i = convertedPath.indexOf("upload");
-                        String url = GlobalConstant.SER_URL + "/generic/web/viewer.html?file=/" + convertedPath.substring(i);
+                        String url = GlobalConstant.SER_URL + "/generic/web/viewer.html?file="+ GlobalConstant.SER_URL + "/" + convertedPath.substring(i);
                         message.setInfo(url);
                         message.setStatus(true);
                     }
@@ -1451,7 +1430,6 @@ public class UserController {
      */
     @RequestMapping(value = "convertFile", method = {RequestMethod.POST})
     public void convertFile(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         Message msg = new Message();
         Boolean status;
         String info;
@@ -1632,7 +1610,6 @@ public class UserController {
      */
     @RequestMapping(value = "createDir", method = {RequestMethod.POST})
     public void createDir(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         Message msg = new Message();
         Boolean status = true;
         String info = null;
@@ -1673,7 +1650,6 @@ public class UserController {
      */
     @RequestMapping(value = "removeDir", method = {RequestMethod.POST})
     public void removeDir(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         Boolean status = true;
         String dirId = request.getParameter("dirId");
 
@@ -1703,7 +1679,6 @@ public class UserController {
      */
     @RequestMapping(value = "renameDir", method = {RequestMethod.POST})
     public void renameDir(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         Message msg = new Message();
         Boolean status = true;
         String info = null;
@@ -1741,7 +1716,6 @@ public class UserController {
      */
     @RequestMapping(value = "initUserPanDir", method = {RequestMethod.GET})
     public void initUserPanDir(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         String id = request.getParameter("dirId");
         try {
             // 顶层目录 id:root name:我的网盘
@@ -1759,7 +1733,6 @@ public class UserController {
      */
     @RequestMapping(value = "initUserPanSize", method = {RequestMethod.GET})
     public void initUserPanSize(HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         try {
             String uid = getSelfId();
             String perfect;
@@ -1789,7 +1762,6 @@ public class UserController {
     public void previewDisk(HttpServletRequest request, HttpServletResponse response) {
         String panId = request.getParameter("panId");
         Message message = new Message();
-        response.setContentType("text/html;charset=utf-8");
         try {
             if (panId == null) {
                 message.setStatus(false);
@@ -1818,7 +1790,7 @@ public class UserController {
 
                 if (pdfFlag) {
                     int i = path.indexOf("upload");
-                    String url = GlobalConstant.SER_URL + "/generic/web/viewer.html?file=/" + path.substring(i);
+                    String url = GlobalConstant.SER_URL + "/generic/web/viewer.html?file=" + GlobalConstant.SER_URL + "/" + path.substring(i);
                     message.setInfo(url);
                     message.setStatus(true);
                 } else if (previewFlag) {
@@ -1835,7 +1807,7 @@ public class UserController {
                     } else {
                         // 如果转换了，预览转换后的文件
                         int i = tempPath.indexOf("temp");
-                        String url = GlobalConstant.SER_URL + "/generic/web/viewer.html?file=/" + tempPath.substring(i);
+                        String url = GlobalConstant.SER_URL + "/generic/web/viewer.html?file="+ GlobalConstant.SER_URL + "/" + tempPath.substring(i);
                         message.setInfo(url);
                         message.setStatus(true);
                     }
@@ -1854,7 +1826,6 @@ public class UserController {
      */
     @RequestMapping(value = "convertDiskFile", method = {RequestMethod.POST})
     public void convertDiskFile(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         Message msg = new Message();
         Boolean status;
         String info;
@@ -1929,7 +1900,6 @@ public class UserController {
      */
     @RequestMapping(value = "uploadPan", method = {RequestMethod.POST})
     public void uploadPan(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         try {
             DiskFileItemFactory factory = new DiskFileItemFactory(1024 * 1024, new File(GlobalConstant.TEMP_PATH));
             ServletFileUpload upload = new ServletFileUpload(factory);
@@ -2035,7 +2005,6 @@ public class UserController {
      */
     @RequestMapping(value = "panSearch", method = {RequestMethod.POST})
     public void panSearch(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         String searchKey = request.getParameter("searchKey");
         try {
             Message message = new Message();
@@ -2072,7 +2041,6 @@ public class UserController {
      */
     @RequestMapping(value = "createPanDir", method = {RequestMethod.POST})
     public void createPanDir(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         Boolean status = true;
         String info = null;
         try {
@@ -2114,7 +2082,6 @@ public class UserController {
      */
     @RequestMapping(value = "renamePan", method = {RequestMethod.POST})
     public void renamePan(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         Boolean status = true;
         String info = null;
         try {
@@ -2146,7 +2113,6 @@ public class UserController {
      */
     @RequestMapping(value = "renamePanDir", method = {RequestMethod.POST})
     public void renamePanDir(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         Boolean status = true;
         String info = null;
         try {
@@ -2180,7 +2146,6 @@ public class UserController {
      */
     @RequestMapping(value = "removePan", method = {RequestMethod.POST})
     public void removePan(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         Boolean status = true;
         String deleteId = request.getParameter("deleteId");
         //判断删除文件还是目录
@@ -2228,7 +2193,6 @@ public class UserController {
      */
     @RequestMapping(value = "prepareNotify", method = {RequestMethod.GET})
     public void prepareNotify(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         try {
             String type = request.getParameter("type");
             String pageStr = request.getParameter("pageNo");
@@ -2244,7 +2208,7 @@ public class UserController {
                 type = null;
             }
 
-            List<Notify> list = notifyService.listByRecvId(getSelfId(), type, null, "create_date desc", page);
+            List<Notify> list = notifyService.listByRecvId(getSelfId(), type, null, page);
             Message message = new Message();
             message.setNotifies(list);
             message.setPage(page);
@@ -2260,7 +2224,6 @@ public class UserController {
      */
     @RequestMapping(value = "getNotifyContent", method = {RequestMethod.POST})
     public void getNotifyContent(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         Message message = new Message();
         try {
             String id = request.getParameter("id");
@@ -2285,7 +2248,6 @@ public class UserController {
      */
     @RequestMapping(value = "readNotify", method = {RequestMethod.POST})
     public void readNotify(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         try {
             Message message = new Message();
             String id = request.getParameter("id");
@@ -2310,14 +2272,13 @@ public class UserController {
      */
     @RequestMapping(value = "readNotifyByType", method = {RequestMethod.POST})
     public void readNotifyByType(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         try {
             String type = request.getParameter("type");
             if("全部".equals(type)) {
                 type = null;
             }
             Message message = new Message();
-            List<Notify> list = notifyService.listByRecvId(getSelfId(), type, GlobalConstant.NOTIFY_STATUS.UNREAD.getIndex(), null);
+            List<Notify> list = notifyService.listByRecvId(getSelfId(), type, GlobalConstant.NOTIFY_STATUS.UNREAD.getIndex(), "");
             if (list != null) {
                 for (Notify notify : list) {
                     notify.setStatus(GlobalConstant.NOTIFY_STATUS.READ.getIndex());
@@ -2340,7 +2301,6 @@ public class UserController {
      */
     @RequestMapping(value = "removeNotify", method = {RequestMethod.POST})
     public void removeNotify(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         try {
             Message message = new Message();
             String id = request.getParameter("id");

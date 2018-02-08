@@ -14,7 +14,6 @@
     <script src="../../../../js/toastr.js"></script>
     <!--Leancloud option library -->
     <script src="../../../../js/av-min.js"></script>
-    <!--<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>-->
     <!--Valine core code library -->
     <script src="../../../../js/Valine.min.js"></script>
 </head>
@@ -71,18 +70,10 @@
         placeholder: 'Your comment'
     });
 
-    function getHostPath() {
-        var curWwwPath = window.document.location.href;
-        var pathName = window.document.location.pathname;
-        var pos = curWwwPath.indexOf(pathName);
-        var hostPath = curWwwPath.substring(0, pos);
-        return hostPath;
-    }
-
     $(function () {
         var noteId = $('.note_id').text();
-        var getStarUrl = getHostPath() + "/getStar";
-        sendGet(getStarUrl, {'noteId': noteId}, true, function (res) {
+        var url = $("#ctx").val() + "/getStar";
+        sendGet(url, {'noteId': noteId}, true, function (res) {
             if (res.status) {
                 $('.right').append('<p class="like_num" >' + res.info + '</p>');
                 $('.article_detail').append('<p class="like_star" >Love: ' + res.info + '</p>');
@@ -107,8 +98,8 @@
             num = -1;
         }
 
-        var starUrl = getHostPath() + "/star";
-        sendPost(starUrl, {'like_num': num, 'noteId': noteId}, false, function (msg) {
+        var url = $("#ctx").val() + "/star";
+        sendPost(url, {'like_num': num, 'noteId': noteId}, false, function (msg) {
             if (msg.status) {
                 var nowNum = parseInt($(".like_num").text()) + num;
                 $('.like_num').remove();

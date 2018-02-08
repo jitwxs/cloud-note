@@ -232,7 +232,6 @@ public class AdminController {
      */
     @RequestMapping(value = "preparerUserInfo", method = {RequestMethod.GET})
     public void preparerUserInfo(HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         try {
             Map<Object, Object> objects = new HashMap<>(16);
 
@@ -304,7 +303,6 @@ public class AdminController {
      */
     @RequestMapping(value = "preparerLoginInfo", method = {RequestMethod.GET})
     public void preparerLoginInfo(HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         try {
             List<Data> list = logService.countUserByTitle(GlobalConstant.LOG_USER.USER_LOGIN.getName());
             String data = JSON.toJSONString(list, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
@@ -327,7 +325,6 @@ public class AdminController {
      */
     @RequestMapping(value = "preparerShareInfo", method = {RequestMethod.GET})
     public void preparerShareInfo(HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         try {
             List<Data> list = logService.countUserByTitle(GlobalConstant.LOG_NOTE.SHARE_NOTE.getName());
             String data = JSON.toJSONString(list, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
@@ -355,7 +352,6 @@ public class AdminController {
     @RequestMapping(value = "prepareNoteLog", method = {RequestMethod.GET})
     public void prepareNoteLog(HttpServletResponse response) {
         try {
-            response.setContentType("text/html;charset=utf-8");
             List<Log> lists = logService.listByType(GlobalConstant.LOG_NOTE.type, "create_date desc");
 
             List<LogDto> result = log2LogDto(lists);
@@ -381,7 +377,6 @@ public class AdminController {
     @RequestMapping(value = "prepareShareAudit", method = {RequestMethod.GET})
     public void prepareShareAudit(HttpServletResponse response) {
         try {
-            response.setContentType("text/html;charset=utf-8");
             List<Article> tempList = articleService.listAllShareArticle();
             List<ArticleDto> list = article2Dto(tempList);
             String data = JSON.toJSONString(list, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
@@ -475,7 +470,6 @@ public class AdminController {
     @RequestMapping(value = "prepareUserList", method = {RequestMethod.GET})
     public void prepareUserList(HttpServletResponse response) {
         try {
-            response.setContentType("text/html;charset=utf-8");
             List<User> list = userService.listAllUser("create_date");
             List<UserDto> userDtos = user2Dto(list);
             String data = JSON.toJSONString(userDtos, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
@@ -500,7 +494,6 @@ public class AdminController {
     @RequestMapping(value = "prepareUserLog", method = {RequestMethod.GET})
     public void prepareUserLog(HttpServletResponse response) {
         try {
-            response.setContentType("text/html;charset=utf-8");
             List<Log> lists = logService.listByType(GlobalConstant.LOG_USER.type, "create_date desc");
 
             List<LogDto> result = log2LogDto(lists);
@@ -535,7 +528,6 @@ public class AdminController {
      */
     @RequestMapping(value = "showUserInfo", method = {RequestMethod.POST})
     public void showUserInfo(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         String tel = request.getParameter("tel");
         try {
             User user = userService.getByTel(tel);
@@ -560,7 +552,6 @@ public class AdminController {
     @RequestMapping(value = "addBlacklistCheck", method = {RequestMethod.POST})
     public void addBlacklistCheck(HttpServletRequest request, HttpServletResponse response) {
         Message message = new Message();
-        response.setContentType("text/html;charset=utf-8");
         // 如果已经存在有效的封禁记录，提示管理员到期时间，以及是否要继续封禁
         String tel = request.getParameter("tel");
         try {
@@ -648,7 +639,6 @@ public class AdminController {
     @RequestMapping(value = "prepareBlackHome", method = {RequestMethod.GET})
     public void prepareBlackHome(HttpServletResponse response) {
         try {
-            response.setContentType("text/html;charset=utf-8");
             List<UserBlacklist> tempList = userBlacklistService.listAll("create_date desc");
 
             List<UserBlacklistDto> list = userBlacklist2Dto(tempList);
@@ -720,7 +710,6 @@ public class AdminController {
     @RequestMapping(value = "preparePanInfo", method = {RequestMethod.GET})
     public void preparePanInfo(HttpServletResponse response) {
         try {
-            response.setContentType("text/html;charset=utf-8");
             Map<String, Object> maps = new HashMap<>(16);
             String usedSize;
             double perfect;
@@ -784,7 +773,6 @@ public class AdminController {
     @RequestMapping(value = "preparePanLog", method = {RequestMethod.GET})
     public void preparePanLog(HttpServletResponse response) {
         try {
-            response.setContentType("text/html;charset=utf-8");
             List<Log> lists = logService.listByType(GlobalConstant.LOG_PAN.type, "create_date desc");
 
             List<LogDto> result = log2LogDto(lists);
@@ -826,7 +814,6 @@ public class AdminController {
     @RequestMapping(value = "prepareSystemLog", method = {RequestMethod.GET})
     public void prepareSystemLog(HttpServletResponse response) {
         try {
-            response.setContentType("text/html;charset=utf-8");
             List<Log> lists = logService.listByType(GlobalConstant.LOG_SYSTEM.type, "create_date desc");
 
             List<LogDto> result = log2LogDto(lists);
@@ -843,7 +830,6 @@ public class AdminController {
     @RequestMapping(value = "getLogInfo", method = {RequestMethod.POST})
     public void getLogInfo(HttpServletRequest request, HttpServletResponse response) {
         String id = request.getParameter("id");
-        response.setContentType("text/html;charset=utf-8");
         try {
             if (!StringUtils.isBlank(id)) {
                 Log log = logService.getById(id);
@@ -875,7 +861,6 @@ public class AdminController {
         try {
             String type = request.getParameter("type");
             String name = request.getParameter("name");
-            response.setContentType("text/html;charset=utf-8");
             Message message = new Message();
             boolean status = true;
             List<Reason> reasons = reasonService.getByTypeAndName(Integer.parseInt(type), name);
@@ -898,7 +883,6 @@ public class AdminController {
         try {
             String id = request.getParameter("id");
             String name = request.getParameter("name");
-            response.setContentType("text/html;charset=utf-8");
             Message message = new Message();
             boolean status = true;
             Reason reason = reasonService.getById(id);
@@ -952,7 +936,6 @@ public class AdminController {
      */
     @RequestMapping(value = "listIllegal", method = {RequestMethod.GET})
     public void listIllegal(HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         try {
             List<Reason> list = reasonService.listAllByType(GlobalConstant.REASON.ILLEGAL.getIndex());
             String data = JSON.toJSONString(list, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
@@ -967,7 +950,7 @@ public class AdminController {
      */
     @RequestMapping(value = "listShareReason", method = {RequestMethod.GET})
     public void listShareReason(HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
+
         try {
             List<Reason> list = reasonService.listAllByType(GlobalConstant.REASON.SHARE.getIndex());
             String data = JSON.toJSONString(list, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
@@ -982,7 +965,6 @@ public class AdminController {
      */
     @RequestMapping(value = "getTempSize", method = {RequestMethod.GET})
     public void getTempSize(HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         Message message = new Message();
         try {
             File file = new File(GlobalConstant.TEMP_PATH);
@@ -1000,7 +982,6 @@ public class AdminController {
      */
     @RequestMapping(value = "removeTempDir", method = {RequestMethod.GET})
     public void removeTempDir(HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         Message message = new Message();
         try {
             File tempDir = new File(GlobalConstant.TEMP_PATH);
@@ -1031,7 +1012,6 @@ public class AdminController {
     @RequestMapping(value = "prepareNotifyLog", method = {RequestMethod.GET})
     public void prepareNotifyLog(HttpServletResponse response) {
         try {
-            response.setContentType("text/html;charset=utf-8");
             List<Log> lists = logService.listByType(GlobalConstant.NOTIFY.type, "create_date desc");
 
             List<LogDto> result = log2LogDto(lists);
@@ -1056,7 +1036,6 @@ public class AdminController {
     @RequestMapping(value = "prepareSystemNotify", method = {RequestMethod.GET})
     public void prepareSystemNotify(HttpServletResponse response) {
         try {
-            response.setContentType("text/html;charset=utf-8");
             List<Notify> notifies = notifyService.listAll("create_date desc");
             List<NotifyDto> list = notify2Dto(notifies);
 
@@ -1081,7 +1060,6 @@ public class AdminController {
      */
     @RequestMapping(value = "listTels", method = {RequestMethod.POST})
     public void listTels(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
         try {
             Message message = new Message();
             String tel = request.getParameter("tel");
