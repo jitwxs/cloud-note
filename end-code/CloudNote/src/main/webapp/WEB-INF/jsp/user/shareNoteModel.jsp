@@ -59,7 +59,7 @@
     }
 
     function goShare() {
-        var url = $("#shareUrl").val`();
+        var url = $("#shareUrl").val();
         $('#shareNoteModal').modal('hide');
         window.open(url);
     }

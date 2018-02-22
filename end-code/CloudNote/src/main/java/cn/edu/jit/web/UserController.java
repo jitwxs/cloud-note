@@ -223,7 +223,7 @@ public class UserController {
             String url = articleDto.getShareUrl();
             InputStreamReader isr = new InputStreamReader(new FileInputStream(url), "UTF-8");
 
-            while (isr.read(buf, 0, buf.length) > 0 && result.length() <= GlobalConstant.NOTE_ABSTARCT_LENGTH) {
+            while (isr.read(buf, 0, buf.length) > 0 && result.length() <= GlobalConstant.NOTE_ABSTRACT_LENGTH) {
                 String temp = String.valueOf(buf);
                 if (!flag) {
                     result.append(GlobalFunction.getHtmlText(temp));
@@ -233,7 +233,7 @@ public class UserController {
                 }
             }
             isr.close();
-            int len = GlobalConstant.NOTE_ABSTARCT_LENGTH >= result.length() ? result.length() : GlobalConstant.NOTE_ABSTARCT_LENGTH;
+            int len = GlobalConstant.NOTE_ABSTRACT_LENGTH >= result.length() ? result.length() : GlobalConstant.NOTE_ABSTRACT_LENGTH;
             return result.substring(0, len);
         } catch (Exception e) {
             e.printStackTrace();
@@ -258,7 +258,7 @@ public class UserController {
         isr.close();
 
         content = GlobalFunction.getHtmlText(contentBuilder.toString());
-        content = content.substring(0,Math.min(content.length(), GlobalConstant.NOTE_ABSTARCT_LENGTH));
+        content = content.substring(0,Math.min(content.length(), GlobalConstant.NOTE_ABSTRACT_LENGTH));
 
         return content;
     }
@@ -1384,7 +1384,7 @@ public class UserController {
                 Boolean pdfFlag, previewFlag = false;
 
                 // 判断是否是除pdf外的可转换后缀
-                for (String ss : GlobalConstant.PREIVER_SUFFIX) {
+                for (String ss : GlobalConstant.PREVIEW_SUFFIX) {
                     if (temp.endsWith(ss)) {
                         previewFlag = true;
                         break;
@@ -1779,7 +1779,7 @@ public class UserController {
                 Boolean pdfFlag, previewFlag = false;
 
                 // 判断是否是除pdf外的可转换后缀
-                for (String ss : GlobalConstant.PREIVER_SUFFIX) {
+                for (String ss : GlobalConstant.PREVIEW_SUFFIX) {
                     if (temp.endsWith(ss)) {
                         previewFlag = true;
                         break;

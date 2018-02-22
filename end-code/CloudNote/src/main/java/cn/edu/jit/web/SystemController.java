@@ -601,7 +601,6 @@ public class SystemController {
         String tel = request.getParameter("tel");
         // 生成6位验证码
         String verifyCode = (int) ((Math.random() * 9 + 1) * 100000) + "";
-        System.out.println(verifyCode);
         HttpSession session = request.getSession();
         session.setAttribute("code", verifyCode);
         session.setAttribute("tel", tel);

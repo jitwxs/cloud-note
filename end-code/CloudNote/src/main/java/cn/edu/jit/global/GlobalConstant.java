@@ -10,20 +10,20 @@ public class GlobalConstant {
     /**
      * 服务器路径
      */
-    public static String SER_URL = "http://127.0.0.1:8080";
+    public static String SER_URL;
 
     /**
-     * 用户网盘默认大小：100MB
+     * 用户网盘默认大小
      */
-    public static Integer DEFAULT_PAN_SIZE = 100 * 1024 * 1024;
+    public static Integer DEFAULT_PAN_SIZE;
 
     /**
      * 后台分页的页面容量
      */
-    public static Integer PAGE_SIZE = 10;
+    public static Integer PAGE_SIZE;
 
     /**
-     * 是否显示登陆信息
+     * 是否显示登陆信息（此项无需配置，使用false即可）
      */
     public static boolean HAS_SHOW_LOGIN_INFO = false;
 
@@ -80,12 +80,12 @@ public class GlobalConstant {
     /**
      * 笔记后缀
      */
-    public static String NOTE_SUFFIX = ".note";
+    public static String NOTE_SUFFIX;
 
     /**
-     * 除pdf外的可转换后缀
+     * 除pdf外的可转换后缀（无需修改）
      */
-    public static String[] PREIVER_SUFFIX = {".bmp", ".png", ".jpg", ".jpeg", ".gif", ".htm", ".html"};
+    public static final String[] PREVIEW_SUFFIX = {".bmp", ".png", ".jpg", ".jpeg", ".gif", ".htm", ".html"};
 
     /**
      * 根目录
@@ -95,53 +95,53 @@ public class GlobalConstant {
     /**
      * 笔记默认内容
      */
-    public static String ARTICLE_DEFAULT_CONTENT = "<p>欢迎使用 <b>无道云笔记</b></p>";
+    public static String ARTICLE_DEFAULT_CONTENT;
 
     /**
      * 每次显示分享的数目
      */
-    public static Integer SHOW_SHARE_NUM = 5;
+    public static Integer SHOW_SHARE_NUM;
 
     /**
      * 笔记摘要长度
      */
-    public static Integer NOTE_ABSTARCT_LENGTH = 50;
+    public static Integer NOTE_ABSTRACT_LENGTH;
+
+    public static String GITHUB_CLIENT_ID;
+
+    public static String GITHUB_CLIENT_SECRET;
+
+    public static String GITHUB_REDIRECT_URL;
 
     /**
      * 短信签名
      */
-    public static String LABEL_NAME = "无道云笔记";
-
-    public static String GITHUB_CLIENT_ID = "6f66d56a89665725ffef";
-
-    public static String GITHUB_CLIENT_SECRET = "09678e9c634fc777183ab4df930b858f83c0d1f1";
-
-    public static String GITHUB_REDIRECT_URL = GlobalConstant.SER_URL + "/githubCallback";
+    public static String LABEL_NAME;
 
     /**
      * 短信模板
      */
-    public static String MOULD_ID = "SMS_120411170";
+    public static String MOULD_ID;
 
     /**
      * accessKeyId
      */
-    public static final String ACCESS_KEY_ID = "LTAIxXurPn7JerWb";
+    public static String ACCESS_KEY_ID;
 
     /**
      * accessKeySecret
      */
-    public static final String ACCESS_KEY_SECRET = "faB9H3xj2DV8xbwcfWV76o0KOULmOL";
+    public static String ACCESS_KEY_SECRET;
 
     /**
      * 产品名称:云通信短信API产品,开发者无需替换（短信服务）
      */
-    public static final String PRODUCT = "Dysmsapi";
+    public static String PRODUCT;
 
     /**
      * 产品域名,开发者无需替换（短信服务）
      */
-    public static final String DOMAIN = "dysmsapi.aliyuncs.com";
+    public static String DOMAIN;
 
     /**
      * 权限类型
@@ -159,7 +159,7 @@ public class GlobalConstant {
         private String name;
         private int index;
 
-        private ROLE(String name, int index) {
+        ROLE(String name, int index) {
             this.name = name;
             this.index = index;
         }
@@ -202,7 +202,7 @@ public class GlobalConstant {
         private String name;
         private int index;
 
-        private REASON(String name, int index) {
+        REASON(String name, int index) {
             this.name = name;
             this.index = index;
         }
@@ -250,7 +250,7 @@ public class GlobalConstant {
         private int index;
         public static int type = 5;
 
-        private NOTIFY(String name, int index) {
+        NOTIFY(String name, int index) {
             this.name = name;
             this.index = index;
         }
@@ -293,7 +293,7 @@ public class GlobalConstant {
         private String name;
         private int index;
 
-        private NOTIFY_STATUS(String name, int index) {
+        NOTIFY_STATUS(String name, int index) {
             this.name = name;
             this.index = index;
         }
@@ -336,7 +336,7 @@ public class GlobalConstant {
         private String name;
         private int index;
 
-        private NOTE_STATUS(String name, int index) {
+        NOTE_STATUS(String name, int index) {
             this.name = name;
             this.index = index;
         }
@@ -393,7 +393,7 @@ public class GlobalConstant {
         private int index;
         public static int type = 1;
 
-        private LOG_SYSTEM(String name, int index) {
+        LOG_SYSTEM(String name, int index) {
             this.name = name;
             this.index = index;
         }
@@ -449,7 +449,7 @@ public class GlobalConstant {
         private int index;
         public static int type = 2;
 
-        private LOG_USER(String name, int index) {
+        LOG_USER(String name, int index) {
             this.name = name;
             this.index = index;
         }
@@ -509,7 +509,7 @@ public class GlobalConstant {
         private int index;
         public static int type = 3;
 
-        private LOG_NOTE(String name, int index) {
+        LOG_NOTE(String name, int index) {
             this.name = name;
             this.index = index;
         }
@@ -557,7 +557,7 @@ public class GlobalConstant {
         private int index;
         public static int type = 4;
 
-        private LOG_PAN(String name, int index) {
+        LOG_PAN(String name, int index) {
             this.name = name;
             this.index = index;
         }
