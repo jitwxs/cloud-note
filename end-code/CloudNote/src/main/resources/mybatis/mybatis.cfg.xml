@@ -3,7 +3,10 @@
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
 
 <configuration>
-    <!-- 加载Log4j -->
+    <!--
+     Mybatis按顺序支持SLF4J、Apache Commons Logging、LOG4J 2 、LOG4J、JDK LOGGIN，
+     当一个系统有多个日志的时候,指定使用哪种日志
+     -->
     <settings>
         <setting name="logImpl" value="LOG4J"/>
     </settings>

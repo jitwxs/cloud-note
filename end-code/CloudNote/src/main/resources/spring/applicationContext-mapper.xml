@@ -8,14 +8,44 @@
 	http://www.springframework.org/schema/context/spring-context.xsd">
 
     <!-- 加载数据库配置文件 -->
-    <context:property-placeholder location="classpath:mysql.properties"/>
+    <context:property-placeholder location="classpath:db.properties"/>
 
-    <!-- 配置C3P0连接池 -->
-    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
-        <property name="driverClass" value="${jdbc.driver}"/>
-        <property name="jdbcUrl" value="${jdbc.url}"/>
-        <property name="user" value="${jdbc.username}"/>
+    <!-- druid -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+        <!-- 数据库基本信息配置 -->
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
         <property name="password" value="${jdbc.password}"/>
+        <!-- 配置监控统计拦截的filters -->
+        <property name="filters" value="${jdbc.filters}"/>
+        <!-- 最大并发连接数 -->
+        <property name="maxActive" value="${jdbc.maxActive}"/>
+        <!-- 初始化连接数量 -->
+        <property name="initialSize" value="${jdbc.initialSize}"/>
+        <!-- 最小空闲连接数 -->
+        <property name="minIdle" value="${jdbc.minIdle}"/>
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="${jdbc.maxWait}"/>
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="${jdbc.timeBetweenEvictionRunsMillis}"/>
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="${jdbc.minEvictableIdleTimeMillis}"/>
+        <!-- 用来检测连接是否有效的sql，要求是一个查询语句 -->
+        <property name="validationQuery" value="${jdbc.validationQuery}"/>
+        <!-- 对于长时间不使用的连接强制关闭 -->
+        <property name="removeAbandoned" value="${jdbc.removeAbandoned}"/>
+        <!-- 关闭超过多长时间的空闲连接，单位秒 -->
+        <property name="removeAbandonedTimeout" value="${jdbc.removeAbandonedTimeout}"/>
+        <!-- 关闭 abanded 连接时输出错误日志 -->
+        <property name="logAbandoned" value="${jdbc.logAbandoned}"/>
+        <!-- 此项配置为true即可，不影响性能，并且保证安全性。
+            意义为：申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效。 -->
+        <property name="testWhileIdle" value="true"/>
+        <!-- 申请连接时执行validationQuery检测连接是否有效，配置为true会降低性能 -->
+        <property name="testOnBorrow" value="false"/>
+        <!-- 归还连接时执行validationQuery检测连接是否有效，配置为true会降低性能 -->
+        <property name="testOnReturn" value="false"/>
     </bean>
 
     <!-- 配置SqlSessionFactory -->
@@ -29,6 +59,8 @@
     <!-- Mapper批量扫描 -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="cn.edu.jit.mapper"/>
+        <!-- 这个属性一般都用不到，只有当你配置多数据源的时候，这是会有多个sqlSessionFactory，你
+            就需要通过该属性来指定哪一个sqlSessionFactory. -->
         <property name="sqlSessionFactoryBeanName" value="sessionFactory"/>
     </bean>
 
