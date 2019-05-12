@@ -26,37 +26,97 @@
 
 - 社会化分享：Jiathis
 
---- 
-
 ### 二、项目截图
 
-整体流程图 ：
-![流程图](http://img.blog.csdn.net/20180209001326507)
+**整体流程图 ：**
 
-用户首页：
-![用户首页](http://img.blog.csdn.net/20180209001358475)
+![流程图](./screenshot/process.png)
 
-笔记搜索：
-![笔记搜索](http://img.blog.csdn.net/20180209001528172)
+**用户首页：**
 
-笔记分享：
-![笔记分享](http://img.blog.csdn.net/20180209001547541)
+![用户首页](./screenshot/user_index.png)
 
-消息中心：
-![消息中心](http://img.blog.csdn.net/20180209001602937)
+**笔记搜索：**
 
-个人网盘：
-![个人网盘](http://img.blog.csdn.net/20180209001617577)
+![笔记搜索](./screenshot/search.png)
 
-管理员首页：
-![管理员首页](http://img.blog.csdn.net/20180209001635315)
+**笔记分享：**
 
-分享审核：
-![分享审核](http://img.blog.csdn.net/20180209001655324)
+![笔记分享](./screenshot/share.png)
 
----
+**消息中心：**
 
-### 三、任务要求
+![消息中心](./screenshot/notify.png)
+
+**个人网盘：**
+
+![个人网盘](./screenshot/pan.png)
+
+**管理员首页：**
+
+![管理员首页](./screenshot/admin_index.png)
+
+**分享审核：**
+
+![分享审核](./screenshot/share_audit.png)
+
+### 三、起步
+
+#### 3.1 配置数据库
+
+（1）首先请创建数据库：
+
+```sql
+CREATE DATABASE IF NOT EXISTS `cloud_note` /*!40100 DEFAULT CHARACTER SET utf8 */
+```
+
+（2）导入项目 sql 文件夹下的 `cloud_note.sql` 文件。
+
+（3）编辑项目中 `src/main/resources/db.properties` 文件，修改数据库连接信息：
+
+```application
+jdbc.driver=com.mysql.jdbc.Driver
+jdbc.url=jdbc:mysql://localhost:3306/cloud_note?useUnicode=true&characterEncoding=utf-8
+jdbc.username=root # 用户名
+jdbc.password=root # 密码
+```
+
+#### 3.2 运行程序
+
+电脑安装 IDEA Ultimate 版，并安装好 `Tomcat`、`Maven`（可略，使用IDEA自带也行）后。
+
+（1）运行 IDEA，点击 `Import Project` 按钮，导入项目。
+
+![](./screenshot/20190512171652.png)
+
+（2）点击 `File -> Settings -> Build,Execution... -> Application Servers` 中添加 Tomcat 的路径。
+
+添加完毕后，点击主窗口中 `Add Configuation...`，添加 Tomcat 启动项，如图所示。
+
+![](./screenshot/20190512171854.png)
+
+（3）添加完毕后，添加项目到 Tomcat 中，如图所示。
+
+![](./screenshot/20190512172039.png)
+
+（5）确保 URL 正确，如图所示
+
+![](./screenshot/20190512172101.png)
+
+（6）配置完毕后，依次点击 `Apply`、`OK` 按钮，然后点击 `Tomcat` 旁边的绿色三角按钮即可。
+
+![](./screenshot/20190512172516.png)
+
+#### 3.3 用户登录
+
+查看 `login` 表记录，登录名为 `tel` 列记录，密码均为 `123`。用户角色为 `role_id` 列，请自行更改：
+
+- role_id = 1：管理员
+- role_id = 2：普通用户
+
+![](./screenshot/20190512173345.png)
+
+### 四、任务要求
 
 #### 任务一 题目理解
 
