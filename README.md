@@ -62,6 +62,8 @@
 
 ### 三、起步
 
+> 阿里云短信服务请自行注册，然后编辑 `system.properties` 文件的 `MOULD_ID` 、`ACCESS_KEY_ID` 和 `ACCESS_KEY_SECRET` 属性。
+
 #### 3.1 配置数据库
 
 （1）首先请创建数据库：
